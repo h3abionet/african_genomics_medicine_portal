@@ -23,25 +23,23 @@
 		{% comment %} NOTE: If file is undefined, you will get error So be careful {% endcomment %}
 		<div class="row">
 			<div class="col-sm-6">
-				{{ form.country|as_crispy_field}}
+				{{ form.gene_name | as_crispy_field}}
 			</div>
 			<div class="col-sm-6">
-				{{ form.platform|as_crispy_field}}
+				{% comment %} {{ form.platform | as_crispy_field}} {% endcomment %}
 			</div>
 		</div>
 		<div class="row">
 			<div class="col-sm-6">
-				{{ form.disease|as_crispy_field}}
+				{{ form.protein | as_crispy_field}}
 			</div>
 			<div class="col-sm-6">
-				{{ form.study_design|as_crispy_field}}
+				{{ form.function | as_crispy_field}}
 			</div>
 		</div>
-
-
     {% comment %} </div> {% endcomment %}
-    {% comment %} {{ form.job_title|as_crispy_field }} {% endcomment %}
-    {% comment %} {{ form.bio|as_crispy_field }} {% endcomment %}
+    {% comment %} {{ form.job_title | as_crispy_field }} {% endcomment %}
+    {% comment %} {{ form.bio | as_crispy_field }} {% endcomment %}
     <button type="submit" class="btn btn-success col">Search</button>
 	</form>
 	{% comment %}          [> https://getbootstrap.com/docs/4.1/components/forms/ <] {% endcomment %}
