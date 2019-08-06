@@ -1,14 +1,14 @@
 from django.shortcuts import render
 from agmp_app.models import  *
 
-# Create your views here.
-def  overview(request):
-    snps=snp.objects.all()
-    drugs=drug.objects.all()
-    genes=pharmacogenes.objects.all()
-    studies=study.objects.all()
-    return render(request, 'overview.html', 
-            {'snps': snps,
-            'drugs': drugs,
-            'genes': genes,
-            'studies': studies})
+def index(request):
+    return render(request, 'index.html')
+
+def about(request):
+    return render(request, 'about.html')
+
+def resources(request):
+    return render(request, 'resources.html')
+
+def contact(request):
+    return render(request, 'contact.html')

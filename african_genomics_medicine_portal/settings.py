@@ -31,6 +31,10 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'bootstrap4',
+    'crispy_forms',
+    'agmp_app',
+    'leaflet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -116,6 +120,16 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.10/howto/static-files/
-
+# https://docs.djangoproject.com/en/2.0/howto/static-files/
+# os.path.abspath("static")  # added by Anmol
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn')
+# print(BASE_DIR)
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+    # "/home/devil/Documents/Tools/Database/staticfiles"
+]
+
+
+RESULTS_PER_PAGE = 50
