@@ -3,41 +3,47 @@
 {% load bootstrap4 %}
 {% load static %}
 
+{% block js %}
+	<script src="{% static 'js/search_details.js' %}" type="text/JavaScript"></script>
+{% endblock %}
+
+{% block content %}
+
 <table class="table table-hover">
-<tr style="font-weight:bold">
-<td>Gene</td>
-<td>UniProt</td>
-<td>Gene Full Name</td>
-<td>Protein Class</td>
-<td>N diseases</td>
-<td>DSI</td>
-<td>DPI</td>
-<td>pLI</td>
-<td>Score</td>
-<td>EL</td>
-<td>EI</td>
-<td>N PMIDs</td>
-<td>N SNPs</td>
-<td>First Ref</td>
-<td>Last Ref</td>
-</tr>
-<tr>
-<td><a href=#>APP </a></td>
-<td><a href=#>P05067 </a></td>
-<td>amyloid beta precursor protein</td>
-<td>enzyme modulator</td>
-<td><a href=#>371 </a></td>
-<td>0.430</td>
-<td>0.862</td>
-<td>6.2E-02</td>
-<td>0.900</td>
-<td></td>
-<td>0.967</td>
-<td><a href=#>1764 </a></td>
-<td><a href=#>39 </a></td>
-<td>1987</td>
-<td>2018</td>
-</tr>
+  <tr style="font-weight:bold">
+    <td>Gene</td>
+    <td>UniProt</td>
+    <td>Gene Full Name</td>
+    <td>Protein Class</td>
+    <td>N diseases</td>
+    <td>DSI</td>
+    <td>DPI</td>
+    <td>pLI</td>
+    <td>Score</td>
+    <td>EL</td>
+    <td>EI</td>
+    <td>N PMIDs</td>
+    <td>N SNPs</td>
+    <td>First Ref</td>
+    <td>Last Ref</td>
+  </tr>
+  <tr>
+    <td><a href=#>APP </a></td>
+    <td><a href=#>P05067 </a></td>
+    <td>amyloid beta precursor protein</td>
+    <td>enzyme modulator</td>
+    <td><a href=#>371 </a></td>
+    <td>0.430</td>
+    <td>0.862</td>
+    <td>6.2E-02</td>
+    <td>0.900</td>
+    <td></td>
+    <td>0.967</td>
+    <td><a href=#>1764 </a></td>
+    <td><a href=#>39 </a></td>
+    <td>1987</td>
+    <td>2018</td>
+  </tr>
 </table>
 
 {% endblock %}

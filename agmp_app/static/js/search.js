@@ -22,8 +22,17 @@ $(document).ready(function () {
     }
     $("input[type=text], #search").attr('placeholder', placeholder);
   });
-
   $("#search-form").submit(function (event) {
     event.preventDefault();
+    // console.log('sddsd');
+  });
+
+  $("#pharmgkb-btn").click(function () {
+    let item_id = 123;
+    window.location.href = '/search_details/pharmgkb/' + item_id;
+  });
+  $("#gwascatalog-btn").click(function () {
+    let item_id = 321;
+    window.location.href = '/search_details/gwascatalog/' + item_id;
   });
 });

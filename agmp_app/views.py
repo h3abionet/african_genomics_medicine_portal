@@ -18,6 +18,18 @@ def search(request):
     )
     return render(request, 'search.html', {"form": form})    
 
+def search_details(request, db_name, query_id):
+    '''
+    Receive query parameters from search page to fetch
+    database specific results
+    '''
+    return render(
+        request, 'search_details.html', {
+            'db_name': db_name,
+            'query_id': query_id
+            }
+        )
+
 def resources(request):
     return render(request, 'resources.html')
 
