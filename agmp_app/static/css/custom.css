@@ -121,7 +121,7 @@
   padding: 10px;
   width: 80%;
   margin: 10px auto;
-} 
+}
 .snippet {
   font-size: 1.1em;
   color: #27405e;
@@ -158,6 +158,10 @@ body {
 
 .col .footer-link {
   color: #fff;
+}
+
+.page-footer a {
+     color: #fff;
 }
 
 @media (min-width: 1200px){
