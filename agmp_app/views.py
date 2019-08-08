@@ -22,26 +22,47 @@ def search(request):
     )
     return render(request, 'search.html', {"form": form})
 
-def search_details(request, db_name, query_id):
+def search_details(request, db_name, search_type, query_id):
     '''
     Receive query parameters from search page to fetch
     database specific results
     '''
+    drug_list = None
+    gene_list = None
+    variant_list = None
+    disease_list = None
+
+    # query incoming request based on a drug
+    if (search_type == 'dg'):
+        drug_list = drug.objects.filter(drug_id__exact= query_id).values()
+    if (search_type == 'ge'):
+        gene_list = pharmacogenes.objects.filter(drug_id__exact= query_id).values()
+    if (search_type == 'vt'):
+        variant_list = snp.objects.filter(drug_id__exact= query_id).values()
+    if (search_type == 'ds'):
+        disease_list = disease.objects.filter(drug_id__exact= query_id).values()
+
     return render(
         request, 'search_details.html', {
             'db_name': db_name,
-            'query_id': query_id
+            'search_type': search_type,
+            'query_id': query_id,
+            'drug': drug_list,
+            'gene': gene_list,
+            'variant': variant_list,
+            'disease': disease_list,
             }
         )
 
-def fetch_disease(diseases):
+def __fetch_disease(diseases):
     '''
     :param list item_list: a list of item names to fetch from disease table
     :return dict
     '''
     ret = []
-    disease_object = dict()
     for disease in diseases:
+        disease_object = dict()
+        disease_object['key'] = 'ds'
         disease_object['result_type'] = 'disease'
         disease_object['name'] = disease['drug_name']
         disease_object['posology'] = disease['posology']
@@ -50,16 +71,18 @@ def fetch_disease(diseases):
     print('DISEASE ',ret)
     return ret
 
-def fetch_drug(drugs):
+def __fetch_drug(drugs):
     '''
     :param list item_list: a list of item names to fetch from drug table
     :return dict
     '''
     ret = []
-    drug_object = dict()
     # drugs = drug.objects.filter(drug_name__contains= query).values()
     for drug in drugs:
+        drug_object = dict()
+        drug_object['key'] = 'dg'
         drug_object['result_type'] = 'drug'
+
         drug_object['name'] = drug['drug_name']
         drug_object['posology'] = drug['posology']
         drug_object['chemical_structure'] = drug['chemical_structure']
@@ -67,34 +90,41 @@ def fetch_drug(drugs):
     print('DRUG ',ret)
     return ret
 
-def __fetch_study(studies):
+def __fetch_variant(snps):
     '''
-    :param list item_list: a list of item names to fetch from study table
+    :param list item_list: a list of item names to fetch from snp table
     :return dict
     '''
     ret = []
-    study_object = dict()
-    
-    # studies = study.objects.filter(study_title__contains= query).values()
-    for study in studies:
-        study_object['result_type'] = 'study'
-        study_object['name'] = study['study_title']
-        study_object['date'] = study['date']
-        ret.append(study_object)
-    print('STUDY ',ret)
+    for snp in snps:
+        variant_object = dict()
+        variant_object['key'] = 'vt'
+        variant_object['result_type'] = 'variant'
+
+        variant_object['name'] = snp['rs_id']
+        variant_object['drug'] = snp['drug_id']
+        variant_object['allele'] = snp['allele']
+        variant_object['gene'] = snp['gene_id']
+        variant_object['disease_phenotype'] = snp['disease_phenotype']
+        variant_object['reference'] = snp['reference_id']
+        variant_object['chromosome'] = snp['chromosome']
+        variant_object['p_value'] = float(snp['p_value'])
+        ret.append(variant_object)
+    print('VARIANT ',ret)
     return ret
 
-def __fetch_pharmacogenes(genes):
+def __fetch_gene(genes):
     '''
     :param list item_list: a list of item names to fetch from study table
     :return dict
     '''
     ret = []
-    gene_object = dict()
-    
     # genes = pharmacogenes.objects.filter(gene_name__contains= query).values()
     for gene in genes:
+        gene_object = dict()
+        gene_object['key'] = 'ge'
         gene_object['result_type'] = 'gene'
+
         gene_object['name'] = gene['gene_name']
         gene_object['protein'] = gene['protein']
         gene_object['function'] = gene['function']
@@ -132,16 +162,16 @@ def query(request, query_string, **kwargs):
     if request.is_ajax():
         # TODO: there must be a better way to do this
         if is_disease:
-            pass_list += fetch_disease(star_allele.objects.filter(disease_phenotype__contains= query_string).values())
+            pass_list += __fetch_disease(star_allele.objects.filter(disease_phenotype__contains= query_string).values())
         
         if is_drug:
-            pass_list += fetch_drug(drug.objects.filter(drug_name__contains= query_string).values())
+            pass_list += __fetch_drug(drug.objects.filter(drug_name__contains= query_string).values())
         
         if is_variant:
-            pass_list += __fetch_study(study.objects.filter(study_title__contains= query_string).values())
+            pass_list += __fetch_variant(snp.objects.filter(rs_id__exact= query_string).values())
         
         if is_gene:
-            pass_list += __fetch_pharmacogenes(pharmacogenes.objects.filter(gene_name__contains= query_string).values())
+            pass_list += __fetch_gene(pharmacogenes.objects.filter(gene_name__contains= query_string).values())
 
     res = json.dumps(pass_list)
     mimetype = 'application/json'
