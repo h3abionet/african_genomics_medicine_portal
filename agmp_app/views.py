@@ -74,7 +74,7 @@ def __fetch_study(studies):
     '''
     ret = []
     study_object = dict()
-    
+
     # studies = study.objects.filter(study_title__contains= query).values()
     for study in studies:
         study_object['result_type'] = 'study'
@@ -91,7 +91,7 @@ def __fetch_pharmacogenes(genes):
     '''
     ret = []
     gene_object = dict()
-    
+
     # genes = pharmacogenes.objects.filter(gene_name__contains= query).values()
     for gene in genes:
         gene_object['result_type'] = 'gene'
@@ -108,7 +108,7 @@ def __fetch_data(model, item_list):
     :param list item_list: a list of item names to fetch from table
     :return dict
 
-    harmonises the fetch data from specific tables into a 
+    harmonises the fetch data from specific tables into a
     more generic search function
 
     provided in the input parameters
@@ -121,7 +121,7 @@ def query(request, query_string, **kwargs):
     Get search query from ajax call
     Return JSON after retrieving data from database
     '''
-    # fetch the optional parameters from the request    
+    # fetch the optional parameters from the request
     is_disease = int(request.GET.get('disease', 0))
     is_drug = int(request.GET.get('drug', 0))
     is_variant =  int(request.GET.get('variant', 0))
@@ -133,13 +133,13 @@ def query(request, query_string, **kwargs):
         # TODO: there must be a better way to do this
         if is_disease:
             pass_list += fetch_disease(star_allele.objects.filter(disease_phenotype__contains= query_string).values())
-        
+
         if is_drug:
             pass_list += fetch_drug(drug.objects.filter(drug_name__contains= query_string).values())
-        
+
         if is_variant:
             pass_list += __fetch_study(study.objects.filter(study_title__contains= query_string).values())
-        
+
         if is_gene:
             pass_list += __fetch_pharmacogenes(pharmacogenes.objects.filter(gene_name__contains= query_string).values())
 
@@ -147,6 +147,9 @@ def query(request, query_string, **kwargs):
     mimetype = 'application/json'
 
     return HttpResponse(res, mimetype)
+
+def summary(request):
+    return render(request, 'summary.html')
 
 def resources(request):
     return render(request, 'resources.html')
