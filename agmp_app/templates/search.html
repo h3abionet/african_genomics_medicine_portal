@@ -12,70 +12,74 @@
 {% block content %}
 
 
-<form action='/microbiome/results/' method='GET' id="search-form" novalidate>
-	{% csrf_token %}
-  <div class="row">
-    <div class="col-md-12 text-center">
-      <div class="search_type">
-				<div class="tag">Choose a category to search by</div>
-				<div class="row">
-					<div class="col-md-3">
-						<input name="search_type_check" value="diseases" type="checkbox" id="checkbox-2-1" class="regular-checkbox big-checkbox" />
-						<label id="checkbox_2_1" for="checkbox-2-1"></label><br>	
-						Disease
-					</div>
-					<div class="col-md-3">
-						<input name="search_type_check" value="drugs" type="checkbox" id="checkbox-2-2" class="regular-checkbox big-checkbox" />
-						<label id="checkbox_2_2" for="checkbox-2-2"></label><br>
-						Drug
-					</div>
-					<div class="col-md-3">
-						<input name="search_type_check" value="SNP IDs" type="checkbox" id="checkbox-2-3" class="regular-checkbox big-checkbox" />
-						<label id="checkbox_2_3" for="checkbox-2-3"></label><br>
-						Variant
-					</div>
-					<div class="col-md-3">
-						<input name="search_type_check" value="genes" type="checkbox" id="checkbox-2-4" class="regular-checkbox big-checkbox" />
-						<label id="checkbox_2_4" for="checkbox-2-4"></label><br>
-						Genes
-					</div>
-				</div>
+<div class="search">
+  <form action='/microbiome/results/' method='GET' id="search-form" novalidate>
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <div class="search_type">
+          <div class="tag">Choose a category to search by</div>
+          <div class="row">
+            <div class="col-md-3">
+              <input name="search_type_check" value="disease" type="checkbox" id="checkbox-2-1" class="regular-checkbox big-checkbox" />
+              <label id="checkbox_2_1" for="checkbox-2-1"></label><br>	
+              Disease
+            </div>
+            <div class="col-md-3">
+              <input name="search_type_check" value="drug" type="checkbox" id="checkbox-2-2" class="regular-checkbox big-checkbox" />
+              <label id="checkbox_2_2" for="checkbox-2-2"></label><br>
+              Drug
+            </div>
+            <div class="col-md-3">
+              <input name="search_type_check" value="SNP ID" type="checkbox" id="checkbox-2-3" class="regular-checkbox big-checkbox" />
+              <label id="checkbox_2_3" for="checkbox-2-3"></label><br>
+              Variant
+            </div>
+            <div class="col-md-3">
+              <input name="search_type_check" value="gene" type="checkbox" id="checkbox-2-4" class="regular-checkbox big-checkbox" />
+              <label id="checkbox_2_4" for="checkbox-2-4"></label><br>
+              Gene
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="row" style="margin-top: 20px">
-    <div class="col-sm-9">
-      {% comment %} {{ form.gene_name | as_crispy_field}} {% endcomment %}
-      <input id="search" placeholder="" class='form-control' />
+    <div class="row" style="margin-top: 20px">
+      <div class="col-sm-9">
+        {% comment %} {{ form.gene_name | as_crispy_field}} {% endcomment %}
+        <input id="search-input" placeholder="" class='form-control' />
+      </div>
+      <div class="col-sm-3">
+        <button type="submit" class="search-btn btn btn-success col">Search</button>
+      </div>
     </div>
-    <div class="col-sm-3">
-      <button type="submit" class="search-btn btn btn-success col">Search</button>
-    </div>
-  </div>
-  <div class="row" style="margin-top: 50px">
+    {% comment %} </div> {% endcomment %}
+    {% comment %} {{ form.job_title | as_crispy_field }} {% endcomment %}
+    {% comment %} {{ form.bio | as_crispy_field }} {% endcomment %}
+  </form>  
+</div>
+<div id="results">
+  <!-- <div class="row" style="margin-top: 50px">
     <div class="col-md-1"></div>
     <div class="col-md-10">
       <div class="result-container">
-				<div class="result-meta">
-					<span><b>Name</b>: Alzheimer's Disease</span> <br />
-					<span><b>Type</b>: disease</span><br />
-				</div>
-				<div class="database-results" style="margin-top: 10px">
-					<button id="pharmgkb-btn" class="search-btn btn btn-light col">
-							<span class="pharmgkb-icon"><img src="{% static 'img/pharmgkb.svg' %}" alt=""> PharmGKB</span>
-					</button> <br/>
-					<button id="gwascatalog-btn" class="search-btn btn btn-light col">
-							<span class="gwascatalog-icon"><img src="{% static 'img/gwas_catalog.png' %}" alt=""> GWAS Catalog</span>
-					</button>
-				</div>
+        <div class="result-meta">
+          <span><b>Name</b>: Alzheimer's Disease</span> <br />
+          <span><b>Type</b>: disease</span><br />
+        </div>
+        <div class="database-results" style="margin-top: 10px">
+          <button id="pharmgkb-btn" class="btn btn-light col">
+              <span class="pharmgkb-icon"><img src="{% static 'img/pharmgkb.svg' %}" alt=""> PharmGKB</span>
+          </button> <br/>
+          <button id="gwascatalog-btn" class="btn btn-light col">
+              <span class="gwascatalog-icon"><img src="{% static 'img/gwas_catalog.png' %}" alt=""> GWAS Catalog</span>
+          </button>
+        </div>
       </div>
     </div>
     <div class="col-md-1"></div>
-  </div>
-  {% comment %} </div> {% endcomment %}
-  {% comment %} {{ form.job_title | as_crispy_field }} {% endcomment %}
-  {% comment %} {{ form.bio | as_crispy_field }} {% endcomment %}
-</form>
+  </div> -->
+</div>
 {% comment %} [> https://getbootstrap.com/docs/4.1/components/forms/ <] {% endcomment %} {% comment %} <table>
   {% endcomment %}
   {% comment %} <tr>

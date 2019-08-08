@@ -22,7 +22,7 @@ def search(request):
     )
     return render(request, 'search.html', {"form": form})
 
-def search_details(request, db_name, search_type, query_id):
+def search_details(request, search_type, query_id):
     '''
     Receive query parameters from search page to fetch
     database specific results
@@ -31,26 +31,30 @@ def search_details(request, db_name, search_type, query_id):
     gene_list = None
     variant_list = None
     disease_list = None
-
     # query incoming request based on a drug
-    if (search_type == 'dg'):
-        drug_list = drug.objects.filter(drug_id__exact= query_id).values()
-    if (search_type == 'ge'):
-        gene_list = pharmacogenes.objects.filter(drug_id__exact= query_id).values()
+    if (search_type == 'gene-drug'):
+        variant_list = snp.objects.filter(drug_id__exact= query_id).values()
+    if (search_type == 'variant-drug'):
+        gene_list = snp.objects.filter(drug_id__exact= query_id).values()
     if (search_type == 'vt'):
         variant_list = snp.objects.filter(drug_id__exact= query_id).values()
     if (search_type == 'ds'):
         disease_list = disease.objects.filter(drug_id__exact= query_id).values()
 
+    print (drug_list)
+    print (gene_list)
+    print (variant_list)
+    print (disease_list)
+
     return render(
         request, 'search_details.html', {
-            'db_name': db_name,
+            # 'db_name': db_name,
             'search_type': search_type,
             'query_id': query_id,
-            'drug': drug_list,
-            'gene': gene_list,
-            'variant': variant_list,
-            'disease': disease_list,
+            'drugs': drug_list,
+            'genes': gene_list,
+            'variants': variant_list,
+            'diseases': disease_list,
             }
         )
 
@@ -64,6 +68,8 @@ def __fetch_disease(diseases):
         disease_object = dict()
         disease_object['key'] = 'ds'
         disease_object['result_type'] = 'disease'
+
+        disease_object['id'] = disease['id']
         disease_object['name'] = disease['drug_name']
         disease_object['posology'] = disease['posology']
         disease_object['chemical_structure'] = disease['chemical_structure']
@@ -83,6 +89,7 @@ def __fetch_drug(drugs):
         drug_object['key'] = 'dg'
         drug_object['result_type'] = 'drug'
 
+        drug_object['id'] = drug['drug_id']
         drug_object['name'] = drug['drug_name']
         drug_object['posology'] = drug['posology']
         drug_object['chemical_structure'] = drug['chemical_structure']
@@ -102,6 +109,7 @@ def __fetch_variant(snps):
         variant_object['key'] = 'vt'
         variant_object['result_type'] = 'variant'
 
+        variant_object['id'] = snp['snp_id']
         variant_object['name'] = snp['rs_id']
         variant_object['drug'] = snp['drug_id']
         variant_object['allele'] = snp['allele']
@@ -126,6 +134,7 @@ def __fetch_gene(genes):
         gene_object['key'] = 'ge'
         gene_object['result_type'] = 'gene'
 
+        gene_object['id'] = gene['id']
         gene_object['name'] = gene['gene_name']
         gene_object['protein'] = gene['protein']
         gene_object['function'] = gene['function']
@@ -175,11 +184,26 @@ def query(request, query_string, **kwargs):
 
     res = json.dumps(pass_list)
     mimetype = 'application/json'
-
     return HttpResponse(res, mimetype)
 
 def summary(request):
-    return render(request, 'summary.html')
+    '''
+    :return JSON of table counts
+
+    Returns the counts of records for the major models;
+    drug, variant, disease, gene,
+    '''
+    dgc = drug.objects.count()
+    # dsc = star_allele.objects.count
+    dsc = None # nothing for disease, for now
+    vtc = snp.objects.count()
+    gec = pharmacogenes.objects.count()
+    return render(request, 'summary.html', {
+        'drug_count': dgc, 
+        'disease_count': dsc, 
+        'variant_count': vtc,
+        'gene_count': gec
+        })
 
 def resources(request):
     return render(request, 'resources.html')

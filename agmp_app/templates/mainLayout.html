@@ -11,6 +11,7 @@
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
 		<link rel="stylesheet" href="{% static "css/custom.css" %}">
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet" crossorigin="anonymous">
 		{% block css %}
 		{% endblock %}
 	</head>
@@ -18,7 +19,7 @@
 		<div class="container2">
 			<nav class="navbar navbar-fixed-top navbar-expand-md navbar-light bg-mibio py-md-2">
 				<a class="navbar-brand text-white" href="/">
-					<img src="{% static "img/bionetlogo.png" %}" width="30" height="30" class="d-inline-block align-top" alt=""><b >African Genomics Medicine Portal</b>
+					<img style="margin-right:10px" src="{% static "img/bionetlogo.png" %}" width="30" height="30" class="d-inline-block align-top" alt=""><b >African Genomics Medicine Portal</b>
 				</a>
 				<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
 					<span class="navbar-toggler-icon"></span>
@@ -59,6 +60,7 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 		{% block js%}
 		{% endblock %}
 		{% block content2 %}
