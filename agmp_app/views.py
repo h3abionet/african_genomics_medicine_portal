@@ -96,6 +96,7 @@ def __fetch_variant(snps):
     :return dict
     '''
     ret = []
+
     for snp in snps:
         variant_object = dict()
         variant_object['key'] = 'vt'
@@ -138,7 +139,7 @@ def __fetch_data(model, item_list):
     :param list item_list: a list of item names to fetch from table
     :return dict
 
-    harmonises the fetch data from specific tables into a 
+    harmonises the fetch data from specific tables into a
     more generic search function
 
     provided in the input parameters
@@ -151,7 +152,7 @@ def query(request, query_string, **kwargs):
     Get search query from ajax call
     Return JSON after retrieving data from database
     '''
-    # fetch the optional parameters from the request    
+    # fetch the optional parameters from the request
     is_disease = int(request.GET.get('disease', 0))
     is_drug = int(request.GET.get('drug', 0))
     is_variant =  int(request.GET.get('variant', 0))
@@ -169,7 +170,6 @@ def query(request, query_string, **kwargs):
         
         if is_variant:
             pass_list += __fetch_variant(snp.objects.filter(rs_id__exact= query_string).values())
-        
         if is_gene:
             pass_list += __fetch_gene(pharmacogenes.objects.filter(gene_name__contains= query_string).values())
 
@@ -177,6 +177,9 @@ def query(request, query_string, **kwargs):
     mimetype = 'application/json'
 
     return HttpResponse(res, mimetype)
+
+def summary(request):
+    return render(request, 'summary.html')
 
 def resources(request):
     return render(request, 'resources.html')
@@ -186,3 +189,4 @@ def outreach(request):
 
 def contact(request):
     return render(request, 'contact.html')
+
