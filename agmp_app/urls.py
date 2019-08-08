@@ -9,5 +9,6 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('search_details/<str:db_name>/<int:query_id>', views.search_details, name='search_details'),
     path('resources/', views.resources, name='resources'),
+    path('outreach/', views.outreach, name='outreach'),
     path('contact/', views.contact, name='contact'),
 ]

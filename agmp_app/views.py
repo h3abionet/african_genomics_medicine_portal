@@ -16,7 +16,7 @@ def search(request):
             'function': ''
         }
     )
-    return render(request, 'search.html', {"form": form})    
+    return render(request, 'search.html', {"form": form})
 
 def search_details(request, db_name, query_id):
     '''
@@ -32,6 +32,9 @@ def search_details(request, db_name, query_id):
 
 def resources(request):
     return render(request, 'resources.html')
+
+def outreach(request):
+    return render(request, 'outreach.html')
 
 def contact(request):
     return render(request, 'contact.html')
