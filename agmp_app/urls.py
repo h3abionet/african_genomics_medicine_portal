@@ -12,5 +12,6 @@ urlpatterns = [
     path('search/<str:query_string>', views.query, kwargs={'disease': 0, 'drug': 0, 'variant': 0, 'gene': 0}, name='query'),
     path('search_details/<str:db_name>/<int:query_id>', views.search_details, name='search_details'),
     path('resources/', views.resources, name='resources'),
+    path('outreach/', views.outreach, name='outreach'),
     path('contact/', views.contact, name='contact'),
 ]
