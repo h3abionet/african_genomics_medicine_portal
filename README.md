@@ -16,3 +16,10 @@ One prerequisite is to have Python installed and have valid understanding on the
 * `python manage.py runserver`
 
 Project will now be running on the server.
+
+
+# Screen shots of tabular presentation of PharmaGKb data
+
+![](images/drug.png?raw=true)
+![](images/snp.png?raw=true)
+![](images/snp_ethnic.png?raw=true)
