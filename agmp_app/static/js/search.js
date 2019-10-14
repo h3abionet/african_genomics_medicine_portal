@@ -6,7 +6,7 @@ $(document).ready(function () {
   $( "#search-input" ).autocomplete({
     source: function( request, response ) {
       $.ajax({
-        url: "http://www.ebi.ac.uk/ols/api/select?q=", 
+        url: "https://www.ebi.ac.uk/ols/api/select?q=",
         dataType: "json",
         data: {
           q: request.term
