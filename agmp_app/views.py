@@ -31,11 +31,12 @@ def search_details(request, search_type, query_id):
     gene_list = None
     variant_list = None
     disease_list = None
+    print(search_type)
     # query incoming request based on a drug
     if (search_type == 'gene-drug'):
         variant_list = snp.objects.filter(drug_id__exact= query_id).values()
     if (search_type == 'variant-drug'):
-        gene_list = snp.objects.filter(drug_id__exact= query_id).values()
+        drug_list = pharmacogenes.objects.filter(rs_id__exact= query_id).values()
     if (search_type == 'vt'):
         variant_list = snp.objects.filter(drug_id__exact= query_id).values()
     if (search_type == 'ds'):
@@ -70,9 +71,17 @@ def __fetch_disease(diseases):
         disease_object['result_type'] = 'disease'
 
         disease_object['id'] = disease['id']
-        disease_object['name'] = disease['drug_name']
-        disease_object['posology'] = disease['posology']
-        disease_object['chemical_structure'] = disease['chemical_structure']
+        disease_object['name'] = disease['star_annotation']
+        disease_object['star_id'] = disease['star_id']
+        disease_object['allele'] = disease['allele']
+        disease_object['phenotype'] = disease['phenotype']
+        disease_object['drug'] = disease['drug_id']
+        disease_object['reference'] = disease['reference_id']
+        disease_object['gene_id'] = disease['gene_id']
+        disease_object['p_value'] = disease['p_value']
+        disease_object['source'] = disease['source']
+        disease_object['id_in_source'] = disease['id_in_source']
+        disease_object['chromosome'] = disease['chromosome']
         ret.append(disease_object)
     print('DISEASE ',ret)
     return ret
@@ -89,10 +98,12 @@ def __fetch_drug(drugs):
         drug_object['key'] = 'dg'
         drug_object['result_type'] = 'drug'
 
-        drug_object['id'] = drug['drug_id']
+        drug_object['id'] = drug['id']
         drug_object['name'] = drug['drug_name']
-        drug_object['posology'] = drug['posology']
-        drug_object['chemical_structure'] = drug['chemical_structure']
+        drug_object['drug_bank_id'] = drug['drug_bank_id']
+        drug_object['state'] = drug['state']
+        drug_object['indication'] = drug['indication']
+        drug_object['iupac_name'] = drug['iupac_name']
         ret.append(drug_object)
     print('DRUG ',ret)
     return ret
@@ -109,15 +120,17 @@ def __fetch_variant(snps):
         variant_object['key'] = 'vt'
         variant_object['result_type'] = 'variant'
 
-        variant_object['id'] = snp['snp_id']
+        variant_object['id'] = snp['id']
         variant_object['name'] = snp['rs_id']
         variant_object['drug'] = snp['drug_id']
         variant_object['allele'] = snp['allele']
         variant_object['gene'] = snp['gene_id']
-        variant_object['disease_phenotype'] = snp['disease_phenotype']
+        variant_object['phenotype'] = snp['phenotype']
         variant_object['reference'] = snp['reference_id']
+        variant_object['p_value'] = snp['p_value']
+        variant_object['source'] = snp['source']
+        variant_object['id_in_source'] = snp['id_in_source']
         variant_object['chromosome'] = snp['chromosome']
-        variant_object['p_value'] = float(snp['p_value'])
         ret.append(variant_object)
     print('VARIANT ',ret)
     return ret
@@ -138,6 +151,7 @@ def __fetch_gene(genes):
         gene_object['name'] = gene['gene_name']
         gene_object['protein'] = gene['protein']
         gene_object['function'] = gene['function']
+        gene_object['chromosome'] = gene['chromosome']
         ret.append(gene_object)
     print('GENE ',ret)
     return ret
@@ -172,7 +186,7 @@ def query(request, query_string, **kwargs):
     if request.is_ajax():
         # TODO: there must be a better way to do this
         if is_disease:
-            pass_list += __fetch_disease(star_allele.objects.filter(disease_phenotype__contains= query_string).values())
+            pass_list += __fetch_disease(star_allele.objects.filter(phenotype__contains= query_string).values())
         
         if is_drug:
             pass_list += __fetch_drug(drug.objects.filter(drug_name__contains= query_string).values())
