@@ -3,10 +3,13 @@
 {% load bootstrap4 %}
 {% load static %}
 
+{% block css %}
+	<link rel="stylesheet" type="text/css" media="all" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
+{% endblock %}
+
 {% block js %}
-	<script src="{% static 'js/search_details.js' %}" type="text/JavaScript"></script>
-	<script src="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" type="text/JavaScript"></script>
-	<script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js" type="text/JavaScript"></script>
+  <script src="{% static 'js/search_details.js' %}" type="text/JavaScript"></script>
+	<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" type="text/JavaScript"></script>
 {% endblock %}
 
 {% block content %}
@@ -16,15 +19,15 @@
     <h2></h2>
   </div>
   {% if variants %}
-    <table id="detail-table" class="display table table-hover" cellspacing="0" width="100%">
+    <table id="detail-table" class="display table table-hover" cellspacing="1" width="100%">
       <thead>
         <tr>
           <th>rsid</th>
           <th>Allele</th>
           <th>Disease Phenotype</th>
-          <th>Reference Id</th>
+          <th>Ref. Id</th>
           <th>Chromosome</th>
-          <th>P-Value</th>
+          <th>P Value</th>
         </tr>
       </thead>
       <tbody>
@@ -41,6 +44,56 @@
       </tbody>
     </table>
   {% endif %}
+
+  {% if genes %}
+    <table id="detail-table" class="display table table-hover" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th>rsid</th>
+          <th>Allele</th>
+          <th>Disease Phenotype</th>
+          <th>Reference Id</th>
+          <th>Chromosome</th>
+          <th>P-Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for gene in genes %}
+          <tr>
+              <td>{{ gene.rs_id }}</td>
+              <td>{{ gene.allele }}</td>
+              <td>{{ gene.disease_phenotype }}</td>
+              <td>{{ gene.reference_id }}</td>
+              <td>{{ gene.chromosome }}</td>
+              <td>{{ gene.p_value }}</td>
+          </tr>        
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}  
+
+  {% if drugs %}
+    <table id="detail-table" class="display table table-hover" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Drug Name</th>
+          <th>Posology</th>
+          <th>Chemical Structure</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for drug in drugs %}
+          <tr>
+              <td>{{ drug.id }}</td>
+              <td>{{ drug.name }}</td>
+              <td>{{ drug.posology }}</td>
+              <td>{{ drug.chemical_structure }}</td>
+          </tr>        
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}    
 </div>
 
 {% endblock %}
