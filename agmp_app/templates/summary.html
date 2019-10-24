@@ -12,21 +12,22 @@
     </tr>
   </thead>
   <tr>
-    <td>Disease </td>
-    <td>{{ disease_count|default:'0' }}</td>
+    <td>GENES</a></td>
+    <td>{{ gene_count | default_if_none:'0' }}</td>
   </tr>
   <tr>
-    <td>Drug</td>
+    <td>DRUGS</td>
     <td>{{ drug_count | default_if_none:'0' }}</td>
   </tr>
   <tr>
-    <td>Variant</td>
-    <td>{{ variant_count | default_if_none:'0' }}</td>
+    <td>DISEASE </td>
+    <td>{{ disease_count | default:'0' }}</td>
   </tr>
   <tr>
-    <td>Genes</a></td>
-    <td>{{ gene_count | default_if_none:'0' }}</td>
+    <td>VARIANTS</td>
+    <td>{{ variant_count | default_if_none:'0' }}</td>
   </tr>
+
 </table>
 
 {% endblock %}
