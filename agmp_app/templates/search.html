@@ -47,7 +47,8 @@
     <div class="row" style="margin-top: 20px">
       <div class="col-sm-9">
         {% comment %} {{ form.gene_name | as_crispy_field}} {% endcomment %}
-        <input id="search-input" placeholder="" class='form-control' />
+        <input id="search-input" placeholder="" class='form-control' data-agnocomplete/>
+        <!-- <div id="suggesstion-box"></div> -->
       </div>
       <div class="col-sm-3">
         <button type="submit" class="search-btn btn btn-success col">Search</button>
