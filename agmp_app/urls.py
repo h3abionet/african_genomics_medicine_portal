@@ -1,10 +1,10 @@
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 # from django.conf.urls import url
 
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.search, name='index'),
     path('about/', views.about, name='about'),
     path('search/', views.search, name='search'),
 
@@ -15,4 +15,6 @@ urlpatterns = [
     path('resources/', views.resources, name='resources'),
     path('outreach/', views.outreach, name='outreach'),
     path('contact/', views.contact, name='contact'),
+
+    path('agnocomplete/', include('agnocomplete.urls')),
 ]
