@@ -18,27 +18,27 @@
   <div class="result-summary">
     <h2></h2>
   </div>
-  {% if variants %}
+  {% if search_type == 'gene-drug' %}
     <table id="detail-table" class="display table table-hover" cellspacing="1" width="100%">
       <thead>
         <tr>
-          <th>rsid</th>
-          <th>Allele</th>
-          <th>Disease Phenotype</th>
-          <th>Ref. Id</th>
-          <th>Chromosome</th>
-          <th>P Value</th>
+          <th>Gene</th>
+          <th>Variant</th>
+          <th>Drug</th>
+          <th>Significance</th>
+          <th>Region</th>
+          <th>PMID</th>
         </tr>
       </thead>
       <tbody>
-        {% for variant in variants %}
+        {% for gene in gene_drug %}
           <tr>
-              <td>{{ variant.rs_id }}</td>
-              <td>{{ variant.allele }}</td>
-              <td>{{ variant.disease_phenotype }}</td>
-              <td>{{ variant.reference_id }}</td>
-              <td>{{ variant.chromosome }}</td>
-              <td>{{ variant.p_value }}</td>
+              <td>{{ gene.gene_name }}</td>
+              <td>{{ gene.rs_id }}</td>
+              <td>{{ gene.drug_name }}</td>
+              <td>{{ gene.p_value }}</td>
+              <td>{{ gene.region }}</td>
+              <td><a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/{{ gene.external_id }}">{{ gene.external_id }}</a></td>
           </tr>        
         {% endfor %}
       </tbody>
@@ -72,23 +72,27 @@
     </table>
   {% endif %}  
 
-  {% if drugs %}
+  {% if search_type == 'variant-drug' %}
     <table id="detail-table" class="display table table-hover" cellspacing="0" width="100%">
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Drug Name</th>
-          <th>Posology</th>
-          <th>Chemical Structure</th>
+          <th>Variant</th>
+          <th>Gene</th>
+          <th>Drug</th>
+          <th>Significance</th>
+          <th>Region</th>
+          <th>PMID</th>
         </tr>
       </thead>
       <tbody>
-        {% for drug in drugs %}
+        {% for vnt_drg in variant_drug %}
           <tr>
-              <td>{{ drug.id }}</td>
-              <td>{{ drug.name }}</td>
-              <td>{{ drug.posology }}</td>
-              <td>{{ drug.chemical_structure }}</td>
+              <td>{{ vnt_drg.rs_id }}</td>
+              <td>{{ vnt_drg.gene_name }}</td>
+              <td>{{ vnt_drg.drug_name }}</td>
+              <td>{{ vnt_drg.p_value }}</td>
+              <td>{{ vnt_drg.region }}</td>
+              <td><a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/{{ vnt_drg.external_id }}">{{ vnt_drg.external_id }}</a></td>
           </tr>        
         {% endfor %}
       </tbody>
