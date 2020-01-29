@@ -12,6 +12,7 @@ urlpatterns = [
     path('search/<str:query_string>', views.query, kwargs={'disease': 0, 'drug': 0, 'variant': 0, 'gene': 0}, name='query'),
     path('search_details/<str:search_type>/<str:query_id>', views.search_details, name='search_details'),
     path('summary/', views.summary, name='summary'),
+    path('summary/countries', views.country_summary, name='country_summary'),
     path('resources/', views.resources, name='resources'),
     path('outreach/', views.outreach, name='outreach'),
     path('contact/', views.contact, name='contact'),
