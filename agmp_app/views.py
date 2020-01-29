@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponse
 from django.core import serializers
 from itertools import chain
 
-from .models import  pharmacogenes, drug, snp, star_allele, study
+from .models import  pharmacogenes, drug, snp as SnpModel, star_allele, study, snp_ethnicity_country as Country
 from .forms import PostForm
 import json
 
@@ -27,24 +27,32 @@ def search_details(request, search_type, query_id):
     Receive query parameters from search page to fetch
     database specific results
     '''
-    drug_list = None
+    variant_drug = []
     gene_list = None
-    variant_list = None
+    gene_drug = []
     disease_list = None
-    print(search_type)
     # query incoming request based on a drug
-    if (search_type == 'gene-drug'):
-        variant_list = snp.objects.filter(drug_id__exact= query_id).values()
-    if (search_type == 'variant-drug'):
-        drug_list = pharmacogenes.objects.filter(rs_id__exact= query_id).values()
-    if (search_type == 'vt'):
-        variant_list = snp.objects.filter(drug_id__exact= query_id).values()
-    if (search_type == 'ds'):
-        disease_list = disease.objects.filter(drug_id__exact= query_id).values()
+    if search_type == 'gene-drug' and query_id[0] == 'D':
+        for p in pharmacogenes.objects.raw(" SELECT agmp_app_snp.id, agmp_app_snp.rs_id, external_id, p_value, region, gene_name, drug_name FROM agmp_app_snp \
+ inner join agmp_app_snp_ethnicity_country on agmp_app_snp_ethnicity_country.snp = agmp_app_snp.snp_id \
+ INNER JOIN agmp_app_drug on agmp_app_drug.id = agmp_app_snp.drug_id \
+ INNER JOIN agmp_app_pharmacogenes on agmp_app_pharmacogenes.id = agmp_app_snp.gene_id \
+ INNER JOIN agmp_app_study on agmp_app_study.id = agmp_app_snp.reference_id \
+ AND agmp_app_snp.drug_id =%s;", [query_id]):
+            gene_drug.append(p)
 
-    print (drug_list)
+    if (search_type == 'variant-drug'):
+        for p in pharmacogenes.objects.raw(" SELECT agmp_app_snp.id, agmp_app_snp.rs_id, external_id, p_value, region, gene_name, drug_name FROM agmp_app_snp \
+ inner join agmp_app_snp_ethnicity_country on agmp_app_snp_ethnicity_country.snp = agmp_app_snp.snp_id \
+ INNER JOIN agmp_app_drug on agmp_app_drug.id = agmp_app_snp.drug_id \
+ INNER JOIN agmp_app_pharmacogenes on agmp_app_pharmacogenes.id = agmp_app_snp.gene_id \
+ INNER JOIN agmp_app_study on agmp_app_study.id = agmp_app_snp.reference_id \
+ AND agmp_app_snp.snp_id =%s;", [query_id]):
+            variant_drug.append(p)
+
+    print (variant_drug)
     print (gene_list)
-    print (variant_list)
+    print (gene_drug)
     print (disease_list)
 
     return render(
@@ -52,9 +60,9 @@ def search_details(request, search_type, query_id):
             # 'db_name': db_name,
             'search_type': search_type,
             'query_id': query_id,
-            'drugs': drug_list,
+            'variant_drug': variant_drug,
             'genes': gene_list,
-            'variants': variant_list,
+            'gene_drug': gene_drug,
             'diseases': disease_list,
             }
         )
@@ -96,7 +104,9 @@ def __fetch_drug(drugs):
     for drug in drugs:
         drug_object = dict()
         drug_object['key'] = 'dg'
-        drug_object['result_type'] = 'drug'
+        drug_object['detail'] = [
+            'Drug Bank ID: {0}'.format(drug.get('drug_bank_id')),
+            'State: {0}'.format(drug.get('state'))]
 
         drug_object['id'] = drug['id']
         drug_object['name'] = drug['drug_name']
@@ -108,20 +118,21 @@ def __fetch_drug(drugs):
     print('DRUG ',ret)
     return ret
 
-def __fetch_variant(snps):
+def __fetch_variant(qs):
     '''
     :param list item_list: a list of item names to fetch from snp table
     :return dict
     '''
     ret = []
+    snps = SnpModel.objects.filter(rs_id__exact= qs).values()
 
     for snp in snps:
         variant_object = dict()
         variant_object['key'] = 'vt'
-        variant_object['result_type'] = 'variant'
+        variant_object['detail'] = ['Chromosome {0}'.format(snp.get('chromosome'))]
 
-        variant_object['id'] = snp['id']
-        variant_object['name'] = snp['rs_id']
+        variant_object['id'] = snp['snp_id']
+        variant_object['name'] = 'RSID: {0}'.format(snp.get('rs_id'))
         variant_object['drug'] = snp['drug_id']
         variant_object['allele'] = snp['allele']
         variant_object['gene'] = snp['gene_id']
@@ -145,7 +156,7 @@ def __fetch_gene(genes):
     for gene in genes:
         gene_object = dict()
         gene_object['key'] = 'ge'
-        gene_object['result_type'] = 'gene'
+        gene_object['detail'] = ['Chromosome {0}'.format(gene.get('chromosome'))]
 
         gene_object['id'] = gene['id']
         gene_object['name'] = gene['gene_name']
@@ -185,14 +196,13 @@ def query(request, query_string, **kwargs):
 
     if request.is_ajax():
         # TODO: there must be a better way to do this
-        if is_disease:
-            pass_list += __fetch_disease(star_allele.objects.filter(phenotype__contains= query_string).values())
+        # if is_disease:
+        #     pass_list += __fetch_disease(star_allele.objects.filter(phenotype__contains= query_string).values())
         
         if is_drug:
             pass_list += __fetch_drug(drug.objects.filter(drug_name__contains= query_string).values())
-        
         if is_variant:
-            pass_list += __fetch_variant(snp.objects.filter(rs_id__exact= query_string).values())
+            pass_list += __fetch_variant(query_string)
         if is_gene:
             pass_list += __fetch_gene(pharmacogenes.objects.filter(gene_name__contains= query_string).values())
 
@@ -210,14 +220,37 @@ def summary(request):
     dgc = drug.objects.count()
     # dsc = star_allele.objects.count
     dsc = None # nothing for disease, for now
-    vtc = snp.objects.count()
+    vtc = SnpModel.objects.count()
     gec = pharmacogenes.objects.count()
     return render(request, 'summary.html', {
         'drug_count': dgc, 
         'disease_count': dsc, 
         'variant_count': vtc,
-        'gene_count': gec
+        'gene_count': gec,
+        'records': [{'LAT': 1.000, 'LON':-1.000, }]
         })
+
+def country_summary(request):
+    '''
+    :return JSON of country summary
+    '''
+    res = []
+
+    for p in Country.objects.raw("SELECT DISTINCT id, country_of_participants, latitude, longitude, region, snp, \
+        COUNT(country_of_participants) AS cnt FROM agmp_app_snp_ethnicity_country GROUP BY country_of_participants ORDER BY cnt;"):
+        res.append({
+            'country': p.country_of_participants,
+            'region': p.region,
+            'latitude': '{:,.7f}'.format(p.latitude),
+            'longitude': '{0}'.format(p.longitude),
+            'snp': p.snp,
+            'count': p.cnt
+        })  
+    # return render(request, 'summary.html', {'json_list': res})
+
+    res = json.dumps(res)
+    mimetype = 'application/json'
+    return HttpResponse(res, mimetype)
 
 def resources(request):
     return render(request, 'resources.html')
