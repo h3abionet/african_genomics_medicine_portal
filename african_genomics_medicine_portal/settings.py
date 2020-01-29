@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,13 +21,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-***REMOVED***
+SECRET_KEY = config.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '49591fca.ngrok.io',
+    'agpm.knust.edu.gh',
     'localhost',
     '127.0.0.1',
     '0.0.0.0'
@@ -140,3 +141,11 @@ STATICFILES_DIRS = [
 
 
 RESULTS_PER_PAGE = 50
+
+LEAFLET_CONFIG = {
+    'TILES' : [('Streets', 'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png', 
+                {
+                 'attribution': '&copy; Data from H3ABioNet', 
+                 'lang': 'en'
+                })]
+}
