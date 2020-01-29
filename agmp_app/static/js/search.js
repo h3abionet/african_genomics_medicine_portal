@@ -6,13 +6,14 @@ $(document).ready(function () {
   $( "#search-input" ).autocomplete({
     source: function( request, response ) {
       $.ajax({
-        url: "https://www.ebi.ac.uk/ols/api/select?q=",
+        url: "https://www.ebi.ac.uk/ols/api/select",
+        // url: "/agnocomplete/drugs",
         dataType: "json",
         data: {
           q: request.term
         },
         success: function( data ) {
-          console.log(data);
+          // console.log(data);
           response( data.response.docs );
         }
       });
@@ -78,26 +79,28 @@ $(document).ready(function () {
       url: URL,
       dataType: "json",
       success: function (data) {
-        console.log(data);
+        // console.log(data);
         $('#results').empty();
         for (let i = 0; i < data.length; i++) {
-          let name = '', result_type = '';
+          let name = '', head = '';
           const rec = data[i];
-          name = rec.name ? "<h1 class='title'><b>Name</b>: "+rec.name+"</h1></a>" : '';
-          result_type = rec.result_type ? "<h2 class='snippet'>" + rec.result_type + "</h2>" : '';
+          name = rec.name ? "<h1 class='title'>"+rec.name+"</h1></a>" : '';
+          rec.detail.forEach(el => {
+            head += "<h2 class='snippet'>"+el+"</h2>";
+          });
           gedg = (rec.key == 'dg')||(rec.key == 'ge') ? "<a href='/search_details/gene-drug/"+rec.id+"'><h2 class='snippet'>Click here for gene-drug associations</h2></a>" : '';
           vtdg = (rec.key == 'dg')||(rec.key == 'vt') ? "<a href='/search_details/variant-drug/"+rec.id+"'><h4 class='snippet'>Click here for variant-drug associations</h4></a>" : '';          
-          geds = (rec.key == 'ge')||(rec.key == 'ds') ? "<a href='/search_details/gene-disease/"+rec.id+"'><h4 class='snippet'>Click here for gene-disease associations</h4></a>" : '';
-          vtds = (rec.key == 'vt')||(rec.key == 'ds') ? "<a href='/search_details/variant-disease/"+rec.id+"'><h4 class='snippet'>Click here for variant-disease associations</h4></a>" : '';
+          // geds = (rec.key == 'ge')||(rec.key == 'ds') ? "<a href='/search_details/gene-disease/"+rec.id+"'><h4 class='snippet'>Click here for gene-disease associations</h4></a>" : '';
+          // vtds = (rec.key == 'vt')||(rec.key == 'ds') ? "<a href='/search_details/variant-disease/"+rec.id+"'><h4 class='snippet'>Click here for variant-disease associations</h4></a>" : '';
           
           // results = '' + name;
           $('<div class="list-data"></div>')
             .append(name)
-            .append(result_type)
+            .append(head)
             .append(gedg)
             .append(vtdg)
-            .append(geds)
-            .append(vtds)
+            // .append(geds)
+            // .append(vtds)
           .appendTo('#results').fadeIn(8000);
         }
         // check for empty results
