@@ -62,6 +62,8 @@ class snp_ethnicity_country(models.Model):
     #snp=models.ForeignKey(snp, on_delete=models.CASCADE)
     region=models.CharField(max_length=50)
     country_of_participants=models.CharField(max_length=50)
+    latitude = models.DecimalField(max_digits=10,decimal_places=7,default=Decimal('0.0000000'))
+    longitude = models.DecimalField(max_digits=10,decimal_places=7,default=Decimal('0.0000000'))
   
 class star_allele_ethnicity_country(models.Model):
     id=models.CharField(max_length=250, primary_key=True)
@@ -69,3 +71,5 @@ class star_allele_ethnicity_country(models.Model):
     #star_allele=models.ForeignKey(star_allele, on_delete=models.CASCADE)
     region=models.CharField(max_length=50)
     country_of_participants=models.CharField(max_length=50)
+    latitude = models.DecimalField(max_digits=10,decimal_places=7,default=Decimal('0.0000000'))
+    longitude = models.DecimalField(max_digits=10,decimal_places=7,default=Decimal('0.0000000'))
