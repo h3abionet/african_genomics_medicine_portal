@@ -35,7 +35,15 @@
           <tr>
               <td>{{ gene.gene_name }}</td>
               <td>{{ gene.rs_id }}</td>
-              <td>{{ gene.drug_name }}</td>
+              <td>
+                {% if gene.drug_bank_id|length > 0 %}
+                  <a target="_blank" href="https://www.drugbank.ca/drugs/{{ gene.drug_bank_id }}">
+                    {{ gene.drug_name }}
+                  </a>
+                {% else %}
+                    {{ gene.drug_name }}
+                {% endif %}
+              </td>
               <td>{{ gene.p_value }}</td>
               <td>{{ gene.region }}</td>
               <td><a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/{{ gene.external_id }}">{{ gene.external_id }}</a></td>
@@ -89,7 +97,15 @@
           <tr>
               <td>{{ vnt_drg.rs_id }}</td>
               <td>{{ vnt_drg.gene_name }}</td>
-              <td>{{ vnt_drg.drug_name }}</td>
+              <td>
+                {% if vnt_drg.drug_bank_id|length > 0 %}
+                  <a target="_blank" href="https://www.drugbank.ca/drugs/{{ vnt_drg.drug_bank_id }}">
+                    {{ vnt_drg.drug_name }}
+                  </a>
+                {% else %}
+                  {{ vnt_drg.drug_name }}
+                {% endif %}
+              </td>
               <td>{{ vnt_drg.p_value }}</td>
               <td>{{ vnt_drg.region }}</td>
               <td><a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/{{ vnt_drg.external_id }}">{{ vnt_drg.external_id }}</a></td>

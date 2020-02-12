@@ -33,7 +33,8 @@ def search_details(request, search_type, query_id):
     disease_list = None
     # query incoming request based on a drug
     if search_type == 'gene-drug' and query_id[0] == 'D':
-        for p in pharmacogenes.objects.raw(" SELECT agmp_app_snp.id, agmp_app_snp.rs_id, external_id, p_value, region, gene_name, drug_name FROM agmp_app_snp \
+        for p in pharmacogenes.objects.raw(" SELECT agmp_app_snp.id, agmp_app_snp.rs_id, agmp_app_drug.drug_bank_id, \
+            external_id, p_value, region, gene_name, drug_name FROM agmp_app_snp \
  inner join agmp_app_snp_ethnicity_country on agmp_app_snp_ethnicity_country.snp = agmp_app_snp.snp_id \
  INNER JOIN agmp_app_drug on agmp_app_drug.id = agmp_app_snp.drug_id \
  INNER JOIN agmp_app_pharmacogenes on agmp_app_pharmacogenes.id = agmp_app_snp.gene_id \
@@ -42,7 +43,8 @@ def search_details(request, search_type, query_id):
             gene_drug.append(p)
 
     if (search_type == 'variant-drug') and query_id[0] == 'S':
-        for p in pharmacogenes.objects.raw(" SELECT agmp_app_snp.id, agmp_app_snp.rs_id, external_id, p_value, region, gene_name, drug_name FROM agmp_app_snp \
+        for p in pharmacogenes.objects.raw(" SELECT agmp_app_snp.id, agmp_app_snp.rs_id, \
+            external_id, p_value, region, gene_name, drug_name FROM agmp_app_snp \
  inner join agmp_app_snp_ethnicity_country on agmp_app_snp_ethnicity_country.snp = agmp_app_snp.snp_id \
  INNER JOIN agmp_app_drug on agmp_app_drug.id = agmp_app_snp.drug_id \
  INNER JOIN agmp_app_pharmacogenes on agmp_app_pharmacogenes.id = agmp_app_snp.gene_id \
@@ -51,7 +53,8 @@ def search_details(request, search_type, query_id):
             variant_drug.append(p)
 
     if (search_type == 'variant-drug') and query_id[0] == 'D':
-        for p in pharmacogenes.objects.raw(" SELECT agmp_app_snp.id, agmp_app_snp.rs_id, external_id, p_value, region, gene_name, drug_name FROM agmp_app_snp \
+        for p in pharmacogenes.objects.raw(" SELECT agmp_app_snp.id, agmp_app_snp.rs_id, agmp_app_drug.drug_bank_id,\
+            external_id, p_value, region, gene_name, drug_name FROM agmp_app_snp \
  inner join agmp_app_snp_ethnicity_country on agmp_app_snp_ethnicity_country.snp = agmp_app_snp.snp_id \
  INNER JOIN agmp_app_drug on agmp_app_drug.id = agmp_app_snp.drug_id \
  INNER JOIN agmp_app_pharmacogenes on agmp_app_pharmacogenes.id = agmp_app_snp.gene_id \
