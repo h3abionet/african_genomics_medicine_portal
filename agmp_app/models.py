@@ -2,6 +2,10 @@ from django.db import models
 from django.utils import timezone
 from decimal import Decimal
 
+class Index(models.Model):
+    id=models.IntegerField(primary_key=True)
+    recname=models.CharField(max_length=250)
+    keywords=models.CharField(default="NA",max_length=250)
 
 class drug(models.Model):
     id=models.CharField(max_length=250, primary_key=True)
