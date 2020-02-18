@@ -7,11 +7,11 @@
 	<script src="{% static 'js/search.js' %}" type="text/JavaScript"></script>
 {% endblock %}
 
-{% comment %} https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4-forms-with-django.html
+{% comment %} 
+https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4-forms-with-django.html
 {% endcomment %}
+
 {% block content %}
-
-
 <div class="search">
   <form action='/microbiome/results/' method='GET' id="search-form" novalidate>
     {% csrf_token %}
@@ -48,7 +48,6 @@
       <div class="col-sm-9">
         {% comment %} {{ form.gene_name | as_crispy_field}} {% endcomment %}
         <input id="search-input" placeholder="" class='form-control' data-agnocomplete/>
-        <!-- <div id="suggesstion-box"></div> -->
       </div>
       <div class="col-sm-3">
         <button type="submit" class="search-btn btn btn-success col">Search</button>
@@ -81,7 +80,8 @@
     <div class="col-md-1"></div>
   </div> -->
 </div>
-{% comment %} [> https://getbootstrap.com/docs/4.1/components/forms/ <] {% endcomment %} {% comment %} <table>
+{% comment %} [> https://getbootstrap.com/docs/4.1/components/forms/ <] {% endcomment %} 
+{% comment %} <table>
   {% endcomment %}
   {% comment %} <tr>
     <td>Country</td>

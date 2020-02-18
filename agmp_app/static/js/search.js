@@ -6,15 +6,16 @@ $(document).ready(function () {
   $( "#search-input" ).autocomplete({
     source: function( request, response ) {
       $.ajax({
-        url: "https://www.ebi.ac.uk/ols/api/select",
-        // url: "/agnocomplete/drugs",
+        // url: "https://www.ebi.ac.uk/ols/api/select",
+        url: "/agnocomplete/Search",
         dataType: "json",
         data: {
           q: request.term
         },
         success: function( data ) {
           // console.log(data);
-          response( data.response.docs );
+          response( data.data );
+          // response( data.response.docs );
         }
       });
     },
