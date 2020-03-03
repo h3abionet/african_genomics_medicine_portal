@@ -1,108 +1,113 @@
 <!DOCTYPE html>
 {% load static %}
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta http-equiv="x-ua-compatible" content="ie=edge">
-		<title>Precision Medicine Portal</title>
-		{% block js_top %}
-		{% endblock %}
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>Precision Medicine Portal</title>
+	{% block js_top %}
+	{% endblock %}
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css' integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ' crossorigin='anonymous'>
 		<link rel="stylesheet" href="{% static "css/custom.css" %}">
 		<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet" crossorigin="anonymous">
-		{% block css %}
+	{% block css %}
+	{% endblock %}
+</head>
+
+<body>
+	<div class="container2">
+		<nav class="navbar navbar-fixed-top navbar-expand-md navbar-light bg-mibio py-md-2">
+			<a class="navbar-brand text-white" href="/">
+				<img style="margin-right:10px" src="{% static "img/bionetlogo.png" %}" width="30" height="30"
+					class="d-inline-block align-top" alt=""><b>African Genomics Medicine Portal</b>
+			</a>
+			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse"
+				data-target="#main-navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="main-navigation">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item ml-auto py-0 sp-menu-item">
+						<a class="nav-link dropdown text-white" href="/about/">About</a>
+					</li>
+					<li class="nav-item ml-auto py-0">
+						<a class="nav-link text-white" href="/search/">Search</a>
+					</li>
+					<li class="nav-item ml-auto py-0">
+						<a class="nav-link text-white" href="/summary/">Summary</a>
+					</li>
+					<li class="nav-item ml-auto py-0">
+						<a class="nav-link text-white" href="/resources/">Resources</a>
+					</li>
+					<li class="nav-item ml-auto py-0">
+						<a class="nav-link text-white" href="/outreach/">Outreach</a>
+					</li>
+					<li class="nav-item ml-auto py-0">
+						<a class="nav-link text-white" href="/contact/">Contact</a>
+					</li>
+				</ul>
+			</div>
+		</nav>
+	</div>
+	<div class="container">
+		{% block content %}
 		{% endblock %}
-	</head>
-	<body>
-		<div class="container2">
-			<nav class="navbar navbar-fixed-top navbar-expand-md navbar-light bg-mibio py-md-2">
-				<a class="navbar-brand text-white" href="/">
-					<img style="margin-right:10px" src="{% static "img/bionetlogo.png" %}" width="30" height="30" class="d-inline-block align-top" alt=""><b >African Genomics Medicine Portal</b>
-				</a>
-				<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#main-navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="collapse navbar-collapse" id="main-navigation">
-					<ul class="navbar-nav ml-auto">
-						<li class="nav-item ml-auto py-0 sp-menu-item">
-							<a class="nav-link dropdown text-white" href="/about/">About</a>
-						</li>
-						<li class="nav-item ml-auto py-0">
-							<a class="nav-link text-white" href="/search/">Search</a>
-						</li>
-						<li class="nav-item ml-auto py-0">
-							<a class="nav-link text-white" href="/summary/">Summary</a>
-						</li>
-						<li class="nav-item ml-auto py-0">
-							<a class="nav-link text-white" href="/resources/">Resources</a>
-						</li>
-						<li class="nav-item ml-auto py-0">
-							<a class="nav-link text-white" href="/outreach/">Outreach</a>
-						</li>
-						<li class="nav-item ml-auto py-0">
-							<a class="nav-link text-white" href="/contact/">Contact</a>
-						</li>
-					</ul>
-				</div>
-			</nav>
-		</div>
-		<div class="container">
-			{% block content %}
-			{% endblock %}
-
-
-
-
-
-	{% comment %} <script src='http://127.0.0.1:9001/js/socket.js'></script> {% endcomment %}
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+			crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+			integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+			crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+			integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+			crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 		{% block js%}
 		{% endblock %}
 		{% block content2 %}
 		{% endblock %}
+	</div>
+
+	<!-- Footer -->
+	<footer class="page-footer">
+
+		<!-- Footer Links -->
+		<div class="container-fluid text-center text-md-left">
+			<div class="row">
+				<div class="col-md-3">
+					<p>H3ABioNet is funded by NIH Common Fund Award / NHGRI Grant Number U41HG006941</p>
+				</div>
+				<div class="col-md-2"><img src="{% static "img/NHGRI-logo_footer.png" %}" class="img-responsive"></div>
+				<div class="col-md-2"><img src="{% static "img/NIH-logo_footer.png" %}" class="img-responsive"></div>
+				<div class="col-md-2"><a href="https://h3africa.org/"><img src="{% static "img/h3africa-_partner.png" %}" class="img-responsive"></a></div>
+				<!-- <div class="col-md-2"><img src="{% static "img/idm_uct_logo.png" %}" class="img-responsive"></div> -->
+			</div>
 		</div>
 
-		<!-- Footer -->
-		<footer class="page-footer">
-
-		  <!-- Footer Links -->
-		  <div class="container-fluid text-center text-md-left">
-		    <div class="row">
-		      <div class="col-md-3">
-		        <p>H3ABioNet is funded by NIH Common Fund Award / NHGRI Grant Number U41HG006941</p>
-		      </div>
-					<div class="col-md-2"><img src="{% static "img/NHGRI-logo_footer.png" %}" class="img-responsive"></div>
-					<div class="col-md-2"><img src="{% static "img/NIH-logo_footer.png" %}" class="img-responsive"></div>
-					<div class="col-md-2"><img src="{% static "img/h3africa-_partner.png" %}" class="img-responsive"></div>
-					<!-- <div class="col-md-2"><img src="{% static "img/idm_uct_logo.png" %}" class="img-responsive"></div> -->
-		    </div>
-		  </div>
-
-			<div class="row">
-		  	<div class="col-md-3">
-		   		<p>  © 2019 Copyright:<a href="https://h3abionet.org/"> H3ABioNet</a></p>
-				</div>
-			  <div class="col-md-2">
-					<a href="https://h3abionet.org/"> Terms</a> - <a href="https://h3abionet.org/"> Privacy</a> - <a href="https://helpdesk.h3abionet.org/"> Helpdesk</a>
-				</div>
-  			<div class="col-md-2">
-					<a href="https://github.com/h3abionet"> Github Repository</a>
-				</div>
-				<div class="col-md-2">
-					<a href="https://h3abionet.org/training/courses-and-events">Policy &amp; Safety</a>
-				</div>
-				<div class="col-md-2">
-					<a target="_blank" href="https://www.facebook.com/H3ABioNet">Facebook</a> | 
-					<a target="_blank" href="https://twitter.com/H3ABioNet">Twitter</a> | 
-					<a target="_blank" href="https://www.youtube.com/channel/UCMYQE_GYsOKY6-j8z9N6Adw">YouTube</a>
-				</div>
+		<div class="row">
+			<div class="col-md-3">
+				<p> © 2019 Copyright:<a href="https://h3abionet.org/"> H3ABioNet</a></p>
 			</div>
-		</footer>
-		<!-- Footer -->
+			<div class="col-md-2">
+				<a href="https://h3abionet.org/"> Terms</a> - <a href="https://h3abionet.org/"> Privacy</a> - 
+				<a href="https://helpdesk.h3abionet.org/"> Helpdesk</a>
+			</div>
+			<div class="col-md-2">
+				<a href="https://github.com/h3abionet/african_genomics_medicine_portal">Github Repository</a>
+			</div>
+			<div class="col-md-2">
+				<a href="/disclaimer">Disclaimer</a>
+			</div>
+			<div class="col-md-2">
+				<a target="_blank" href="https://www.facebook.com/H3ABioNet">Facebook</a> |
+				<a target="_blank" href="https://twitter.com/H3ABioNet">Twitter</a> |
+				<a target="_blank" href="https://www.youtube.com/channel/UCMYQE_GYsOKY6-j8z9N6Adw">YouTube</a>
+			</div>
+		</div>
+	</footer>
+	<!-- Footer -->
 </body>
+
 </html>
