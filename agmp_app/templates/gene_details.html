@@ -1,0 +1,136 @@
+{% extends "mainLayout.html" %}
+{% load crispy_forms_tags %}
+{% load bootstrap4 %}
+{% load static %}
+
+{% block css %}
+    <link href='https://fonts.loli.net/css?family=Open+Sans:400italic,700italic,700,400&subset=latin,latin-ext' rel='stylesheet' type='text/css' />
+	<link rel="stylesheet" type="text/css" media="all" href="{% static "css/gene_details.css" %}" />
+	<link rel="stylesheet" type="text/css" media="all" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
+	<link rel="stylesheet" type="text/css" media="all" href="//cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css" />
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/search_details.js' %}" type="text/JavaScript"></script>
+	<script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" type="text/JavaScript"></script>
+	<script src="//cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js" type="text/JavaScript"></script>
+	<script src="//cdn.datatables.net/buttons/1.6.1/js/buttons.flash.min.js" type="text/JavaScript"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js" type="text/JavaScript"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js" type="text/JavaScript"></script>
+	<script src="//cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js" type="text/JavaScript"></script>
+	<script src="//cdn.datatables.net/buttons/1.6.1/js/buttons.print.min.js" type="text/JavaScript"></script>
+{% endblock %}
+
+{% block content %}
+<!-- <body class='typora-export'> -->
+    <div id='write' class='is-node'>
+        <h1><a name="{{ gene_details.name }}" class="md-header-anchor"></a><span>{{ gene_details.name }}</span></h1>
+        <p>&nbsp;</p>
+        <p><strong><span>gene name</span></strong><span> {{ gene_details.name }} </span></p>
+        <p><strong><span>Uniprot ID</span></strong><span> </span><a
+                href='https://www.uniprot.org/uniprot/{{ gene_details.external_id }}'><span>{{ gene_details.external_id }}</span></a></p>
+        <p><strong><span>Function</span></strong><span> {{ gene_details.description }} </span></p>
+        <p>&nbsp;</p>
+        <h2><a name="pharmacogenomics-description" class="md-header-anchor"></a><span>Pharmacogenomics description
+            </span>
+        </h2>
+        {% if gene_details.snps_drugs|length > 0 %}
+            <h3><a name="snps-drugs" class="md-header-anchor"></a><span>SNPs drugs</span></h3>
+            <figure>
+                <table id="snps-drugs">
+                    <thead>
+                        <tr>
+                            <th><span>RSID</span></th>
+                            <th><span>Genotype</span></th>
+                            <th><span>Drug</span></th>
+                            <th><span>Description</span></th>
+                            <th><span>P-value</span></th>
+                            <th><span>Study</span></th>
+                            <th><span>Regions</span></th>
+                            <th><span>Countries</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rec in gene_details.snps_drugs %}
+                            <tr>
+                                <td><span>{{ rec.rs_id }}</span></td>
+                                <td><span> {{ rec.allele }} </span></td>
+                                <td><a href='https://www.drugbank.ca/drugs/{{ rec.drug_bank_id }}'><span>{{ rec.drug_name }}</span></a></td>
+                                <td><span> {{ rec.association_with }} </span></td>
+                                <td> {{ rec.p_value }} </td>
+                                <td><a href='https://www.ncbi.nlm.nih.gov/pubmed/?term={{ rec.reference_id }}'><span>{{ rec.reference_id }}</span></a></td>
+                                <td><span> {{ rec.region }} </span></td>
+                                <td><span> {{ rec.country_of_participants }} </span></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </figure>
+            <p>&nbsp;</p>
+        {% endif %}
+        {% if gene_details.star_alleles_drugs|length > 0 %}
+            <h3><a name="star-alleles-drugs" class="md-header-anchor"></a><span>Star alleles drugs</span></h3>
+            <figure>
+                <table id="star-alleles-drugs">
+                    <thead>
+                        <tr>
+                            <th><span>Star notation</span></th>
+                            <th><span>Genotype</span></th>
+                            <th><span>Drug</span></th>
+                            <th><span>Description</span></th>
+                            <th><span>P-value</span></th>
+                            <th><span>Study</span></th>
+                            <th><span>Regions</span></th>
+                            <th><span>Country of Participants</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rec in gene_details.star_alleles_drugs %}
+                            <tr>
+                                <td><span> {{ rec.star_annotation }} </span></td>
+                                <td><span>{{ rec.allele }}</span></td>
+                                <td><a href='https://www.drugbank.ca/drugs/{{ rec.drug_bank_id }}'><span>{{ rec.drug_bank_id }}</span></a></td>
+                                <td><span> {{ rec.phenotype }} </span></td>
+                                <td><span>{{ rec.p_value }}</span></td>
+                                <td><a href='https://www.ncbi.nlm.nih.gov/pubmed/?term={{ rec.reference_id }}'><span>{{ rec.reference_id }}</span></a></td>
+                                <td><span> {{ rec.region }} </span></td>
+                                <td><span> {{ rec.country_of_participants }} </span></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </figure>
+            <p>&nbsp;</p>
+        {% endif %}
+        <h2><a name="snp-diseases" class="md-header-anchor"></a><span>SNP diseases </span></h2>
+        <figure>
+            <table>
+                <thead>
+                    <tr>
+                        <th><span>RS ID</span></th>
+                        <th><span>Genotype</span></th>
+                        <th><span>disease</span></th>
+                        <th><span>DO code</span></th>
+                        <th><span>P-value</span></th>
+                        <th><span>Study</span></th>
+                        <th><span>Regions</span></th>
+                        <th><span>Country of Participants</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span>rs1058172</span></td>
+                        <td><span>*17</span></td>
+                        <td><span>Depressive disorder</span></td>
+                        <td><span>12294</span></td>
+                        <td><span>&lt;0.05</span></td>
+                        <td><span>17517247</span></td>
+                        <td><span>African American/Afro-Caribbean</span></td>
+                        <td><span>USA</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </figure>
+    </div>
+<!-- </body> -->
+{% endblock %}

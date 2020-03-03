@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponse
 from django.core import serializers
 from itertools import chain
 
-from .models import  pharmacogenes, drug, snp as SnpModel, star_allele, study, snp_ethnicity_country as Country
+from .models import  pharmacogenes, drug, snp as SnpModel, star_allele, study
 from .forms import PostForm
 import json
 
@@ -16,7 +16,7 @@ def search(request):
     form = PostForm(
         initial = {
             'gene_name': '',
-            'protein': '',
+            # 'protein': '',
             'function': ''
         }
     )
@@ -30,51 +30,76 @@ def search_details(request, search_type, query_id):
     variant_drug = []
     gene_list = None
     gene_drug = []
+    gene_details = dict()
     disease_list = None
+    print(query_id)
     # query incoming request based on a drug
-    if search_type == 'gene-drug' and query_id[0] == 'D':
-        for p in pharmacogenes.objects.raw(" SELECT agmp_app_snp.id, agmp_app_snp.rs_id, agmp_app_drug.drug_bank_id, \
-            external_id, p_value, region, gene_name, drug_name FROM agmp_app_snp \
- inner join agmp_app_snp_ethnicity_country on agmp_app_snp_ethnicity_country.snp = agmp_app_snp.snp_id \
+    if search_type == 'gene-drug' and 'gene' in query_id.lower():
+        detail_view = 'gene_details.html'
+
+        genes = pharmacogenes.objects.filter(id__exact= query_id).values()
+        gene_details['name'] = genes[0].get('gene_name')
+        gene_details['external_id'] = genes[0].get('uniprot_id')
+        gene_details['description'] = genes[0].get('function')
+        gene_details['snps_drugs'] = []
+        gene_details['star_alleles_drugs'] = []
+
+        for p in pharmacogenes.objects.raw(" SELECT agmp_app_snp.id, agmp_app_snp.rs_id, agmp_app_snp.snp_id, agmp_app_snp.gene_id, \
+            agmp_app_drug.drug_bank_id, agmp_app_snp.p_value, agmp_app_snp.allele, agmp_app_snp.association_with, agmp_app_snp.region, agmp_app_pharmacogenes.gene_name, \
+            agmp_app_drug.drug_name, agmp_app_study.reference_id, agmp_app_snp.country_of_participants FROM agmp_app_snp \
  INNER JOIN agmp_app_drug on agmp_app_drug.id = agmp_app_snp.drug_id \
  INNER JOIN agmp_app_pharmacogenes on agmp_app_pharmacogenes.id = agmp_app_snp.gene_id \
  INNER JOIN agmp_app_study on agmp_app_study.id = agmp_app_snp.reference_id \
- AND agmp_app_snp.drug_id =%s;", [query_id]):
-            gene_drug.append(p)
+ AND agmp_app_snp.gene_id = %s;", [query_id]):
+            gene_details['snps_drugs'].append(p)
+        
+        # star alleles drugs
+        for p in pharmacogenes.objects.raw("SELECT agmp_app_star_allele.id, agmp_app_star_allele.star_id, agmp_app_star_allele.star_annotation, \
+        agmp_app_star_allele.allele, agmp_app_star_allele.gene_id, agmp_app_star_allele.allele, agmp_app_star_allele.phenotype, \
+        agmp_app_pharmacogenes.gene_name, agmp_app_drug.drug_name, agmp_app_star_allele.p_value, agmp_app_drug.drug_bank_id, \
+        agmp_app_study.reference_id, agmp_app_star_allele.country_of_participants, \
+        agmp_app_star_allele.region FROM agmp_app_star_allele \
+ INNER JOIN agmp_app_drug on agmp_app_drug.id = agmp_app_star_allele.drug_id \
+ INNER JOIN agmp_app_pharmacogenes on agmp_app_pharmacogenes.id = agmp_app_star_allele.gene_id \
+ INNER JOIN agmp_app_study on agmp_app_study.id = agmp_app_star_allele.reference_id \
+ AND agmp_app_star_allele.gene_id = %s;", [query_id]):
+            gene_details['star_alleles_drugs'].append(p)
 
-    if (search_type == 'variant-drug') and query_id[0] == 'S':
+    if (search_type == 'variant-drug') and 'snp' in query_id:
         for p in pharmacogenes.objects.raw(" SELECT agmp_app_snp.id, agmp_app_snp.rs_id, \
             external_id, p_value, region, gene_name, drug_name FROM agmp_app_snp \
- inner join agmp_app_snp_ethnicity_country on agmp_app_snp_ethnicity_country.snp = agmp_app_snp.snp_id \
  INNER JOIN agmp_app_drug on agmp_app_drug.id = agmp_app_snp.drug_id \
  INNER JOIN agmp_app_pharmacogenes on agmp_app_pharmacogenes.id = agmp_app_snp.gene_id \
  INNER JOIN agmp_app_study on agmp_app_study.id = agmp_app_snp.reference_id \
  AND agmp_app_snp.snp_id =%s;", [query_id]):
             variant_drug.append(p)
+        detail_view = 'search_details.html'
 
-    if (search_type == 'variant-drug') and query_id[0] == 'D':
+    if (search_type == 'variant-drug') and 'drug' in query_id:
         for p in pharmacogenes.objects.raw(" SELECT agmp_app_snp.id, agmp_app_snp.rs_id, agmp_app_drug.drug_bank_id,\
             external_id, p_value, region, gene_name, drug_name FROM agmp_app_snp \
- inner join agmp_app_snp_ethnicity_country on agmp_app_snp_ethnicity_country.snp = agmp_app_snp.snp_id \
  INNER JOIN agmp_app_drug on agmp_app_drug.id = agmp_app_snp.drug_id \
  INNER JOIN agmp_app_pharmacogenes on agmp_app_pharmacogenes.id = agmp_app_snp.gene_id \
  INNER JOIN agmp_app_study on agmp_app_study.id = agmp_app_snp.reference_id \
  AND agmp_app_drug.id =%s;", [query_id]):
-            variant_drug.append(p)   
+            variant_drug.append(p)
+        detail_view = 'search_details.html'
 
     print (variant_drug)
     print (gene_list)
     print (gene_drug)
     print (disease_list)
+    print (gene_details)
 
     return render(
-        request, 'search_details.html', {
+        request, detail_view, {
             # 'db_name': db_name,
             'search_type': search_type,
             'query_id': query_id,
             'variant_drug': variant_drug,
             'genes': gene_list,
             'gene_drug': gene_drug,
+            'gene_details': gene_details,
             'diseases': disease_list,
             }
         )
@@ -168,13 +193,14 @@ def __fetch_gene(genes):
     for gene in genes:
         gene_object = dict()
         gene_object['key'] = 'ge'
-        gene_object['detail'] = ['Chromosome {0}'.format(gene.get('chromosome'))]
+        gene_object['detail'] = ['Chromosome Patch {0}'.format(gene.get('chromosome_patch'))]
 
         gene_object['id'] = gene['id']
         gene_object['name'] = gene['gene_name']
-        gene_object['protein'] = gene['protein']
+        # gene_object['protein'] = gene['protein']
         gene_object['function'] = gene['function']
-        gene_object['chromosome'] = gene['chromosome']
+        gene_object['uniprot_id'] = gene['uniprot_id']
+        gene_object['chromosome'] = gene['chromosome_patch']
         ret.append(gene_object)
     print('GENE ',ret)
     return ret
@@ -248,14 +274,14 @@ def country_summary(request):
     '''
     res = []
 
-    for p in Country.objects.raw("SELECT DISTINCT id, country_of_participants, latitude, longitude, region, snp, \
-        COUNT(country_of_participants) AS cnt FROM agmp_app_snp_ethnicity_country GROUP BY country_of_participants ORDER BY cnt;"):
+    for p in SnpModel.objects.raw("SELECT DISTINCT id, country_of_participants, latitude, longitude, region, snp_id, \
+        COUNT(country_of_participants) AS cnt FROM agmp_app_snp GROUP BY country_of_participants ORDER BY cnt;"):
         res.append({
             'country': p.country_of_participants,
             'region': p.region,
             'latitude': '{:,.7f}'.format(p.latitude),
             'longitude': '{0}'.format(p.longitude),
-            'snp': p.snp,
+            'snp': p.snp_id,
             'count': p.cnt
         })  
     # return render(request, 'summary.html', {'json_list': res})
@@ -272,4 +298,7 @@ def outreach(request):
 
 def contact(request):
     return render(request, 'contact.html')
+
+def disclaimer(request):
+    return render(request, 'disclaimer.html')
 
