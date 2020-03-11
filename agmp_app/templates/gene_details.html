@@ -104,13 +104,12 @@
         {% endif %}
         <h2><a name="snp-diseases" class="md-header-anchor"></a><span>SNP diseases </span></h2>
         <figure>
-            <table>
+            <table id="snp-diseases">
                 <thead>
                     <tr>
                         <th><span>RS ID</span></th>
                         <th><span>Genotype</span></th>
                         <th><span>disease</span></th>
-                        <th><span>DO code</span></th>
                         <th><span>P-value</span></th>
                         <th><span>Study</span></th>
                         <th><span>Regions</span></th>
@@ -118,16 +117,17 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% for rec in gene_details.snp_diseases %}
                     <tr>
-                        <td><span>rs1058172</span></td>
-                        <td><span>*17</span></td>
-                        <td><span>Depressive disorder</span></td>
-                        <td><span>12294</span></td>
-                        <td><span>&lt;0.05</span></td>
-                        <td><span>17517247</span></td>
-                        <td><span>African American/Afro-Caribbean</span></td>
-                        <td><span>USA</span></td>
+                        <td><span>{{ rec.rs_id }}</span></td>
+                        <td><span> {{ rec.allele }} </span></td>
+                        <td><span> {{ rec.association_with }} </span></td>
+                        <td> {{ rec.p_value }} </td>
+                        <td><a href='https://www.ncbi.nlm.nih.gov/pubmed/?term={{ rec.reference_id }}'><span>{{ rec.reference_id }}</span></a></td>
+                        <td><span> {{ rec.region }} </span></td>
+                        <td><span> {{ rec.country_of_participants }} </span></td>
                     </tr>
+                    {% endfor %}                    
                 </tbody>
             </table>
         </figure>
