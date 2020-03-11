@@ -26,6 +26,7 @@
     <h2></h2>
   </div>
   {% if search_type == 'gene-drug' %}
+  <h3><span>Gene Drug associations</span></h3><br>
     <table id="detail-table" class="display table table-hover" cellspacing="1" width="100%">
       <thead>
         <tr>
@@ -61,6 +62,7 @@
   {% endif %}
 
   {% if genes %}
+  <h3><span>Gene associations</span></h3><br>
     <table id="detail-table" class="display table table-hover" cellspacing="0" width="100%">
       <thead>
         <tr>
@@ -88,6 +90,7 @@
   {% endif %}  
 
   {% if search_type == 'variant-drug' %}
+  <h3><span>Variant Drug associations</span></h3><br>
     <table id="detail-table" class="display table table-hover" cellspacing="0" width="100%">
       <thead>
         <tr>
@@ -95,8 +98,8 @@
           <th>Gene</th>
           <th>Drug</th>
           <th>Significance</th>
-          <th>Region</th>
-          <th>PMID</th>
+          <th>Country</th>
+          <th>Studies</th>
         </tr>
       </thead>
       <tbody>
@@ -114,8 +117,8 @@
                 {% endif %}
               </td>
               <td>{{ vnt_drg.p_value }}</td>
-              <td>{{ vnt_drg.region }}</td>
-              <td><a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/{{ vnt_drg.external_id }}">{{ vnt_drg.external_id }}</a></td>
+              <td>{{ vnt_drg.country_of_participants }}</td>
+              <td><a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/{{ vnt_drg.reference_id }}">{{ vnt_drg.title }}</a></td>
           </tr>        
         {% endfor %}
       </tbody>
