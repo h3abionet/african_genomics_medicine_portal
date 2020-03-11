@@ -1,0 +1,26 @@
+{% extends 'mainLayout.html' %}
+{% block title %}About{% endblock %}
+{% block content %}
+<h3 class="text-center">Frequently Asked Questions (FAQs)</h3>
+
+<ol>
+    <li><b>How is the Portal useful?</b></li>
+    The African Genomics Medicine Portal (AGMP) can be used to find relevant gene/variant-disease/drug associations 
+    in African populations. This can be used in preliminary/exploratory investigations of African health, or assist 
+    in the interpretation of such results. The portal should <b>NOT</b> be used for clinical decision making purposes. 
+    <li><b>Why can't I find my searched gene in the Portal?</b></li>
+    The Portal provides curated metadata which relates to African populations. 
+    These metadata were extracted from PharmGKB and DisGeNET, therefore, if a gene, variant, 
+    disease or drug does not appear, there may not be any information related to African populations 
+    associated with these in the aforementioned databases.
+    <li><b>Can the portal be used for clinical decision making?</b></li>
+    The portal should NOT be used for clinical decision making purposes. However, in the Resources page, 
+    the portal does provide resources that may be used for these purposes, such as CPIC.
+    <li><b>How do I use the Portal?</b></li>
+    A step-by-step guide for using the Portal can be found on the <a href="#">Tutorial</a> page. 
+    This includes expected search inputs and results outputs.
+</ol>
+<br>
+<small>If you require further assistance in using or information on the Portal, please reach out using the <a href="https://helpdesk.h3abionet.org/"> Helpdesk</a> or the <a href="/contact"> Contact Us </a> page.
+</small>
+{% endblock %}
