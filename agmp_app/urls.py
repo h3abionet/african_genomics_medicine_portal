@@ -17,6 +17,7 @@ urlpatterns = [
     path('outreach/', views.outreach, name='outreach'),
     path('contact/', views.contact, name='contact'),
     path('disclaimer', views.disclaimer, name='disclaimer'),
+    path('faqs', views.faqs, name='faqs'),
 
     path('agnocomplete/', include('agnocomplete.urls')),
 ]
