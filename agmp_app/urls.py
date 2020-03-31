@@ -16,6 +16,9 @@ urlpatterns = [
     path('resources/', views.resources, name='resources'),
     path('outreach/', views.outreach, name='outreach'),
     path('contact/', views.contact, name='contact'),
+    path('databases/', views.databases, name='databases'),
+    path('tools_pipelines/', views.tools_pipelines, name='tools_pipelines'),
+    path('online_courses/', views.online_courses, name='online_courses'),
     path('disclaimer', views.disclaimer, name='disclaimer'),
     path('faqs', views.faqs, name='faqs'),
 

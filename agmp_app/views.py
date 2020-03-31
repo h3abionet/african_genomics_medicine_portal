@@ -239,7 +239,7 @@ def _fetch_gene(genes):
     for gene in genes:
         gene_object = dict()
         gene_object['key'] = 'ge'
-        gene_object['detail'] = ['Chromosome Patch {0}'.format(gene.get('chromosome_patch'))]
+        gene_object['detail'] = ['Chromosome {0}'.format(gene.get('chromosome_patch'))]
 
         gene_object['id'] = gene['id']
         gene_object['name'] = gene['gene_name']
@@ -349,3 +349,11 @@ def disclaimer(request):
 def faqs(request):
     return render(request, 'faqs.html')
 
+def tools_pipelines(request):
+    return render(request, 'tools_pipelines.html')
+
+def databases(request):
+    return render(request, 'databases.html')
+
+def online_courses(request):
+    return render(request, 'online_courses.html')    
