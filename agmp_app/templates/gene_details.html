@@ -26,16 +26,15 @@
     <div id='write' class='is-node'>
         <h1><a name="{{ gene_details.name }}" class="md-header-anchor"></a><span>{{ gene_details.name }}</span></h1>
         <p>&nbsp;</p>
-        <p><strong><span>gene name</span></strong><span> {{ gene_details.name }} </span></p>
+        <p><strong><span>Gene Name</span></strong><span> {{ gene_details.name }} </span></p>
         <p><strong><span>Uniprot ID</span></strong><span> </span><a
                 href='https://www.uniprot.org/uniprot/{{ gene_details.external_id }}'><span>{{ gene_details.external_id }}</span></a></p>
         <p><strong><span>Function</span></strong><span> {{ gene_details.description }} </span></p>
         <p>&nbsp;</p>
-        <h2><a name="pharmacogenomics-description" class="md-header-anchor"></a><span>Pharmacogenomics description
-            </span>
+        <h2><a name="pharmacogenomics-description" class="md-header-anchor"></a><span>Pharmacogenomics Associations</span>
         </h2>
         {% if gene_details.snps_drugs|length > 0 %}
-            <h3><a name="snps-drugs" class="md-header-anchor"></a><span>SNPs drugs</span></h3>
+            <h3><a name="snps-drugs" class="md-header-anchor"></a><span>SNPs</span></h3>
             <figure>
                 <table id="snps-drugs">
                     <thead>
@@ -69,7 +68,7 @@
             <p>&nbsp;</p>
         {% endif %}
         {% if gene_details.star_alleles_drugs|length > 0 %}
-            <h3><a name="star-alleles-drugs" class="md-header-anchor"></a><span>Star alleles drugs</span></h3>
+            <h3><a name="star-alleles-drugs" class="md-header-anchor"></a><span>Star Alleles</span></h3>
             <figure>
                 <table id="star-alleles-drugs">
                     <thead>
@@ -102,14 +101,13 @@
             </figure>
             <p>&nbsp;</p>
         {% endif %}
-        <h2><a name="snp-diseases" class="md-header-anchor"></a><span>SNP diseases </span></h2>
+        <h2><a name="snp-diseases" class="md-header-anchor"></a><span>Disease Associations</span></h2>
         <figure>
             <table id="snp-diseases">
                 <thead>
                     <tr>
-                        <th><span>RS ID</span></th>
-                        <th><span>Genotype</span></th>
-                        <th><span>disease</span></th>
+                        <th><span>rs ID</span></th>
+                        <th><span>Disease</span></th>
                         <th><span>P-value</span></th>
                         <th><span>Study</span></th>
                         <th><span>Regions</span></th>
@@ -120,14 +118,13 @@
                     {% for rec in gene_details.snp_diseases %}
                     <tr>
                         <td><span>{{ rec.rs_id }}</span></td>
-                        <td><span> {{ rec.allele }} </span></td>
                         <td><span> {{ rec.association_with }} </span></td>
                         <td> {{ rec.p_value }} </td>
                         <td><a href='https://www.ncbi.nlm.nih.gov/pubmed/?term={{ rec.reference_id }}'><span>{{ rec.reference_id }}</span></a></td>
                         <td><span> {{ rec.region }} </span></td>
                         <td><span> {{ rec.country_of_participants }} </span></td>
                     </tr>
-                    {% endfor %}                    
+                    {% endfor %}
                 </tbody>
             </table>
         </figure>
