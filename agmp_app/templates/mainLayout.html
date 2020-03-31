@@ -24,7 +24,7 @@
 <body>
 	<div class="container2">
 		<nav class="navbar navbar-fixed-top navbar-expand-md navbar-light bg-mibio py-md-2">
-			<a class="navbar-brand text-white" href="/">
+			<a class="navbar-brand text-bigblue" href="/">
 				<img style="margin-right:10px" src="{% static "img/bionetlogo.png" %}" width="30" height="30"
 					class="d-inline-block align-top" alt=""><b>African Genomics Medicine Portal</b>
 			</a>
@@ -35,27 +35,37 @@
 			<div class="collapse navbar-collapse" id="main-navigation">
 				<ul class="navbar-nav ml-auto">
 					<li class="nav-item ml-auto py-0 sp-menu-item">
-						<a class="nav-link dropdown text-white" href="/about/">About</a>
+						<a class="nav-link dropdown text-blue" href="/about/">About</a>
 					</li>
 					<li class="nav-item ml-auto py-0">
-						<a class="nav-link text-white" href="/search/">Search</a>
+						<a class="nav-link text-blue" href="/search/">Search</a>
 					</li>
 					<li class="nav-item ml-auto py-0">
-						<a class="nav-link text-white" href="/summary/">Summary</a>
-					</li>
-					<li class="nav-item ml-auto py-0">
-						<a class="nav-link text-white" href="/resources/">Resources</a>
-					</li>
-					<li class="nav-item ml-auto py-0">
-						<a class="nav-link text-white" href="/outreach/">Outreach</a>
+						<a class="nav-link text-blue" href="/summary/">Summary</a>
 					</li>
 					<li class="nav-item ml-auto py-0">
 						<div class="dropdown">
-							<button class="btn dropdown-toggle nav-link text-white" type="button" data-toggle="dropdown" aria-haspopup="true">
-							  Contact Us
+							<button class="btn dropdown-toggle nav-link text-blue" type="button" data-toggle="dropdown" aria-haspopup="true">
+								Resources
+							</button>
+							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+							  <a class="dropdown-item" href="/databases">Databases</a>
+							  <a class="dropdown-item" href="/tools_pipelines">Tools &amp; Pipelines</a>
+							  <a class="dropdown-item" href="/online_courses">Online Courses</a>
+							</div>
+						  </div>
+					</li>
+					<!-- <li class="nav-item ml-auto py-0">
+						<a class="nav-link text-blue" href="/outreach/">Outreach</a>
+					</li> -->
+					<li class="nav-item ml-auto py-0">
+						<div class="dropdown">
+							<button class="btn dropdown-toggle nav-link text-blue" type="button" data-toggle="dropdown" aria-haspopup="true">
+							  Help
 							</button>
 							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
 							  <a class="dropdown-item" href="/contact">Contact Us</a>
+							  <a class="dropdown-item" href="#">Tutorial</a>
 							  <a class="dropdown-item" href="/faqs">FAQs</a>
 							</div>
 						  </div>
@@ -116,6 +126,9 @@
 			</div>
 			<div class="col-md-2">
 				<a href="/disclaimer">Disclaimer</a>
+			</div>
+			<div class="col-md-2">
+				<a target="_blank" href="https://h3abionet.org/">H3ABioNet</a>
 			</div>
 		</div>
 	</footer>
