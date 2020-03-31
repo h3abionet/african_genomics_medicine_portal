@@ -16,7 +16,17 @@ body {
 }
 
 .bg-mibio {
-  background-color: #337ab7;
+  background-color: #f4faff;
+}
+
+.text-blue {
+  color: #337ab7 !important;
+  font-weight: 500;
+  font-size: inherit;  
+}
+
+.text-bigblue {
+  color: #337ab7 !important;
 }
 
 #logo {
