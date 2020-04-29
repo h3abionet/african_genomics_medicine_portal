@@ -773,7 +773,7 @@ a.md-print-anchor {
 }
 
 .os-windows.monocolor-emoji .md-emoji {
-    font-family: "Segoe UI Symbol", sans-serif;
+    font-family: Roboto, sans-serif;
 }
 
 .md-diagram-panel>svg {
@@ -845,7 +845,7 @@ html {
 }
 
 body {
-    font-family: "Open Sans", "Clear Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: Roboto, sans-serif;
     color: rgb(51, 51, 51);
     line-height: 1.6;
 }
@@ -1182,7 +1182,7 @@ header,
 .context-menu,
 .megamenu-content,
 footer {
-    font-family: "Segoe UI", "Arial", sans-serif;
+    font-family: Roboto, sans-serif;
 }
 
 .file-node-content:hover .file-node-icon,
