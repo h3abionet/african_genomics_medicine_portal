@@ -31,15 +31,14 @@
                 href='https://www.uniprot.org/uniprot/{{ gene_details.external_id }}'><span>{{ gene_details.external_id }}</span></a></p>
         <p><strong><span>Function</span></strong><span> {{ gene_details.description }} </span></p>
         <p>&nbsp;</p>
-        <h2><a name="pharmacogenomics-description" class="md-header-anchor"></a><span>Pharmacogenomics Associations</span>
-        </h2>
-        {% if gene_details.snps_drugs|length > 0 %}
+        <h2><a name="pharmacogenomics-description" class="md-header-anchor"></a><span>Pharmacogenomics Associations</span></h2>
+        {% comment %} {% if gene_details.snps_drugs|length > 0 %} {% endcomment %}
             <h3><a name="snps-drugs" class="md-header-anchor"></a><span>SNPs</span></h3>
             <figure>
                 <table id="snps-drugs">
                     <thead>
                         <tr>
-                            <th><span>RSID</span></th>
+                            <th><span>rs ID</span></th>
                             <th><span>Genotype</span></th>
                             <th><span>Drug</span></th>
                             <th><span>Description</span></th>
@@ -66,8 +65,8 @@
                 </table>
             </figure>
             <p>&nbsp;</p>
-        {% endif %}
-        {% if gene_details.star_alleles_drugs|length > 0 %}
+        {% comment %} {% endif %} {% endcomment %}
+        {% comment %} {% if gene_details.star_alleles_drugs|length > 0 %} {% endcomment %}
             <h3><a name="star-alleles-drugs" class="md-header-anchor"></a><span>Star Alleles</span></h3>
             <figure>
                 <table id="star-alleles-drugs">
@@ -100,7 +99,7 @@
                 </table>
             </figure>
             <p>&nbsp;</p>
-        {% endif %}
+        {% comment %} {% endif %} {% endcomment %}
         <h2><a name="snp-diseases" class="md-header-anchor"></a><span>Disease Associations</span></h2>
         <figure>
             <table id="snp-diseases">
