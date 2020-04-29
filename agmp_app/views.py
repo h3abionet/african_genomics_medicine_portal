@@ -356,4 +356,10 @@ def databases(request):
     return render(request, 'databases.html')
 
 def online_courses(request):
-    return render(request, 'online_courses.html')    
+    return render(request, 'online_courses.html')
+
+def help(request):
+    return render(request, 'help.html')
+
+def tutorial(request):
+    return render(request, 'tutorial.html')
