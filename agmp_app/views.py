@@ -157,25 +157,24 @@ def _fetch_disease(diseases):
     :return dict
     '''
     ret = []
-    for disease in diseases:
-        disease_object = dict()
-        disease_object['key'] = 'ds'
-        disease_object['result_type'] = 'disease'
+    # for disease in diseases:
+    #     disease_object = dict()
+    #     disease_object['key'] = 'ds'
+    #     disease_object['detail'] = [f"Source: {disease.get('source')}"]
 
-        disease_object['id'] = disease['id']
-        disease_object['name'] = disease['star_annotation']
-        disease_object['star_id'] = disease['star_id']
-        disease_object['allele'] = disease['allele']
-        disease_object['phenotype'] = disease['phenotype']
-        disease_object['drug'] = disease['drug_id']
-        disease_object['reference'] = disease['reference_id']
-        disease_object['gene_id'] = disease['gene_id']
-        disease_object['p_value'] = disease['p_value']
-        disease_object['source'] = disease['source']
-        disease_object['id_in_source'] = disease['id_in_source']
-        disease_object['chromosome'] = disease['chromosome']
-        ret.append(disease_object)
-    print('DISEASE ',ret)
+    #     disease_object['id'] = disease['id']
+    #     disease_object['name'] = disease['association_with']
+    #     disease_object['gene'] = disease['gene_id']
+    #     disease_object['allele'] = disease['allele']
+    #     disease_object['drug'] = disease['drug_id']
+    #     disease_object['reference'] = disease['reference_id']
+    #     disease_object['p_value'] = disease['p_value']
+    #     disease_object['source'] = disease['source']
+    #     disease_object['id_in_source'] = disease['id_in_source']
+    #     disease_object['region'] = disease['region']
+    #     disease_object['country_of_participants'] = disease['country_of_participants']
+    #     ret.append(disease_object)
+    # print('DISEASE ',ret)
     return ret
 
 def _fetch_drug(drugs):
@@ -208,7 +207,7 @@ def _fetch_variant(qs):
     :return dict
     '''
     ret = []
-    snps = SnpModel.objects.filter(rs_id__exact= qs).values()
+    snps = SnpModel.objects.filter(rs_id__icontains= qs).values()
     for snp in snps:
         variant_object = dict()
         variant_object['key'] = 'vt'
@@ -279,9 +278,10 @@ def query(request, query_string, **kwargs):
 
     if request.is_ajax():
         # TODO: there must be a better way to do this
-        # if is_disease:
-        #     pass_list += _fetch_disease(star_allele.objects.filter(phenotype__contains= query_string).values())
-        
+        if is_disease:
+            disgenet_snps = SnpModel.objects.filter(source__icontains= 'DisGeNET')
+            disgenet_snps = disgenet_snps.filter(association_with__icontains=query_string)
+            pass_list += _fetch_disease(disgenet_snps.values())
         if is_drug:
             pass_list += _fetch_drug(drug.objects.filter(drug_name__contains= query_string).values())
         if is_variant:
