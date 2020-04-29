@@ -6,7 +6,6 @@ $(document).ready(function () {
   $( "#search-input" ).autocomplete({
     source: function( request, response ) {
       $.ajax({
-        // url: "https://www.ebi.ac.uk/ols/api/select",
         url: "/agnocomplete/Search",
         dataType: "json",
         data: {
@@ -45,10 +44,15 @@ $(document).ready(function () {
       cats.push($(this).val());
     });
     // updatePlaceholder(cats);
+    // if no categories are selected, show nothing
     if (cats.length == 0) {
       placeholder = '';
     } else {
-      placeholder = 'Enter ' + cats.join(', ') + ' separated by double colon (::)';
+      // if you have only one category, 
+      // don't add the separation instructions
+      let splitText;
+      if (cats.length === 1) {splitText = '';} else {splitText= ' separated by double colon (::)';}
+      placeholder = 'Enter ' + cats.join(', ') + splitText;
     }
     $("input[type=text], #search-input").attr('placeholder', placeholder);
   });
@@ -80,7 +84,7 @@ $(document).ready(function () {
       url: URL,
       dataType: "json",
       success: function (data) {
-        // console.log(data);
+        console.log(data);
         $('#results').empty();
         for (let i = 0; i < data.length; i++) {
           let name = '', head = '';
@@ -89,7 +93,8 @@ $(document).ready(function () {
           rec.detail.forEach(el => {
             head += "<h2 class='snippet'>"+el+"</h2>";
           });
-          gedg = (rec.key == 'dg')||(rec.key == 'ge') ? "<a href='/search_details/gene-drug/"+rec.id+"'><h2 class='snippet'>Click here for gene associations</h2></a>" : '';
+          // gedg = (rec.key == 'dg')||(rec.key == 'ge') ? "<a href='/search_details/gene-drug/"+rec.id+"'><h2 class='snippet'>Click here for gene associations</h2></a>" : '';
+          gedg = (rec.key == 'ds')||(rec.key == 'ge') ? "<a href='/search_details/gene-drug/"+rec.id+"'><h2 class='snippet'>Click here for gene associations</h2></a>" : '';
           vtdg = (rec.key == 'dg')||(rec.key == 'vt') ? "<a href='/search_details/variant-drug/"+rec.id+"'><h4 class='snippet'>Click here for variant-drug associations</h4></a>" : '';          
           // geds = (rec.key == 'ge')||(rec.key == 'ds') ? "<a href='/search_details/gene-disease/"+rec.id+"'><h4 class='snippet'>Click here for gene-disease associations</h4></a>" : '';
           // vtds = (rec.key == 'vt')||(rec.key == 'ds') ? "<a href='/search_details/variant-disease/"+rec.id+"'><h4 class='snippet'>Click here for variant-disease associations</h4></a>" : '';
