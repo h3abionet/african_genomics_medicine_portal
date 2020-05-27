@@ -106,7 +106,11 @@
         {% for vnt_drg in variant_drug %}
           <tr>
               <td>{{ vnt_drg.rs_id }}</td>
-              <td>{{ vnt_drg.gene_name }}</td>
+              <td>
+                <a href="/search_details/gene-drug/{{ vnt_drg.gene_id }}">
+                  {{ vnt_drg.gene_name }}
+                </a>
+              </td>
               <td>
                 {% if vnt_drg.drug_bank_id|length > 0 %}
                   <a target="_blank" href="https://www.drugbank.ca/drugs/{{ vnt_drg.drug_bank_id }}">
