@@ -1,4 +1,6 @@
 from django.shortcuts import render, HttpResponse
+from django.http import FileResponse
+
 from django.core import serializers
 from itertools import chain
 
@@ -89,6 +91,7 @@ def search_details(request, search_type, query_id):
             agmp_app_snp.p_value,
             agmp_app_snp.region,
             agmp_app_pharmacogenes.gene_name,
+            agmp_app_pharmacogenes.id AS gene_id,
             agmp_app_study.title,
             agmp_app_study.reference_id
             FROM agmp_app_drug
@@ -101,7 +104,7 @@ def search_details(request, search_type, query_id):
     if (search_type == 'variant-drug') and 'snp' in query_id.lower():
         detail_view = 'search_details.html'
         for p in pharmacogenes.objects.raw(" SELECT agmp_app_snp.id, agmp_app_snp.rs_id, \
-            country_of_participants, \
+            country_of_participants, agmp_app_pharmacogenes.id AS gene_id, \
             agmp_app_study.title, agmp_app_study.reference_id, p_value, region, gene_name, drug_name FROM agmp_app_snp \
  INNER JOIN agmp_app_drug on agmp_app_drug.id = agmp_app_snp.drug_id \
  INNER JOIN agmp_app_pharmacogenes on agmp_app_pharmacogenes.id = agmp_app_snp.gene_id \
@@ -122,6 +125,7 @@ def search_details(request, search_type, query_id):
             country_of_participants, \
             drug_name, \
 	        agmp_app_pharmacogenes.gene_name, \
+            agmp_app_pharmacogenes.id AS gene_id, \
             agmp_app_study.type, \
             agmp_app_study.reference_id, \
             agmp_app_study.title \
@@ -188,7 +192,8 @@ def _fetch_drug(drugs):
         drug_object = dict()
         drug_object['key'] = 'dg'
         drug_object['detail'] = [
-            'Drug Bank ID: {0}'.format(drug.get('drug_bank_id')),
+            "Drug Bank ID: <a target='_blank' href='https://www.drugbank.ca/drugs/{0}'>{1}</a>".format(
+                drug.get('drug_bank_id'), drug.get('drug_bank_id')),
             'State: {0}'.format(drug.get('state'))]
 
         drug_object['id'] = drug['id']
@@ -198,7 +203,7 @@ def _fetch_drug(drugs):
         drug_object['indication'] = drug['indication']
         drug_object['iupac_name'] = drug['iupac_name']
         ret.append(drug_object)
-    print('DRUG ',ret)
+    # print('DRUG ',ret)
     return ret
 
 def _fetch_variant(qs):
@@ -207,25 +212,27 @@ def _fetch_variant(qs):
     :return dict
     '''
     ret = []
-    snps = SnpModel.objects.filter(rs_id__icontains= qs).values()
+    snps = SnpModel.objects.select_related('gene').filter(rs_id__icontains= qs).all()
+    # print(snps)
     for snp in snps:
+        # snp = snp.values()
         variant_object = dict()
         variant_object['key'] = 'vt'
-        variant_object['detail'] = ['Chromosome {0}'.format(snp.get('chromosome'))]
+        variant_object['detail'] = ['<b>Chromosome</b> {0}'.format(snp.gene.chromosome_patch), f'<b>Gene</b>: {snp.gene.gene_name}']
 
-        variant_object['id'] = snp['snp_id']
-        variant_object['name'] = 'RSID: {0}'.format(snp.get('rs_id'))
-        variant_object['drug'] = snp['drug_id']
-        variant_object['allele'] = snp['allele']
-        variant_object['gene'] = snp['gene_id']
-        variant_object['phenotype'] = snp['association_with']
-        variant_object['reference'] = snp['reference_id']
-        variant_object['p_value'] = snp['p_value']
-        variant_object['source'] = snp['source']
-        variant_object['id_in_source'] = snp['id_in_source']
+        variant_object['id'] = snp.snp_id
+        variant_object['name'] = 'rs ID: {0}'.format(snp.rs_id)
+        variant_object['drug'] = snp.drug_id
+        variant_object['allele'] = snp.allele
+        variant_object['gene'] = snp.gene_id
+        variant_object['phenotype'] = snp.association_with
+        variant_object['reference'] = snp.reference_id
+        variant_object['p_value'] = snp.p_value
+        variant_object['source'] = snp.source
+        variant_object['id_in_source'] = snp.id_in_source
         # variant_object['chromosome'] = snp['chromosome']
         ret.append(variant_object)
-    print('VARIANT ',ret)
+    # print('VARIANT ',ret)
     return ret
 
 def _fetch_gene(genes):
@@ -246,7 +253,7 @@ def _fetch_gene(genes):
         gene_object['uniprot_id'] = gene['uniprot_id']
         gene_object['chromosome'] = gene['chromosome_patch']
         ret.append(gene_object)
-    print('GENE ',ret)
+    # print('GENE ',ret)
     return ret
 
 def _fetch_data(model, item_list):
@@ -366,3 +373,7 @@ def tutorial(request):
 
 def home(request):
     return render(request, 'home.html')
+
+def download_file(request, file_name):
+    response = FileResponse(open(f"{file_name}", 'rb'))
+    return response
