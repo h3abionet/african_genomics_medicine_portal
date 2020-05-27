@@ -4,9 +4,10 @@ from django.urls import path, re_path, include
 from . import views
 
 urlpatterns = [
-    path('', views.search, name='index'),
-    path('about/', views.about, name='about'),
+    path('', views.home, name='index'),
+    path('about', views.about, name='about'),
     path('search/', views.search, name='search'),
+    path('home', views.home, name='home'),
 
     # call search query with optional parameters 
     path('search/<str:query_string>', views.query, kwargs={'disease': 0, 'drug': 0, 'variant': 0, 'gene': 0}, name='query'),
@@ -22,7 +23,7 @@ urlpatterns = [
     path('disclaimer', views.disclaimer, name='disclaimer'),
     path('faqs', views.faqs, name='faqs'),
     path('tutorial/', views.tutorial, name='tutorial'),
-    path('help/', views.help, name='help'),
+    path('help', views.help, name='help'),
 
     path('agnocomplete/', include('agnocomplete.urls')),
 ]
