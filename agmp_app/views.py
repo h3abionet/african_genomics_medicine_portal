@@ -218,7 +218,7 @@ def _fetch_variant(qs):
         # snp = snp.values()
         variant_object = dict()
         variant_object['key'] = 'vt'
-        variant_object['detail'] = ['<b>Chromosome</b> {0}'.format(snp.gene.chromosome_patch), f'<b>Gene</b>: {snp.gene.gene_name}']
+        variant_object['detail'] = ["<b>Chromosome</b> {0}".format(snp.gene.chromosome_patch), f"<b>Gene</b>": {snp.gene.gene_name}]
 
         variant_object['id'] = snp.snp_id
         variant_object['name'] = 'rs ID: {0}'.format(snp.rs_id)
