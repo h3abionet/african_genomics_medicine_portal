@@ -363,3 +363,6 @@ def help(request):
 
 def tutorial(request):
     return render(request, 'tutorial.html')
+
+def home(request):
+    return render(request, 'home.html')
