@@ -374,6 +374,6 @@ def tutorial(request):
 def home(request):
     return render(request, 'home.html')
 
-def download_file(request, file_name):
-    response = FileResponse(open(f"{file_name}", 'rb'))
-    return response
+# def download_file(request, file_name):
+#     response = FileResponse(open(f"{file_name}", 'rb'))
+#     return response
