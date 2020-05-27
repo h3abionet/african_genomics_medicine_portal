@@ -37,6 +37,12 @@ $(document).ready(function () {
   $("input[name='search_type_check']").change(function () {
     // define array to hold selected category types
     cats = [];
+    eg = {
+      drug: ' eg. Warfarin',
+      disease: ' eg. Malaria',
+      "SNP ID": ' eg. rs28371685',
+      gene: ' eg. CFH'
+    };
     let placeholder;
     // on category (remember its a checkbox) change
     // push the selected category value into the category array
@@ -51,7 +57,7 @@ $(document).ready(function () {
       // if you have only one category, 
       // don't add the separation instructions
       let splitText;
-      if (cats.length === 1) {splitText = '';} else {splitText= ' separated by double colon (::)';}
+      if (cats.length === 1) {splitText = '' + eg[cats[0]];} else {splitText= ' separated by double colon (::)';}
       placeholder = 'Enter ' + cats.join(', ') + splitText;
     }
     $("input[type=text], #search-input").attr('placeholder', placeholder);
