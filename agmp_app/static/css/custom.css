@@ -223,3 +223,30 @@ body {
   width: 150px;
   height: auto;
 }
+
+/* The sidebar menu */
+.sidenav {
+  position: fixed;
+  z-index: 1;
+  margin-top: 2em;
+  background: #eee;
+  overflow-x: hidden;
+  /* padding: 8px 0; */
+}
+
+.sidenav a {
+  padding: 10px 60px 10px 30px;
+  text-decoration: none;
+  font-size: 21px;
+  color: #2196F3;
+  display: block;
+}
+
+.sidenav a:hover {
+  color: #064579;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
