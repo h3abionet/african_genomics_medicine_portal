@@ -1,6 +1,6 @@
-# African Genomics Precision Medicine Portal
+# African Genomic Precision Medicine Portal
 
-This is the African Genomics Medicine Portal that provides information about African genomics and variation with regards to pharmocology and disease.
+This is the African Genomic Medicine Portal that provides information about African genomics and variation with regards to pharmocology and disease.
 
 ## How to run:
 
