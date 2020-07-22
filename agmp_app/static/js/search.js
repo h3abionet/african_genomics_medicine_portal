@@ -99,12 +99,12 @@ $(document).ready(function () {
           rec.detail.forEach(el => {
             head += "<h2 class='snippet'>"+el+"</h2>";
           });
-          // gedg = (rec.key == 'dg')||(rec.key == 'ge') ? "<a href='/search_details/gene-drug/"+rec.id+"'><h2 class='snippet'>Click here for gene associations</h2></a>" : '';
-          gedg = (rec.key == 'ds')||(rec.key == 'ge') ? "<a href='/search_details/gene-drug/"+rec.id+"'><h2 class='snippet'>Click here for gene associations</h2></a>" : '';
-          vtdg = (rec.key == 'dg')||(rec.key == 'vt') ? "<a href='/search_details/variant-drug/"+rec.id+"'><h4 class='snippet'>Click here for variant-drug associations</h4></a>" : '';          
-          // geds = (rec.key == 'ge')||(rec.key == 'ds') ? "<a href='/search_details/gene-disease/"+rec.id+"'><h4 class='snippet'>Click here for gene-disease associations</h4></a>" : '';
-          // vtds = (rec.key == 'vt')||(rec.key == 'ds') ? "<a href='/search_details/variant-disease/"+rec.id+"'><h4 class='snippet'>Click here for variant-disease associations</h4></a>" : '';
-          
+          // gedg = (rec.key == 'dg')||(rec.key == 'ge') ? "<a href='/search_details/gene-drug/"+rec.id+"'><h2 class='snippet'>For gene associations click here</h2></a>" : '';
+          gedg = (rec.key == 'ds')||(rec.key == 'ge') ? "<a href='/search_details/gene-drug/"+rec.id+"'><h2 class='snippet'>For gene associations click here</h2></a>" : '';
+          vtdg = (rec.key == 'dg')||(rec.key == 'vt') ? "<a href='/search_details/variant-drug/"+rec.id+"'><h4 class='snippet'>For variant-drug associations click here</h4></a>" : '';          
+          // geds = (rec.key == 'ge')||(rec.key == 'ds') ? "<a href='/search_details/gene-disease/"+rec.id+"'><h4 class='snippet'>For gene-disease associations click here</h4></a>" : '';
+          // vtds = (rec.key == 'vt')||(rec.key == 'ds') ? "<a href='/search_details/variant-disease/"+rec.id+"'><h4 class='snippet'>For variant-disease associations click here</h4></a>" : '';
+
           // results = '' + name;
           $('<div class="list-data"></div>')
             .append(name)
