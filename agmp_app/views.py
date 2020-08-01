@@ -4,7 +4,7 @@ from django.http import FileResponse
 from django.core import serializers
 from itertools import chain
 
-from .models import  pharmacogenes, drug, snp as SnpModel, star_allele, study
+from .models import disease, pharmacogenes, drug, snp as SnpModel, star_allele, study
 from .forms import PostForm
 import json
 
@@ -74,7 +74,7 @@ def search_details(request, search_type, query_id):
     gene_list = None
     gene_drug = []
     gene_details = dict()
-    disease_list = None
+    disease_list = []
     # query incoming request based on a drug
     if search_type == 'gene-drug' and 'gene' in query_id.lower():
         detail_view = 'gene_details.html'
@@ -136,6 +136,31 @@ def search_details(request, search_type, query_id):
         AND agmp_app_drug.id = %s;", [query_id]):
             variant_drug.append(p)
 
+    if (search_type == 'variant-disease') and 'dis' in query_id.lower():
+        detail_view = 'search_details.html'
+        for p in pharmacogenes.objects.raw(""" SELECT
+agmp_app_snp.id,
+rs_id,
+allele,
+association_with,
+p_value,
+source,
+region,
+country_of_participants,
+disease_id,
+agmp_app_pharmacogenes.gene_name,
+agmp_app_pharmacogenes.id AS gene_id,
+agmp_app_disease.disease_name,
+agmp_app_study.type,
+agmp_app_study.reference_id,
+agmp_app_study.title
+FROM agmp_app_snp
+INNER JOIN agmp_app_pharmacogenes on agmp_app_pharmacogenes.id = agmp_app_snp.gene_id
+INNER JOIN agmp_app_study on agmp_app_study.id = agmp_app_snp.reference_id
+INNER JOIN agmp_app_disease on agmp_app_disease.id = agmp_app_snp.disease_id
+AND agmp_app_disease.id =  %s;""", [query_id]):
+            disease_list.append(p)
+
     print (variant_drug)
     print (gene_list)
     print (gene_drug)
@@ -161,24 +186,15 @@ def _fetch_disease(diseases):
     :return dict
     '''
     ret = []
-    # for disease in diseases:
-    #     disease_object = dict()
-    #     disease_object['key'] = 'ds'
-    #     disease_object['detail'] = [f"Source: {disease.get('source')}"]
+    for disease in diseases:
+        disease_object = dict()
+        disease_object['key'] = 'ds'
+        disease_object['detail'] = []
 
-    #     disease_object['id'] = disease['id']
-    #     disease_object['name'] = disease['association_with']
-    #     disease_object['gene'] = disease['gene_id']
-    #     disease_object['allele'] = disease['allele']
-    #     disease_object['drug'] = disease['drug_id']
-    #     disease_object['reference'] = disease['reference_id']
-    #     disease_object['p_value'] = disease['p_value']
-    #     disease_object['source'] = disease['source']
-    #     disease_object['id_in_source'] = disease['id_in_source']
-    #     disease_object['region'] = disease['region']
-    #     disease_object['country_of_participants'] = disease['country_of_participants']
-    #     ret.append(disease_object)
-    # print('DISEASE ',ret)
+        disease_object['id'] = disease.get('id')
+        disease_object['name'] = disease.get('disease_name')
+        ret.append(disease_object)
+    print('DISEASE ',ret)
     return ret
 
 def _fetch_drug(drugs):
@@ -213,7 +229,7 @@ def _fetch_variant(qs):
     '''
     ret = []
     snps = SnpModel.objects.select_related('gene').filter(rs_id__icontains= qs).all()
-    # print(snps)
+    print(snps)
     for snp in snps:
         # snp = snp.values()
         variant_object = dict()
@@ -288,7 +304,9 @@ def query(request, query_string, **kwargs):
         if is_disease:
             disgenet_snps = SnpModel.objects.filter(source__icontains= 'DisGeNET')
             disgenet_snps = disgenet_snps.filter(association_with__icontains=query_string)
-            pass_list += _fetch_disease(disgenet_snps.values())
+            # pass_list += _fetch_disease(disgenet_snps.values())
+            pass_list += _fetch_disease(disease.objects.filter(disease_name__contains= query_string).values())
+            print (pass_list)
         if is_drug:
             pass_list += _fetch_drug(drug.objects.filter(drug_name__contains= query_string).values())
         if is_variant:
