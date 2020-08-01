@@ -127,7 +127,39 @@
         {% endfor %}
       </tbody>
     </table>
-  {% endif %}    
+  {% endif %}
+
+  {% if search_type == 'variant-disease' %}
+  <h3><span>Variant Disease associations</span></h3><br>
+    <table id="detail-table" class="display table table-hover" cellspacing="0" width="100%">
+      <thead>
+        <tr>
+          <th>Variant</th>
+          <th>Disease</th>
+          <th>Gene</th>
+          <th>Significance</th>
+          <th>Country</th>
+          <th>Studies</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for vnt_dis in diseases %}
+          <tr>
+              <td>{{ vnt_dis.rs_id }}</td>
+              <td>{{ vnt_dis.disease_name }}</td>
+              <td>
+                <a href="/search_details/gene-drug/{{ vnt_dis.gene_id }}">
+                  {{ vnt_dis.gene_name }}
+                </a>
+              </td>
+              <td>{{ vnt_dis.p_value }}</td>
+              <td>{{ vnt_dis.country_of_participants }}</td>
+              <td><a target="_blank" href="https://www.ncbi.nlm.nih.gov/pubmed/{{ vnt_dis.reference_id }}">{{ vnt_dis.title }}</a></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
 </div>
 
 {% endblock %}
