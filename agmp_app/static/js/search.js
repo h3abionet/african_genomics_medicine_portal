@@ -90,7 +90,7 @@ $(document).ready(function () {
       url: URL,
       dataType: "json",
       success: function (data) {
-        console.log(data);
+        // console.log(data);
         $('#results').empty();
         for (let i = 0; i < data.length; i++) {
           let name = '', head = '';
@@ -100,10 +100,10 @@ $(document).ready(function () {
             head += "<h2 class='snippet'>"+el+"</h2>";
           });
           // gedg = (rec.key == 'dg')||(rec.key == 'ge') ? "<a href='/search_details/gene-drug/"+rec.id+"'><h2 class='snippet'>For gene associations click here</h2></a>" : '';
-          gedg = (rec.key == 'ds')||(rec.key == 'ge') ? "<a href='/search_details/gene-drug/"+rec.id+"'><h2 class='snippet'>For gene associations click here</h2></a>" : '';
+          gedg = (rec.key == 'ge') ? "<a href='/search_details/gene-drug/"+rec.id+"'><h2 class='snippet'>For gene associations click here</h2></a>" : '';
           vtdg = (rec.key == 'dg')||(rec.key == 'vt') ? "<a href='/search_details/variant-drug/"+rec.id+"'><h4 class='snippet'>For variant-drug associations click here</h4></a>" : '';          
           // geds = (rec.key == 'ge')||(rec.key == 'ds') ? "<a href='/search_details/gene-disease/"+rec.id+"'><h4 class='snippet'>For gene-disease associations click here</h4></a>" : '';
-          // vtds = (rec.key == 'vt')||(rec.key == 'ds') ? "<a href='/search_details/variant-disease/"+rec.id+"'><h4 class='snippet'>For variant-disease associations click here</h4></a>" : '';
+          vtds = (rec.key == 'vt')||(rec.key == 'ds') ? "<a href='/search_details/variant-disease/"+rec.id+"'><h4 class='snippet'>For variant-disease associations click here</h4></a>" : '';
 
           // results = '' + name;
           $('<div class="list-data"></div>')
@@ -112,7 +112,7 @@ $(document).ready(function () {
             .append(gedg)
             .append(vtdg)
             // .append(geds)
-            // .append(vtds)
+            .append(vtds)
           .appendTo('#results').fadeIn(8000);
         }
         // check for empty results
