@@ -27,12 +27,12 @@ SECRET_KEY = config.SECRET_KEY
 # as a failsafe if you don't have this flag in config switch on production
 DEBUG = config.DEBUG
 
-#ALLOWED_HOSTS = [
-#    'agpm.knust.edu.gh',
+ALLOWED_HOSTS = [
+   'agpm.knust.edu.gh',
 #    'localhost',
 #    '127.0.0.1',
 #    '0.0.0.0'
-#]
+]
 
 
 # Application definition
