@@ -14,6 +14,10 @@ class drug(models.Model):
     indication=models.TextField()
     iupac_name=models.TextField()
 
+class disease(models.Model):
+    id=models.CharField(max_length=50, primary_key=True, default="DIS0")
+    disease_name=models.CharField(max_length=250)
+
 class study(models.Model):
     id=models.CharField(max_length=50, primary_key=True)
     reference_id=models.CharField(max_length=50)
@@ -34,6 +38,7 @@ class snp(models.Model):
     rs_id=models.CharField(max_length=50, default="RS0")
     gene=models.ForeignKey(pharmacogenes, on_delete=models.CASCADE, default="GENE0")
     drug=models.ForeignKey(drug, on_delete=models.CASCADE, default="DRUG0")
+    disease=models.ForeignKey(disease, on_delete=models.CASCADE, default="DIS0")
     allele=models.CharField(max_length=50)
     association_with=models.TextField(default="NA")
     reference=models.ForeignKey(study, on_delete=models.CASCADE)
