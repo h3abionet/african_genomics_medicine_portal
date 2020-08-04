@@ -136,6 +136,32 @@ def search_details(request, search_type, query_id):
         AND agmp_app_drug.id = %s;", [query_id]):
             variant_drug.append(p)
 
+    if (search_type == 'variant-disease') and 'snp' in query_id.lower():
+        detail_view = 'search_details.html'
+        for p in pharmacogenes.objects.raw(""" SELECT
+agmp_app_snp.id,
+agmp_app_snp.snp_id,
+rs_id,
+allele,
+association_with,
+p_value,
+source,
+region,
+country_of_participants,
+disease_id,
+agmp_app_pharmacogenes.gene_name,
+agmp_app_pharmacogenes.id AS gene_id,
+agmp_app_disease.disease_name,
+agmp_app_study.type,
+agmp_app_study.reference_id,
+agmp_app_study.title
+FROM agmp_app_snp
+INNER JOIN agmp_app_pharmacogenes on agmp_app_pharmacogenes.id = agmp_app_snp.gene_id
+INNER JOIN agmp_app_study on agmp_app_study.id = agmp_app_snp.reference_id
+INNER JOIN agmp_app_disease on agmp_app_disease.id = agmp_app_snp.disease_id
+AND agmp_app_snp.snp_id = %s;""", [query_id]):
+            disease_list.append(p)
+
     if (search_type == 'variant-disease') and 'dis' in query_id.lower():
         detail_view = 'search_details.html'
         for p in pharmacogenes.objects.raw(""" SELECT
