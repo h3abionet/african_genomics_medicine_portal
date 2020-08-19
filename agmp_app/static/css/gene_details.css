@@ -46,12 +46,12 @@ a:hover {
     outline: 0px;
 }
 
-.in-text-selection,
+/* .in-text-selection,
 ::selection {
     text-shadow: none;
     background: var(--select-text-bg-color);
     color: var(--select-text-font-color);
-}
+} */
 
 #write {
     margin: 0px auto;
@@ -298,9 +298,9 @@ table.md-table td {
     background-color: inherit;
 }
 
-.CodeMirror-linenumber {
+/* .CodeMirror-linenumber {
     user-select: none;
-}
+} */
 
 .CodeMirror {
     text-align: left;
