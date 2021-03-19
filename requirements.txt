@@ -3,7 +3,7 @@ astroid==2.3.3
 certifi==2019.11.28
 chardet==3.0.4
 distlib==0.3.0
-Django==2.2.13
+Django==2.2.18
 django-agnocomplete==0.14.0
 django-bootstrap4==1.0.1
 django-crispy-forms==1.7.0
