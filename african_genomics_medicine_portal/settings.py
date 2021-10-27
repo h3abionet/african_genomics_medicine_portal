@@ -29,7 +29,7 @@ DEBUG = config.DEBUG
 
 ALLOWED_HOSTS = [
    'agpm.knust.edu.gh',
-#    'localhost',
+    'localhost',
     '127.0.0.1',
 #    '0.0.0.0'
 ]

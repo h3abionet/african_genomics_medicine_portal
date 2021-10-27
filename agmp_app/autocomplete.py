@@ -1,6 +1,6 @@
 from agnocomplete.register import register
 from agnocomplete.core import AgnocompleteChoices, AgnocompleteModel
-from .models import Index
+#from .models import Index
 from django.utils.functional import cached_property
 from copy import copy
 import logging
@@ -8,17 +8,17 @@ import logging
 logger = logging.getLogger(__name__)
 _omni = []
 
-class Search(AgnocompleteModel):
-    model = Index
-    fields = ['recname', 'keywords']
-    value_key = 'recname'
-    label_key = 'recname'
+# class Search(AgnocompleteModel):
+#     model = Index
+#     fields = ['recname', 'keywords']
+#     value_key = 'recname'
+#     label_key = 'recname'
 
-    def item(self, current_item):
-        return dict(
-            value=current_item.recname,
-            label=current_item.recname,
-        )       
+#     def item(self, current_item):
+#         return dict(
+#             value=current_item.recname,
+#             label=current_item.recname,
+#         )       
 
-# Register models
-register(Search)
+# # Register models
+# register(Search)
