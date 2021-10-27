@@ -51,7 +51,6 @@ class snp(models.Model):
     longitude = models.DecimalField(max_digits=10,decimal_places=7,default=Decimal('0.0000000'))
 
 class star_allele(models.Model):
-    id=models.AutoField(primary_key=True)
     star_id=models.CharField(max_length=50, default='NA')
     star_annotation=models.CharField(max_length=50)
     gene=models.ForeignKey(pharmacogenes, on_delete=models.CASCADE, default="GENE0")
