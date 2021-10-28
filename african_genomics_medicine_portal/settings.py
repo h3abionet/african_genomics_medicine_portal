@@ -10,8 +10,16 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
+import json
 import os
 import config
+try:
+    import config
+except ImportError:
+    print("Cannot find config.py in the root folder, do you need to create one ?")
+    import sys
+    sys.exit()
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -25,13 +33,15 @@ SECRET_KEY = config.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # as a failsafe if you don't have this flag in config switch on production
-DEBUG = config.DEBUG
+# DEBUG = config.DEBUG
+
+DEBUG = True
 
 ALLOWED_HOSTS = [
-   'agpm.knust.edu.gh',
+    'agpm.knust.edu.gh',
     'localhost',
     '127.0.0.1',
-#    '0.0.0.0'
+    #    '0.0.0.0'
 ]
 
 
@@ -147,9 +157,9 @@ STATICFILES_DIRS = [
 RESULTS_PER_PAGE = 50
 
 LEAFLET_CONFIG = {
-    'TILES' : [('Streets', 'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png', 
-                {
-                 'attribution': '&copy; Data from H3ABioNet', 
-                 'lang': 'en'
-                })]
+    'TILES': [('Streets', 'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png',
+               {
+                   'attribution': '&copy; Data from H3ABioNet',
+                   'lang': 'en'
+               })]
 }
