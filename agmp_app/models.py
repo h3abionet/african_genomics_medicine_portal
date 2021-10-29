@@ -9,6 +9,7 @@ class Gene(models.Model):
     function = models.TextField(default="NA", max_length=2500, null=True)
     chromosome = models.CharField(default="NA", max_length=50)
 
+
 class Variant(models.Model):
     variant_id = models.CharField(max_length=50)
     rs_id_star_annotation = models.CharField(max_length=50)
@@ -25,6 +26,7 @@ class Variant(models.Model):
     #phenotypes = models.ManyToManyField("Phenotype")
     #studies = models.ManyToManyField("Study")
 
+
 class Study(models.Model):
     study_id = models.CharField(primary_key=True, max_length=50)
     publication_id = models.CharField(max_length=50, default="NA")
@@ -34,6 +36,7 @@ class Study(models.Model):
     study_type = models.CharField(max_length=50, default="NA")
     data_ac = models.CharField(max_length=50, default="NA")
     variants = models.ManyToManyField("Variant", through='Variant_Study')
+
 
 class Variant_Study(models.Model):
     variant = models.ForeignKey("Variant", on_delete=models.CASCADE)
@@ -53,6 +56,7 @@ class Phenotype(models.Model):
     name = models.CharField(max_length=250)
     variants = models.ManyToManyField("Variant")
 
+
 class Drug(models.Model):
     drug_id = models.CharField(max_length=250, primary_key=True)
     drug_bank_id = models.CharField(max_length=50, null=True)
@@ -60,7 +64,7 @@ class Drug(models.Model):
     state = models.CharField(max_length=250, null=True)
     indication = models.TextField()
     iupac_name_or_sequence = models.TextField()
-    
+
 
 # class Index(models.Model):
 #     id=models.AutoField(primary_key=True)
