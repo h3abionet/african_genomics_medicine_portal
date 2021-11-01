@@ -74,6 +74,7 @@ class Command(BaseCommand):
             gene_id, chromosome, gene_name, uniprot_ac, function = row
             gene, created = Gene.objects.get_or_create(
                 gene_name=gene_name,
+                gene_id=gene_id,
                 chromosome=chromosome,
                 uniprot_ac=uniprot_ac,
                 function=function)
