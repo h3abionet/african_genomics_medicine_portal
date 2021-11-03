@@ -46,3 +46,6 @@ Project will now be running on the server.
 
 ### Generate PDF ERD of models
 `python manage.py graph_models agmp_app -g -o erd.pdf`
+
+### Ingest test data
+`./ingest.sh`
