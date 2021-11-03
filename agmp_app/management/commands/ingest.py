@@ -69,6 +69,7 @@ class Command(BaseCommand):
                 iupac_name_or_sequence=iupac_name_or_sequence,
             )
             drugs_dict[drug_id] = drug
+        print(f"done.                    {len(drugs_dict)} Drugs in the DB now")
 
         # import sys
         # sys.exit()
@@ -89,8 +90,7 @@ class Command(BaseCommand):
                     function=function,
                 )
             except:
-                print("Anmol")
-                print(row)
+                print("Error loading row:", row)
         all_genes = Gene.objects.all()
         print(
             f"done.                    {all_genes.count()} Genes in the DB now")
@@ -122,7 +122,7 @@ class Command(BaseCommand):
                 ethnicity,
             ) = row
 
-            print(row)
+            #print(row)
             variant, created = Variant.objects.get_or_create(
                 variant_id=variant_id,
                 rs_id_star_annotation=rs_id_star_annotation,
