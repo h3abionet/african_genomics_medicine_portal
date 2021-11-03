@@ -1,189 +1,197 @@
 <!DOCTYPE html>
 <html>
-    <script type="text/javascript" src="//code.jquery.com/jquery-3.3.1.js"></script>
-    <script  type="text/javascript" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="//cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
-    <script type="text/javascript" src="//cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
-    <script type="text/javascript" src="//cdn.datatables.net/plug-ins/preview/searchPane/dataTables.searchPane.min.js"></script>
-    <script type="text/javascript" src="//cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
-    <script type="text/javascript" src="//cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
-    <script type="text/javascript" src="//cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
-    <script type="text/javascript" src="//cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
-    
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/select/1.2.7/css/select.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/preview/searchPane/dataTables.searchPane.min.css">
-    
-    <style>
-        body {
-            font: 90%/1.45em "Helvetica Neue", HelveticaNeue, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            color: #333;
-            background-color: #fff;
-        }
-        
-        div.dt-searchPanes {
-            flex-direction: column;
-            height: 500px;
-        }
-        
-        /* Layout for the table */
-        div.searchGrid {
-            display: flex;
-            width: 70%;
-        
-            flex-direction: row;
-            flex-wrap: nowrap;
-            justify-content: space-around;
-            align-content: flex-start;
-            align-items: stretch;
-        }
-        
-        div.searchPanes {
-            flex: 1 1 auto;
-            padding-left: 1em;
-            padding-right: 1em;
-        }
-            
-        div.searchTable {
-            flex: 1 1 auto;
-            padding-right: 1em;
-        }    
-    </style>
-    <body> 
-    <div class="container"  align="center">
-    <h1>African precision medicine portal: Dummy Data display</h1>
-    
-    <br>
-    <div class="searchGrid" align="left">
-        <div class="searchTable">
-            <table id="" class="display" cellspacing="0" width="100%">
-            <thead>
-                <tr>
-                    <th>Annotation ID</th>
-                    <th>Gene</th>
-                    <th>Protein</th>
-                    <th>Function</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for gene in genes %}
-                <tr><td>{{gene.id}}</td>
-                    <td>{{gene.gene_name}}</td>
-                    <td>{{gene.protein}}</td>
-                    <td>{{gene.function}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-            </table>
-        </div>
-        <!-- <div class="searchPanes"></div> -->
-    </div>
+<script type="text/javascript" src="//code.jquery.com/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="//cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
+<script type="text/javascript" src="//cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript"
+    src="//cdn.datatables.net/plug-ins/preview/searchPane/dataTables.searchPane.min.js"></script>
+<script type="text/javascript" src="//cdn.datatables.net/buttons/1.5.2/js/buttons.flash.min.js"></script>
+<script type="text/javascript" src="//cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="//cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
+<script type="text/javascript" src="//cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
 
-    <!-- next table -->
-    <div class="searchGrid" align="left">
-        <div class="searchTable">
-            <table id="" class="display" cellspacing="0" width="100%">
-            <thead>
-                <tr>
-                    <th>drug id</th>
-                    <th>drug name</th>
-                    <th>posology</th>
-                    <th>chemical structure</th>
-                    <th>drug bank id</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for drug in drugs %}
-                <tr><td>{{drug.drug_id}}</td>
-                    <td>{{drug.drug_name}}</td>
-                    <td>{{drug.posology}}</td>
-                    <td>{{drug.chemical_structure}}</td>
-                    <td>{{drug.drug_bank_id}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-            </table>
-        </div>
-        <!-- <div class="searchPanes"></div> -->
-    </div>
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/select/1.2.7/css/select.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css">
+<link rel="stylesheet" type="text/css"
+    href="//cdn.datatables.net/plug-ins/preview/searchPane/dataTables.searchPane.min.css">
 
-    <!-- next table -->
-    <div class="searchGrid" align="left">
-        <div class="searchTable">
-            <table id="" class="display" cellspacing="0" width="100%">
-            <thead>
-                <tr>
-                    <th>snp id</th>
-                    <th>rs No.</th>
-                    <th>drug id</th>
-                    <th>allele</th>
-                    <th>gene id</th>
-                    <th>description</th>
-                    <th>reference</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for snp in snps %}
-                <tr><td>{{snp.snp_id}}</td>
-                    <td>{{snp.rs_id}}</td>
-                    <td>{{snp.drug_id_id}}</td>
-                    <td>{{snp.allele}}</td>
-                    <td>{{snp.gene_id_id}}</td>
-                    <td>{{snp.description}}</td>
-                    <td>{{snp.reference_id_id}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-            </table>
-        </div>
-        <!-- <div class="searchPanes"></div> -->
-    </div>
+<style>
+    body {
+        font: 90%/1.45em "Helvetica Neue", HelveticaNeue, Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #333;
+        background-color: #fff;
+    }
 
-    <!-- next table -->
-    <div class="searchGrid" align="left">
-        <div class="searchTable">
-            <table id="" class="display" cellspacing="0" width="100%">
-            <thead>
-                <tr>
-                    <th>study id</th>
-                    <th>title</th>
-                    <th>External id</th>
-                    <th>date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for study in studies %}
-                <tr><td>{{study.study_id}}</td>
-                    <td>{{study.study_title}}</td>
-                    <td>{{study.external_id}}</td>
-                    <td>{{study.date}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-            </table>
+    div.dt-searchPanes {
+        flex-direction: column;
+        height: 500px;
+    }
+
+    /* Layout for the table */
+    div.searchGrid {
+        display: flex;
+        width: 70%;
+
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: space-around;
+        align-content: flex-start;
+        align-items: stretch;
+    }
+
+    div.searchPanes {
+        flex: 1 1 auto;
+        padding-left: 1em;
+        padding-right: 1em;
+    }
+
+    div.searchTable {
+        flex: 1 1 auto;
+        padding-right: 1em;
+    }
+</style>
+
+<body>
+    <div class="container" align="center">
+        <h1>African precision medicine portal: Dummy Data display</h1>
+
+        <br>
+        <div class="searchGrid" align="left">
+            <div class="searchTable">
+                <table id="" class="display" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Annotation ID</th>
+                            <th>Gene</th>
+                            <th>Protein</th>
+                            <th>Function</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for gene in genes %}
+                        <tr>
+                            <td>{{gene.id}}</td>
+                            <td>{{gene.gene_name}}</td>
+                            <td>{{gene.protein}}</td>
+                            <td>{{gene.function}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- <div class="searchPanes"></div> -->
         </div>
-        <!-- <div class="searchPanes"></div> -->
+
+        <!-- next table -->
+        <div class="searchGrid" align="left">
+            <div class="searchTable">
+                <table id="" class="display" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>drug id</th>
+                            <th>drug name</th>
+                            <th>posology</th>
+                            <th>chemical structure</th>
+                            <th>drug bank id</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for drug in drugs %}
+                        <tr>
+                            <td>{{drug.drug_id}}</td>
+                            <td>{{drug.drug_name}}</td>
+                            <td>{{drug.posology}}</td>
+                            <td>{{drug.chemical_structure}}</td>
+                            <td>{{drug.drug_bank_id}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- <div class="searchPanes"></div> -->
+        </div>
+
+        <!-- next table -->
+        <div class="searchGrid" align="left">
+            <div class="searchTable">
+                <table id="" class="display" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>snp id</th>
+                            <th>rs No.</th>
+                            <th>drug id</th>
+                            <th>allele</th>
+                            <th>gene id</th>
+                            <th>description</th>
+                            <th>reference</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for snp in snps %}
+                        <tr>
+                            <td>{{snp.snp_id}}</td>
+                            <td>{{snp.rs_id}}</td>
+                            <td>{{snp.drug_id_id}}</td>
+                            <td>{{snp.allele}}</td>
+                            <td>{{snp.gene_id_id}}</td>
+                            <td>{{snp.description}}</td>
+                            <td>{{snp.reference_id_id}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- <div class="searchPanes"></div> -->
+        </div>
+
+        <!-- next table -->
+        <div class="searchGrid" align="left">
+            <div class="searchTable">
+                <table id="" class="display" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>study id</th>
+                            <th>title</th>
+                            <th>External id</th>
+                            <th>date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for study in studies %}
+                        <tr>
+                            <td>{{study.study_id}}</td>
+                            <td>{{study.study_title}}</td>
+                            <td>{{study.external_id}}</td>
+                            <td>{{study.date}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- <div class="searchPanes"></div> -->
+        </div>
     </div>
-    </div>
-    </body>
-    <script>
-    $(document).ready(function() {
-            var table = $('table.display').DataTable( {
-                searchPane: {
-                        container: '.searchPanes'
-                    },
-                "pagingType": "full",
-                dom: 'lBfrtip',
-                buttons: ['print', 'copy', 'csv'],
-            
-            } );
-            // Event listener to the two range filtering inputs to redraw on input
-            $('#min, #max').keyup( function() {
-                table.draw();
-            } );
-        } );
-    </script>
+</body>
+<script>
+    $(document).ready(function () {
+        var table = $('table.display').DataTable({
+            searchPane: {
+                container: '.searchPanes'
+            },
+            "pagingType": "full",
+            dom: 'lBfrtip',
+            buttons: ['print', 'copy', 'csv'],
+
+        });
+        // Event listener to the two range filtering inputs to redraw on input
+        $('#min, #max').keyup(function () {
+            table.draw();
+        });
+    });
+</script>
+
 </html>

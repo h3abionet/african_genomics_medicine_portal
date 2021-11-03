@@ -1,0 +1,20 @@
+html, body {
+    height: 100%;
+  }
+  body {
+    font-family: Roboto, sans-serif;
+    font-size: 18px;
+    font-weight: normal;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .container {
+    margin-top: 40px;
+    flex: 1 0 auto;
+  }
+  .text-blue {
+    color: #fff !important;
+    font-weight: 500;
+    font-size: inherit;  
+  }
