@@ -1,4 +1,4 @@
-pwd# African Genomic Precision Medicine Portal
+# African Genomic Precision Medicine Portal
 
 This is the African Genomic Medicine Portal that provides information about African genomics and variation with regards to pharmocology and disease.
 
