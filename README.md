@@ -38,3 +38,10 @@ Install the following packages (if you have not done so already):
 * `python manage.py runserver`
 
 Project will now be running on the server.
+
+
+# Screen shots of tabular presentation of PharmaGKb data
+
+![](images/drug.png?raw=true)
+![](images/snp.png?raw=true)
+![](images/snp_ethnic.png?raw=true)
