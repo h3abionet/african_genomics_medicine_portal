@@ -87,5 +87,5 @@ __pycache__/
 local_settings.py
 
 env_pm/
-db.sqlite3
+*.sqlite3
 config.py
