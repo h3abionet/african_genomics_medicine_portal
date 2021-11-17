@@ -1,8 +1,19 @@
  /* this css file is for projects specific overides */
 /* changes here will overide h3abionet.css */
 
-body{
+/* body{
   font-size: 18px;
+} */
+
+
+body,
+* {
+  font-family: 'Roboto', sans-serif !important;
+
+  font-weight: 300 !important;
+  line-height: 1.6;
+
+
 }
 
 
@@ -16,6 +27,7 @@ body{
 .text-bigblue {
   color: white !important;
 }
+
 
 #logo {
   position: absolute;
