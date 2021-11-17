@@ -25,7 +25,15 @@
 	{% endblock %}
 
 	<style>
+		/* Media Queries: Tabled Portrait */
+		@media screen and (max-width: 768px) {
 
+			.home_top_text {
+				font-size: 1.2rem !important;
+			}
+
+
+		}
 	</style>
 </head>
 
@@ -34,13 +42,12 @@
 
 		<div class="row">
 			<div class="col-md-4">
-				<a class="navbar-brand text-bigblue" href="/">
-					<img style="margin-right:10px" src="{% static 'img/h3ab.png' %}" width="" height="15%"
-						class="d-inline-block " alt="">
+				<a class="navbar-brand text-bigblue margin_on_top_image" href="/">
+					<img src="{% static 'img/h3ab.png' %}" width="" height="15%" class="d-inline-block " alt="">
 				</a>
 			</div>
 			<div class="col-md-8">
-				<div class="top_title_text">
+				<div class="top_title_text home_top_text">
 					<h3><b><i>African Genomic Medicine Portal</i></b></h3>
 				</div>
 
