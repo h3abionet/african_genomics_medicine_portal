@@ -21,19 +21,12 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet"
 		crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700;900&display=swap" rel="stylesheet">
 	{% block css %}
 	{% endblock %}
 
 	<style>
-		/* Media Queries: Tabled Portrait */
-		@media screen and (max-width: 768px) {
-
-			.home_top_text {
-				font-size: 1.2rem !important;
-			}
-
-
-		}
+	
 	</style>
 </head>
 
@@ -62,15 +55,15 @@
 				<img style="margin-right:10px" src="{% static 'img/bionetlogo.png' %}" width="30" height="30"
 					class="d-inline-block align-top" alt="">Home
 			</a>
+
 			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse"
 				data-target="#main-navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
+
 			<div class="collapse navbar-collapse" id="main-navigation">
+
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item ml-auto py-0">
-						<a class="nav-link dropdown text-blue" href="/home">Home</a>
-					</li>
 					<li class="nav-item ml-auto py-0 sp-menu-item">
 						<a class="nav-link dropdown text-blue" href="/about">About</a>
 					</li>
