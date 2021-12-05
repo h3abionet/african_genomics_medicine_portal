@@ -4,37 +4,67 @@
 
 {% load leaflet_tags %}
 {% block js%}
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> 
-  {% leaflet_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+{% leaflet_js %}
 {% endblock %}
 
 {%block css%}
 {% leaflet_css %}
 <style>
-body {font-family: Roboto, sans-serif;}
-.node {
-  border: solid 1px white;
-  font: 10px sans-serif;
-  line-height: 12px;
-  overflow: hidden;
-  position: absolute;
-  text-indent: 2px;
-}
-.c3-line, .c3-focused {stroke-width: 3px !important;}
-.c3-bar {stroke: white !important; stroke-width: 1;}
-.c3 text { font-size: 12px; color: grey;}
-.tick line {stroke: white;}
-.c3-axis path {stroke: grey;}
-.c3-circle { opacity: 1 !important; }
-.c3-xgrid-focus {visibility: hidden !important;}
-.leaflet-container {  /* all maps */
-	width:  440%;
-	height: 400px;
-}
-/* Resize the "display_raw" textbox */
-.django-leaflet-raw-textarea {
-	width: 100%;
-}
+  body {
+    font-family: Roboto, sans-serif;
+  }
+
+  .node {
+    border: solid 1px white;
+    font: 10px sans-serif;
+    line-height: 12px;
+    overflow: hidden;
+    position: absolute;
+    text-indent: 2px;
+  }
+
+  .c3-line,
+  .c3-focused {
+    stroke-width: 3px !important;
+  }
+
+  .c3-bar {
+    stroke: white !important;
+    stroke-width: 1;
+  }
+
+  .c3 text {
+    font-size: 12px;
+    color: grey;
+  }
+
+  .tick line {
+    stroke: white;
+  }
+
+  .c3-axis path {
+    stroke: grey;
+  }
+
+  .c3-circle {
+    opacity: 1 !important;
+  }
+
+  .c3-xgrid-focus {
+    visibility: hidden !important;
+  }
+
+  .leaflet-container {
+    /* all maps */
+    width: 440%;
+    height: 400px;
+  }
+
+  /* Resize the "display_raw" textbox */
+  .django-leaflet-raw-textarea {
+    width: 100%;
+  }
 </style>
 {% endblock %}
 
@@ -68,27 +98,27 @@ body {font-family: Roboto, sans-serif;}
 <div class="row">
   <div class="col-3">
     <script type="text/javascript">
-        function map_init(map, options){
-          $.ajax({
-            url: "/summary/countries",
-            dataType: "json",
-            data: {
-            },
-            success: function( data ) {
-              // console.log(data);
-              data.forEach(el => {
-                let text = "Country: "+el.country+"<br/>Total No.: "+el.count
-                let marker = L.marker([el.latitude, el.longitude]);
-                marker.bindTooltip(text, {permanent: false, className: "count-label", offset: [0, 0] });
-                marker.addTo(map);
-              });
-            }, 
-            error: function(e){
-              console.log(e);
-            }
-          });
-          map.setView([-0.6605788, 14.8965794], 3);
-        }
+      function map_init(map, options) {
+        $.ajax({
+          url: "/summary/countries",
+          dataType: "json",
+          data: {
+          },
+          success: function (data) {
+            // console.log(data);
+            data.forEach(el => {
+              let text = "Country: " + el.country + "<br/>Total No.: " + el.count
+              let marker = L.marker([el.latitude, el.longitude]);
+              marker.bindTooltip(text, { permanent: false, className: "count-label", offset: [0, 0] });
+              marker.addTo(map);
+            });
+          },
+          error: function (e) {
+            console.log(e);
+          }
+        });
+        map.setView([-0.6605788, 14.8965794], 3);
+      }
     </script>
     {% leaflet_map "mapd" callback="window.map_init" %}
   </div>

@@ -2,6 +2,7 @@
 {% load static %}
 <html>
 
+
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,111 +22,170 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet"
 		crossorigin="anonymous">
+
+
+	<link rel="shortcut icon" href="{% static 'img/bionetlogo.png' %}" />
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700;900&display=swap" rel="stylesheet">
 	{% block css %}
 	{% endblock %}
 
 	<style>
-	
+		.top_div_fixed {
+			/* overflow: hidden; */
+			/* position: fixed;
+			top: 0;
+			width: 100%; */
+
+
+		}
+
+		.main {
+			/* 
+			background-color: lime; */
+
+			/* Add a bottom margin to avoid content overlay */
+
+		}
+
+		.main_1 {
+			/* margin-top: 21.5%;
+			background-color: yellow; */
+			/* overflow-y: scroll; */
+			/* height: 400px;
+			overflow-x: hidden;
+			overflow-y: auto;
+			position: relative; */
+
+			/* Add a bottom margin to avoid content overlay */
+		}
 	</style>
 </head>
 
 <body>
-	<div class="container-fluid">
 
-		<div class="row">
-			<div class="col-md-4">
-				<a class="navbar-brand text-bigblue margin_on_top_image" href="/">
-					<img src="{% static 'img/h3ab.png' %}" width="" height="15%" class="d-inline-block " alt="">
-				</a>
-			</div>
-			<div class="col-md-8">
-				<div class="top_title_text home_top_text">
-					<h3><b><i>African Genomic Medicine Portal</i></b></h3>
+	<div class="top_div_fixed">
+		<div class="container-fluid">
+
+			<div class="row">
+				<div class="col-md-4">
+					<a class="navbar-brand text-bigblue margin_on_top_image" href="https://h3abionet.org/"
+						target=”_blank”>
+						<img src="{% static 'img/h3ab.png' %}" width="" height="15%" class="d-inline-block " alt="">
+					</a>
 				</div>
+				<div class="col-md-8">
+					<div class="top_title_text home_top_text font_header " id="header_top_1">
+						<h3>
+							<b> African Genomic Medicine Portal</b>
 
+						</h3>
+					</div>
+
+				</div>
 			</div>
+
 		</div>
 
-	</div>
+		<div class="container2">
+			<nav class="navbar navbar-fixed-top navbar-expand-md navbar-light bg-mibio py-md-2">
 
-	<div class="container2">
-		<nav class="navbar navbar-fixed-top navbar-expand-md navbar-light bg-mibio py-md-2">
-			<a class="navbar-brand text-bigblue" href="/">
-				<img style="margin-right:10px" src="{% static 'img/bionetlogo.png' %}" width="30" height="30"
-					class="d-inline-block align-top" alt="">Home
-			</a>
 
-			<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse"
-				data-target="#main-navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
+				<a class="navbar-brand text-bigblue" href="/">
+					<img style="margin-right:10px" src="{% static 'img/bionetlogo.png' %}" width="30" height="30"
+						class="d-inline-block align-top dot" alt="">Home
+				</a>
 
-			<div class="collapse navbar-collapse" id="main-navigation">
+				<button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse"
+					data-target="#main-navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
 
-				<ul class="navbar-nav ml-auto">
-					<li class="nav-item ml-auto py-0 sp-menu-item">
-						<a class="nav-link dropdown text-blue" href="/about">About</a>
-					</li>
+				<div class="collapse navbar-collapse" id="main-navigation">
 
-					<li class="nav-item ml-auto py-0">
-						<a class="nav-link text-blue" href="/search/">Search</a>
-					</li>
-					<li class="nav-item ml-auto py-0">
-						<a class="nav-link text-blue" href="/summary/">Summary</a>
-					</li>
-					<li class="nav-item ml-auto py-0">
-						<div class="dropdown">
-							<button class="btn dropdown-toggle nav-link text-blue" type="button" data-toggle="dropdown"
-								aria-haspopup="true">
-								Resources
-							</button>
-							<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-								<a class="dropdown-item" href="/databases">Databases</a>
-								<a class="dropdown-item" href="/tools_pipelines">Tools &amp; Pipelines</a>
-								<a class="dropdown-item" href="/online_courses">Online Courses</a>
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item ml-auto py-0 sp-menu-item">
+							<a class="nav-link dropdown text-bigblue" href="/about">About</a>
+						</li>
+
+						<!-- <li class="nav-item ml-auto py-0">
+							<a class="nav-link text-bigblue" href="/search/">Search</a>
+						</li> -->
+						<li class="nav-item ml-auto py-0">
+							<a class="nav-link text-bigblue" href="/summary/">Summary</a>
+						</li>
+
+						<li class="nav-item ml-auto py-0">
+							<a class="nav-link text-bigblue" href="/resources">Resources</a>
+						</li>
+						<li class="nav-item ml-auto py-0">
+							<div class="dropdown">
+								<button class="btn dropdown-toggle nav-link text-blue" type="button"
+									data-toggle="dropdown" aria-haspopup="true">
+									Resources
+								</button>
+								<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+									<a class="dropdown-item" href="/databases">Databases</a>
+									<a class="dropdown-item" href="/tools_pipelines">Tools &amp;
+										Pipelines</a>
+									<a class="dropdown-item" href="/online_courses">Online Courses</a>
+								</div>
 							</div>
-						</div>
-					</li>
-					<!-- <li class="nav-item ml-auto py-0">
+						</li>
+						<!-- <li class="nav-item ml-auto py-0">
 						<a class="nav-link text-blue" href="/outreach/">Outreach</a>
 					</li> -->
-					<li class="nav-item ml-auto py-0">
-						<a class="nav-link text-blue" href="/help">Help</a>
-					</li>
-				</ul>
+						<li class="nav-item ml-auto py-0">
+							<a class="nav-link text-bigblue" href="/help">Help</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+		</div>
+
+
+		<!-- ########## start of top header with overlay white text ########### -->
+		<div class="header_top_bg vcenter-item ">
+
+
+			<div class="text-center">
+
+				<span class="text_top_bg">
+
+					{% block crumbs %}
+					{{ page.title }}
+					{% endblock %}
+
+
+				</span>
 			</div>
-		</nav>
+
+
+		</div>
+		<!-- ########### end of top header with overlay text ##############-->
+
+
+
 	</div>
 
-	<!-- ########## start of top header with overlay white text ########### -->
-	<div class="header_top_bg">
-
-		<span class="text_top_bg"> </span>
-		<!-- <H3 class="">
-	
-		  {% block title_rep %} <span class="text_top_bg"> African Microbiome Research Home Default</span> {% endblock %}
-		</H3> -->
+	<div class="main">
+		<div class="container main_1">
+			{% block content %}
+			{% endblock %}
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+				crossorigin="anonymous"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+				integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+				crossorigin="anonymous"></script>
+			<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+				integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+				crossorigin="anonymous"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+			{% block js%}
+			{% endblock %}
+			{% block content2 %}
+			{% endblock %}
+		</div>
 	</div>
-	<!-- ########### end of top header with overlay text ##############-->
-	<div class="container">
-		{% block content %}
-		{% endblock %}
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
-			crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-			integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-			crossorigin="anonymous"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-			integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-			crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-		{% block js%}
-		{% endblock %}
-		{% block content2 %}
-		{% endblock %}
-	</div>
-
 
 	<!-- New Footer start here-->
 	<div class="container-fluid page-footer_new ">
@@ -159,6 +219,8 @@
 							class="fab fa-twitter-square"></i></a>
 					<a target="_blank " href="https://www.youtube.com/channel/UCMYQE_GYsOKY6-j8z9N6Adw"
 						style="padding: 5px; color:#fff;"><i class="fab fa-youtube-square"></i></a>
+
+
 				</div>
 			</div>
 		</div>

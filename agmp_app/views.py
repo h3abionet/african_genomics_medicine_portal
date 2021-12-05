@@ -8,8 +8,8 @@ from .models import disease, pharmacogenes, drug, snp as SnpModel, star_allele, 
 from .forms import PostForm
 import json
 
-def index(request):
-    return render(request, 'index.html')
+# def index(request):
+#     return render(request, 'index.html')
 
 def about(request):
     return render(request, 'about.html')
@@ -404,7 +404,7 @@ def tools_pipelines(request):
     return render(request, 'tools_pipelines.html')
 
 def databases(request):
-    return render(request, 'databases.html')
+    return render(request, 'resources.html')
 
 def online_courses(request):
     return render(request, 'online_courses.html')

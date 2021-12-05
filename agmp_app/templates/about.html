@@ -1,29 +1,67 @@
 {% extends 'mainLayout.html' %}
 
+
 {% block title%}About{% endblock %}
+
+
+
 
 {% block content %}
 
+
 <h2 class="text-center">About</h2>
+
+{% with page_name="About" %}
+
+<div>Hello {{page_name}}!</div>
+
+
+{% firstof "variable contents" as variable %}
+
+
+{% endwith %}
+
+<div>
+
+	<div>Hello {{variable}}!</div>
+
+</div>
+
+
+
 <h3>Background</h3>
+<!-- 
+src="{{ static.img.url }}" -->
+
+
 
 <p>
-	The genomic profiles of African individuals and individuals of recent African descent are highly diverse. This genomic diversity is associated with susceptibility and predisposition to various communicable and non-communicable diseases in these populations. Similarly, genomic diversity is also associated with the response to various therapies deployed for these diseases. To proliferate scientific discovery related to genomic medicine in Africa, access to curated African data is required to highlight unique anomalies and facilitate research practices.	
+	The genomic profiles of African individuals and individuals of recent African descent are highly diverse. This
+	genomic diversity is associated with susceptibility and predisposition to various communicable and non-communicable
+	diseases in these populations. Similarly, genomic diversity is also associated with the response to various
+	therapies deployed for these diseases. To proliferate scientific discovery related to genomic medicine in Africa,
+	access to curated African data is required to highlight unique anomalies and facilitate research practices.
 </p>
 <p>
-	The African Genomic Medicine Portal (AGMP) is a resource which facilitates the transfer of existing knowledge regarding the genetic underpinnings associated with disease and drug response in African populations. The AGMP provides researchers with a platform from which they can retrieve existing information and resources with regards to the investigation and implementation of genomic medicine practices in African populations.
+	The African Genomic Medicine Portal (AGMP) is a resource which facilitates the transfer of existing knowledge
+	regarding the genetic underpinnings associated with disease and drug response in African populations. The AGMP
+	provides researchers with a platform from which they can retrieve existing information and resources with regards to
+	the investigation and implementation of genomic medicine practices in African populations.
 
 </p>
 <p>
-	The AGMP is adaptable to the user's need and can retrieve information regarding genetic variants, genes, diseases and drugs. Data retrieved from the AGMP are specific to African populations and diaspora, making it the first comprehensive resource for genomic medicine in Africa.
+	The AGMP is adaptable to the user's need and can retrieve information regarding genetic variants, genes, diseases
+	and drugs. Data retrieved from the AGMP are specific to African populations and diaspora, making it the first
+	comprehensive resource for genomic medicine in Africa.
 </p>
 
 <h3>Portal Objectives</h3>
 <ul>
-  <li>Provide genotype-phenotype associations as they pertain to African populations.</li>
-  <li>Provide pharmacogenomics information as they pertain to African populations.</li>
-  <li>Provide disease information as they pertain to African populations.</li>
-	<li>Provide access to existing resources and materials to enable the implementation, education, and practice of genomics and precision medicine.
+	<li>Provide genotype-phenotype associations as they pertain to African populations.</li>
+	<li>Provide pharmacogenomics information as they pertain to African populations.</li>
+	<li>Provide disease information as they pertain to African populations.</li>
+	<li>Provide access to existing resources and materials to enable the implementation, education, and practice of
+		genomics and precision medicine.
 	</li>
 </ul>
 
@@ -31,10 +69,13 @@
 <h3>Contributors</h3>
 
 <p>
-	Development of the AGMP was sparked by the increased amount of precision medicine research being conducted in Africa, and initiated by the Human Heredity and Health in Africa’s (H3Africa) Bioinformatics Network (H3ABioNet). H3ABioNet is funded by NIH Common Fund Award / NHGRI Grant Number U41HG006941.
+	Development of the AGMP was sparked by the increased amount of precision medicine research being conducted in
+	Africa, and initiated by the Human Heredity and Health in Africa’s (H3Africa) Bioinformatics Network (H3ABioNet).
+	H3ABioNet is funded by NIH Common Fund Award / NHGRI Grant Number U41HG006941.
 </p>
 <p>
-	Development of the AGMP was driven by H3ABioNet’s Databases and Resources Work Package, and led by the members of the Precision Medicine project.
+	Development of the AGMP was driven by H3ABioNet’s Databases and Resources Work Package, and led by the members of
+	the Precision Medicine project.
 </p>
 
 
@@ -42,7 +83,10 @@
 <h3>Original Data Sources</h3>
 
 <p>
-	Data provided in the AGMP was sourced from two existing online resources, PharmGKB and DisGeNET. These resources provide curated data from various existing resources as well, including existing genomics databases and published literature. African-specific data were retrieved and curated for access in the AGMP. More information on data retrieval and curation processes can be found in the associated articles.
+	Data provided in the AGMP was sourced from two existing online resources, PharmGKB and DisGeNET. These resources
+	provide curated data from various existing resources as well, including existing genomics databases and published
+	literature. African-specific data were retrieved and curated for access in the AGMP. More information on data
+	retrieval and curation processes can be found in the associated articles.
 </p>
 
 
@@ -55,11 +99,11 @@
 
 <h3>How to cite us?</h3>
 <ul>
-  <li>Article: Author, Title , journal , etc</li>
-  <li>Publication</li>
+	<li>Article: Author, Title , journal , etc</li>
+	<li>Publication</li>
 </ul>
 <ul>
-  <li>The title of the portal article</li>
-  <li>DOI:12343454567</li>
+	<li>The title of the portal article</li>
+	<li>DOI:12343454567</li>
 </ul>
 {% endblock %}
