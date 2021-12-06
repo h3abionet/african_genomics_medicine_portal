@@ -9,101 +9,193 @@
 {% block content %}
 
 
-<h2 class="text-center">About</h2>
-
-{% with page_name="About" %}
-
-<div>Hello {{page_name}}!</div>
 
 
-{% firstof "variable contents" as variable %}
+
+<div class="row">
+	<div class="col-md-3">
+		<nav class="navigation" id="mainNav">
+
+			<ul>
+				<div class="no_style">
+
+					<li><a class="navigation__link" href="#1">Background</a></li>
+					<li><a class="navigation__link" href="#2">Portal Objectives</a></li>
+					<li><a class="navigation__link" href="#3">Contributors</a></li>
+					<li><a class="navigation__link" href="#4">Original Data Sources</a></li>
+					<li><a class="navigation__link" href="#5">Version History</a></li>
+					<li><a class="navigation__link" href="#6">How to cite us ?</a></li>
+
+				</div>
+
+			</ul>
+
+		</nav>
+	</div>
+	<div class="col-md-9 section1">
+
+		<h3 class="text-center">About</h3>
+		<div class="page-section" id="1">
+			<h3 class="text-center">Background</h3>
+
+			<p>
+				The genomic profiles of African individuals and individuals of recent African descent are highly
+				diverse. This
+				genomic diversity is associated with susceptibility and predisposition to various communicable and
+				non-communicable
+				diseases in these populations. Similarly, genomic diversity is also associated with the response to
+				various
+				therapies deployed for these diseases. To proliferate scientific discovery related to genomic medicine
+				in Africa,
+				access to curated African data is required to highlight unique anomalies and facilitate research
+				practices.
+			</p>
+			<p>
+				The African Genomic Medicine Portal (AGMP) is a resource which facilitates the transfer of existing
+				knowledge
+				regarding the genetic underpinnings associated with disease and drug response in African populations.
+				The AGMP
+				provides researchers with a platform from which they can retrieve existing information and resources
+				with regards to
+				the investigation and implementation of genomic medicine practices in African populations.
+
+			</p>
+			<p>
+				The AGMP is adaptable to the user's need and can retrieve information regarding genetic variants, genes,
+				diseases
+				and drugs. Data retrieved from the AGMP are specific to African populations and diaspora, making it the
+				first
+				comprehensive resource for genomic medicine in Africa.
+			</p>
 
 
-{% endwith %}
+		</div>
+		<div class="page-section" id="2">
+			<h3 class="text-center">Portal Objectives</h3>
+			<ul>
+				<li>Provide genotype-phenotype associations as they pertain to African populations.</li>
+				<li>Provide pharmacogenomics information as they pertain to African populations.</li>
+				<li>Provide disease information as they pertain to African populations.</li>
+				<li>Provide access to existing resources and materials to enable the implementation, education, and
+					practice of
+					genomics and precision medicine.
+				</li>
+			</ul>
 
-<div>
 
-	<div>Hello {{variable}}!</div>
+		</div>
+		<div class="page-section" id="3">
+			<h3 class="text-center">Contributors</h3>
+
+			<p>
+				Development of the AGMP was sparked by the increased amount of precision medicine research being
+				conducted in
+				Africa, and initiated by the Human Heredity and Health in Africa’s (H3Africa) Bioinformatics Network
+				(H3ABioNet).
+				H3ABioNet is funded by NIH Common Fund Award / NHGRI Grant Number U41HG006941.
+			</p>
+			<p>
+				Development of the AGMP was driven by H3ABioNet’s Databases and Resources Work Package, and led by the
+				members of
+				the Precision Medicine project.
+			</p>
+		</div>
+
+
+		<div class="page-section" id="4">
+			<h3 class="text-center">Original Data Sources</h3>
+
+			<p>
+				Data provided in the AGMP was sourced from two existing online resources, PharmGKB and DisGeNET. These
+				resources
+				provide curated data from various existing resources as well, including existing genomics databases and
+				published
+				literature. African-specific data were retrieved and curated for access in the AGMP. More information on
+				data
+				retrieval and curation processes can be found in the associated articles.
+			</p>
+		</div>
+
+
+
+		<div class="page-section" id="5">
+			<h3 class="text-center">Version History</h3>
+			<h5>AGMP v1.0 - released TBD Date </h5>
+			<ul>
+				<li>Access provided to African-specific PharmGKB data</li>
+				<li>Access provided to African-specific DisGeNET data</li>
+			</ul>
+
+		</div>
+
+
+
+		<div class="page-section" id="6">
+			<h3 class="text-center">How to cite us ?</h3>
+			<ul>
+				<li>Article: Author, Title , journal , etc</li>
+				<li>Publication</li>
+			</ul>
+			<ul>
+				<li>The title of the portal article</li>
+				<li>DOI:12343454567</li>
+			</ul>
+		</div>
+
+	</div>
 
 </div>
 
 
 
-<h3>Background</h3>
-<!-- 
-src="{{ static.img.url }}" -->
 
 
 
-<p>
-	The genomic profiles of African individuals and individuals of recent African descent are highly diverse. This
-	genomic diversity is associated with susceptibility and predisposition to various communicable and non-communicable
-	diseases in these populations. Similarly, genomic diversity is also associated with the response to various
-	therapies deployed for these diseases. To proliferate scientific discovery related to genomic medicine in Africa,
-	access to curated African data is required to highlight unique anomalies and facilitate research practices.
-</p>
-<p>
-	The African Genomic Medicine Portal (AGMP) is a resource which facilitates the transfer of existing knowledge
-	regarding the genetic underpinnings associated with disease and drug response in African populations. The AGMP
-	provides researchers with a platform from which they can retrieve existing information and resources with regards to
-	the investigation and implementation of genomic medicine practices in African populations.
-
-</p>
-<p>
-	The AGMP is adaptable to the user's need and can retrieve information regarding genetic variants, genes, diseases
-	and drugs. Data retrieved from the AGMP are specific to African populations and diaspora, making it the first
-	comprehensive resource for genomic medicine in Africa.
-</p>
-
-<h3>Portal Objectives</h3>
-<ul>
-	<li>Provide genotype-phenotype associations as they pertain to African populations.</li>
-	<li>Provide pharmacogenomics information as they pertain to African populations.</li>
-	<li>Provide disease information as they pertain to African populations.</li>
-	<li>Provide access to existing resources and materials to enable the implementation, education, and practice of
-		genomics and precision medicine.
-	</li>
-</ul>
-
-
-<h3>Contributors</h3>
-
-<p>
-	Development of the AGMP was sparked by the increased amount of precision medicine research being conducted in
-	Africa, and initiated by the Human Heredity and Health in Africa’s (H3Africa) Bioinformatics Network (H3ABioNet).
-	H3ABioNet is funded by NIH Common Fund Award / NHGRI Grant Number U41HG006941.
-</p>
-<p>
-	Development of the AGMP was driven by H3ABioNet’s Databases and Resources Work Package, and led by the members of
-	the Precision Medicine project.
-</p>
 
 
 
-<h3>Original Data Sources</h3>
+{% endblock %}
 
-<p>
-	Data provided in the AGMP was sourced from two existing online resources, PharmGKB and DisGeNET. These resources
-	provide curated data from various existing resources as well, including existing genomics databases and published
-	literature. African-specific data were retrieved and curated for access in the AGMP. More information on data
-	retrieval and curation processes can be found in the associated articles.
-</p>
+{% block js %}
+<script>
+
+	$(document).ready(function () {
+		$('a[href*=#]').bind('click', function (e) {
+			e.preventDefault(); // prevent hard jump, the default behavior
+
+			var target = $(this).attr("href"); // Set the target as variable
+
+			// perform animated scrolling by getting top-position of target-element and set it as scroll target
+			$('html, body').stop().animate({
+				scrollTop: $(target).offset().top
+			}, 600, function () {
+				location.hash = target; //attach the hash (#jumptarget) to the pageurl
+			});
+
+			return false;
+		});
+	});
+
+	$(window).scroll(function () {
+		var scrollDistance = $(window).scrollTop();
+
+		// Show/hide menu on scroll
+		//if (scrollDistance >= 850) {
+		//		$('nav').fadeIn("fast");
+		//} else {
+		//		$('nav').fadeOut("fast");
+		//}
+
+		// Assign active class to nav links while scolling
+		$('.page-section').each(function (i) {
+			if ($(this).position().top <= scrollDistance) {
+				$('.navigation a.active').removeClass('active');
+				$('.navigation a').eq(i).addClass('active');
+			}
+		});
+	}).scroll();
+
+</script>
 
 
-<h3>Version History</h3>
-<h5>AGMP v1.0 - released TBD Date </h5>
-<ul>
-	<li>Access provided to African-specific PharmGKB data</li>
-	<li>Access provided to African-specific DisGeNET data</li>
-</ul>
-
-<h3>How to cite us?</h3>
-<ul>
-	<li>Article: Author, Title , journal , etc</li>
-	<li>Publication</li>
-</ul>
-<ul>
-	<li>The title of the portal article</li>
-	<li>DOI:12343454567</li>
-</ul>
 {% endblock %}

@@ -370,4 +370,36 @@ white circle as background of top  left logo */
     
  }
 
- 
+  /* css for side bar and content area  */
+
+ .page-section {
+  /* height: 480px; */
+  /* width: 80%;
+      margin-left: 35%; */
+  margin-top: 3%;
+  padding: 2em;
+  /* background: linear-gradient(45deg, #43cea2 10%, #185a9d 90%);
+  color: white; */
+  box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+}
+
+.navigation {
+  /* position: fixed; */
+  /* top: 0%; */
+  width: 100%;
+  /* margin-left: 2%; */
+  /* margin-top: 0; */
+  background-color: lightgray;
+  color: #fff;
+  margin-bottom: 25px;
+  border-radius: 10px;
+  box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.5);
+
+
+
+}
+
+ul .no_style {
+  list-style-type: none;
+}

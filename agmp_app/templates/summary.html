@@ -68,59 +68,145 @@
 </style>
 {% endblock %}
 
-<h3 class="text-center">Data Summary</h3>
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th scope="col">Category</th>
-      <th scope="col">Total Number</th>
-    </tr>
-  </thead>
-  <tr>
-    <td>GENES</a></td>
-    <td>{{ gene_count | default_if_none:'0' }}</td>
-  </tr>
-  <tr>
-    <td>DRUGS</td>
-    <td>{{ drug_count | default_if_none:'0' }}</td>
-  </tr>
-  <tr>
-    <td>DISEASES </td>
-    <td>{{ disease_count | default:'0' }}</td>
-  </tr>
-  <tr>
-    <td>VARIANTS</td>
-    <td>{{ variant_count | default_if_none:'0' }}</td>
-  </tr>
-</table>
 
-<h3 class="text-center">Map Summary</h3>
+
 <div class="row">
-  <div class="col-3">
-    <script type="text/javascript">
-      function map_init(map, options) {
-        $.ajax({
-          url: "/summary/countries",
-          dataType: "json",
-          data: {
-          },
-          success: function (data) {
-            // console.log(data);
-            data.forEach(el => {
-              let text = "Country: " + el.country + "<br/>Total No.: " + el.count
-              let marker = L.marker([el.latitude, el.longitude]);
-              marker.bindTooltip(text, { permanent: false, className: "count-label", offset: [0, 0] });
-              marker.addTo(map);
-            });
-          },
-          error: function (e) {
-            console.log(e);
-          }
-        });
-        map.setView([-0.6605788, 14.8965794], 3);
-      }
-    </script>
-    {% leaflet_map "mapd" callback="window.map_init" %}
+  <div class="col-md-3">
+    <nav class="navigation" id="mainNav">
+
+      <ul>
+        <div class="no_style">
+
+          <li><a class="navigation__link" href="#1">Data Summary</a></li>
+          <li><a class="navigation__link" href="#2">Map Summary</a></li>
+
+
+        </div>
+
+      </ul>
+
+    </nav>
   </div>
+  <div class="col-md-9 section1">
+    <div class="page-section" id="1">
+
+
+      <h3 class="text-center">Data Summary</h3>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">Category</th>
+            <th scope="col">Total Number</th>
+          </tr>
+        </thead>
+        <tr>
+          <td>GENES</a></td>
+          <td>{{ gene_count | default_if_none:'0' }}</td>
+        </tr>
+        <tr>
+          <td>DRUGS</td>
+          <td>{{ drug_count | default_if_none:'0' }}</td>
+        </tr>
+        <tr>
+          <td>DISEASES </td>
+          <td>{{ disease_count | default:'0' }}</td>
+        </tr>
+        <tr>
+          <td>VARIANTS</td>
+          <td>{{ variant_count | default_if_none:'0' }}</td>
+        </tr>
+      </table>
+
+    </div>
+    <div class="page-section" id="2">
+
+      <h3 class="text-center">Map Summary</h3>
+      <div class="row">
+        <div class="col-3">
+          <script type="text/javascript">
+            function map_init(map, options) {
+              $.ajax({
+                url: "/summary/countries",
+                dataType: "json",
+                data: {
+                },
+                success: function (data) {
+                  // console.log(data);
+                  data.forEach(el => {
+                    let text = "Country: " + el.country + "<br/>Total No.: " + el.count
+                    let marker = L.marker([el.latitude, el.longitude]);
+                    marker.bindTooltip(text, { permanent: false, className: "count-label", offset: [0, 0] });
+                    marker.addTo(map);
+                  });
+                },
+                error: function (e) {
+                  console.log(e);
+                }
+              });
+              map.setView([-0.6605788, 14.8965794], 3);
+            }
+          </script>
+          {% leaflet_map "mapd" callback="window.map_init" %}
+        </div>
+      </div>
+
+
+
+    </div>
+
+
+
+  </div>
+
 </div>
+
+
+
+
+
+
+
+
+
 {% endblock %}
+
+
+<script>
+
+  $(document).ready(function () {
+    $('a[href*=#]').bind('click', function (e) {
+      e.preventDefault(); // prevent hard jump, the default behavior
+
+      var target = $(this).attr("href"); // Set the target as variable
+
+      // perform animated scrolling by getting top-position of target-element and set it as scroll target
+      $('html, body').stop().animate({
+        scrollTop: $(target).offset().top
+      }, 600, function () {
+        location.hash = target; //attach the hash (#jumptarget) to the pageurl
+      });
+
+      return false;
+    });
+  });
+
+  $(window).scroll(function () {
+    var scrollDistance = $(window).scrollTop();
+
+    // Show/hide menu on scroll
+    //if (scrollDistance >= 850) {
+    //		$('nav').fadeIn("fast");
+    //} else {
+    //		$('nav').fadeOut("fast");
+    //}
+
+    // Assign active class to nav links while scolling
+    $('.page-section').each(function (i) {
+      if ($(this).position().top <= scrollDistance) {
+        $('.navigation a.active').removeClass('active');
+        $('.navigation a').eq(i).addClass('active');
+      }
+    });
+  }).scroll();
+
+</script>
