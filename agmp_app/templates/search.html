@@ -3,15 +3,34 @@
 {% load bootstrap4 %}
 {% load static %}
 
+
+
+{% block title%}Search{% endblock %}
+
 {% block js %}
-	<script src="{% static 'js/search.js' %}" type="text/JavaScript"></script>
+<script src="{% static 'js/search.js' %}" type="text/JavaScript"></script>
 {% endblock %}
 
-{% comment %} 
+{% comment %}
 https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4-forms-with-django.html
 {% endcomment %}
 
+
+
+{% block banner %}
+
+
+{% include 'partials/banner_search.html' %}
+
+{% endblock %}
 {% block content %}
+
+
+<style>
+
+
+</style>
+
 <div class="search">
   <form action='/microbiome/results/' method='GET' id="search-form" novalidate>
     {% csrf_token %}
@@ -21,22 +40,26 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
           <div class="tag">Choose a category to search by</div>
           <div class="row">
             <div class="col-md-3">
-              <input name="search_type_check" value="disease" type="radio" id="checkbox-2-1" class="regular-checkbox big-checkbox" />
-              <label id="checkbox_2_1" for="checkbox-2-1"></label><br>	
+              <input name="search_type_check" value="disease" type="radio" id="checkbox-2-1"
+                class="regular-checkbox big-checkbox" />
+              <label id="checkbox_2_1" for="checkbox-2-1"></label><br>
               Disease
             </div>
             <div class="col-md-3">
-              <input name="search_type_check" value="drug" type="radio" id="checkbox-2-2" class="regular-checkbox big-checkbox" />
+              <input name="search_type_check" value="drug" type="radio" id="checkbox-2-2"
+                class="regular-checkbox big-checkbox" />
               <label id="checkbox_2_2" for="checkbox-2-2"></label><br>
               Drug
             </div>
             <div class="col-md-3">
-              <input name="search_type_check" value="SNP ID" type="radio" id="checkbox-2-3" class="regular-checkbox big-checkbox" />
+              <input name="search_type_check" value="SNP ID" type="radio" id="checkbox-2-3"
+                class="regular-checkbox big-checkbox" />
               <label id="checkbox_2_3" for="checkbox-2-3"></label><br>
               Variant
             </div>
             <div class="col-md-3">
-              <input name="search_type_check" value="gene" type="radio" id="checkbox-2-4" class="regular-checkbox big-checkbox" />
+              <input name="search_type_check" value="gene" type="radio" id="checkbox-2-4"
+                class="regular-checkbox big-checkbox" />
               <label id="checkbox_2_4" for="checkbox-2-4"></label><br>
               Gene
             </div>
@@ -47,16 +70,17 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
     <div class="row" style="margin-top: 20px">
       <div class="col-sm-9">
         {% comment %} {{ form.gene_name | as_crispy_field}} {% endcomment %}
-        <input id="search-input" placeholder="" class='form-control' data-agnocomplete/>
+        <input id="search-input" placeholder="" class='form-control' data-agnocomplete />
       </div>
       <div class="col-sm-3">
         <button type="submit" class="search-btn btn btn-success col">Search</button>
       </div>
     </div>
-    {% comment %} </div> {% endcomment %}
-    {% comment %} {{ form.job_title | as_crispy_field }} {% endcomment %}
-    {% comment %} {{ form.bio | as_crispy_field }} {% endcomment %}
-  </form>  
+    {% comment %}
+</div> {% endcomment %}
+{% comment %} {{ form.job_title | as_crispy_field }} {% endcomment %}
+{% comment %} {{ form.bio | as_crispy_field }} {% endcomment %}
+</form>
 </div>
 <div id="results">
   <!-- <div class="row" style="margin-top: 50px">
@@ -80,8 +104,7 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
     <div class="col-md-1"></div>
   </div> -->
 </div>
-{% comment %} [> https://getbootstrap.com/docs/4.1/components/forms/ <] {% endcomment %} 
-{% comment %} <table>
+{% comment %} [> https://getbootstrap.com/docs/4.1/components/forms/ <] {% endcomment %} {% comment %} <table>
   {% endcomment %}
   {% comment %} <tr>
     <td>Country</td>

@@ -341,7 +341,7 @@ white circle as background of top  left logo */
 
 
     color:#fff;
-    font-size: 18px;
+    font-size: 36px;
     font-family: Roboto;
     /* text-align: center; */
     text-transform: sentencecase;
@@ -380,8 +380,8 @@ white circle as background of top  left logo */
   padding: 2em;
   /* background: linear-gradient(45deg, #43cea2 10%, #185a9d 90%);
   color: white; */
-  box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.5);
-  border-radius: 10px;
+  box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.4);
+  border-radius: 1px;
 }
 
 .navigation {
@@ -393,8 +393,8 @@ white circle as background of top  left logo */
   background-color: lightgray;
   color: #fff;
   margin-bottom: 25px;
-  border-radius: 10px;
-  box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.5);
+  border-radius: 1px;
+  box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.4);
 
 
 
@@ -402,4 +402,9 @@ white circle as background of top  left logo */
 
 ul .no_style {
   list-style-type: none;
+}
+
+
+.main_min_height {
+  min-height: 40vh;
 }

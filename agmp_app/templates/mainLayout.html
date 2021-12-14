@@ -29,36 +29,7 @@
 	{% block css %}
 	{% endblock %}
 
-	<style>
-		.top_div_fixed {
-			/* overflow: hidden; */
-			/* position: fixed;
-			top: 0;
-			width: 100%; */
 
-
-		}
-
-		.main {
-			/* 
-			background-color: lime; */
-
-			/* Add a bottom margin to avoid content overlay */
-
-		}
-
-		.main_1 {
-			/* margin-top: 21.5%;
-			background-color: yellow; */
-			/* overflow-y: scroll; */
-			/* height: 400px;
-			overflow-x: hidden;
-			overflow-y: auto;
-			position: relative; */
-
-			/* Add a bottom margin to avoid content overlay */
-		}
-	</style>
 </head>
 
 <body>
@@ -144,29 +115,28 @@
 
 
 		<!-- ########## start of top header with overlay white text ########### -->
-		<div class="header_top_bg vcenter-item ">
+
+		{% block banner %}
 
 
-			<div class="text-center">
+		{% include 'partials/banner.html' %}
 
-				<span class="text_top_bg">
-
-					African Genomic Medicine Portal
+		{% endblock %}
 
 
-				</span>
-			</div>
 
 
-		</div>
+
 		<!-- ########### end of top header with overlay text ##############-->
 
 
 
 	</div>
 
+
+
 	<div class="main">
-		<div class="container main_1">
+		<div class="container main_min_height">
 			{% block content %}
 			{% endblock %}
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
