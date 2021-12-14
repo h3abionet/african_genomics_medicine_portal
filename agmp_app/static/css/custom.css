@@ -5,38 +5,26 @@
   font-size: 18px;
 } */
 
-
 body,
 * {
   font-family: 'Roboto', sans-serif !important;
 
   font-weight: 300 !important;
   line-height: 1.6;
-
-
 }
 
 .margin_on_top_image{
   margin-right:5px;
 }
 
-
-
-
-
-
-
 .bg-mibio {
   background-color: #337ab7;
   border-bottom: 2px #337ab7 solid;
 }
 
-
-
 .text-bigblue {
   color: white !important;
 }
-
 
 #logo {
   position: absolute;
@@ -235,10 +223,12 @@ body,
 /* The sidebar menu */
 .sidenav {
   position: fixed;
+  align-items: top;
   z-index: 1;
-  margin-top: 2em;
-  background: #eee;
+  margin-top: 0em;
+  background: #337ab7;
   overflow-x: hidden;
+  margin-right: 0px;
   /* padding: 8px 0; */
 }
 
@@ -246,12 +236,14 @@ body,
   padding: 10px 60px 10px 30px;
   text-decoration: none;
   font-size: 21px;
-  color: #2196F3;
+  color: #ffffff;
   display: block;
 }
 
 .sidenav a:hover {
-  color: #064579;
+  /* color: #9999FF; */
+  text-decoration: underline;
+  /* font-style: oblique; */
 }
 
 @media screen and (max-height: 450px) {
