@@ -1,4 +1,5 @@
-from django.db import models
+# from django.db import models
+from agmp_app.models import models
 from decimal import Decimal
 
 class Index(models.Model):
