@@ -47,10 +47,11 @@ Project will now be running on the server.
 ![](images/snp_ethnic.png?raw=true)
 
 
-### Data import for genes
-* python3 manage.py import_from_drug_csv /Users/perceval/que/dummy_data/drugs.csv --verbosity=3
-
 ### Data import for drugs
 * python3 manage.py import_from_drug_csv /Users/perceval/que/dummy_data/drugs.csv --verbosity=3
 
+### Data import for genes
+* 
+
 ### Data import for snps
+* 
