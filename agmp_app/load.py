@@ -1,5 +1,6 @@
+
+from .models import drug, pharmacogenes, study, snp			
 import pandas as pd
-from .models import drug, pharmacogenes, study, snp, disease			
 
 #populate the drug table
 #Note that the id is not supplied for most of the tables since
