@@ -65,3 +65,20 @@ class star_allele(models.Model):
     country_of_participants=models.CharField(max_length=50, null=True)
     latitude = models.DecimalField(max_digits=10,decimal_places=7,default=Decimal('0.0000000'))
     longitude = models.DecimalField(max_digits=10,decimal_places=7,default=Decimal('0.0000000'))
+
+
+
+
+class Country(models.Model):
+    name = models.CharField(max_length=30)
+
+
+    def __str__(self):
+        return self.name 
+class City(models.Model):
+    name = models.CharField(max_length=30)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
+    population = models.PositiveIntegerField()
+
+    def __str__(self):
+        return self.name 

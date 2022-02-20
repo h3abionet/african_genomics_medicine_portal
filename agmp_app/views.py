@@ -1,12 +1,16 @@
 from django.shortcuts import render, HttpResponse
-from django.http import FileResponse
+from django.http import FileResponse, JsonResponse
 
 from django.core import serializers
 from itertools import chain
 
-from .models import disease, pharmacogenes, drug, snp as SnpModel, star_allele, study
+from .models import disease, pharmacogenes, drug, snp as SnpModel, star_allele, study, City, Country
+from django.db.models import Sum
+
 from .forms import PostForm
 import json
+
+import pandas as pd
 
 # def index(request):
 #     return render(request, 'index.html')
@@ -421,3 +425,24 @@ def home(request):
 # def download_file(request, file_name):
 #     response = FileResponse(open(f"{file_name}", 'rb'))
 #     return response
+
+
+
+def graph(request):
+    labels =[]
+    data = []
+
+    queryset = City.objects.order_by('-population')[:5]
+
+    for city in queryset:
+        labels.append(city.name)
+        data.append(city.population)
+    return render (request, 'graph.html', {
+        'lables': labels,
+        'data': data
+
+    })
+
+
+
+

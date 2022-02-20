@@ -24,6 +24,7 @@ urlpatterns = [
     path('faqs', views.faqs, name='faqs'),
     path('tutorial/', views.tutorial, name='tutorial'),
     path('help', views.help, name='help'),
+    path('graph/', views.graph, name='graph'),
 
     path('agnocomplete/', include('agnocomplete.urls')),
 ]

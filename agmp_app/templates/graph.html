@@ -1,0 +1,166 @@
+{% extends 'mainLayout.html' %}
+
+
+
+{% block title%}Graph{% endblock %}
+
+
+{% block banner %}
+
+
+{% include 'partials/banner_about.html' %}
+
+{% endblock %}
+
+
+
+
+
+</script>
+
+{% block content %}
+<div id="container" style="width: 75%;">
+
+</div>
+
+
+
+
+
+<div class="row">
+	<div class="col-md-3">
+		<nav class="navigation" id="mainNav">
+
+			<ul>
+				<div class="no_style">
+
+					<li><a class="navigation__link" href="#1">Graph</a></li>
+
+
+				</div>
+
+			</ul>
+
+		</nav>
+	</div>
+	<div class="col-md-9 section1">
+
+		<div class="page-section" id="1">
+			<h3 class="text-center">Background</h3>
+
+
+			<canvas id="myChart" width="200" height="200"></canvas>
+
+		</div>
+		<script>
+
+
+			const ctx = document.getElementById('myChart').getContext('2d');
+			const myChart = new Chart(ctx, {
+				type: 'bar',
+				data: {
+					labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange1'],
+					datasets: [{
+						label: '# of Votes',
+						data: [1, 5, 3, 5, 2, 3],
+						backgroundColor: [
+							'rgba(255, 99, 132, 0.2)',
+							'rgba(54, 162, 235, 0.2)',
+							'rgba(255, 206, 86, 0.2)',
+							'rgba(75, 192, 192, 0.2)',
+							'rgba(153, 102, 255, 0.2)',
+							'rgba(255, 159, 64, 0.2)'
+						],
+						borderColor: [
+							'rgba(255, 99, 132, 1)',
+							'rgba(54, 162, 235, 1)',
+							'rgba(255, 206, 86, 1)',
+							'rgba(75, 192, 192, 1)',
+							'rgba(153, 102, 255, 1)',
+							'rgba(255, 159, 64, 1)'
+						],
+						borderWidth: 1
+					}]
+				},
+				options: {
+					scales: {
+						y: {
+							beginAtZero: true
+						}
+					}
+				}
+			});
+
+
+		</script>
+
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block js %}
+<script>
+
+	$(document).ready(function () {
+		$('a[href*=#]').bind('click', function (e) {
+			e.preventDefault(); // prevent hard jump, the default behavior
+
+			var target = $(this).attr("href"); // Set the target as variable
+
+			// perform animated scrolling by getting top-position of target-element and set it as scroll target
+			$('html, body').stop().animate({
+				scrollTop: $(target).offset().top
+			}, 600, function () {
+				location.hash = target; //attach the hash (#jumptarget) to the pageurl
+			});
+
+			return false;
+		});
+	});
+
+	$(window).scroll(function () {
+		var scrollDistance = $(window).scrollTop();
+
+		// Show/hide menu on scroll
+		//if (scrollDistance >= 850) {
+		//		$('nav').fadeIn("fast");
+		//} else {
+		//		$('nav').fadeOut("fast");
+		//}
+
+		// Assign active class to nav links while scolling
+		$('.page-section').each(function (i) {
+			if ($(this).position().top <= scrollDistance) {
+				$('.navigation a.active').removeClass('active');
+				$('.navigation a').eq(i).addClass('active');
+			}
+		});
+	}).scroll();
+
+</script>
+
+
+{% endblock %}
