@@ -49,7 +49,7 @@
 			<h3 class="text-center">Background</h3>
 
 
-			<canvas id="myChart" width="200" height="200"></canvas>
+			<canvas id="myChart" width="400" height="300"></canvas>
 
 		</div>
 		<script>
@@ -59,10 +59,11 @@
 			const myChart = new Chart(ctx, {
 				type: 'bar',
 				data: {
-					labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange1'],
+					labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+
 					datasets: [{
 						label: '# of Votes',
-						data: [1, 5, 3, 5, 2, 3],
+						data: [15, 5, 3, 5, 2, 3],
 						backgroundColor: [
 							'rgba(255, 99, 132, 0.2)',
 							'rgba(54, 162, 235, 0.2)',
