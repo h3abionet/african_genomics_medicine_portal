@@ -1,7 +1,7 @@
 from django import forms
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-from .models import drug
+from .models import drug, CountryData
 
 from .models import pharmacogenes
 
@@ -24,3 +24,12 @@ class drugForm(forms.ModelForm):
     class Meta:
         model = drug
         fields = "__all__" 
+
+
+
+
+
+class CountryDataFrom(forms.ModelForm):
+    class Meta:
+        model = CountryData
+        fields = '__all__'

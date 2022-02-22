@@ -1,13 +1,13 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 from django.http import FileResponse, JsonResponse
 
 from django.core import serializers
 from itertools import chain
 
-from .models import disease, pharmacogenes, drug, snp as SnpModel, star_allele, study, City, Country
+from .models import disease, pharmacogenes, drug, snp as SnpModel, star_allele, study, City, Country, CountryData
 from django.db.models import Sum
 
-from .forms import PostForm
+from .forms import PostForm, CountryDataFrom
 import json
 
 import pandas as pd
@@ -428,21 +428,35 @@ def home(request):
 
 
 
+# def graph(request):
+#     labels =[]
+#     data = []
+
+#     queryset = City.objects.order_by('-population')[:5]
+
+#     for city in queryset:
+#         labels.append(city.name)
+#         data.append(city.population)
+#     return render (request, 'graph.html', {
+#         'lables': labels,
+#         'data': data
+
+#     })
+
+
 def graph(request):
-    labels =[]
-    data = []
-
-    queryset = City.objects.order_by('-population')[:5]
-
-    for city in queryset:
-        labels.append(city.name)
-        data.append(city.population)
-    return render (request, 'graph.html', {
-        'lables': labels,
-        'data': data
-
-    })
-
-
+    data = CountryData.objects.all()
+    if request.method == 'POST':
+        form = CountryDataFrom(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    else:
+        form = CountryDataFrom()
+    context = {
+        'data': data,
+        'form': form,
+    }
+    return render(request, 'graph.html', context)
 
 

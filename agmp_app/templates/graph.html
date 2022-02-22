@@ -54,44 +54,46 @@
 		</div>
 		<script>
 
+			<script>
 
-			const ctx = document.getElementById('myChart').getContext('2d');
-			const myChart = new Chart(ctx, {
-				type: 'bar',
+				var ctx = document.getElementById('myChart').getContext('2d');
+				var myChart = new Chart(ctx, {
+					type: 'bar',
 				data: {
-					labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-
-					datasets: [{
-						label: '# of Votes',
-						data: [15, 5, 3, 5, 2, 3],
-						backgroundColor: [
-							'rgba(255, 99, 132, 0.2)',
-							'rgba(54, 162, 235, 0.2)',
-							'rgba(255, 206, 86, 0.2)',
-							'rgba(75, 192, 192, 0.2)',
-							'rgba(153, 102, 255, 0.2)',
-							'rgba(255, 159, 64, 0.2)'
-						],
-						borderColor: [
-							'rgba(255, 99, 132, 1)',
-							'rgba(54, 162, 235, 1)',
-							'rgba(255, 206, 86, 1)',
-							'rgba(75, 192, 192, 1)',
-							'rgba(153, 102, 255, 1)',
-							'rgba(255, 159, 64, 1)'
-						],
-						borderWidth: 1
-					}]
-				},
+					labels: [{% for data in data %} '{{ data.country }}', {% endfor %}],
+				datasets: [{
+					label: '# of Votes',
+				data: [{% for data in data %} {{ data.population }}, {% endfor %}],
+				backgroundColor: [
+				'rgba(255, 99, 132, 1)',
+				'rgba(54, 162, 235, 1)',
+				'rgba(255, 206, 86, 1)',
+				'rgba(75, 192, 192, 1)',
+				'rgba(153, 102, 255, 1)',
+				'rgba(255, 159, 64, 1)'
+				],
+				borderColor: [
+				'rgba(255, 99, 132, 1)',
+				'rgba(54, 162, 235, 1)',
+				'rgba(255, 206, 86, 1)',
+				'rgba(75, 192, 192, 1)',
+				'rgba(153, 102, 255, 1)',
+				'rgba(255, 159, 64, 1)'
+				],
+				borderWidth: 1
+            }]
+                },
 				options: {
 					scales: {
-						y: {
-							beginAtZero: true
-						}
-					}
-				}
-			});
-
+					yAxes: [{
+					ticks: {
+					beginAtZero: true
+                        }
+                    }]
+                }
+            }
+            });
+		</script>
 
 		</script>
 
@@ -125,40 +127,40 @@
 {% block js %}
 <script>
 
-	$(document).ready(function () {
-		$('a[href*=#]').bind('click', function (e) {
-			e.preventDefault(); // prevent hard jump, the default behavior
+				$(document).ready(function () {
+					$('a[href*=#]').bind('click', function (e) {
+						e.preventDefault(); // prevent hard jump, the default behavior
 
-			var target = $(this).attr("href"); // Set the target as variable
+						var target = $(this).attr("href"); // Set the target as variable
 
-			// perform animated scrolling by getting top-position of target-element and set it as scroll target
-			$('html, body').stop().animate({
-				scrollTop: $(target).offset().top
-			}, 600, function () {
-				location.hash = target; //attach the hash (#jumptarget) to the pageurl
-			});
+						// perform animated scrolling by getting top-position of target-element and set it as scroll target
+						$('html, body').stop().animate({
+							scrollTop: $(target).offset().top
+						}, 600, function () {
+							location.hash = target; //attach the hash (#jumptarget) to the pageurl
+						});
 
-			return false;
-		});
+						return false;
+					});
 	});
 
-	$(window).scroll(function () {
+				$(window).scroll(function () {
 		var scrollDistance = $(window).scrollTop();
 
 		// Show/hide menu on scroll
 		//if (scrollDistance >= 850) {
-		//		$('nav').fadeIn("fast");
-		//} else {
-		//		$('nav').fadeOut("fast");
-		//}
+					//		$('nav').fadeIn("fast");
+					//} else {
+					//		$('nav').fadeOut("fast");
+					//}
 
-		// Assign active class to nav links while scolling
-		$('.page-section').each(function (i) {
-			if ($(this).position().top <= scrollDistance) {
-				$('.navigation a.active').removeClass('active');
-				$('.navigation a').eq(i).addClass('active');
-			}
-		});
+					// Assign active class to nav links while scolling
+					$('.page-section').each(function (i) {
+						if ($(this).position().top <= scrollDistance) {
+							$('.navigation a.active').removeClass('active');
+							$('.navigation a').eq(i).addClass('active');
+						}
+					});
 	}).scroll();
 
 </script>
