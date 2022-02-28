@@ -143,7 +143,7 @@
             data: {
               labels: [{% for data in data %} '{{ data.country }}', {% endfor %}],
           datasets: [{
-            label: 'Total Numbers',
+            label: 'Total Number',
             data: [{% for data in data %} {{ data.population }}, {% endfor %}],
             backgroundColor: [
               'rgba(255, 99, 132, 1)',
