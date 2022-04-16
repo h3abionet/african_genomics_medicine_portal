@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+    web:
+        image: agmp
+        container_name: agmp_instance
+        build: .
+        command: python manage.py runserver 0.0.0.0:8000
+        #`command: tail -f /dev/null
+        volumes:
+            - .:/agp
+        ports:
+            - 8000:8000
