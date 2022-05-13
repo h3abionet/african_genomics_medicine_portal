@@ -65,3 +65,13 @@ class star_allele(models.Model):
     country_of_participants=models.CharField(max_length=50, null=True)
     latitude = models.DecimalField(max_digits=10,decimal_places=7,default=Decimal('0.0000000'))
     longitude = models.DecimalField(max_digits=10,decimal_places=7,default=Decimal('0.0000000'))
+
+class CountryData(models.Model):
+    country = models.CharField(max_length=100)
+    population = models.IntegerField()
+
+    class Meta:
+        verbose_name_plural = 'Country Population Data'
+
+    def __str__(self):
+        return f'{self.country}-{self.population}'

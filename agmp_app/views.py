@@ -1,12 +1,14 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 from django.http import FileResponse
 
 from django.core import serializers
 from itertools import chain
 
 from .models import disease, pharmacogenes, drug, snp as SnpModel, star_allele, study
-from .forms import PostForm
+from .forms import PostForm, CountryDataFrom
 import json
+
+from agmp_app.models import CountryData
 
 # def index(request):
 #     return render(request, 'index.html')
@@ -351,6 +353,7 @@ def summary(request):
     Returns the counts of records for the major models;
     drug, variant, disease, gene,
     '''
+    data = CountryData.objects.all()
     dgc = drug.objects.count()
     dsc = star_allele.objects.count()
     vtc = SnpModel.objects.count()
@@ -359,6 +362,7 @@ def summary(request):
         'drug_count': dgc, 
         'disease_count': dsc, 
         'variant_count': vtc,
+        'data': data,
         'gene_count': gec,
         'records': [{'LAT': 1.000, 'LON':-1.000, }]
         })
@@ -417,6 +421,21 @@ def tutorial(request):
 
 def home(request):
     return render(request, 'home.html')
+
+def countries(request):
+    data = CountryData.objects.all()
+    if request.method == 'POST':
+        form = CountryDataFrom(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('/')
+    else:
+        form = CountryDataFrom()
+    context = {
+        'data': data,
+        'form': form,
+    }
+    return render(request, 'summary.html', context)
 
 # def download_file(request, file_name):
 #     response = FileResponse(open(f"{file_name}", 'rb'))
