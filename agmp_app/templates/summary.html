@@ -76,28 +76,19 @@
 </style>
 {% endblock %}
 
-
-
 <div class="row">
   <div class="col-md-3">
     <nav class="navigation" id="mainNav">
-
       <ul>
         <div class="no_style">
-
           <li><a class="navigation__link" href="#1">Data Overview</a></li>
           <li><a class="navigation__link" href="#2">Data Distribution</a></li>
-
-
         </div>
-
       </ul>
-
     </nav>
   </div>
   <div class="col-md-9 section1">
     <div class="page-section" id="1">
-
 
       <h3 class="text-center">Data Overview</h3>
       <table class="table table-hover">
@@ -108,7 +99,7 @@
           </tr>
         </thead>
         <tr>
-          <td>GENES</a></td>
+          <td>GENES</td>
           <td>{{ gene_count | default_if_none:'0' }}</td>
         </tr>
         <tr>
@@ -138,29 +129,29 @@
           var ctx = document.getElementById('myChart').getContext('2d');
           var myChart = new Chart(ctx, {
             type: 'bar',
-            data: {
-              labels: [{% for data in data %} '{{ data.country }}', {% endfor %}],
-          datasets: [{
-            label: 'Total Numbers',
-            data: [{% for data in data %} {{ data.population }}, {% endfor %}],
-            backgroundColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)',
-              'rgba(255, 206, 86, 1)',
-              'rgba(75, 192, 192, 1)',
-              'rgba(153, 102, 255, 1)',
-              'rgba(255, 159, 64, 1)'
-            ],
-              borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-              ],
-                borderWidth: 1
-            }]
+              data: {
+                labels:  {{ count_keys|safe }},   
+                datasets: [{
+                  label: 'Total Numbers',
+                  data: {{ count_data|safe }},   
+                  backgroundColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                  ],
+                  borderColor : [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                  ],
+                  borderWidth: 1
+                }]
                 },
           options: {
             scales: {
@@ -173,13 +164,11 @@
           }
             });
         </script>
-
         {% endblock %}
       </div>
     </div>
-    
-    <div class="page-section" id="2">
 
+    <div class="page-section" id="2">
       <h3 class="text-center">Data Distribution</h3>
       <div class="row">
         <div class="col-3">
@@ -209,27 +198,11 @@
           {% leaflet_map "mapd" callback="window.map_init" %}
         </div>
       </div>
-
-
-
     </div>
-
-
-
   </div>
-
 </div>
 
-
-
-
-
-
-
-
-
 {% endblock %}
-
 
 <script>
 

@@ -8,7 +8,7 @@ from .models import disease, pharmacogenes, drug, snp as SnpModel, star_allele, 
 from .forms import PostForm, CountryDataFrom
 import json
 
-from agmp_app.models import CountryData
+from agmp_app.models import *
 
 # def index(request):
 #     return render(request, 'index.html')
@@ -353,19 +353,26 @@ def summary(request):
     Returns the counts of records for the major models;
     drug, variant, disease, gene,
     '''
-    data = CountryData.objects.all()
     dgc = drug.objects.count()
-    dsc = star_allele.objects.count()
+    dsc = disease.objects.count()
     vtc = SnpModel.objects.count()
     gec = pharmacogenes.objects.count()
-    return render(request, 'summary.html', {
+    
+    counts = {}
+    counts["Drugs"] = drug.objects.count()
+    counts["Variants"] = snp.objects.count() + star_allele.objects.count()
+    counts["Diseases"] = disease.objects.count()
+    counts["Genes"] = pharmacogenes.objects.count()
+    context = {
         'drug_count': dgc, 
         'disease_count': dsc, 
         'variant_count': vtc,
-        'data': data,
         'gene_count': gec,
+        'count_keys': json.dumps(list(counts.keys())),
+        'count_data': json.dumps(list(counts.values())),
         'records': [{'LAT': 1.000, 'LON':-1.000, }]
-        })
+        }
+    return render(request, 'summary.html', context)
 
 def country_summary(request):
     '''
@@ -421,21 +428,6 @@ def tutorial(request):
 
 def home(request):
     return render(request, 'home.html')
-
-def countries(request):
-    data = CountryData.objects.all()
-    if request.method == 'POST':
-        form = CountryDataFrom(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('/')
-    else:
-        form = CountryDataFrom()
-    context = {
-        'data': data,
-        'form': form,
-    }
-    return render(request, 'summary.html', context)
 
 # def download_file(request, file_name):
 #     response = FileResponse(open(f"{file_name}", 'rb'))
