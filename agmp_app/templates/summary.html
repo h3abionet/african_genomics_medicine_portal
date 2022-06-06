@@ -18,6 +18,190 @@
 
 {%block css%}
 {% leaflet_css %}
+
+{% block scripts %}
+
+<script>
+
+  $(document).ready(function () {
+
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: {{ count_keys| safe }},
+    datasets: [{
+      label: 'Total Numbers',
+      data: {{ count_data| safe }},
+    backgroundColor: [
+      'rgba(255, 99, 132, 0.2)',
+      'rgba(54, 162, 235, 0.2)',
+      'rgba(255, 206, 86, 0.2)',
+      'rgba(75, 192, 192, 0.2)',
+      'rgba(153, 102, 255, 0.2)',
+      'rgba(255, 159, 64, 0.2)'
+    ],
+    borderColor: [
+      'rgba(255, 99, 132, 1)',
+      'rgba(54, 162, 235, 1)',
+      'rgba(255, 206, 86, 1)',
+      'rgba(75, 192, 192, 1)',
+      'rgba(153, 102, 255, 1)',
+      'rgba(255, 159, 64, 1)'
+    ],
+    borderWidth: 1
+    }]
+      },
+    options: {
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  }
+    });
+
+
+
+  });
+
+  ///graph1
+  $(document).ready(function () {
+
+    const ctx = document.getElementById('myChart01').getContext('2d');
+    const myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [{
+          label: '# of Votes',
+          data: [12, 19, 3, 5, 2, 3],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+
+
+  });
+
+  ///graph2
+  $(document).ready(function () {
+
+    const ctx = document.getElementById('myChart02').getContext('2d');
+    const myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [{
+          label: '# of Votes',
+          data: [12, 19, 3, 5, 2, 3],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+
+
+  });
+
+
+  ///graph3
+  $(document).ready(function () {
+
+    const ctx = document.getElementById('myChart03').getContext('2d');
+    const myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        datasets: [{
+          label: '# of Votes',
+          data: [12, 19, 3, 5, 2, 3],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+
+
+
+  });
+
+
+</script>
+
+
+{% endblock %}
+
+
 <style>
   body {
     font-family: Roboto, sans-serif;
@@ -82,7 +266,10 @@
       <ul>
         <div class="no_style">
           <li><a class="navigation__link" href="#1">Data Overview</a></li>
+          <li><a class="navigation__link" href="#2_0">Graph</a></li>
+          <li><a class="navigation__link" href="#2_1">Sample Graphs</a></li>
           <li><a class="navigation__link" href="#2">Data Distribution</a></li>
+
         </div>
       </ul>
     </nav>
@@ -122,51 +309,57 @@
       <h3 class="text-center">Graph</h3>
 
       <div class="col-md-8">
-        <canvas id="myChart" width="400" height="300"></canvas>
+        <canvas id="myChart" width="200" height="100"></canvas>
 
-        {% block scripts %}
-        <script>
-          var ctx = document.getElementById('myChart').getContext('2d');
-          var myChart = new Chart(ctx, {
-            type: 'bar',
-              data: {
-                labels:  {{ count_keys|safe }},   
-                datasets: [{
-                  label: 'Total Numbers',
-                  data: {{ count_data|safe }},   
-                  backgroundColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                  ],
-                  borderColor : [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                  ],
-                  borderWidth: 1
-                }]
-                },
-          options: {
-            scales: {
-              yAxes: [{
-                ticks: {
-                  beginAtZero: true
-                }
-              }]
-            }
-          }
-            });
-        </script>
-        {% endblock %}
+
       </div>
     </div>
+
+
+    <div class="page-section" id="2_1">
+      <h3 class="text-center">Sample Graphs</h3>
+      <div class="row">
+        <div class="col">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="graph1-tab" data-toggle="tab" href="#graph1" role="tab"
+                aria-controls="graph1" aria-selected="true">Graph 1</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="graph2-tab" data-toggle="tab" href="#graph2" role="tab" aria-controls="graph2"
+                aria-selected="false">Graph 2</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="graph3-tab" data-toggle="tab" href="#graph3" role="tab" aria-controls="graph3"
+                aria-selected="false">Graph 3</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="graph1" role="tabpanel" aria-labelledby="graph1-tab">
+              <div class="col-md-8">
+
+                <canvas id="myChart01" width="200" height="100"></canvas>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="graph2" role="tabpanel" aria-labelledby="graph2-tab">
+
+              <div class="col-md-8">
+                <canvas id="myChart02" width="200" height="100"></canvas>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="graph3" role="tabpanel" aria-labelledby="graph3-tab">
+              <div class="col-md-8">
+                <canvas id="myChart03" width="200" height="100"></canvas>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+
 
     <div class="page-section" id="2">
       <h3 class="text-center">Data Distribution</h3>

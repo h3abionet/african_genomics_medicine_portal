@@ -28,10 +28,10 @@ SECRET_KEY = config.SECRET_KEY
 DEBUG = config.DEBUG
 
 ALLOWED_HOSTS = [
-   'agpm.knust.edu.gh',
+    'agpm.knust.edu.gh',
     'localhost',
     '127.0.0.1',
-#    '0.0.0.0'
+    #    '0.0.0.0'
 ]
 
 
@@ -147,9 +147,9 @@ STATICFILES_DIRS = [
 RESULTS_PER_PAGE = 50
 
 LEAFLET_CONFIG = {
-    'TILES' : [('Streets', 'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png', 
-                {
-                 'attribution': '&copy; Data from H3ABioNet', 
-                 'lang': 'en'
-                })]
+    'TILES': [('Streets', 'https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}{r}.png',
+               {
+                   'attribution': '&copy; Data from H3ABioNet',
+                   'lang': 'en'
+               })]
 }
