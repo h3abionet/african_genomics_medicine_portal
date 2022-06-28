@@ -387,6 +387,7 @@ def summary(request):
     data = [[-33.918861, 18.423300, 3330], [55, 3, 100]]
     all_points_on_map = pd.DataFrame(
         list(snp.objects.all().values('latitude', 'longitude')))
+
     # all_points_on_map2 = snp.objects.values_list('latitude', 'longitude')
     # df = pd.DataFrame(all_points_on_map2)
     # location_list = df.values.tolist()
@@ -424,9 +425,11 @@ def summary(request):
         num_pubs=Count('snp')).order_by('-num_pubs')[:10]
 
   # new graph variants 26 June 2022
-    top_ten_variants = star_allele.objects.all().annotate(
-        num_pubs=Count('star_id')).order_by('-num_pubs')[:10]
-
+    top_ten_variants1 = snp.objects.values('snp_id').order_by(
+        'snp_id').annotate(count=Count('snp_id'))[:10]
+    # top_ten_variants = star_allele.objects.all().annotate(
+    #     num_pubs=Count('star_id')).order_by('-num_pubs')[:10]
+    # print(top_ten_variants1)
     # top ten diseases 26 June 2022
     top_ten_diseases = disease.objects.annotate(
         num_of_pubs=Count('snp')).order_by('-num_of_pubs')[:10]
@@ -460,7 +463,8 @@ def summary(request):
         'map_01': map_01,
         'top_ten_diseases': top_ten_diseases,
         'top_ten_drugs': top_ten_drugs,
-        'top_ten_variants': top_ten_variants,
+        # 'top_ten_variants': top_ten_variants,
+        'top_ten_variants1': top_ten_variants1,
         'top_ten_pharmacogenes': top_ten_pharmacogenes,
         # 'top_ten_genes': top_ten_genes,
         'snp_usa_number': snp_usa_number,

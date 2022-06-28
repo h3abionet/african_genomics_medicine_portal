@@ -230,16 +230,20 @@
     const myChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: [{% for i in top_ten_variants %}'{{i.star_id|safe}}',{% endfor %}],
+        labels: [{% for i in top_ten_variants1 %}'{{i.snp_id|safe}}',{% endfor %}],
     datasets: [{
       label: 'No of Publications',
-      data: [{% for i in top_ten_variants %}'{{i.num_pubs|safe}}', {% endfor %}],
+      data: [{% for i in top_ten_variants1 %}'{{i.count|safe}}', {% endfor %}],
     backgroundColor: [
     'rgba(255, 99, 132, 0.2)',
     'rgba(54, 162, 235, 0.2)',
     'rgba(255, 206, 86, 0.2)',
     'rgba(75, 192, 192, 0.2)',
     'rgba(153, 102, 255, 0.2)',
+    'rgba(255, 159, 64, 0.2)',
+    'rgba(255, 159, 64, 0.2)',
+    'rgba(255, 159, 64, 0.2)',
+    'rgba(255, 159, 64, 0.2)',
     'rgba(255, 159, 64, 0.2)'
   ],
     borderColor: [
@@ -248,6 +252,10 @@
     'rgba(255, 206, 86, 1)',
     'rgba(75, 192, 192, 1)',
     'rgba(153, 102, 255, 1)',
+    'rgba(255, 159, 64, 1)',
+    'rgba(255, 159, 64, 1)',
+    'rgba(255, 159, 64, 1)',
+    'rgba(255, 159, 64, 1)',
     'rgba(255, 159, 64, 1)'
   ],
     borderWidth: 1
@@ -790,9 +798,8 @@
 
       <!--  -->
 
-<!-- 
-      {% for i in all_points_on_map %}
-      <p>Long: {{i.longitude|safe}}</p> ========== <b>Lat: {{i.latitude}}
+      <!-- {% for i in top_ten_variants1 %}
+      <p>Snp ID: {{i.snp_id}}</p> ========== <b>Count: {{i.count}}
 
 
 
