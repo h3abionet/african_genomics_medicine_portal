@@ -89,3 +89,6 @@ local_settings.py
 .env
 db.sqlite3
 config.py
+.editorconfig
+
+scripts
