@@ -378,24 +378,24 @@ def summary(request):
 
     Returns the counts of records for the major models;
     drug, variant, disease, gene,
+
     '''
+    ######## generating a data frame with longitudes and latitudes ###############
+    df = pd.DataFrame(list(snp.objects.all().values(
+        'latitude', 'longitude', 'snp_id')))
+
+    locations = df[["latitude", "longitude", "snp_id"]]
+
     map_01 = folium.Map(
         location=[4, 21], tiles='OpenStreetMap', control_scale=True, prefer_canvas=True, zoom_start=3)
-    data_list = snp.objects.values_list(
-        'latitude', 'longitude')
 
+    # print out all locations on the map
+    for index, location_info in locations.iterrows():
+        folium.Marker([location_info["latitude"],
+                       location_info["longitude"]], popup=location_info["snp_id"]).add_to(map_01)
+
+    # code to test location and heat map intensity
     data = [[-33.918861, 18.423300, 3330], [55, 3, 100]]
-    all_points_on_map = pd.DataFrame(
-        list(snp.objects.all().values('latitude', 'longitude')))
-
-    # all_points_on_map2 = snp.objects.values_list('latitude', 'longitude')
-    # df = pd.DataFrame(all_points_on_map2)
-    # location_list = df.values.tolist()
-    # location_list_size = len(location_list)
-    # print(location_list_size)
-
-    # for point in range(0, location_list_size):
-    #     folium.Marker(location_list, [point]).add_to(map_01)
 
     # plugins
     plugins.HeatMap(data).add_to(map_01)
@@ -423,10 +423,12 @@ def summary(request):
     # new drug graph 26 June 2022
     top_ten_drugs = drug.objects.all().annotate(
         num_pubs=Count('snp')).order_by('-num_pubs')[:10]
-
+    # top_ten_variants1 = snp.objects.values('rs_id').order_by( ##### working
+    #     'rs_id').annotate(count=Count('rs_id'))[:10]
   # new graph variants 26 June 2022
-    top_ten_variants1 = snp.objects.values('snp_id').order_by(
-        'snp_id').annotate(count=Count('snp_id'))[:10]
+    top_ten_variants = snp.objects.values('rs_id').annotate(num_pubs=Count('rs_id')).order_by(
+        '-num_pubs')[:10]
+
     # top_ten_variants = star_allele.objects.all().annotate(
     #     num_pubs=Count('star_id')).order_by('-num_pubs')[:10]
     # print(top_ten_variants1)
@@ -436,6 +438,9 @@ def summary(request):
     # top ten genes query2
     # top_ten_genes = snp.objects.annotate(
     #     num_of_genes=Count('gene_id')).order_by('-gene_id')[:10]
+
+    top_ten_countries = snp.objects.values('country_of_participants').annotate(
+        num_of_pubs=Count('country_of_participants')).order_by('-num_of_pubs')[:10]
 
     # //new graph queries
     snp_data = snp.objects.all()
@@ -458,13 +463,14 @@ def summary(request):
     counts["Diseases"] = disease.objects.count()
     counts["Genes"] = pharmacogenes.objects.count()
     context = {
-        'data_list': data_list,
+
         # 'all_points_on_map': all_points_on_map,
         'map_01': map_01,
+        'top_ten_countries': top_ten_countries,
         'top_ten_diseases': top_ten_diseases,
         'top_ten_drugs': top_ten_drugs,
         # 'top_ten_variants': top_ten_variants,
-        'top_ten_variants1': top_ten_variants1,
+        'top_ten_variants': top_ten_variants,
         'top_ten_pharmacogenes': top_ten_pharmacogenes,
         # 'top_ten_genes': top_ten_genes,
         'snp_usa_number': snp_usa_number,

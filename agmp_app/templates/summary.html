@@ -230,10 +230,10 @@
     const myChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: [{% for i in top_ten_variants1 %}'{{i.snp_id|safe}}',{% endfor %}],
+        labels: [{% for i in top_ten_variants %}'{{i.rs_id|safe}}',{% endfor %}],
     datasets: [{
       label: 'No of Publications',
-      data: [{% for i in top_ten_variants1 %}'{{i.count|safe}}', {% endfor %}],
+      data: [{% for i in top_ten_variants %}'{{i.num_pubs|safe}}', {% endfor %}],
     backgroundColor: [
     'rgba(255, 99, 132, 0.2)',
     'rgba(54, 162, 235, 0.2)',
@@ -275,7 +275,7 @@
   });
 
 
-  ///graph3
+  ///graph4
   $(document).ready(function () {
 
     const ctx = document.getElementById('myChart04').getContext('2d');
@@ -325,6 +325,62 @@
 
 
 });
+
+
+
+
+
+  ///graph5
+  $(document).ready(function () {
+
+    const ctx = document.getElementById('myChart05').getContext('2d');
+    const myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: [{% for i in top_ten_countries %}'{{i.country_of_participants|safe}}',{% endfor %}],
+    datasets: [{
+      label: 'No of Publications',
+      data: [{% for i in top_ten_countries %}'{{i.num_of_pubs|safe}}', {% endfor %}],
+    backgroundColor: [
+    'rgba(255, 99, 132, 0.2)',
+    'rgba(54, 162, 235, 0.2)',
+    'rgba(255, 206, 86, 0.2)',
+    'rgba(75, 192, 192, 0.2)',
+    'rgba(153, 102, 255, 0.2)',
+    'rgba(255, 159, 64, 0.2)',
+    'rgba(255, 159, 64, 0.2)',
+    'rgba(255, 159, 64, 0.2)',
+    'rgba(255, 159, 64, 0.2)',
+    'rgba(255, 159, 64, 0.2)'
+  ],
+    borderColor: [
+    'rgba(255, 99, 132, 1)',
+    'rgba(54, 162, 235, 1)',
+    'rgba(255, 206, 86, 1)',
+    'rgba(75, 192, 192, 1)',
+    'rgba(153, 102, 255, 1)',
+    'rgba(255, 159, 64, 1)',
+    'rgba(255, 159, 64, 1)',
+    'rgba(255, 159, 64, 1)',
+    'rgba(255, 159, 64, 1)',
+    'rgba(255, 159, 64, 1)'
+  ],
+    borderWidth: 1
+}]
+},
+    options: {
+    scales: {
+      y: {
+        beginAtZero: true
+      }
+    }
+  }
+});
+
+
+
+});
+
 
 
 </script>
@@ -682,7 +738,7 @@
           <li><a class="navigation__link" href="#1">Data Overview</a></li>
           <li><a class="navigation__link" href="#2_0">Graph</a></li>
           <li><a class="navigation__link" href="#2_1">Sample Graphs</a></li>
-          <li><a class="navigation__link" href="#2_2">Map</a></li>
+          <!-- <li><a class="navigation__link" href="#2_2">Map</a></li> -->
           <li><a class="navigation__link" href="#2">Data Distribution</a></li>
 
         </div>
@@ -753,6 +809,10 @@
               <a class="nav-link" id="4-tab" data-toggle="tab" href="#graph4" role="tab" aria-controls="graph4"
                 aria-selected="false">Top Ten Diseases</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" id="5-tab" data-toggle="tab" href="#graph5" role="tab" aria-controls="graph5"
+                aria-selected="false">Top Ten Countries</a>
+            </li>
 
           </ul>
           <div class="tab-content" id="myTabContent">
@@ -779,16 +839,23 @@
                 <canvas id="myChart04" width="200" height="100"></canvas>
               </div>
             </div>
+
+
+            <div class="tab-pane fade" id="graph5" role="tabpanel" aria-labelledby="graph5-tab">
+              <div class="col-md-9">
+                <canvas id="myChart05" width="200" height="100"></canvas>
+              </div>
+            </div>
           </div>
 
         </div>
       </div>
     </div>
 
-    <div class="page-section" id="2_2">
+    <div class="page-section" id="2">
 
 
-      <h3 class="text-center">Heat map</h3>
+      <h3 class="text-center">Data Distribution</h3>
       <div class="row">
         <div class="col-12">
 
@@ -796,10 +863,10 @@
         </div>
       </div>
 
-      <!--  -->
+
 
       <!-- {% for i in top_ten_variants1 %}
-      <p>Snp ID: {{i.snp_id}}</p> ========== <b>Count: {{i.count}}
+      <p>Snp ID: {{i.rs_id}}</p> ========== <b>Count: {{i.count}}
 
 
 
@@ -809,11 +876,11 @@
     </div>
 
 
-    <div class="page-section" id="2">
-      <h3 class="text-center">Data Distribution</h3>
-      <div class="row">
-        <div class="col-3">
-          <script type="text/javascript">
+    <!-- <div class="page-section" id="">
+      <!-- <h3 class="text-center">Data Distribution</h3> -->
+    <div class="row">
+      <div class="col-3">
+        <!-- <script type="text/javascript">
             function map_init(map, options) {
               $.ajax({
                 url: "/summary/countries",
@@ -835,12 +902,14 @@
               });
               map.setView([-0.6605788, 14.8965794], 3);
             }
-          </script>
-          {% leaflet_map "mapd" callback="window.map_init" %}
-        </div>
+          </script> -->
+        <!-- {% leaflet_map "mapd" callback="window.map_init" %} -->
       </div>
     </div>
   </div>
+
+
+</div>
 </div>
 
 {% endblock %}
