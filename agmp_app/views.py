@@ -395,10 +395,10 @@ def summary(request):
                        location_info["longitude"]], popup=location_info["snp_id"]).add_to(map_01)
 
     # code to test location and heat map intensity
-    data = [[-33.918861, 18.423300, 3330], [55, 3, 100]]
+    # data = [[-33.918861, 18.423300, 3330], [55, 3, 100]]
 
     # plugins
-    plugins.HeatMap(data).add_to(map_01)
+    # plugins.HeatMap(data).add_to(map_01)
     plugins.Fullscreen(position='topleft').add_to(map_01)
     folium.Marker(location=[5.655576044317193, -
                             0.1830446720123291]).add_to(map_01)
