@@ -92,3 +92,6 @@ config.py
 .editorconfig
 
 scripts
+agmp-portal.service
+notes.md
+config/nginx/conf.d/local.conf
