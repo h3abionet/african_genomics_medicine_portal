@@ -15,6 +15,7 @@ from folium import plugins
 from agmp_app.models import *
 from django.db.models import Avg, Min, Max, Count, Q
 import pandas as pd
+from collections import Counter
 
 
 # def index(request):
@@ -380,6 +381,22 @@ def summary(request):
     drug, variant, disease, gene,
 
     '''
+    # top ten countries using Counter per @Ayton 25Jul2022
+    snp_counts = Counter([cntry.strip() for pub in snp.objects.all()
+                          for cntry in pub.country_of_participants.split(',')])
+    star_counts = Counter([cntry.strip() for pub in star_allele.objects.all()
+                           for cntry in pub.country_of_participants.split(',')])
+    both_counts = snp_counts + star_counts
+
+    top_ten_both_counts = both_counts.most_common(10)
+
+    a_list = top_ten_both_counts
+    top_ten_c_count = [country[1] for country in a_list]
+    top_ten_p_count = [publication[0] for publication in a_list]
+
+    final_top_ten_countries = pd.DataFrame(list(zip(top_ten_c_count, top_ten_p_count)), columns=[
+        'publication', 'country'])
+
     ######## generating a data frame with longitudes and latitudes ###############
     df = pd.DataFrame(list(snp.objects.all().values(
         'latitude', 'longitude', 'snp_id')))
@@ -439,9 +456,6 @@ def summary(request):
     # top_ten_genes = snp.objects.annotate(
     #     num_of_genes=Count('gene_id')).order_by('-gene_id')[:10]
 
-    top_ten_countries = snp.objects.values('country_of_participants').annotate(
-        num_of_pubs=Count('country_of_participants')).order_by('-num_of_pubs')[:10]
-
     # //new graph queries
     snp_data = snp.objects.all()
     snp_data_by_country = snp.objects.all().values('country_of_participants')
@@ -464,9 +478,10 @@ def summary(request):
     counts["Genes"] = pharmacogenes.objects.count()
     context = {
 
-        # 'all_points_on_map': all_points_on_map,
+        # Top ten countries
+        'final_top_ten_countries': final_top_ten_countries,
+        'top_ten_both_counts': top_ten_both_counts,
         'map_01': map_01,
-        'top_ten_countries': top_ten_countries,
         'top_ten_diseases': top_ten_diseases,
         'top_ten_drugs': top_ten_drugs,
         # 'top_ten_variants': top_ten_variants,

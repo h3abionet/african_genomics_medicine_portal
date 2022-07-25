@@ -337,10 +337,10 @@
     const myChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: [{% for i in top_ten_countries %}'{{i.country_of_participants|safe}}',{% endfor %}],
+        labels: [{% for i in final_top_ten_countries.itertuples %}'{{i.country|safe}}',{% endfor %}],
     datasets: [{
       label: 'No of Publications',
-      data: [{% for i in top_ten_countries %}'{{i.num_of_pubs|safe}}', {% endfor %}],
+      data: [{% for i in final_top_ten_countries.itertuples %} {{ i.publication | safe }}, {% endfor %}],
     backgroundColor: [
     'rgba(255, 99, 132, 0.2)',
     'rgba(54, 162, 235, 0.2)',
@@ -865,47 +865,10 @@
 
 
 
-      <!-- {% for i in top_ten_variants1 %}
-      <p>Snp ID: {{i.rs_id}}</p> ========== <b>Count: {{i.count}}
-
-
-
-        {% endfor %} -->
-
-
     </div>
 
 
-    <!-- <div class="page-section" id="">
-      <!-- <h3 class="text-center">Data Distribution</h3> -->
-    <div class="row">
-      <div class="col-3">
-        <!-- <script type="text/javascript">
-            function map_init(map, options) {
-              $.ajax({
-                url: "/summary/countries",
-                dataType: "json",
-                data: {
-                },
-                success: function (data) {
-                  // console.log(data);
-                  data.forEach(el => {
-                    let text = "Country: " + el.country + "<br/>Total No.: " + el.count
-                    let marker = L.marker([el.latitude, el.longitude]);
-                    marker.bindTooltip(text, { permanent: false, className: "count-label", offset: [0, 0] });
-                    marker.addTo(map);
-                  });
-                },
-                error: function (e) {
-                  console.log(e);
-                }
-              });
-              map.setView([-0.6605788, 14.8965794], 3);
-            }
-          </script> -->
-        <!-- {% leaflet_map "mapd" callback="window.map_init" %} -->
-      </div>
-    </div>
+
   </div>
 
 
