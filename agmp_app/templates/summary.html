@@ -16,6 +16,13 @@
 {% load leaflet_tags %}
 {% block js%}
 
+<style>
+  .hiddenbox_1 {
+    display: none;
+    visibility: hidden;
+  }
+</style>
+
 
 <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -143,10 +150,10 @@
     'rgba(75, 192, 192, 0.2)',
     'rgba(153, 102, 255, 0.2)',
     'rgba(255, 159, 64, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
+    'rgba(195, 79, 64, 5.2)',
+    'rgba(285, 159, 64, 5.2)',
+    'rgba(0, 128, 0, 3.2)',
+    'rgba(108, 122, 137, 0.2)',
   ],
     borderColor: [
     'rgba(255, 99, 132, 1)',
@@ -155,10 +162,10 @@
     'rgba(75, 192, 192, 1)',
     'rgba(153, 102, 255, 1)',
     'rgba(255, 159, 64, 1)',
+    'rgba(195, 79, 64, 5.2)',
     'rgba(255, 159, 64, 1)',
-    'rgba(255, 159, 64, 1)',
-    'rgba(255, 159, 64, 1)',
-    'rgba(255, 159, 64, 1)'
+    'rgba(0, 128, 0, 3.2)',
+    'rgba(108, 122, 137, 0.2)',
   ],
     borderWidth: 1
     }]
@@ -194,8 +201,10 @@
     'rgba(75, 192, 192, 0.2)',
     'rgba(153, 102, 255, 0.2)',
     'rgba(255, 159, 64, 0.2)',
-    'rgba(255, 206, 86, 0.2)',
-    'rgba(75, 192, 192, 0.2)',
+    'rgba(195, 79, 64, 5.2)',
+    'rgba(285, 159, 64, 5.2)',
+    'rgba(0, 128, 0, 3.2)',
+    'rgba(108, 122, 137, 0.2)',
 
   ],
     borderColor: [
@@ -204,7 +213,11 @@
     'rgba(255, 206, 86, 1)',
     'rgba(75, 192, 192, 1)',
     'rgba(153, 102, 255, 1)',
-    'rgba(255, 159, 64, 1)'
+    'rgba(255, 159, 64, 1)',
+    'rgba(195, 79, 64, 5.2)',
+    'rgba(255, 159, 64, 1)',
+    'rgba(0, 128, 0, 3.2)',
+    'rgba(108, 122, 137, 0.2)',
   ],
     borderWidth: 1
     }]
@@ -241,10 +254,10 @@
     'rgba(75, 192, 192, 0.2)',
     'rgba(153, 102, 255, 0.2)',
     'rgba(255, 159, 64, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(255, 159, 64, 0.2)'
+    'rgba(195, 79, 64, 5.2)',
+    'rgba(285, 159, 64, 5.2)',
+    'rgba(0, 128, 0, 3.2)',
+    'rgba(108, 122, 137, 0.2)',
   ],
     borderColor: [
     'rgba(255, 99, 132, 1)',
@@ -253,10 +266,10 @@
     'rgba(75, 192, 192, 1)',
     'rgba(153, 102, 255, 1)',
     'rgba(255, 159, 64, 1)',
+    'rgba(195, 79, 64, 5.2)',
     'rgba(255, 159, 64, 1)',
-    'rgba(255, 159, 64, 1)',
-    'rgba(255, 159, 64, 1)',
-    'rgba(255, 159, 64, 1)'
+    'rgba(0, 128, 0, 3.2)',
+    'rgba(108, 122, 137, 0.2)',
   ],
     borderWidth: 1
     }]
@@ -293,10 +306,10 @@
     'rgba(75, 192, 192, 0.2)',
     'rgba(153, 102, 255, 0.2)',
     'rgba(255, 159, 64, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(255, 159, 64, 0.2)'
+    'rgba(195, 79, 64, 5.2)',
+    'rgba(285, 159, 64, 5.2)',
+    'rgba(0, 128, 0, 3.2)',
+    'rgba(108, 122, 137, 0.2)',
   ],
     borderColor: [
     'rgba(255, 99, 132, 1)',
@@ -305,10 +318,10 @@
     'rgba(75, 192, 192, 1)',
     'rgba(153, 102, 255, 1)',
     'rgba(255, 159, 64, 1)',
+    'rgba(195, 79, 64, 5.2)',
     'rgba(255, 159, 64, 1)',
-    'rgba(255, 159, 64, 1)',
-    'rgba(255, 159, 64, 1)',
-    'rgba(255, 159, 64, 1)'
+    'rgba(0, 128, 0, 3.2)',
+    'rgba(108, 122, 137, 0.2)',
   ],
     borderWidth: 1
 }]
@@ -348,10 +361,10 @@
     'rgba(75, 192, 192, 0.2)',
     'rgba(153, 102, 255, 0.2)',
     'rgba(255, 159, 64, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(255, 159, 64, 0.2)'
+    'rgba(195, 79, 64, 5.2)',
+    'rgba(285, 159, 64, 5.2)',
+    'rgba(0, 128, 0, 3.2)',
+    'rgba(108, 122, 137, 0.2)',
   ],
     borderColor: [
     'rgba(255, 99, 132, 1)',
@@ -360,10 +373,10 @@
     'rgba(75, 192, 192, 1)',
     'rgba(153, 102, 255, 1)',
     'rgba(255, 159, 64, 1)',
+    'rgba(195, 79, 64, 5.2)',
     'rgba(255, 159, 64, 1)',
-    'rgba(255, 159, 64, 1)',
-    'rgba(255, 159, 64, 1)',
-    'rgba(255, 159, 64, 1)'
+    'rgba(0, 128, 0, 3.2)',
+    'rgba(108, 122, 137, 0.2)',
   ],
     borderWidth: 1
 }]
@@ -737,7 +750,7 @@
         <div class="no_style">
           <li><a class="navigation__link" href="#1">Data Overview</a></li>
           <li><a class="navigation__link" href="#2_0">Graph</a></li>
-          <li><a class="navigation__link" href="#2_1">Sample Graphs</a></li>
+          <li><a class="navigation__link" href="#2_1">Graphs</a></li>
           <!-- <li><a class="navigation__link" href="#2_2">Map</a></li> -->
           <li><a class="navigation__link" href="#2">Data Distribution</a></li>
 
@@ -789,7 +802,7 @@
 
 
     <div class="page-section" id="2_1">
-      <h3 class="text-center">Sample Graphs</h3>
+      <h3 class="text-center">Graphs</h3>
       <div class="row">
         <div class="col">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
