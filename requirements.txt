@@ -91,7 +91,7 @@ pytz==2022.1
 pytz-deprecation-shim==0.1.0.post0
 pyzmq==23.2.0
 ratelim==0.1.6
-requests==2.22.0
+requests>=2.22.0
 rich==12.4.4
 semver==2.13.0
 Send2Trash==1.8.0
