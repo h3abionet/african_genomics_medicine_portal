@@ -397,11 +397,15 @@ def summary(request):
     final_top_ten_countries = pd.DataFrame(list(zip(top_ten_c_count, top_ten_p_count)), columns=[
         'publication', 'country'])
 
+
     ######## generating a data frame with longitudes and latitudes ###############
     df = pd.DataFrame(list(snp.objects.all().values(
-        'latitude', 'longitude', 'snp_id')))
+        'latitude', 'longitude', 'snp_id', 'country_of_participants', 'reference')))
+    
+    df = pd.DataFrame(list(snp.objects.values('latitude','longitude','reference')
+                           .annotate(publication_count = Count('reference'))))
 
-    locations = df[["latitude", "longitude", "snp_id"]]
+    locations = df[["latitude", "longitude", "publication_count"]]
 
     map_01 = folium.Map(
         location=[4, 21], tiles='OpenStreetMap', control_scale=True, prefer_canvas=True, zoom_start=3)
@@ -409,7 +413,7 @@ def summary(request):
     # print out all locations on the map
     for index, location_info in locations.iterrows():
         folium.Marker([location_info["latitude"],
-                       location_info["longitude"]], popup=location_info["snp_id"]).add_to(map_01)
+                       location_info["longitude"]], popup=f'Publications: {location_info["publication_count"]}').add_to(map_01)
 
     # code to test location and heat map intensity
     # data = [[-33.918861, 18.423300, 3330], [55, 3, 100]]
