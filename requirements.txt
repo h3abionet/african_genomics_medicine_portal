@@ -36,10 +36,11 @@ future==0.18.2
 geocoder==1.38.1
 gitdb==4.0.9
 GitPython==3.1.27
+gunicorn
 idna==2.8
 importlib-metadata==1.5.0
 ipykernel==6.15.0
-ipython==8.4.0
+ipython>=8.4.0
 ipython-genutils==0.2.0
 ipywidgets==7.7.1
 isort==4.3.21
@@ -122,3 +123,5 @@ widgetsnbextension==3.6.1
 wrapt==1.11.2
 zipp==2.2.1
 django-pandas
+WhiteNoise==5.2.0
+Werkzeug==1.0.1
