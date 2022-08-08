@@ -19,7 +19,9 @@ RUN apt-get update && \
 ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
 ENV C_INCLUDE_PATH=/usr/include/gdal
 
+RUN python -m pip install --upgrade pip
 RUN python -m pip install -r requirements.txt
+
 
 COPY . /agp
 
