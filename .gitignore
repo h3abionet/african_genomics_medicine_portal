@@ -9,7 +9,6 @@
 # Icon must end with two \r
 Icon
 
-
 # Thumbnails
 ._*
 
@@ -78,7 +77,6 @@ docs/_build/
 # PyBuilder
 target/
 
-
 ### Django ###
 *.log
 *.pot
@@ -86,16 +84,26 @@ target/
 __pycache__/
 local_settings.py
 
-.env
-db.sqlite3
-config.py
-
+### VS Code
 .editorconfig
+
+## envs
+.env
+env_pm
+config.py
+.python-version
+
+## databases
+db.sqlite3
+dbs
+
+# Jupyter
+*.ipynb
+.ipynb_checkpoints
+
+# other
 scripts
 agmp-portal.service
 notes.md
 config/nginx/conf.d
-Untitled.ipynb
-.ipynb_checkpoints
-dbs
-.python-version
+
