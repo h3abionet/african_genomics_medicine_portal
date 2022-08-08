@@ -11,21 +11,15 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.CreateModel(
-            name='disease',
-            fields=[
-                ('id', models.CharField(default='DIS0', max_length=50, primary_key=True, serialize=False)),
-                ('disease_name', models.CharField(max_length=250)),
-            ],
-        ),
-        migrations.AlterField(
-            model_name='star_allele',
-            name='id',
-            field=models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
-        ),
-        migrations.AddField(
-            model_name='snp',
-            name='disease',
-            field=models.ForeignKey(default='DIS0', on_delete=django.db.models.deletion.CASCADE, to='agmp_app.disease'),
-        ),
+
+        # migrations.AlterField(
+        #     model_name='star_allele',
+        #     name='id',
+        #     field=models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+        # ),
+        # migrations.AddField(
+        #     model_name='snp',
+        #     name='disease',
+        #     field=models.ForeignKey(default='DIS0', on_delete=django.db.models.deletion.CASCADE, to='agmp_app.disease'),
+        # ),
     ]
