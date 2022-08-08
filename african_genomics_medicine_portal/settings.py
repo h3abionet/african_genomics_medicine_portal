@@ -33,6 +33,7 @@ ALLOWED_HOSTS = [
     'agmp.h3abionet.org'
 ]
 
+ADMIN_URL = "madiba/"
 
 # Application definition
 
