@@ -89,3 +89,13 @@ local_settings.py
 .env
 db.sqlite3
 config.py
+
+.editorconfig
+scripts
+agmp-portal.service
+notes.md
+config/nginx/conf.d
+Untitled.ipynb
+.ipynb_checkpoints
+dbs
+.python-version
