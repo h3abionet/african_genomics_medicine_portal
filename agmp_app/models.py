@@ -16,11 +16,17 @@ class drug(models.Model):
     state = models.CharField(max_length=250, null=True)
     indication = models.TextField()
     iupac_name = models.TextField()
+    
+    def __str__(self):
+        return f"{self.drug_name}"
 
 
 class disease(models.Model):
     id = models.CharField(max_length=50, primary_key=True, default="DIS0")
     disease_name = models.CharField(max_length=250)
+    
+    def __str__(self):
+        return f"{self.disease_name}"
 
 
 class study(models.Model):
@@ -29,6 +35,12 @@ class study(models.Model):
     type = models.CharField(max_length=250)
     year = models.CharField(max_length=10, default="NA")
     title = models.CharField(max_length=250)
+    
+    def __str__(self):
+        return f"{self.title}"
+    
+    class Meta:
+        verbose_name_plural = "Studies"
 
 
 class pharmacogenes(models.Model):
@@ -37,6 +49,12 @@ class pharmacogenes(models.Model):
     gene_name = models.CharField(max_length=50, default="NA")
     uniprot_id = models.CharField(max_length=50, null=True)
     function = models.TextField(default="NA", max_length=250, null=True)
+    
+    def __str__(self):
+        return f"{self.gene_name}"
+    
+    class Meta:
+        verbose_name_plural = "Pharmacogenes"
 
 
 class snp(models.Model):
@@ -65,6 +83,12 @@ class snp(models.Model):
         self.latitude = geocoder.osm(self.country_of_participants).lat
         self.longitude = geocoder.osm(self.country_of_participants).lng
         return super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return f"{self.snp_id}"
+    
+    class Meta:
+        verbose_name_plural = "SNPs"
 
 
 class star_allele(models.Model):
@@ -85,6 +109,12 @@ class star_allele(models.Model):
         max_digits=10, decimal_places=7, default=Decimal('0.0000000'))
     longitude = models.DecimalField(
         max_digits=10, decimal_places=7, default=Decimal('0.0000000'))
+    
+    def __str__(self):
+        return f"{self.star_id}"
+    
+    class Meta:
+        verbose_name_plural = "Star alleles"
 
 
 class CountryData(models.Model):
@@ -95,4 +125,4 @@ class CountryData(models.Model):
         verbose_name_plural = 'Country Population Data'
 
     def __str__(self):
-        return f'{self.country}-{self.population}'
+        return f'{self.country} - {self.population}'
