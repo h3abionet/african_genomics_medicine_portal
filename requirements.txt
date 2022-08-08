@@ -121,3 +121,4 @@ whitenoise==5.2.0
 widgetsnbextension==3.6.1
 wrapt==1.11.2
 zipp==2.2.1
+django-pandas

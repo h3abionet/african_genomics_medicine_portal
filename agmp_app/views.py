@@ -16,6 +16,7 @@ from agmp_app.models import *
 from django.db.models import Avg, Min, Max, Count, Q
 import pandas as pd
 from collections import Counter
+from django_pandas.io import read_frame
 
 
 # def index(request):
@@ -391,21 +392,36 @@ def summary(request):
     top_ten_both_counts = both_counts.most_common(10)
 
     a_list = top_ten_both_counts
-    top_ten_c_count = [country[1] for country in a_list]
-    top_ten_p_count = [publication[0] for publication in a_list]
 
-    final_top_ten_countries = pd.DataFrame(list(zip(top_ten_c_count, top_ten_p_count)), columns=[
-        'publication', 'country'])
+    country = [country[1] for country in a_list]
+    publications = [publication[0] for publication in a_list]
 
+    country_by_publications = {
+        publications[i]: country[i] for i in range(len(publications))}
+
+    countries = list(country_by_publications.keys())
+
+    publications = list(country_by_publications.values())
 
     ######## generating a data frame with longitudes and latitudes ###############
-    df = pd.DataFrame(list(snp.objects.all().values(
-        'latitude', 'longitude', 'snp_id', 'country_of_participants', 'reference')))
-    
-    df = pd.DataFrame(list(snp.objects.values('latitude','longitude','reference')
-                           .annotate(publication_count = Count('reference'))))
 
-    locations = df[["latitude", "longitude", "publication_count"]]
+    results = snp.objects.all().values('latitude', 'longitude', 'snp_id',
+                                       'country_of_participants', 'reference').annotate(publication_count=Count('reference'))
+
+    # django pandas
+    query_set = snp.objects.values('latitude', 'longitude', 'reference').annotate(
+        publication_count=Count('reference'))
+
+    data_frame = read_frame(query_set)
+   
+    #  working python pandas
+    # df = pd.DataFrame(list(snp.objects.all().values(
+    #     'latitude', 'longitude', 'snp_id', 'country_of_participants', 'reference')))
+
+    # df = pd.DataFrame(list(snp.objects.values('latitude', 'longitude', 'reference')
+    #                        .annotate(publication_count=Count('reference'))))
+
+    locations = data_frame[["latitude", "longitude", "publication_count"]]
 
     map_01 = folium.Map(
         location=[4, 21], tiles='OpenStreetMap', control_scale=True, prefer_canvas=True, zoom_start=3)
@@ -483,7 +499,9 @@ def summary(request):
     context = {
 
         # Top ten countries
-        'final_top_ten_countries': final_top_ten_countries,
+
+        'countries': countries,
+        'publications': publications,
         'top_ten_both_counts': top_ten_both_counts,
         'map_01': map_01,
         'top_ten_diseases': top_ten_diseases,

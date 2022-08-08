@@ -350,10 +350,10 @@
     const myChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: [{% for i in final_top_ten_countries.itertuples %}'{{i.country|safe}}',{% endfor %}],
+        labels: [{% for i in countries %} '{{i}}',{% endfor %}],
     datasets: [{
       label: 'No of Publications',
-      data: [{% for i in final_top_ten_countries.itertuples %} {{ i.publication | safe }}, {% endfor %}],
+      data: [{% for i in publications %} {{ i }}, {% endfor %}],
     backgroundColor: [
     'rgba(255, 99, 132, 0.2)',
     'rgba(54, 162, 235, 0.2)',
@@ -749,7 +749,7 @@
       <ul>
         <div class="no_style">
           <li><a class="navigation__link" href="#1">Data Overview</a></li>
-          <li><a class="navigation__link" href="#2_0">Graph</a></li>
+          {% comment %} <li><a class="navigation__link" href="#2_0">Genes, Drugs, Variants and Diseases</a></li> {% endcomment %}
           <li><a class="navigation__link" href="#2_1">Graphs</a></li>
           <!-- <li><a class="navigation__link" href="#2_2">Map</a></li> -->
           <li><a class="navigation__link" href="#2">Data Distribution</a></li>
@@ -789,8 +789,8 @@
 
     </div>
 
-    <div class="page-section" id="2_0">
-      <h3 class="text-center">Graph</h3>
+    {% comment %} <div class="page-section" id="2_0">
+      <h3 class="text-center">Genes,Drugs,Variants and Diseases</h3>
 
       <div class="col-md-8">
         <canvas id="myChart" width="200" height="100"></canvas>
@@ -798,7 +798,7 @@
 
 
       </div>
-    </div>
+    </div> {% endcomment %}
 
 
     <div class="page-section" id="2_1">
@@ -874,6 +874,10 @@
 
           {{map_01|safe}}
         </div>
+
+        {% for i in results %}
+        <p>{{i.country_of_participants}}: {{i.publication_count}}| {{i.longitude}}{{i.lattitude}}</p>
+        {% endfor %}
       </div>
 
 
