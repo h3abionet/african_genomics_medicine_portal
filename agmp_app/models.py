@@ -51,7 +51,7 @@ class pharmacogenes(models.Model):
     function = models.TextField(default="NA", max_length=250, null=True)
     
     def __str__(self):
-        return f"{self.gene_name}"
+        return f"{self.uniprot_id}"
     
     class Meta:
         verbose_name_plural = "Pharmacogenes"
