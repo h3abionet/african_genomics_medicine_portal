@@ -1,33 +1,7 @@
  /* this css file is for projects specific overides */
  /* changes here will overide h3abionet.css */
 
- /* body{
-  font-size: 18px;
-} */
-
-
- body {
-   font-family: 'Roboto', 'Verdana', sans-serif;
-
-   font-weight: 300 !important;
-   line-height: 1.6;
-
-
- }
-
- #header_top_1 {
-   font-family: 'Verdana';
-   font-weight: 300 !important;
-   margin-top: 1.6rem;
-   margin-left: 1.5rem;
-   color: rgb(15, 14, 14);
-   /* margin-left:25px; */
-
-
- }
-
- /* 
-white circle as background of top  left logo */
+ /* white circle as background of top  left logo */
  .dot {
    height: 30px;
    width: 30px;
@@ -36,34 +10,23 @@ white circle as background of top  left logo */
    display: inline-block;
  }
 
-
-
-
-
  .margin_on_top_image {
    margin-right: 5px;
  }
-
-
- /* h3{
-  font-size:8px !important;
-  
-} */
-
-
-
-
 
  .bg-mibio {
    background-color: #337ab7;
    border-bottom: 2px #337ab7 solid;
  }
 
-
-
  .text-bigblue {
-   color: white !important;
+   color: white;
  }
+
+ .text-bigblue a:hover {
+   color: #064579;
+ }
+
 
 
  #logo {
@@ -76,6 +39,12 @@ white circle as background of top  left logo */
    /* position: absolute; */
    /* display:flex; */
    margin-left: 50px;
+ }
+
+ .navbar-brand,
+ .nav-link {
+   color: #ffffff !important;
+   /* font-size: 18px; */
  }
 
  .search {
@@ -520,23 +489,14 @@ transform: translateY(-50%); */
    margin-right: auto;
  }
 
-
-
-
-
-
-
-
  h3 {
    font-size: 36px !important;
    color: rgb(40, 64, 94);
  }
 
  .top_title_text {
-
    margin-top: 1.25rem;
    margin-left: 0px;
-
  }
 
  /* css for side bar and content area  */
@@ -552,30 +512,54 @@ transform: translateY(-50%); */
    /* box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.4); */
    padding: 10px;
    border: 1px solid #ccc;
-   border-radius: 4px;
+   border-radius: 5px;
  }
 
  .navigation {
+   background-color: rgb(51, 122, 183);
+   
+   border-radius: 5px;
+   
+   padding-top: 55px;
+   padding-bottom: 55px;
+   margin-bottom: 25px;
+   
+   width: 100%;
+   border: 1px solid #ccc;
+   line-height: 200%;
    /* position: fixed; */
    /* top: 0%; */
-   width: 100%;
    /* margin-left: 2%; */
    /* margin-top: 0; */
    /* background-color: lightgray; */
    /* color: #fff !important; */
-   background-color: rgb(51, 122, 183);
-   margin-bottom: 25px;
    /* border-radius: 1px; */
    /* box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.4); */
-   padding-top: 55px;
-   padding-bottom: 55px;
-   border: 1px solid #ccc;
-   border-radius: 4px;
-   line-height: 200%;
-
-
-
  }
+
+
+
+/* agmp previous */
+ /* .navigation { */
+  /* position: fixed; */
+  /* top: 0%; */
+  /* width: 100%; */
+  /* margin-left: 2%; */
+  /* margin-top: 0; */
+  /* background-color: lightgray; */
+  /* color: #fff !important; */
+  /* background-color: rgb(51, 122, 183); */
+  /* margin-bottom: 25px; */
+  /* border-radius: 1px; */
+  /* box-shadow: 0px 3px 10px 0px rgba(0, 0, 0, 0.4); */
+  /* padding-top: 55px; */
+  /* padding-bottom: 55px; */
+  /* border: 1px solid #ccc; */
+  /* border-radius: 5px; */
+  /* line-height: 200%; */
+/* } */
+
+
 
  .navigation a {
    color: white;
