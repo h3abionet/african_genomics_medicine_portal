@@ -30,7 +30,8 @@ DEBUG = config.DEBUG
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'agmp.h3abionet.org'
+    'agmp.h3abionet.org',
+    'dockerhost02.cbio.uct.ac.za',
 ]
 
 ADMIN_URL = "madiba/"
@@ -53,6 +54,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions'
 ]
+
+SHELL_PLUS = "notebook"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -97,6 +100,11 @@ DATABASES = {
     }
 }
 
+# new Django 3.2
+# https://dev.to/weplayinternet/upgrading-to-django-3-2-and-fixing-defaultautofield-warnings-518n
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
@@ -136,13 +144,17 @@ USE_TZ = True
 # os.path.abspath("static")  # added by Anmol
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn')
-# print(BASE_DIR)
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-    # "/home/devil/Documents/Tools/Database/staticfiles"
-]
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn')
+
+# if not DEBUG:
+#     STATIC_ROOT = "/var/www/static/"
+
+# print(BASE_DIR)
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static')
+#     # "/home/devil/Documents/Tools/Database/staticfiles"
+# ]
 
 RESULTS_PER_PAGE = 50
 
