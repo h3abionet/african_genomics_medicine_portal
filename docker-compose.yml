@@ -21,7 +21,7 @@ services:
         container_name: agmp_nginx_instance
         restart: unless-stopped
         volumes:
-            - ./config/nginx/conf.d:/etc/nginx/conf.d
+            - ./nginx/conf.d:/etc/nginx/conf.d
             - static:/agmp/static_cdn
         ports:
             - 8080:80
