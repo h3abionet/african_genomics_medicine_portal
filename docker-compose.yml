@@ -2,32 +2,37 @@ version: '3'
 
 services:
     djangoapp:
-        restart: unless-stopped
         image: agmp
-        container_name: agmp_instance
+        container_name: agmp_django_instance
+        restart: unless-stopped
         build: .
-        command: python manage.py runserver 0.0.0.0:8000
-        #`command: tail -f /dev/null
+        #command: python manage.py runserver 0.0.0.0:8000
+        #command: tail -f /dev/null
+        command: gunicorn african_genomics_medicine_portal.wsgi:application -w 2 -b :8000
         volumes:
-            - .:/agp
-        ports:
-            - 8008:8000
+            - static:/agmp/static_cdn
+        expose:
+            - 8000
         networks:  # <-- here
-        - nginx_network
+            - agmp_network
     
     nginx:
-        restart: unless-stopped
-        image: nginx:1.13
+        image: nginx:latest
         container_name: agmp_nginx_instance
+        restart: unless-stopped
         volumes:
             - ./config/nginx/conf.d:/etc/nginx/conf.d
+            - static:/agmp/static_cdn
         ports:
-            - 8000:80
+            - 8080:80
         depends_on:  # <-- wait for djangoapp to be "ready" before starting this service
             - djangoapp
         networks:  # <-- here
-            - nginx_network
+            - agmp_network
 
 networks:  # <-- and here
-  nginx_network:
+  agmp_network:
     driver: bridge
+
+volumes:
+    static:
