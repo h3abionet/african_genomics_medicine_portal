@@ -202,11 +202,11 @@ INNER JOIN agmp_app_disease on agmp_app_disease.id = agmp_app_snp.disease_id
 AND agmp_app_disease.id =  %s;""", [query_id]):
             disease_list.append(p)
 
-    print(variant_drug)
-    print(gene_list)
-    print(gene_drug)
-    print(disease_list)
-    print(gene_details)
+    # print(variant_drug)
+    # print(gene_list)
+    # print(gene_drug)
+    # print(disease_list)
+    # print(gene_details)
 
     return render(
         request, detail_view, {
