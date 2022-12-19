@@ -21,6 +21,7 @@ ENV C_INCLUDE_PATH=/usr/include/gdal
 RUN python -m pip install -U pip
 
 RUN mkdir /agmp
+
 WORKDIR /agmp
 COPY requirements.txt /agmp
 

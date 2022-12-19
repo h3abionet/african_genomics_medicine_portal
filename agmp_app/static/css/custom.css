@@ -369,35 +369,17 @@
  /*
 ######## css for overlay text in top header ######## */
  .header_top_bg_search .text_top_bg {
-
-
-
    color: #fff;
    font-size: 25px;
-   font-family: Roboto;
-   /* text-align: center; */
-   text-transform: sentencecase;
    background: rgba(0, 0, 0, 0.4);
    padding: 11.5px !important;
-   /* position: relative; */
-   /* top: 23%;
-    left: 50%; */
-   /* -ms-transform: translateY(-50%);
-    transform: translateY(-50%); */
-   /* transform: translate(-50%, -50%); */
    border-radius: 10px;
 
    margin-left: auto;
    margin-right: auto;
  }
 
-
-
-
  .header_top_bg_about .text_top_bg {
-
-
-
    color: #fff;
    font-size: 25px;
    font-family: Roboto;
@@ -526,7 +508,7 @@ transform: translateY(-50%); */
    
    width: 100%;
    border: 1px solid #ccc;
-   line-height: 200%;
+   /* line-height: 200%; */
    /* position: fixed; */
    /* top: 0%; */
    /* margin-left: 2%; */
