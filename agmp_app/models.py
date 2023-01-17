@@ -45,17 +45,14 @@ class Variantagmp(models.Model):
 
 class VariantStudyagmp(models.Model):
     variantagmp = models.ForeignKey(Variantagmp, on_delete=models.CASCADE,null=True, blank=True)
+    studyagmp = models.ForeignKey(Studyagmp, on_delete=models.CASCADE,null=True, blank=True)
     country_participant = models.CharField(max_length=50, null=True, blank=True)
     ethnicity = models.CharField(max_length=50, null=True, blank=True)
     geographical_regions = models.CharField(max_length=50, null=True, blank=True)
     notes = models.CharField(max_length=50, null=True, blank=True)
     p_value = models.CharField(max_length=50, null=True, blank=True)
   
-  
-
-
 ######### New Models #############
-
 
 ######### Old Models #############
 
