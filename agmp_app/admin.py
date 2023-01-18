@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import pharmacogenes, drug, snp, star_allele, study, CountryData,  Variantagmp, Drugagmp, Geneagmp, VariantStudyagmp
+from .models import pharmacogenes, drug, snp, star_allele, study, CountryData,  Variantagmp, Drugagmp, Geneagmp, VariantStudyagmp, Studyagmp, Phenotypeagmp
 ###### New classes ######
 class VariantagmpAdmin(admin.ModelAdmin):
     list_display = ['id']
@@ -16,11 +16,19 @@ class GeneagmpAdmin(admin.ModelAdmin):
 class VariantStudyagmpAdmin(admin.ModelAdmin):
     list_display = ['id']
 
+class StudyagmpAdmin(admin.ModelAdmin):
+    list_display = ['id']
+
+class PhenotypeagmpAdmin(admin.ModelAdmin):
+    list_display = ['id']
+
 ###### site.register ######
 admin.site.register(Drugagmp, DrugagmpAdmin)
 admin.site.register(Variantagmp, VariantagmpAdmin)
 admin.site.register(Geneagmp, GeneagmpAdmin)
 admin.site.register(VariantStudyagmp, VariantStudyagmpAdmin)
+admin.site.register(Studyagmp, StudyagmpAdmin)
+admin.site.register(Phenotypeagmp, PhenotypeagmpAdmin)
 
 
 
