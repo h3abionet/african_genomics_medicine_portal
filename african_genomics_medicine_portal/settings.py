@@ -30,7 +30,7 @@ DEBUG = config.DEBUG
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'agmp.h3abionet.org'
+    'agmp.h3abionet.org','176.58.102.12',
 ]
 
 ADMIN_URL = "madiba/"
