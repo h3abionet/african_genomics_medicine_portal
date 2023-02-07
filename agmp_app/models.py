@@ -12,21 +12,17 @@ class Drugagmp(models.Model):
     indication = models.TextField(max_length=50, null=True, blank=True)
     iupac_name_seq = models.CharField(max_length=50, null=True, blank=True)
     state = models.CharField(max_length=50, null=True, blank=True)
-
-
     class Meta:
         verbose_name_plural = "* Drugs"
 
 class Geneagmp(models.Model):
-    # gen_id = models.CharField(max_length=50, null=True, blank=True)
+    gene_id = models.CharField(max_length=50, null=True, blank=True)
     # source_db = models.CharField(max_length=50, null=True, blank=True)
     # gene_id =models.UUIDField(primary_key=True, default= uuid.uuid4,editable=False)
     chromosome = models.CharField(max_length=50, null=True, blank=True)
     function = models.TextField(max_length=50, null=True, blank=True)
     gene_name= models.CharField(max_length=50, null=True, blank=True)
-    uniprot= models.CharField(max_length=50, null=True, blank=True)
-
-
+    uniprot_ac= models.CharField(max_length=50, null=True, blank=True)
     class Meta:
         verbose_name_plural = "* Gene"
 
@@ -37,37 +33,34 @@ class Studyagmp(models.Model):
     publication_year = models.CharField(max_length=50, null=True, blank=True)
     study_type = models.CharField(max_length=500, null=True, blank=True)
     title = models.TextField(max_length=50, null=True, blank=True)
-
-
     class Meta:
         verbose_name_plural = "* Studies"
 
-class Phenotypeagmp(models.Model):
+class Phenotypeagmp(models.Model): # will be the diseases
     name = models.TextField(max_length=500, null=True, blank=True)
-
-
     class Meta:
         verbose_name_plural = "* Phenotype"
    
-
 class Variantagmp(models.Model):
+    geneagmp = models.ForeignKey(Geneagmp, on_delete=models.CASCADE, default="GENE",null=True, blank=True)
     allele = models.CharField(max_length=50, null=True, blank=True)
     drugagmp = models.ForeignKey(Drugagmp, on_delete=models.CASCADE, default="DRUG",null=True, blank=True)
     source_db = models.CharField(max_length=50, null=True, blank=True)
-    geneagmp = models.ForeignKey(Geneagmp, on_delete=models.CASCADE, default="GENE",null=True, blank=True)
     studyagmp = models.ForeignKey(Studyagmp, on_delete=models.CASCADE,null=True, blank=True)
     phenotypeagmp = models.ForeignKey(Phenotypeagmp, on_delete=models.CASCADE,null=True, blank=True)
-
-
+    # extra models
+    id_in_source_db = models.CharField(max_length=50, null=True, blank=True)
+    rs_id_star_annotation = models.CharField(max_length=50, null=True, blank=True) #which column is this in the csv file?
+    variant_type = models.CharField(max_length=50, null=True, blank=True)
+    rs_id = models.CharField(max_length=50, null=True, blank=True)
     class Meta:
         verbose_name_plural = "* Variant"
-
 
 class VariantStudyagmp(models.Model):
     variantagmp = models.ForeignKey(Variantagmp, on_delete=models.CASCADE,null=True, blank=True)
     studyagmp = models.ForeignKey(Studyagmp, on_delete=models.CASCADE,null=True, blank=True)
     country_participant = models.CharField(max_length=50, null=True, blank=True)
-    Ethnicity = models.CharField(max_length=50, null=True, blank=True)
+    ethnicity = models.CharField(max_length=50, null=True, blank=True)
     geographical_regions = models.CharField(max_length=50, null=True, blank=True)
     notes = models.TextField(max_length=500, null=True, blank=True)
     p_value = models.CharField(max_length=50, null=True, blank=True)
@@ -78,8 +71,6 @@ class VariantStudyagmp(models.Model):
 ######### New Models #############
 
 ######### Old Models #############
-
-
 class Index(models.Model):
     id = models.AutoField(primary_key=True)
     recname = models.CharField(max_length=250)

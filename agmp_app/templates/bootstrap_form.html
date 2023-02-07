@@ -1,0 +1,167 @@
+{% extends 'mainLayout.html' %}
+
+
+{% block title%}About{% endblock %}
+
+
+{% block banner %}
+
+
+{% include 'partials/banner_about.html' %}
+
+{% endblock %}
+
+{% block content %}
+
+<style type="text/css">
+	ul {
+	 list-style-type: none;
+	}
+   </style>
+{% comment %} 
+<div class="row"> {% endcomment %}
+ 
+
+ <form method="GET" action=".">
+
+	{% comment %} ------{% endcomment %}
+	<div class="form-row">
+		<div class="form-group col-12">
+			<div class="input-group">
+					<input class="form-control py-2 border-right-0 border" type="search" name="title_contains" placeholder= "Title Contains"/>
+					<span class="input-group-append">
+						<div class="input-group-text bg-transparent">
+							<i class="fa fa-search"></i>
+						</div>
+					</span>
+			</div>
+		</div>
+	</div>
+		{% comment %} ------{% endcomment %}
+		<div class="form-row">
+			<div class="form-group col-12">
+				<div class="input-group">
+						<input class="form-control py-2 border-right-0 border" type="search"  name="title_exact" placeholder= "Title Exact"/>
+						<span class="input-group-append">
+							<div class="input-group-text bg-transparent">
+								<i class="fa fa-search"></i>
+							</div>
+						</span>
+				</div>
+			</div>
+		</div>
+			{% comment %} ------{% endcomment %}
+	<div class="form-row">
+		<div class="form-group col-12">
+			<div class="input-group">
+					<input class="form-control py-2 border-right-0 border" type="search" name="title_or_author" placeholder="Title or Author"/>
+					<span class="input-group-append">
+						<div class="input-group-text bg-transparent">
+							<i class="fa fa-search"></i>
+						</div>
+					</span>
+			</div>
+		</div>
+	</div>
+
+
+		{% comment %} ------{% endcomment %}
+
+	<div class="form-row">
+		<div class="form-group col-md-2 col-lg-2">
+		  <label for="inputEmail4">Minimum View Count</label>
+		  <input type="number" min=0  class="form-control" name="view_count_min" id="inputEmail4" placeholder="">
+		</div>
+		<div class="form-group col-md-2 col-lg-2">
+		  <label for="inputPassword4">Maximum View Count</label>
+		  <input type="number" max=10 000 class="form-control" name="view_count_max" id="inputPassword4" placeholder="">
+		</div>
+		<div class="form-group col-md-2 col-lg-2">
+			<label for="inputEmail4">Publish Date Min</label>
+			<input type="date" class="form-control" name="date_min" id="inputEmail4" placeholder="">
+		  </div>
+		  <div class="form-group col-md-2 col-lg-2">
+			<label for="inputPassword4">Publish Date Max </label>
+			<input type="date" class="form-control" name="date_max" id="inputPassword4" placeholder="">
+		  </div>
+		  <div class="form-group col-md-2 col-lg-2">
+			<label for="inputState">Category</label>
+			<select id="inputState" name="category" class="form-control">
+			  <option selected>Choose...</option>
+			  <option>...</option>
+			</select>
+		  </div>
+	  </div>
+
+	  <button type="submit" class="btn btn-primary">Search</button>
+ </form>
+
+{% comment %} </div> {% endcomment %}
+
+
+<hr>
+
+<div class="row">
+
+	<ul>
+			{% for journal in queryset %}
+
+			<li>{{journal.id}}, {{journal.title}} Authored by :{{journal.author.name}}  <li>
+
+			{% endfor %}
+
+
+	</ul>
+<hr>
+</div>
+
+
+
+
+
+
+{% endblock %}
+
+{% block js %}
+<script>
+
+	$(document).ready(function () {
+		$('a[href*=#]').bind('click', function (e) {
+			e.preventDefault(); // prevent hard jump, the default behavior
+
+			var target = $(this).attr("href"); // Set the target as variable
+
+			// perform animated scrolling by getting top-position of target-element and set it as scroll target
+			$('html, body').stop().animate({
+				scrollTop: $(target).offset().top
+			}, 600, function () {
+				location.hash = target; //attach the hash (#jumptarget) to the pageurl
+			});
+
+			return false;
+		});
+	});
+
+	$(window).scroll(function () {
+		var scrollDistance = $(window).scrollTop();
+
+		// Show/hide menu on scroll
+		//if (scrollDistance >= 850) {
+		//		$('nav').fadeIn("fast");
+		//} else {
+		//		$('nav').fadeOut("fast");
+		//}
+
+		// Assign active class to nav links while scolling
+		$('.page-section').each(function (i) {
+			if ($(this).position().top <= scrollDistance) {
+				$('.navigation a.active').removeClass('active');
+				$('.navigation a').eq(i).addClass('active');
+			}
+		});
+	}).scroll();
+
+</script>
+
+
+{% endblock %}

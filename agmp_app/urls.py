@@ -1,5 +1,6 @@
 from django.urls import path, re_path, include
 # from django.conf.urls import url
+# from core.views import BootstrapFilterView
 
 from . import views
 
@@ -24,5 +25,6 @@ urlpatterns = [
     path('faqs', views.faqs, name='faqs'),
     path('tutorial/', views.tutorial, name='tutorial'),
     path('help', views.help, name='help'),
+    path('search-new/',views.FilterView, name='bootstrap'),
     path('agnocomplete/', include('agnocomplete.urls')),
 ]

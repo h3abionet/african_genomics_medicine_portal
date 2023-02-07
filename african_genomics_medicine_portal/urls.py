@@ -21,4 +21,5 @@ from django.conf import settings
 urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
     path('', include('agmp_app.urls')),
+    path('core/', include('core.urls')),
 ]

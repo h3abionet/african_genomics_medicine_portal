@@ -8,7 +8,7 @@ class VariantagmpAdmin(admin.ModelAdmin):
 
     # pass
 class DrugagmpAdmin(admin.ModelAdmin):
-    list_display = ['id']
+    list_display = ['drug_id']
 
 class GeneagmpAdmin(admin.ModelAdmin):
     list_display = ['id']
@@ -30,8 +30,6 @@ admin.site.register(VariantStudyagmp, VariantStudyagmpAdmin)
 admin.site.register(Studyagmp, StudyagmpAdmin)
 admin.site.register(Phenotypeagmp, PhenotypeagmpAdmin)
 
-
-
 admin.site.site_header = 'AGMP admin'
 admin.site.site_title = 'AGMP admin'
 admin.site.index_title = 'AGMP admin home'
@@ -48,7 +46,7 @@ class PharmacogenesAdmin(admin.ModelAdmin):
 @admin.register(drug)
 class DrugsAdmin(admin.ModelAdmin):
     list_display = (
-        "id",
+       
         "drug_name",
         "drug_bank_id",
         "state",
@@ -58,7 +56,7 @@ class DrugsAdmin(admin.ModelAdmin):
 @admin.register(snp)
 class SNPAdmin(admin.ModelAdmin):
     list_display = (
-        "id",
+ 
         "snp_id",
         "rs_id",
     )
