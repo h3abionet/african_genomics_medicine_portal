@@ -18,7 +18,7 @@ class Category(models.Model):
 class Journal(models.Model):
     title = models.CharField(max_length=250, null=True, blank=True)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    categories = models.ManyToManyField(Category, null=True, blank=True)
+    categories = models.ManyToManyField(Category)
     publish_date = models.DateField(auto_now_add=True)
     views = models.IntegerField(default=0)
     reviewed = models.BooleanField(default=False)
