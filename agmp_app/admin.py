@@ -11,7 +11,7 @@ class DrugagmpAdmin(admin.ModelAdmin):
     list_display = ['drug_id']
 
 class GeneagmpAdmin(admin.ModelAdmin):
-    list_display = ['id']
+    list_display = ['id', 'gene_id']
 
 class VariantStudyagmpAdmin(admin.ModelAdmin):
     list_display = ['id']

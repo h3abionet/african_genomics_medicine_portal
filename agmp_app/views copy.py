@@ -18,97 +18,149 @@ import pandas as pd
 from collections import Counter
 from django_pandas.io import read_frame
 
-from django.views.generic.detail import DetailView
-
-
-
-
-# Variant Details views
-class VariantDetailView(DetailView):
-    model = Variantagmp
-    template_name = "search_variant_detail.html"
-
-
-
+# def FilterView(request,q_id):
 def FilterView(request):
     qs_variant = Variantagmp.objects.select_related().all() 
-    variant_contains_query = request.GET.get('variant_contains')
-    if variant_contains_query != '' and variant_contains_query is not None:
-        qs_variant = qs_variant.filter(rs_id__icontains=variant_contains_query)
+    variant_cotains_query = request.GET.get('variant_contains')
+    if variant_cotains_query != '' and variant_cotains_query is not None:
+        qs_variant = qs_variant.filter(rs_id__icontains=variant_cotains_query)
+       
+    # if q_id ==0:
+    # elif q_id ==1:
+
+    #     print("one")
+
+    # elif q_id ==2:
+
+    #     print("two")
+
+    # else: 
+
+    #     print("three")
 
 
 
-    context = {
+
+
+    # qs_drug = Drugagmp.objects.all()
+
+    # qs_gene = Geneagmp.objects.all()
+
+    # qs_study = Studyagmp.objects.all()
+
   
 
-        'qs_variant':qs_variant,
-      
+    # qs_variant = Variantagmp.objects.all()
+
+    # qs_variant_study = VariantStudyagmp.objects.all()
+
+    # qs_pheno = Phenotypeagmp.objects.all()
+
+    # drug_cotains_query = request.GET.get('drug_contains')
+
+    # if drug_cotains_query != '' and drug_cotains_query is not None:
+
+    #     qs_drug = qs_drug.filter(drug_name__icontains=drug_cotains_query)
+
+
+    # gene_cotains_query = request.GET.get('gene_contains')
+
+    # if gene_cotains_query != '' and gene_cotains_query is not None:
+
+    #     qs_gene = qs_gene.filter(gene_name__icontains=gene_cotains_query)
+
+# # variant search results only
+#     qs_variant = Variantagmp.objects.select_related().all()
+
+#     # variant_select = request.GET.get('inlineRadio1')
+
+#     # if variant_select == "inlineRadio1":
+
+#     #     qs_variant = Variantagmp.objects.all()  
+
+#     variant_cotains_query = request.GET.get('variant_contains')
+
+#     if variant_cotains_query != '' and variant_cotains_query is not None:
+
+#          qs_variant = qs_variant.filter(rs_id__icontains=variant_cotains_query)
+
+
+
+
+#Drug Search results
+    
+    # qs_drug = Variantagmp.objects.select_related().all()
+
+    # drug_cotains_query = request.GET.get('variant_contains')
+
+    # if drug_cotains_query != '' and drug_cotains_query is not None:
+
+    #     qs_drug = qs_drug.filter(rs_id__icontains=drug_cotains_query)
+
+
+#Drug Search Results 
+    # print("test line 86")
+
+#     drug_test_name = Variantagmp.objects.select_related('drugv').annotate(
+#     Drugagmp=models.Case(models.When(models.Q(drug_name__icontains="warfarin"), then=models.F('drugv')))
+# )
+
+
+    # drug_test_name = Variantagmp.objects.select_related('drugv').filter(Q(drug_name__icontains="warfarin" ))
+    # print("test print")
+    # print(drug_test_name)
+
+
+#Gene Search Results 
+  
+        
+    qs_drug = Variantagmp.objects.select_related().all()
+
+    drug_cotains_query = request.GET.get('durg_contains')
+
+    if drug_cotains_query != '' and drug_cotains_query is not None:
+
+        qs_drug = qs_drug.filter(rs_id__icontains=drug_cotains_query)
+
+
+
+
+
+    # var_display =1
+    # id ="inlineRadio1"
+
+    context = {
+        # 'var_x':var_x,
+
+        'qs_drug':qs_drug,
+        # 'q_id':q_id,
     
     
     }
     return render(request, "search_variant.html",context)
 
 def FilterViewDrug(request):
+    qs_drug = Drugagmp.objects.select_related().all()  
+    variant_cotains_query = request.GET.get('variant_contains')
+    if variant_cotains_query != '' and variant_cotains_query is not None:
+        qs_variant = qs_variant.filter(rs_id__icontains=variant_cotains_query)
+       
 
-    qs_drug = Drugagmp.objects.select_related().all() 
-    drug_contains_query = request.GET.get('drug_contains')
-    if drug_contains_query != '' and drug_contains_query is not None:
-        qs_drug = qs_drug.filter(drug_name__icontains=drug_contains_query)
-
-
+    qs_drug_cotains_query = request.GET.get('qs_drug')
+    if drug_cotains_query != '' and drug_cotains_query is not None:
+        qs_drug = qs_drug.filter(id__icontains=drug_cotains_query)
+     
 
     context = {
-  
+    
 
-        'qs_drug':qs_drug,
-      
+    'qs_drug':qs_drug,
+       
     
     
     }
 
     return render(request, "search_drug.html",context)
-
-
-
-def FilterViewGene(request):
-
-    qs_gene = Geneagmp.objects.select_related().all() 
-    gene_contains_query = request.GET.get('gene_contains')
-    if gene_contains_query != '' and gene_contains_query is not None:
-        qs_gene = qs_gene.filter(gene_name__icontains=gene_contains_query)
-
-
-
-    context = {
-  
-
-        'qs_gene':qs_gene,
-      
-    
-    
-    }
-
-    return render(request, "search_gene.html",context)
-
-
-def FilterViewDisease(request):
-
-    qs_disease = Variantagmp.objects.select_related().exclude(source_db="PharmGKB")
-    disease_contains_query = request.GET.get('disease_contains')
-    if disease_contains_query != '' and disease_contains_query is not None:
-        qs_disease = qs_disease.filter(phenotypeagmp__name__icontains=disease_contains_query)
-
-
-    context = {
-  
-
-        'qs_disease':qs_disease,
-    
-    
-    
-    }
-
-    return render(request, "search_disease.html",context)
 
 
 

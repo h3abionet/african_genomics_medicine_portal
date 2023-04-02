@@ -1,6 +1,8 @@
 from django.db import models
 
 # Create your models here.
+import secrets
+from core.utils import custom_id
 
 class Author(models.Model):
     name= models.CharField(max_length=250, null=True, blank=True)
@@ -22,6 +24,8 @@ class Journal(models.Model):
     publish_date = models.DateField(auto_now_add=True)
     views = models.IntegerField(default=0)
     reviewed = models.BooleanField(default=False)
+    custom_id = models.CharField(primary_key=True, max_length=11, unique=True, default=custom_id)
+
 
 
     def __str__(self):

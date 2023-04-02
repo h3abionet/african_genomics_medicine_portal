@@ -1,0 +1,149 @@
+{% extends 'mainLayout.html' %}
+
+
+{% block title%}About{% endblock %}
+
+
+{% block banner %}
+
+
+{% include 'partials/banner_about.html' %}
+
+{% endblock %}
+
+{% block content %}
+
+<style type="text/css">
+	ul {
+	 list-style-type: none;
+	}
+   </style>
+{% comment %} 
+<div class="row"> {% endcomment %}
+ <div>
+
+ <form method="GET" action=".">
+	<p>
+	
+	  <div class="form-check form-check-inline">
+		<input class="form-check-input" type="radio" name="GFG" id="1" value="1">
+		<label class="form-check-label" for="inlineRadio2">Gene</label>
+	  </div>
+
+	</p>
+
+	<div class="form-row">
+		<div class="form-group col-12">
+			<div class="input-group">
+					<input class="form-control py-2 border-right-0 border" type="search" name="gene_contains" placeholder="Search..."/>
+					<span class="input-group-append">
+						<div class="input-group-text bg-transparent">
+							<i class="fa fa-search"></i>
+						</div>
+					</span>
+			</div>
+		</div>
+	</div>
+	
+	<div class="form-row">
+	
+	</div>
+	
+	<button type="submit" id ="btn" class="btn btn-primary" onclick="display()">Search</button>
+ </form>
+
+
+		<div class="row">
+
+			<ul>
+	
+					{% for i in qs_gene  %}
+	
+				<li> {{i.gene_id}}<br><b>Chromosome: </b>{{i.chromosome}}<br>
+					<a href="#" target="_blank">For Gene associations click here</a>  
+					<a href="#" target="_blank">For Variant-Drug associations click here</a>  
+					<li>
+					<hr>
+					{% endfor %}
+					
+			
+		
+	
+			</ul> 
+
+
+		
+
+			<div class="col-sm-12">
+				{% comment %} <ul>
+					Drug
+					<hr>
+					{% for i in qs_drug %}
+		
+					<li> <b>Drug Name:</b> {{i.drug_name}}, <b>Drug ID:</b> {{i.drug_id}}, <b>Drug Bank ID</b> {{i.drug_bank_id}}
+						<br>
+						<b>State:</b> {{i.state}}
+						<br>
+						<a href="#" target="_blank">For variant-drug associations click here</a> 
+						<li>
+						<hr>
+					{% endfor %}
+				</ul>  {% endcomment %}
+
+			
+
+		
+
+			
+		
+
+		</div>
+	
+	
+	</div>
+ 
+	
+
+
+
+</div>
+
+
+
+
+
+
+{% endblock %}
+
+{% block js %}
+<script>
+
+	{% comment %} var checked_object1 = document.querySelector('input[name = "inlineRadioOption"]:checked');
+
+	if(checked_object1 != null){  //Test if something was checked
+	alert(checked_object1.value); //Alert the value of the checked.
+	} else {
+	alert('Nothing checked'); //Alert, nothing was checked.
+	} {% endcomment %}
+
+
+	function display() {
+		var checkRadio = document.querySelector(
+			'input[name="GFG"]:checked');
+		 
+		if(checkRadio != null) {
+			document.getElementById("disp").innerHTML
+				= checkRadio.value
+				+ " radio button checked";
+		}
+		else {
+			document.getElementById("disp").innerHTML
+				= "No one selected";
+		}
+	}
+
+
+</script>
+
+
+{% endblock %}
