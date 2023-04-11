@@ -32,5 +32,6 @@ urlpatterns = [
     path('search-gene/',views.FilterViewGene, name='search-gene'),
     path('search-disease/',views.FilterViewDisease, name='search-disease'),
     path('agnocomplete/', include('agnocomplete.urls')),
-      path('search-variant/<pk>/', VariantDetailView.as_view()),
+    path('search-variant/<pk>/', VariantDetailView.as_view()),
+    path('search-all/', views.search_all, name='search_all'),
 ]

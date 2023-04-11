@@ -6,7 +6,7 @@ from django.core import serializers
 from itertools import chain
 
 from .models import disease, pharmacogenes, drug, snp as SnpModel, star_allele, study, Drugagmp, Geneagmp, Studyagmp, Variantagmp, VariantStudyagmp, Phenotypeagmp
-from .forms import PostForm, CountryDataFrom
+from .forms import PostForm, CountryDataFrom, SearchForm
 import json
 import folium
 import geocoder
@@ -20,6 +20,26 @@ from django_pandas.io import read_frame
 
 from django.views.generic.detail import DetailView
 
+def search_all(request):
+    query = request.GET.get('query') 
+    variant_results = Variantagmp.objects.filter(
+        Q(rs_id__icontains=query | None )
+    )
+    drug_results = Drugagmp.objects.filter(drug_name__icontains=query | None )
+    gene_results = Geneagmp.objects.filter(gene_name__icontains=query | None)
+    context = {
+        'variant_results': variant_results,
+        'drug_results': drug_results,
+        'gene_results': gene_results,
+    }
+    return render(request, 'search_all.html', context)
+
+    
+
+   
+  
+
+  
 
 
 
