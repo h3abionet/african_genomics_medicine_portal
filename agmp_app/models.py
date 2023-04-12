@@ -4,6 +4,9 @@ import geocoder
 import uuid
 from django.urls import reverse
 
+
+
+
 #Drug ids
 def increment_drug_id():
     last_drug_id = Drugagmp.objects.all().order_by('id').last()

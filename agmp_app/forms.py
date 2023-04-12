@@ -21,10 +21,11 @@ class CountryDataFrom(forms.ModelForm):
         model = CountryData
         fields = '__all__'
 
-
-
 class SearchForm(forms.Form):
-   class SearchForm(forms.Form):
-    query = forms.CharField()
-
-  
+    SEARCH_CHOICES = (
+        ('Variantagmp', 'Variant'),
+        ('Geneagmp', 'Gene'),
+        ('Drugagmp', 'Drug'),
+    )
+    search_option = forms.ChoiceField(choices=SEARCH_CHOICES, widget=forms.RadioSelect)
+    search_query = forms.CharField(max_length=100)

@@ -6,7 +6,7 @@ from django.core import serializers
 from itertools import chain
 
 from .models import disease, pharmacogenes, drug, snp as SnpModel, star_allele, study, Drugagmp, Geneagmp, Studyagmp, Variantagmp, VariantStudyagmp, Phenotypeagmp
-from .forms import PostForm, CountryDataFrom, SearchForm
+from .forms import PostForm, CountryDataFrom
 import json
 import folium
 import geocoder
@@ -19,28 +19,27 @@ from collections import Counter
 from django_pandas.io import read_frame
 
 from django.views.generic.detail import DetailView
+from .forms import SearchForm
 
 def search_all(request):
-    query = request.GET.get('query') 
-    variant_results = Variantagmp.objects.filter(
-        Q(rs_id__icontains=query | None )
-    )
-    drug_results = Drugagmp.objects.filter(drug_name__icontains=query | None )
-    gene_results = Geneagmp.objects.filter(gene_name__icontains=query | None)
-    context = {
-        'variant_results': variant_results,
-        'drug_results': drug_results,
-        'gene_results': gene_results,
-    }
-    return render(request, 'search_all.html', context)
-
-    
-
-   
-  
-
-  
-
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            search_option = form.cleaned_data['search_option']
+            search_query = form.cleaned_data['search_query']
+            
+            if search_option == 'Variantagmp':
+                results = Variantagmp.objects.filter(rs_id__icontains=search_query)
+            elif search_option == 'Geneagmp':
+                results = Geneagmp.objects.filter(gene_name__icontains=search_query)
+            elif search_option == 'Drugagmp':
+                results = Drugagmp.objects.filter(drug_name__icontains=search_query)
+            
+            return render(request, 'search_results.html', {'form': form,'results': results})
+    else:
+        form = SearchForm()
+        
+    return render(request, 'search_form.html', {'form': form})
 
 
 # Variant Details views

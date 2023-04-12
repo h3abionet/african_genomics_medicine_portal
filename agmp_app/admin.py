@@ -30,6 +30,7 @@ admin.site.register(VariantStudyagmp, VariantStudyagmpAdmin)
 admin.site.register(Studyagmp, StudyagmpAdmin)
 admin.site.register(Phenotypeagmp, PhenotypeagmpAdmin)
 
+
 admin.site.site_header = 'AGMP admin'
 admin.site.site_title = 'AGMP admin'
 admin.site.index_title = 'AGMP admin home'
