@@ -31,14 +31,14 @@ def search_all(request):
             if search_option == 'Variantagmp':
                 results = Variantagmp.objects.filter(rs_id__icontains=search_query)
             elif search_option == 'Geneagmp':
-                results = Geneagmp.objects.filter(gene_name__icontains=search_query)
+                results = Geneagmp.objects.filter(gene_id__icontains=search_query)
             elif search_option == 'Drugagmp':
                 results = Drugagmp.objects.filter(drug_name__icontains=search_query)
             elif search_option == 'Disease':
                 results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__icontains=search_query)
             
             
-            return render(request, 'search_results.html', {'form': form,'results': results})
+            return render(request, 'search_results.html', {'form': form, 'results': results, 'search_option':search_option })
     else:
         form = SearchForm()
         

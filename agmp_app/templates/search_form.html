@@ -3,7 +3,12 @@
 {% load bootstrap4 %}
 {% load static %}
 
+<style>
+    ul, li {
+        display:inline !important;
+    }
 
+</style>
 
 {% block title%}Search{% endblock %}
 
@@ -28,11 +33,12 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
 
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    
+    {{ form.as_p }} 
     <button type="submit">Search</button>
 </form>
 
-{% if results %}
+{% if result %}
     <ul>
     {% for result in results %}
         <li>{{ result }}</li>

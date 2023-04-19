@@ -3,6 +3,12 @@
 {% load bootstrap4 %}
 {% load static %}
 
+<style>
+    ul, li {
+        display:inline !important;
+    }
+
+</style>
 
 
 {% block title%}Search{% endblock %}
@@ -27,19 +33,49 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
 
 <form method="post">
     {% csrf_token %}
+<div class="">
     {{ form.as_p }}
+
+</div>
     <button type="submit">Search</button>
 </form>
-{% if results %}
-    <ul>
+
+{% if search_option == "Variantagmp" %}
+   
+   {% for result in results %}
+       <b>rs ID: </b>{{ result.rs_id}}<br>
+        <b>Chromosome: </b>{{ result.geneagmp.chromosome}}<br>
+        <b>Gene: </b>{{ result.geneagmp.gene_id}}<br>
+        <a href="#" target="_blank">For Variant-Drug associations click here</a> <br><hr>
+        <b>Gene Name: </b>{{ result.geneagmp.gene_name}}<br>
+    {% endfor %} 
+
+    {% elif search_option == "Geneagmp" %}
+
     {% for result in results %}
-        <li>{{ result }}</li>
-    {% endfor %}
-    </ul>
-{% else %}
+       <b>gene ID: </b>{{ result.gene_id}}<br>
+        <b>Chromosome: </b>{{result.chromosome}}<br>
+        <a href="#" target="_blank">For Gene associations click here For Variant-Drug associations click here</a> <br><hr>
+    {% endfor %}   
+    {% elif search_option == "Drugagmp" %}
+ {% for result in results %}
+     <b></b>{{result.drug_name}}<br>
+     <b>Drug Bank ID: </b>{{result.drug_bank_id}}<br>
+     <b>State: </b>{{result.state}}<br>
+     <a href="#" target="_blank"> For Variant Drug associations click here</a><br><hr>
+ {% endfor %}   
+ {% elif search_option == "Disease" %}
+ {% for result in results %}
+ <b></b>{{result.phenotypeagmp.name}}<br>
+ <a href="#" target="_blank"> For variant-disease associations click here</a><br><hr>
+{% endfor %}  
+
+
+
+{% else  %}
     <p>No results found.</p>
 {% endif %}
 
 
 
-        {% endblock %}
+{% endblock %}
