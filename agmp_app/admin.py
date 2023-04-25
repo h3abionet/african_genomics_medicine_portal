@@ -4,11 +4,12 @@ from django.contrib import admin
 from .models import pharmacogenes, drug, snp, star_allele, study, CountryData,  Variantagmp, Drugagmp, Geneagmp, VariantStudyagmp, Studyagmp, Phenotypeagmp
 ###### New classes ######
 class VariantagmpAdmin(admin.ModelAdmin):
-    list_display = ['id']
+    list_display = ['id',]
+
 
     # pass
 class DrugagmpAdmin(admin.ModelAdmin):
-    list_display = ['drug_id']
+    list_display = ['id','drug_id']
 
 class GeneagmpAdmin(admin.ModelAdmin):
     list_display = ['id', 'gene_id']

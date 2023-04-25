@@ -2,7 +2,8 @@ from django.urls import path, re_path, include
 # from django.conf.urls import url
 # from core.views import BootstrapFilterView
 from . import views
-from .views import VariantDetailView
+
+
 
 urlpatterns = [
     # path('', views.home, name='index'),
@@ -25,12 +26,12 @@ urlpatterns = [
     path('faqs', views.faqs, name='faqs'),
     path('tutorial/', views.tutorial, name='tutorial'),
     path('help', views.help, name='help'),
-    # path('search-new/<int:q_id>',views.FilterView, name='bootstrap'),
     path('search-variant/',views.FilterView, name='search-variant'),
     path('search-drug/',views.FilterViewDrug, name='search-drug'),
     path('search-gene/',views.FilterViewGene, name='search-gene'),
     path('search-disease/',views.FilterViewDisease, name='search-disease'),
     path('agnocomplete/', include('agnocomplete.urls')),
-    path('search-variant/<pk>/', VariantDetailView.as_view()),
     path('search-all/', views.search_all, name='search_v'),
+    path('drug-list/', views.drug_list_view, name='drug_list'),
+   
 ]

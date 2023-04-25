@@ -4,9 +4,6 @@
 {% load static %}
 
 <style>
-    ul, li {
-        display:inline !important;
-    }
 
 </style>
 
@@ -47,22 +44,23 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
         <b>Chromosome: </b>{{ result.geneagmp.chromosome}}<br>
         <b>Gene: </b>{{ result.geneagmp.gene_id}}<br>
         <a href="#" target="_blank">For Variant-Drug associations click here</a> <br><hr>
-        <b>Gene Name: </b>{{ result.geneagmp.gene_name}}<br>
+       
     {% endfor %} 
 
     {% elif search_option == "Geneagmp" %}
 
     {% for result in results %}
-       <b>gene ID: </b>{{ result.gene_id}}<br>
+       <b>Gene </b>{{ result.gene_id}}<br>
         <b>Chromosome: </b>{{result.chromosome}}<br>
         <a href="#" target="_blank">For Gene associations click here For Variant-Drug associations click here</a> <br><hr>
     {% endfor %}   
     {% elif search_option == "Drugagmp" %}
  {% for result in results %}
      <b></b>{{result.drug_name}}<br>
-     <b>Drug Bank ID: </b>{{result.drug_bank_id}}<br>
+     <b>Drug Bank ID: </b><a href="https://go.drugbank.com/drugs/{{result.drug_bank_id}}" target="_blank">{{result.drug_bank_id}}</a><br>
      <b>State: </b>{{result.state}}<br>
-     <a href="#" target="_blank"> For Variant Drug associations click here</a><br><hr>
+     <a href="#" target="_blank"> For Variant Drug associations click here</a><br>
+     <a href="#" target="_blank"> Variant Disease associations</a><br><hr>
  {% endfor %}   
  {% elif search_option == "Disease" %}
  {% for result in results %}

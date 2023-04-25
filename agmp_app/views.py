@@ -1,5 +1,5 @@
 from urllib.parse import DefragResult
-from django.shortcuts import render, HttpResponse, redirect
+from django.shortcuts import render, HttpResponse, redirect,  get_object_or_404
 from django.http import FileResponse
 
 from django.core import serializers
@@ -20,6 +20,8 @@ from django_pandas.io import read_frame
 
 from django.views.generic.detail import DetailView
 from .forms import SearchForm
+
+
 
 def search_all(request):
     if request.method == 'POST':
@@ -45,11 +47,18 @@ def search_all(request):
     return render(request, 'search_form.html', {'form': form})
 
 
-# Variant Details views
-class VariantDetailView(DetailView):
-    model = Variantagmp
-    template_name = "search_variant_detail.html"
+# drug list View 
+def drug_list_view(request):
+    my_objects = VariantStudyagmp.objects.all()
+    context = {'my_objects': my_objects}
+    return render(request, 'drug_list.html', context)
 
+
+# Variant Details view
+def variant_detail_view(request, pk):
+    variant_item = Variantagmp.objects.get(id=pk)
+    context = {'variant_item': variant_item,}
+    return render(request, 'variant_detail.html', context)
 
 
 def FilterView(request):
@@ -326,16 +335,14 @@ AND agmp_app_disease.id =  %s;""", [query_id]):
     print(disease_list)
     print(gene_details)
 
-    return render(
-        request, detail_view, {
-            # 'db_name': db_name,
-            'search_type': search_type,
+    return render(request, detail_view, {'search_type': search_type,
             'query_id': query_id,
             'variant_drug': variant_drug,
             'genes': gene_list,
             'gene_drug': gene_drug,
             'gene_details': gene_details,
             'diseases': disease_list,
+               # 'db_name': db_name,
         }
     )
 
