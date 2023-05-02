@@ -53,6 +53,37 @@ def drug_list_view(request):
     context = {'my_objects': my_objects}
     return render(request, 'drug_list.html', context)
 
+class DrugDetailView(DetailView):
+    model = VariantStudyagmp
+    template_name = 'drug_detail.html'
+    pk_url_kwarg = 'drug_id'
+
+    def get_object(self):
+        drug_id = self.kwargs.get(self.pk_url_kwarg)
+
+        data = Drugagmp.objects.filter(drug_id=drug_id)
+        print(data) # for testing purposes
+        return data
+    
+    def get_context_data(self, **kwargs):
+        context = super(DrugDetailView, self).get_context_data(**kwargs)
+        drug_id = self.kwargs.get(self.pk_url_kwarg)
+        print(drug_id) #for testing puporses
+        context['drugagmp'] = Drugagmp.objects.filter(
+            drug_id=drug_id).first()
+        drug = Drugagmp.objects.filter(drug_id=drug_id).first()
+
+        context['object_list'] = VariantStudyagmp.objects.filter(
+            variantagmp__drugagmp__drug_id__iregex=r"\b{0}\b".format(str(drug_id)))
+        
+
+        context['drugagmp'] = Drugagmp.objects.filter(
+           drug_id=drug.id).first()
+
+  
+
+        return context
+
 
 # Variant Details view
 def variant_detail_view(request, pk):

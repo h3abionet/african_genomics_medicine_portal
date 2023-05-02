@@ -57,9 +57,10 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
     {% elif search_option == "Drugagmp" %}
  {% for result in results %}
      <b></b>{{result.drug_name}}<br>
-     <b>Drug Bank ID: </b><a href="https://go.drugbank.com/drugs/{{result.drug_bank_id}}" target="_blank">{{result.drug_bank_id}}</a><br>
+     <b>Drug Bank ID: </b><a href="https://go.drugbank.com/drugs/{{result.drug_bank_id}}" target="_blank">{{result.drug_bank_id}}</a>
+     <br>
      <b>State: </b>{{result.state}}<br>
-     <a href="#" target="_blank"> For Variant Drug associations click here</a><br>
+     <a href="{% url 'drug_detail' result.drug_id %}">For Variant Drug associations </a><br>
      <a href="#" target="_blank"> Variant Disease associations</a><br><hr>
  {% endfor %}   
  {% elif search_option == "Disease" %}
