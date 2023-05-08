@@ -84,6 +84,12 @@ class DrugDetailView(DetailView):
 
         return context
 
+class DrugGeneDetailView(DetailView):
+    model = Variantagmp
+    template_name = 'drug_detail_gene.html'
+    pk_url_kwarg = 'drug_id'
+
+
 
 # Variant Details view
 def variant_detail_view(request, pk):

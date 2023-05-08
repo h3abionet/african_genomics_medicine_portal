@@ -2,7 +2,7 @@ from django.urls import path, re_path, include
 # from django.conf.urls import url
 # from core.views import BootstrapFilterView
 from . import views
-from .views import DrugDetailView
+from .views import DrugDetailView, DrugGeneDetailView
 
 
 
@@ -36,5 +36,8 @@ urlpatterns = [
     path('drug-list/', views.drug_list_view, name='drug_list'),
     path('drug/<str:drug_id>/',
          DrugDetailView.as_view(),
+         name='drug_detail'),
+       path('drug/<str:drug_id>/',
+         DrugGeneDetailView.as_view(),
          name='drug_detail'),
 ]

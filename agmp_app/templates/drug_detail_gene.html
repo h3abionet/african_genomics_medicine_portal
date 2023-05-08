@@ -1,0 +1,84 @@
+ {% extends 'mainLayout.html' %} 
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+
+</head>
+
+
+{% block title %} Variant Drug Associations {% endblock %}
+
+
+{% block banner %}
+
+{% include 'partials/banner_about.html' %}
+
+{% endblock %}
+
+{% block content %}
+<!-- Initialize DataTables -->
+<p><h3>Variant Drug Associations </h3></p>
+
+
+<table id="example" class="table table-striped table-bordered">
+  <thead>
+      <tr>
+          <th>Variant</th>
+          <th>Gene</th>
+          <th>Drug</th>
+          <th>Significance</th>
+          <th>Country</th>
+          <th>Studies</th>
+      </tr>
+  </thead>
+  <tbody>
+ {% for my_object in object_list %}
+      <tr>
+          <td>{{my_object.variantagmp.rs_id }}</td>
+          <td>{{my_object.variantagmp.geneagmp.gene_id}}</td>
+          <td>{{my_object.variantagmp.drugagmp.drug_name}}</td>
+          <td>{{my_object.p_value}}</td>
+          <td>{{my_object.country_participant}}</td>
+          <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}" target="_blank">{{my_object.studyagmp.title}}</a></td>
+      </tr>
+      {% endfor %}  
+      <!-- ... more rows ... -->
+  </tbody>
+</table>
+
+
+
+
+
+<!-- Include required CSS and JS files -->
+
+
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+<script type="text/javascript" src=""></script>
+ 
+
+<script type="text/javascript">
+
+
+    $('#example').DataTable( {
+        dom: 'Bfrtip',
+         
+          buttons: [
+          'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+        
+     } );
+  
+
+</script>
+
+{% endblock %}
