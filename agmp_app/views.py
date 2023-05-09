@@ -62,13 +62,12 @@ class DrugDetailView(DetailView):
         drug_id = self.kwargs.get(self.pk_url_kwarg)
 
         data = Drugagmp.objects.filter(drug_id=drug_id)
-        print(data) # for testing purposes
+       
         return data
     
     def get_context_data(self, **kwargs):
         context = super(DrugDetailView, self).get_context_data(**kwargs)
         drug_id = self.kwargs.get(self.pk_url_kwarg)
-        print(drug_id) #for testing puporses
         context['drugagmp'] = Drugagmp.objects.filter(
             drug_id=drug_id).first()
         drug = Drugagmp.objects.filter(drug_id=drug_id).first()
@@ -79,10 +78,42 @@ class DrugDetailView(DetailView):
 
         context['drugagmp'] = Drugagmp.objects.filter(
            drug_id=drug.id).first()
-
-  
-
         return context
+    
+# Gene Details
+class GeneDetailView(DetailView):
+    model = VariantStudyagmp
+    template_name = 'gene_drug_detail.html'
+    pk_url_kwarg = 'gene_id'
+
+    def get_object(self):
+        gene_id = self.kwargs.get(self.pk_url_kwarg)
+
+        data = Geneagmp.objects.filter(gene_id=gene_id)
+        print(data) # for testing purposes
+        return data
+    
+    def get_context_data(self, **kwargs):
+        context = super(GeneDetailView, self).get_context_data(**kwargs)
+        gene_id = self.kwargs.get(self.pk_url_kwarg)
+        context['geneagmp'] = Geneagmp.objects.filter(
+            gene_id=gene_id).first()
+        gene = Geneagmp.objects.filter(gene_id=gene_id).first()
+
+        context['object_list'] = VariantStudyagmp.objects.filter(
+            variantagmp__geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id)))
+        
+        context['object_list_d'] = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id)))
+        # .filter(phenotypeagmp__name__icontains="malaria").filter(
+        #     variantagmp__geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id)))
+        
+        
+        # results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__icontains=search_query)
+
+        context['geneagmp'] = Geneagmp.objects.filter(
+           gene_id=gene.id).first()
+        return context
+
 
 
 # Variant Details view
