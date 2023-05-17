@@ -36,7 +36,6 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
 </div>
     <button type="submit">Search</button>
 </form>
-
 {% if search_option == "Variantagmp" %}
    
    {% for result in results %}
@@ -52,7 +51,7 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
     {% for result in results %}
        <b>Gene </b>{{ result.gene_id}}<br>
         <b>Chromosome: </b>{{result.chromosome}}<br>
-        <a href="#" target="_blank">For Gene associations click here For Variant-Drug associations click here</a> <br><hr>
+        <a href="#" target="_blank">For Gene associations click here </a> <br> <a href="#" target="_blank">For Variant-Drug associations click here</a><hr>
     {% endfor %}   
     {% elif search_option == "Drugagmp" %}
  {% for result in results %}
@@ -61,12 +60,13 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
      <br>
      <b>State: </b>{{result.state}}<br>
      <a href="{% url 'drug_detail' result.drug_id %}">For Variant Drug associations </a><br>
-     <a href="#" target="_blank"> Variant Disease associations</a><br><hr>
+   <hr>
  {% endfor %}   
  {% elif search_option == "Disease" %}
  {% for result in results %}
  <b></b>{{result.phenotypeagmp.name}}<br>
  <a href="#" target="_blank"> For variant-disease associations click here</a><br><hr>
+
 {% endfor %}  
 
 

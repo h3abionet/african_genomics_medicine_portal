@@ -19,6 +19,7 @@ from collections import Counter
 from django_pandas.io import read_frame
 
 from django.views.generic.detail import DetailView
+from django.views.generic import ListView
 from .forms import SearchForm
 
 
@@ -46,6 +47,56 @@ def search_all(request):
         
     return render(request, 'search_form.html', {'form': form})
 
+
+ #################### Variant Drug Details 1 ################################
+
+class DrugagmpDetailView(DetailView):
+    model = Drugagmp
+    template_name = 'drugagmp_detail.html'  # Template to display the post details
+
+class VariantStudyagmpListView(ListView):
+    model = VariantStudyagmp
+    template_name = 'variantstudyagmp_list.html'  # Template to display the comment list
+
+    def get_queryset(self):
+        drug_id = self.kwargs['pk']  # Get the post id from URL parameter
+        return VariantStudyagmp.objects.filter(Variantagmp__drugagmp_icontains=drug_id)  # Filter comments by post id
+
+
+  
+ #################### Variant Drug Details ################################
+
+
+#################### Variant Drug Details 2 ################################
+
+
+class Drug2DetailView(DetailView):
+    model = Variantagmp
+    template_name = 'variant_detail.html'
+    pk_url_kwarg = 'drug_id'
+
+    def get_object(self):
+        drug_id = self.kwargs.get(self.pk_url_kwarg)
+
+        data = Drugagmp.objects.filter(drug_id=drug_id)
+       
+        return data
+    
+    def get_context_data(self, **kwargs):
+        context = super(Drug2DetailView, self).get_context_data(**kwargs)
+        drug_id = self.kwargs.get(self.pk_url_kwarg)
+        context['drugagmp'] = Drugagmp.objects.filter(
+            drug_id=drug_id).first()
+        drug = Drugagmp.objects.filter(drug_id=drug_id).first()
+
+        context['object_list'] = Variantagmp.objects.filter(drugagmp__drug_id__iregex=r"\b{0}\b".format(str(drug_id)))
+        
+
+        context['drugagmp'] = Drugagmp.objects.filter(
+           drug_id=drug.id).first()
+        return context
+  
+ #################### Variant Drug Details ################################
 
 # drug list View 
 def drug_list_view(request):
