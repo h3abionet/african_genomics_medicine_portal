@@ -22,6 +22,8 @@ def increment_drug_id():
     return new_drug_id
 
 
+
+
 ######### New Models #############
 class Drugagmp(models.Model):
     # drug_id = models.CharField(max_length=50, null=True, blank=True)
@@ -49,6 +51,7 @@ class Geneagmp(models.Model):
     function = models.TextField(max_length=50, null=True, blank=True)
     gene_name= models.CharField(max_length=50, null=True, blank=True)
     uniprot_ac= models.CharField(max_length=50, null=True, blank=True)
+ 
     class Meta:
         verbose_name_plural = "* Gene"
 
