@@ -2,14 +2,14 @@ from django.urls import path, re_path, include
 # from django.conf.urls import url
 # from core.views import BootstrapFilterView
 from . import views
-from .views import DrugDetailView, GeneDetailView, DrugagmpDetailView, VariantStudyagmpListView, Drug2DetailView
+from .views import (DrugDetailView, GeneDetailView, DrugagmpDetailView, VariantStudyagmpListView, Drug2DetailView, GeneDrugAssocDetailView, VarDrugAssocDetailView, VvarDrugAssocDetailView, VarDisAssocDetailView)
 
 
 
 urlpatterns = [
     # path('', views.home, name='index'),
     path('about', views.about, name='about'),
-    path('', views.search, name='search'),
+    path('old-search', views.search, name='search'),
     path('home', views.home, name='home'),
 
     # call search query with optional parameters 
@@ -32,19 +32,39 @@ urlpatterns = [
     path('search-gene/',views.FilterViewGene, name='search-gene'),
     path('search-disease/',views.FilterViewDisease, name='search-disease'),
     path('agnocomplete/', include('agnocomplete.urls')),
-    path('search-all/', views.search_all, name='search_v'),
+    path('', views.search_all, name='search_v'),
     path('drug-list/', views.drug_list_view, name='drug_list'),
     path('drug/<str:drug_id>/',
          DrugDetailView.as_view(),
          name='drug_detail'),
-    path('gene/<str:gene_id>/',
-         GeneDetailView.as_view(),
-         name='gene_detail'),
-     path('drug-detail/<int:pk>/', DrugagmpDetailView.as_view(), name='drug-detail'),
-     path('variant-drug-list/<int:pk>/',VariantStudyagmpListView.as_view(), name='variant-drug-list'),
-     path('variant-drug2/<str:drug_id>/',
+  
+    path('drug-detail/<int:pk>/', DrugagmpDetailView.as_view(), name='drug-detail'),
+    path('variant-drug-list/<int:pk>/',VariantStudyagmpListView.as_view(), name='variant-drug-list'),
+    path('variant-drug2/<str:drug_id>/',
          Drug2DetailView.as_view(),
-         name='variant_detail'),
+         name='variant_detail'), 
+
+     ##### New URLS for data tables ######
+     path('GeneDrugAssoc/<str:gene_id>/',
+         GeneDrugAssocDetailView.as_view(),
+         name='Gene_Drug_Assoc'),
+
+     path('VarDrugAssoc/<str:rs_id>/',
+         VarDrugAssocDetailView.as_view(),
+         name='Var_Drug_Assoc'),
+
+     path('VvarDrugAssoc/<str:rs_id>/',
+         VvarDrugAssocDetailView.as_view(),
+         name='Vvar_Drug_Assoc'),
+
+     path('VarDisAssoc/<str:rs_id>/',
+         VarDisAssocDetailView.as_view(),
+         name='Var_Dis_Assoc'),
+
+     path('PharmacGene/<str:drug_id>/',
+         GeneDetailView.as_view(),
+         name='Pharmac_Gene'),
+     ##### New URLS for data tables ######
 ]
 
   
