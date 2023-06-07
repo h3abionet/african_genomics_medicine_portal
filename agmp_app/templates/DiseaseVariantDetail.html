@@ -24,46 +24,10 @@
 
 <p>Gene Name{{object}}</p>
 <p>Uniprot ID{{geneagmp.gene_id}}</p>
-<p>Function{{geneagmp.gene_id}}</p>
-
-<p><h3>Pharmacogenetics Associations</h3></p>
-
-test query
-<table id="example" class="table table-striped table-bordered">
-  <thead>
-      <tr>
-          <th>rs ID</th>
-          <th>Drug</th>
-          <th>Description</th>
-          <th>p_value</th>
-          <th>Study</th>
-          <th>Regions</th>
-          <th>Countries</th>
-      </tr>
-  </thead>
-  <tbody>
-     {% for my_object in object_list %}
-      <tr>
-          <td>{{my_object.variantagmp.rs_id}}</td>
-          <td><a href="https://go.drugbank.com/drugs/{{my_object.variantagmp.drugagmp.drug_bank_id}}" target="_blank">{{my_object.variantagmp.drugagmp.drug_name}}</a>
-          </td>
-          <td>{{my_object.variantagmp.phenotypeagmp.name}}</td>
-          <td>{{my_object.p_value}}</td>
-          <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}" target="_blank">{{my_object.studyagmp.publication_id}}</a></td>
-          <td>{{my_object.geographical_regions}}</td>
-          <td>{{my_object.country_participant}}</td>
-          
-      </tr>
-      {% endfor %}  
-      <!-- ... more rows ... -->
-     
+<p>Function{{geneagmp}}</p>
 
 
-  </tbody>
-</table>
-
-
-<p><h3>Disease Associations</h3></p>
+<p><h3>Variant Disease Associations</h3></p>
 
   <table id="example3" class="table table-striped table-bordered"> 
       <thead>
@@ -79,10 +43,10 @@ test query
       <tbody>
          {% for my_object in object_list_d %}
           <tr>
-              <td>xx{{my_object }}
+              <td>{{my_object.variantagmp.rs_id }}
             
               </td>
-              <td>{{my_object.variantagmp.phenotypeagmp.name }}</td>
+              <td>{{my_object.variantagmp.phenotypeagmp.name }} <br></td>
               <td>{{my_object.p_value}}
               </td>
               <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}" target="_blank">{{my_object.studyagmp.publication_id}}</a></td>

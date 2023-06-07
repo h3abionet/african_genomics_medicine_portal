@@ -10,9 +10,12 @@ class VariantagmpAdmin(admin.ModelAdmin):
     # pass
 class DrugagmpAdmin(admin.ModelAdmin):
     list_display = ['id','drug_id']
+    search_fields =['drug_id']
 
 class GeneagmpAdmin(admin.ModelAdmin):
     list_display = ['id', 'gene_id']
+    search_fields =['gene_id']
+  
 
 class VariantStudyagmpAdmin(admin.ModelAdmin):
     list_display = ['id']

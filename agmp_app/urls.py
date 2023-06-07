@@ -2,7 +2,7 @@ from django.urls import path, re_path, include
 # from django.conf.urls import url
 # from core.views import BootstrapFilterView
 from . import views
-from .views import (DrugDetailView, GeneDetailView, DrugagmpDetailView, VariantStudyagmpListView, Drug2DetailView, GeneDrugAssocDetailView, VarDrugAssocDetailView, VvarDrugAssocDetailView, VarDisAssocDetailView)
+from .views import (DrugDetailView,PharmacoDrugDetailView, DrugagmpDetailView, VariantStudyagmpListView, Drug2DetailView, GeneDrugAssocDetailView, VarDrugAssocDetailView, VvarDrugAssocDetailView, VarDisAssocDetailView)
 
 
 
@@ -61,9 +61,9 @@ urlpatterns = [
          VarDisAssocDetailView.as_view(),
          name='Var_Dis_Assoc'),
 
-     path('PharmacGene/<str:drug_id>/',
-         GeneDetailView.as_view(),
-         name='Pharmac_Gene'),
+     path('PharmacoDrug/<str:drug_id>/',
+         PharmacoDrugDetailView.as_view(),
+         name='Pharmaco_Drug_Detail'),
      ##### New URLS for data tables ######
 ]
 

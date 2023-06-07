@@ -176,14 +176,14 @@ class VvarDrugAssocDetailView(DetailView):
   #################### Variant Var Drug Associations ################################
 class VarDisAssocDetailView(DetailView):
     model = VariantStudyagmp
-    template_name = 'VarDrugAssocDetail.html'
+    template_name = 'VarDissAssocDetail.html'
     pk_url_kwarg = 'rs_id'
 
     def get_object(self):
         rs_id = self.kwargs.get(self.pk_url_kwarg)
 
         data = Variantagmp.objects.filter(rs_id=rs_id)
-        # print(data) # for testing purposes
+     
         return data
     
     def get_context_data(self, **kwargs):
@@ -211,24 +211,24 @@ class VarDisAssocDetailView(DetailView):
 
 
 # Display Phamacogenes and Disease associations
-class GeneDetailView(DetailView):
+class PharmacoDrugDetailView(DetailView):
     model = VariantStudyagmp
-    template_name = 'Gene_Drug_Detail.html'
+    template_name = 'PharmacoDrugDetailView.html'
     pk_url_kwarg = 'drug_id'
 
     def get_object(self):
         drug_id = self.kwargs.get(self.pk_url_kwarg)
 
         data = Drugagmp.objects.filter(drug_id=drug_id)
-        print(data) # for testing purposes
         return data
     
     def get_context_data(self, **kwargs):
-        context = super(GeneDetailView, self).get_context_data(**kwargs)
+        context = super(PharmacoDrugDetailView, self).get_context_data(**kwargs)
         drug_id = self.kwargs.get(self.pk_url_kwarg)
         context['geneagmp'] = Drugagmp.objects.filter(
             drug_id=drug_id)
         drug = Drugagmp.objects.filter(drug_id=drug_id)
+        
 
         context['object_list'] = VariantStudyagmp.objects.filter(
             variantagmp__drugagmp__drug_id__iregex=r"\b{0}\b".format(str(drug_id)))
@@ -237,7 +237,14 @@ class GeneDetailView(DetailView):
 
         context['object_list_y']=VariantStudyagmp.objects.select_related().exclude(variantagmp__source_db="PharmGKB").filter(variantagmp__phenotypeagmp__name__icontains="Hiv")
 
-        context['object_list_d']=VariantStudyagmp.objects.select_related().exclude(variantagmp__source_db="PharmGKB").filter(variantagmp__drugagmp__drug_id__iregex=r"\b{0}\b".format(str(drug_id)))
+        context['object_list_do']=VariantStudyagmp.objects.select_related().exclude(variantagmp__source_db="PharmGKB").filter(variantagmp__phenotypeagmp__name__icontains="Malaria")
+        
+        data1=Variantagmp.objects.filter(drugagmp__drug_id__icontains=drug_id)
+        context['object_list_d']=VariantStudyagmp.objects.filter(variantagmp__drugagmp__drug_id__icontains=drug_id)
+        
+        print(" ----> Queryset risperidone Drug ID !<---- ")
+        print(data1)  
+      
 
         #rs28365062
         
