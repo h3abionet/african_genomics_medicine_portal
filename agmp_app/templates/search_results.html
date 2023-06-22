@@ -3,11 +3,6 @@
 {% load bootstrap4 %}
 {% load static %}
 
-<style>
-
-</style>
-
-
 {% block title%}Search{% endblock %}
 
 {% block js %}
@@ -27,6 +22,24 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
 
 {% endblock %}
 {% block content %}
+<style>    
+    dl, ol, ul {
+         margin-top: 0;
+         margin-bottom: 1rem;
+         list-style-type: none;
+       } 
+ 
+   li {
+    display: inline-block;
+    margin-right: 50px; /* add spacing between items */
+  }
+
+  #id_search_option_3 {
+    list-style-image: url('static/img/bionetlogo.png');
+  }
+ 
+ 
+ </style>
 
 <form method="post">
     {% csrf_token %}
@@ -42,8 +55,11 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
        <b>rs ID: </b>{{ result.rs_id}}<br>
         <b>Chromosome: </b>{{ result.geneagmp.chromosome}}<br>
         <b>Gene: </b>{{ result.geneagmp.gene_id}}<br>
-        <a href="{% url 'Var_Drug_Assoc' result.rs_id %}" target="_blank">For Variant-Drug associations click here</a> <br><hr>
-       
+        <a href="{% url 'Var_Drug_Assoc' result.rs_id %}" target="_blank">For Variant-Drug Associations click here</a> <br>
+        <a href="{% url 'Variant_Disease_Assoc' result.rs_id %}" target="_blank"> For Variant Disease Associations </a> *** similar disease queryset<br>
+        
+        <hr>
+    
     {% endfor %} 
 
     {% elif search_option == "Geneagmp" %}
@@ -51,7 +67,7 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
     {% for result in results %}
        <b>Gene </b>{{ result.gene_id}}<br>
         <b>Chromosome: </b>{{result.chromosome}}<br>
-        <a href="{% url 'Gene_Drug_Assoc' result.gene_id %}" target="_blank">For Gene associations click here </a> <br><hr>
+        <a href="{% url 'PhamacogeneDrugAssoc' result.gene_id %}" target="_blank">For Pharmacogenetics Associations click here </a> <br><hr>
     {% endfor %}   
     {% elif search_option == "Drugagmp" %}
  {% for result in results %}
@@ -59,13 +75,12 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
      <b>Drug Bank ID: </b><a href="https://go.drugbank.com/drugs/{{result.drug_bank_id}}" target="_blank">{{result.drug_bank_id}}</a>
      <br>
      <b>State: </b>{{result.state}}<br>
-     <a href="{% url 'Pharmaco_Drug_Detail' result.drug_id %}">For Variant Drug Associations </a><br>
+      <a href="{% url 'VariantDrugAssociation' result.drug_id %}">For Variant Drug Associations click here </a><br> 
    <hr>
  {% endfor %}   
  {% elif search_option == "Disease" %}
  {% for result in results %}
  <b></b>{{result.phenotypeagmp.name}}<br>
- <b></b>{{result.drugagmp.drug_id}}<br>
  <a href="{% url 'Var_Dis_Assoc' result.rs_id %}" target="_blank"> For Variant Disease Associations click here</a><br><hr>
 
  Var_Dis_Assoc

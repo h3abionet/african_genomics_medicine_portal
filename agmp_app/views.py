@@ -38,7 +38,7 @@ def search_all(request):
             elif search_option == 'Drugagmp':
                 results = Drugagmp.objects.filter(drug_name__icontains=search_query)
             elif search_option == 'Disease':
-                results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__icontains=search_query)
+                results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__contains=search_query)
             
             
             return render(request, 'search_results.html', {'form': form, 'results': results, 'search_option':search_option })
@@ -66,10 +66,10 @@ class VariantStudyagmpListView(ListView):
   
  #################### Variant Drug Details ################################
   
- #################### Gene Drug Associations ################################
-class GeneDrugAssocDetailView(DetailView):
+ #################### PharmacoGene Associations ################################
+class PhamacogeneDrugAssoc(DetailView):
     model = VariantStudyagmp
-    template_name = 'GeneDrugAssocDetail.html'
+    template_name = 'PhamacogeneDrugAssoc.html'
     pk_url_kwarg = 'gene_id'
 
     def get_object(self):
@@ -80,7 +80,7 @@ class GeneDrugAssocDetailView(DetailView):
         return data
     
     def get_context_data(self, **kwargs):
-        context = super(GeneDrugAssocDetailView, self).get_context_data(**kwargs)
+        context = super(PhamacogeneDrugAssoc, self).get_context_data(**kwargs)
         gene_id = self.kwargs.get(self.pk_url_kwarg)
      
         context['geneagmp'] = Geneagmp.objects.filter(
@@ -88,14 +88,13 @@ class GeneDrugAssocDetailView(DetailView):
         #content to display
         gene = Geneagmp.objects.filter(gene_id=gene_id)
 
-        context['object_list_01'] = Geneagmp.objects.filter(gene_id__iregex=r"\b{0}\b".format(str(gene_id)))
-       
         #back up query
         context['object_list'] = VariantStudyagmp.objects.filter(
             variantagmp__geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id))) 
         
-        # context['object_list'] = Variantagmp.objects.filter(geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id)))
 
+        context['object_list_diseases'] = VariantStudyagmp.objects.filter(
+            variantagmp__geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id))).exclude(variantagmp__source_db="PharmGKB")
         return context
 
  #################### Gene Drug Associations ################################
@@ -133,9 +132,69 @@ class VarDrugAssocDetailView(DetailView):
 
         return context
 
- #################### Var Drug Associations ################################
+ #################### Variant Disease Associations ################################
+
+class VariantDiseaseAssocDetailView(DetailView):
+    model = VariantStudyagmp
+    template_name = 'VariantDiseaseAssocDetail.html'
+    pk_url_kwarg = 'rs_id'
+
+    def get_object(self):
+        rs_id = self.kwargs.get(self.pk_url_kwarg)
+
+        data = Variantagmp.objects.filter(rs_id=rs_id)
+        # print(data) # for testing purposes
+        return data
+    
+    def get_context_data(self, **kwargs):
+        context = super(VariantDiseaseAssocDetailView, self).get_context_data(**kwargs)
+        rs_id = self.kwargs.get(self.pk_url_kwarg)
+     
+        context['variantagmp'] = Variantagmp.objects.filter(
+            rs_id=rs_id)
+        #content to display
+        variant = Variantagmp.objects.filter(rs_id=rs_id)
+
+       
+        context['object_list'] = VariantStudyagmp.objects.filter(
+            variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="PharmGKB")
+        
 
 
+        return context
+    
+
+  #################### DRUG searchs for Variant drug Associations ################################
+
+class VariantDrugAssociationDetailView(DetailView):
+    model = VariantStudyagmp
+    template_name = 'VariantDrugAssociation.html'
+    pk_url_kwarg = 'drug_id'
+
+    def get_object(self):
+        drug_id = self.kwargs.get(self.pk_url_kwarg)
+
+        data = Drugagmp.objects.filter(drug_id=drug_id)
+        # print(data) # for testing purposes
+        return data
+    
+    def get_context_data(self, **kwargs):
+        context = super(VariantDrugAssociationDetailView, self).get_context_data(**kwargs)
+        drug_id = self.kwargs.get(self.pk_url_kwarg)
+     
+        context['grugagmp'] = Drugagmp.objects.filter(
+            drug_id=drug_id)
+        #content to display
+        variant = Drugagmp.objects.filter(drug_id=drug_id)
+
+       
+        context['object_list'] = VariantStudyagmp.objects.filter(
+            variantagmp__drugagmp__drug_id__iregex=r"\b{0}\b".format(str(drug_id)))
+        # .exclude(variantagmp__source_db="PharmGKB")
+        
+
+
+        return context
 
 
   #################### Variant Var Drug Associations ################################
@@ -199,90 +258,46 @@ class VarDisAssocDetailView(DetailView):
        
         #back up query
         context['object_list'] = VariantStudyagmp.objects.filter(
-            variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))) 
+            variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="PharmGKB")
+        
         
         # context['object_list'] = Variantagmp.objects.filter(geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id)))
 
         return context
 
- #################### Var Drug Associations ################################
-
-
-
-
 # Display Phamacogenes and Disease associations
 class PharmacoDrugDetailView(DetailView):
     model = VariantStudyagmp
     template_name = 'PharmacoDrugDetailView.html'
-    pk_url_kwarg = 'drug_id'
+    pk_url_kwarg = 'gene_id'
 
     def get_object(self):
-        drug_id = self.kwargs.get(self.pk_url_kwarg)
+        gene_id = self.kwargs.get(self.pk_url_kwarg)
 
-        data = Drugagmp.objects.filter(drug_id=drug_id)
+        data = Geneagmp.objects.filter(gene_id=gene_id)
         return data
     
     def get_context_data(self, **kwargs):
         context = super(PharmacoDrugDetailView, self).get_context_data(**kwargs)
-        drug_id = self.kwargs.get(self.pk_url_kwarg)
-        context['geneagmp'] = Drugagmp.objects.filter(
-            drug_id=drug_id)
-        drug = Drugagmp.objects.filter(drug_id=drug_id)
-        
+        gene_id = self.kwargs.get(self.pk_url_kwarg)
 
+        context['geneagmp'] = Geneagmp.objects.filter(
+            gene_id=gene_id)
+        
         context['object_list'] = VariantStudyagmp.objects.filter(
-            variantagmp__drugagmp__drug_id__iregex=r"\b{0}\b".format(str(drug_id)))
+            variantagmp__geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id))) 
         
-        context['object_list_x']=Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__icontains="Malaria")
 
-        context['object_list_y']=VariantStudyagmp.objects.select_related().exclude(variantagmp__source_db="PharmGKB").filter(variantagmp__phenotypeagmp__name__icontains="Hiv")
+        context['object_list_diseases_old']=VariantStudyagmp.objects.select_related().filter(variantagmp__geneagmp__gene_id__icontains=gene_id)
 
-        context['object_list_do']=VariantStudyagmp.objects.select_related().exclude(variantagmp__source_db="PharmGKB").filter(variantagmp__phenotypeagmp__name__icontains="Malaria")
+        #context['object_list_diseases'] = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id)))
+
+        context['object_list_diseases'] = VariantStudyagmp.objects.select_related().filter(variantagmp__geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id))).exclude(variantagmp__source_db="PharmGKB")
         
-        data1=Variantagmp.objects.filter(drugagmp__drug_id__icontains=drug_id)
-        context['object_list_d']=VariantStudyagmp.objects.filter(variantagmp__drugagmp__drug_id__icontains=drug_id)
-        
-        print(" ----> Queryset risperidone Drug ID !<---- ")
-        print(data1)  
-      
-
-        #rs28365062
-        
-        # context['object_list_d'] = VariantStudyagmp.objects.select_related().filter(variantagmp__drugagmp__drug_id__iregex=r"\b{0}\b".format(str(drug_id))).exclude(variantagmp__source_db="PharmGKB")
-
-        # context['geneagmp'] = Geneagmp.objects.filter(
-        #    gene_id=gene_id).first()
         
         return context
 
 
-
-class Drug2DetailView(DetailView):
-    model = Variantagmp
-    template_name = 'variant_detail.html'
-    pk_url_kwarg = 'drug_id'
-
-    def get_object(self):
-        drug_id = self.kwargs.get(self.pk_url_kwarg)
-
-        data = Drugagmp.objects.filter(drug_id=drug_id)
-       
-        return data
-    
-    def get_context_data(self, **kwargs):
-        context = super(Drug2DetailView, self).get_context_data(**kwargs)
-        drug_id = self.kwargs.get(self.pk_url_kwarg)
-        context['drugagmp'] = Drugagmp.objects.filter(
-            drug_id=drug_id).first()
-        drug = Drugagmp.objects.filter(drug_id=drug_id).first()
-
-        context['object_list'] = Variantagmp.objects.filter(drugagmp__drug_id__iregex=r"\b{0}\b".format(str(drug_id)))
-        
-
-        context['drugagmp'] = Drugagmp.objects.filter(
-           drug_id=drug.id).first()
-        return context
-  
  #################### Variant Drug Details ################################
 
 # drug list View 
