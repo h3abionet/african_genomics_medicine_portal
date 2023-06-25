@@ -87,6 +87,7 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
  {% endfor %}   
  {% elif search_option == "Disease" %}
  {% for result in results %}
+ <b>rs ID: </b>{{result.rs_id}}<br>
  <b></b>{{result.phenotypeagmp.name}}<br>
  <a href="{% url 'DiseaseVariant' result.rs_id %}" target="_blank">Variant Disease Associations</a><br><hr>
 
