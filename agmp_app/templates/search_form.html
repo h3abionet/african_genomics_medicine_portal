@@ -33,15 +33,23 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
  
        dl, ol, ul li {
     display: inline-block;
-    margin-right: 50px; /* add spacing between items */
+    margin-right: 15px; /* add spacing between items */
   }
- 
+ .search_form{
+    margin:auto;
+    display: flex;
+  justify-content: center;
+  align-items: center;
+ }
  
  </style>
-<form method="post">
+
+
+
+<form class="search_form" method="post">
     {% csrf_token %}
-    
-    {{ form.as_p }} 
+ 
+    {{ form.as_p }}&nbsp;&nbsp;
     <button type="submit">Search</button>
 </form>
 

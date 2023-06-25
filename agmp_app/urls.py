@@ -3,7 +3,7 @@ from django.urls import path, re_path, include
 # from core.views import BootstrapFilterView
 from . import views
 from .views import (DrugDetailView,PharmacoDrugDetailView, DrugagmpDetailView, VariantStudyagmpListView, PhamacogeneDrugAssoc, VarDrugAssocDetailView, VvarDrugAssocDetailView, VarDisAssocDetailView, VariantDiseaseAssocDetailView,
-                    VariantDrugAssociationDetailView)
+                    VariantDrugAssociationDetailView, DiseaseVariantDetailView)
 
 
 
@@ -73,6 +73,11 @@ urlpatterns = [
     path('VariantDrugAssociation/<str:drug_id>/',
          VariantDrugAssociationDetailView.as_view(),
          name='VariantDrugAssociation'),
+
+     
+    path('DiseaseVariant/<str:rs_id>/',
+         DiseaseVariantDetailView.as_view(),
+         name='DiseaseVariant'),
 
      ##### New URLS for data tables ######
 ]

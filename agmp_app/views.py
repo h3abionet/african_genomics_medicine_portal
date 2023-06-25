@@ -88,9 +88,10 @@ class PhamacogeneDrugAssoc(DetailView):
         #content to display
         gene = Geneagmp.objects.filter(gene_id=gene_id)
 
-        #back up query
+        #exclude multiple fields as an example
+        exclude_list = ['A', 'B', 'C']
         context['object_list'] = VariantStudyagmp.objects.filter(
-            variantagmp__geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id))) 
+            variantagmp__geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id))).exclude(variantagmp__source_db="DisGeNET")
         
 
         context['object_list_diseases'] = VariantStudyagmp.objects.filter(
@@ -182,7 +183,7 @@ class VariantDrugAssociationDetailView(DetailView):
         context = super(VariantDrugAssociationDetailView, self).get_context_data(**kwargs)
         drug_id = self.kwargs.get(self.pk_url_kwarg)
      
-        context['grugagmp'] = Drugagmp.objects.filter(
+        context['drugagmp'] = Drugagmp.objects.filter(
             drug_id=drug_id)
         #content to display
         variant = Drugagmp.objects.filter(drug_id=drug_id)
@@ -229,9 +230,43 @@ class VvarDrugAssocDetailView(DetailView):
 
         return context
 
- #################### Var Drug Associations ################################
+ #################### Search Diseases ################################
 
+# Display Phamacogenes and Disease associations
+class DiseaseVariantDetailView(DetailView):
+    model = VariantStudyagmp
+    template_name = 'DiseaseVariantDetailView.html'
+    pk_url_kwarg = 'rs_id'
 
+    def get_object(self):
+        rs_id = self.kwargs.get(self.pk_url_kwarg)
+
+        data = Variantagmp.objects.filter(rs_id=rs_id)
+        return data
+    
+    def get_context_data(self, **kwargs):
+        context = super(DiseaseVariantDetailView, self).get_context_data(**kwargs)
+        rs_id = self.kwargs.get(self.pk_url_kwarg)
+        print("test")
+
+        context['geneagmp'] = Variantagmp.objects.filter(
+            rs_id=rs_id)
+        
+        context['object_list'] = VariantStudyagmp.objects.select_related().filter(
+            variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="PharmGKB")
+       
+        #context['object_list'] = VariantStudyagmp.objects.select_related().filter(
+        #variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).filter(variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="PharmGKB")
+        
+        #context['object_list_diseases_old']=VariantStudyagmp.objects.select_related().filter(variantagmp__geneagmp__gene_id__icontains=gene_id)
+
+        #context['object_list_diseases'] = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id)))
+
+        context['object_list_diseases'] = VariantStudyagmp.objects.select_related().filter(variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="PharmGKB")
+        
+        
+        return context
+       
   #################### Variant Var Drug Associations ################################
 class VarDisAssocDetailView(DetailView):
     model = VariantStudyagmp
