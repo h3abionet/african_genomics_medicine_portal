@@ -34,9 +34,9 @@
           <th>Drug</th>
           <th>Description</th>
           <th>Significance</th>
-          <th>Study</th>
           <th>Regions</th>
           <th>Country</th>
+          <th>Study</th>
       </tr>
   </thead>
   <tbody>
@@ -49,9 +49,9 @@
           <td>{{my_object.variantagmp.phenotypeagmp.name}}
         </td>
           <td>{{my_object.p_value}}</td>
-          <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}" target="_blank">{{my_object.studyagmp.publication_id}}</a></td>
           <td>{{my_object.geographical_regions}}</td>
           <td>{{my_object.country_participant}}</td>
+          <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}" target="_blank">{{my_object.studyagmp.publication_id}}</a></td>
       </tr>
       {% endfor %}  
       <!-- ... more rows ... -->
@@ -69,9 +69,9 @@
           <th>Variant</th>
          <th>Disease</th> 
           <th>Significance</th>
-          <th>Study</th>
           <th>Regions</th>
           <th>Country</th>
+          <th>Study</th>
          
       </tr>
   </thead>
@@ -81,10 +81,10 @@
           <td>{{my_object.variantagmp.rs_id }}</td>
           <td>{{my_object.variantagmp.phenotypeagmp.name}}</td>
             <td>{{my_object.p_value}}</td>
-          <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}" target="_blank">{{my_object.studyagmp.publication_id}}</a>
-        </td>
           <td>{{my_object.geographical_regions}}</td>
           <td>{{my_object.country_participant}}</td>
+          <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}" target="_blank">{{my_object.studyagmp.publication_id}}</a>
+          </td>
   
       </tr>
       {% endfor %}  
