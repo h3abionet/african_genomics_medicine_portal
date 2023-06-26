@@ -23,15 +23,15 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
 {% endblock %}
 {% block content %}
 <style>    
-    dl, ol, ul {
-         margin-top: 0;
+   dl, ol, ul {
+         {% comment %} margin-top: 0;
          margin-bottom: 1rem;
-         list-style-type: none;
+         list-style-type: none; {% endcomment %}
        } 
  
    li {
     display: inline-block;
-    margin-right: 15px; /* add spacing between items */
+    {% comment %} margin-right: 0px; /* add spacing between items */ {% endcomment %}
   }
 
   #id_search_option_3 {
@@ -42,7 +42,7 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
     display: flex;
   justify-content: center;
   align-items: center;
- }
+ } 
  </style>
 
 
@@ -56,6 +56,9 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
 </div>
     <button type="submit">Search</button>
 </form>
+
+<div class="dev-result">
+
 {% if search_option == "Variantagmp" %}
    
    {% for result in results %}
@@ -96,9 +99,9 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
 
 
 {% else  %}
-    <p>No results found.</p>
+    <p class="" width="auto">No results found.</p>
 {% endif %}
 
-
+</div>
 
 {% endblock %}

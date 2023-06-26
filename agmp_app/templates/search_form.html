@@ -26,32 +26,53 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
 {% block content %}
 <style>    
     dl, ol, ul {
-         margin-top: 0;
-         margin-bottom: 1rem;
-         list-style-type: none;
-       } 
- 
-       dl, ol, ul li {
-    display: inline-block;
-    margin-right: 15px; /* add spacing between items */
-  }
- .search_form{
-    margin:auto;
-    display: flex;
-  justify-content: center;
-  align-items: center;
+        {% comment %} margin-top: 0;
+        margin-bottom: 1rem;
+        list-style-type: none; {% endcomment %}
+      } 
+
+  li {
+   display: inline-block;
+   {% comment %} margin-right: 0px; /* add spacing between items */ {% endcomment %}
  }
+
+
+ .search_form{
+   margin:auto;
+   display: flex;
+ justify-content: center;
+ align-items: center;
+} 
+
+
+.mastercard{background-image:url(http://i.imgur.com/SJbRQF7.png);}
+.visa{
+background: url("static/img/noun_Disease_2078983.svg");
+}
  
  </style>
 
+<div class="visa"></div>
+<div class="test-image test_d">
 
+
+    <img src="{% static 'img/noun_Disease_2078983.svg' %}" alt="Image" width="5%"> 
+   
+
+</div>
 
 <form class="search_form" method="post">
     {% csrf_token %}
- 
-    {{ form.as_p }}&nbsp;&nbsp;
+    <div class="search_form">
+
+       
+        
+    {{ form.as_p }}
     <button type="submit">Search</button>
+    </div>
 </form>
+
+<div>
 
 {% if result %}
     <ul>
@@ -63,6 +84,6 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
     <p>No results found.</p>
 {% endif %}
 
-
+</div>
 
         {% endblock %}

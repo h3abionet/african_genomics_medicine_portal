@@ -29,25 +29,28 @@
 <table id="example" class="table table-striped table-bordered">
   <thead>
       <tr>
-          <th>rs ID</th>
+          <th>Variant</th>
+          <th>Gene</th>
           <th>Disease</th>
-          <th>P-value</th>
-          <th>Study</th>
-          <th>Regions</th>
+          <th>Significance</th>
+          <th>Region</th>
           <th>Country</th>
+          <th>Study</th>
       </tr>
   </thead>
   <tbody>
  {% for my_object in object_list %}
       <tr>
           <td>{{my_object.variantagmp.rs_id}}</td>
+          <td>{{my_object.variantagmp.geneagmp.gene_id}}
           <td>{{my_object.variantagmp.phenotypeagmp.name}}
             <td>{{my_object.p_value}}</td>
-
+            <td>{{my_object.geographical_regions}}</td>
+            <td>{{my_object.country_participant}}</td>
           <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}" target="_blank">{{my_object.studyagmp.title}}</a>
         </td>
-          <td>{{my_object.geographical_regions}}</td>
-          <td>{{my_object.country_participant}}</td>
+        
+        
       </tr>
       {% endfor %}  
       <!-- ... more rows ... -->
