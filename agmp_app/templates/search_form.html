@@ -25,30 +25,15 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
 {% endblock %}
 {% block content %}
 <style>    
-    dl, ol, ul {
-        {% comment %} margin-top: 0;
-        margin-bottom: 1rem;
-        list-style-type: none; {% endcomment %}
-      } 
-
-  li {
-   display: inline-block;
-   {% comment %} margin-right: 0px; /* add spacing between items */ {% endcomment %}
- }
 
 
- .search_form{
-   margin:auto;
-   display: flex;
- justify-content: center;
- align-items: center;
-} 
 
 
-.mastercard{background-image:url(http://i.imgur.com/SJbRQF7.png);}
-.visa{
-background: url("static/img/noun_Disease_2078983.svg");
-}
+
+.centered-columns {
+    display: flex;
+    justify-content: center;
+  }
  
  </style>
 
@@ -56,7 +41,7 @@ background: url("static/img/noun_Disease_2078983.svg");
 <div class="test-image test_d">
 
 
-    <img src="{% static 'img/noun_Disease_2078983.svg' %}" alt="Image" width="5%"> 
+   
    
 
 </div>
@@ -65,14 +50,35 @@ background: url("static/img/noun_Disease_2078983.svg");
     {% csrf_token %}
     <div class="search_form">
 
+
+        <div class="row centered-columns">
+            <div class="col-md-3 text-right"> {{ form.search_option.3}}  <img src="{% static 'img/noun_Disease_2078983.svg' %}" alt="Image" width="25%"> </div>
+            <div class="col-md-3 text-center"> {{ form.search_option.2 }}  <img src="{% static 'img/noun_Drug_2227411.svg' %}" alt="Image" width="25%"> </div>
+            <div class="col-md-3 text-center"> {{ form.search_option.0 }} <img src="{% static 'img/noun_choice_of_option_2765906.svg' %}" alt="Image" width="25%"> </div>
+            <div class="col-md-3 text-left"> {{ form.search_option.1 }} <img src="{% static 'img/noun_genes_1767492.svg' %}" alt="Image" width="25%"> </div>
+
+
+        </div>
+
+        <div class="row centered-columns">
+
+            <div class="col-md-8 text-center">{{ form.search_query}}</div>
+            <div class="col-md-4 text-left">
+                <button class= "btn btn-success" type="submit">Search</button> </div>
+
+
+        </div>
+    
+    
+
        
         
-    {{ form.as_p }}
-    <button type="submit">Search</button>
+    {% comment %} {{ form.as_p }} {% endcomment %}
+  
     </div>
 </form>
 
-<div>
+<div class="text-center">
 
 {% if result %}
     <ul>
