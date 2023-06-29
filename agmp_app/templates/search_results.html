@@ -27,7 +27,12 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
     display: flex;
     justify-content: center;
   }
- 
+  #id_search_query{
+    width:75%;
+  }
+  .btn{
+    width:75%;
+  }
  </style>
 
 
@@ -48,9 +53,9 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
 
     <div class="row centered-columns">
 
-        <div class="col-md-8 col-sm-8 text-center">{{ form.search_query}}</div>
-        <div class="col-md-4 col-sm-4 text-center">
-            <button class= "btn btn-success" type="submit">Search</button> </div>
+        <div class="col-md-9 col-sm-9 text-center ">{{ form.search_query}}</div>
+        <div class="col-md-3 col-sm-3 text-center mt-1">
+            <button class= "btn btn-success btn-sm" type="submit">Search</button> </div>
 
 
     </div>

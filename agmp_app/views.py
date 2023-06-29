@@ -71,6 +71,8 @@ class PhamacogeneDrugAssoc(DetailView):
     model = VariantStudyagmp
     template_name = 'PhamacogeneDrugAssoc.html'
     pk_url_kwarg = 'gene_id'
+    context_object_name = 'variantagmp'
+
 
     def get_object(self):
         gene_id = self.kwargs.get(self.pk_url_kwarg)
@@ -82,11 +84,13 @@ class PhamacogeneDrugAssoc(DetailView):
     def get_context_data(self, **kwargs):
         context = super(PhamacogeneDrugAssoc, self).get_context_data(**kwargs)
         gene_id = self.kwargs.get(self.pk_url_kwarg)
-     
+
+        #content to display
         context['geneagmp'] = Geneagmp.objects.filter(
             gene_id=gene_id)
-        #content to display
-        gene = Geneagmp.objects.filter(gene_id=gene_id)
+        
+      
+       
 
         #exclude multiple fields as an example
         exclude_list = ['A', 'B', 'C']
@@ -96,6 +100,7 @@ class PhamacogeneDrugAssoc(DetailView):
 
         context['object_list_diseases'] = VariantStudyagmp.objects.filter(
             variantagmp__geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id))).exclude(variantagmp__source_db="PharmGKB")
+        
         return context
 
  #################### Gene Drug Associations ################################
