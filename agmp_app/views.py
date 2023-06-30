@@ -71,7 +71,7 @@ class PhamacogeneDrugAssoc(DetailView):
     model = VariantStudyagmp
     template_name = 'PhamacogeneDrugAssoc.html'
     pk_url_kwarg = 'gene_id'
-    context_object_name = 'variantagmp'
+    context_object_name = 'variantstudyagmp'
 
 
     def get_object(self):
@@ -310,6 +310,7 @@ class PharmacoDrugDetailView(DetailView):
     model = VariantStudyagmp
     template_name = 'PharmacoDrugDetailView.html'
     pk_url_kwarg = 'gene_id'
+    
 
     def get_object(self):
         gene_id = self.kwargs.get(self.pk_url_kwarg)
@@ -322,7 +323,7 @@ class PharmacoDrugDetailView(DetailView):
         gene_id = self.kwargs.get(self.pk_url_kwarg)
 
         context['geneagmp'] = Geneagmp.objects.filter(
-            gene_id=gene_id)
+            gene_id=gene_id).first()
         
         context['object_list'] = VariantStudyagmp.objects.filter(
             variantagmp__geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id))) 
@@ -828,7 +829,7 @@ def summary(request):
 
     '''
     # top ten countries using Counter per @Ayton 25Jul2022
-    snp_counts = Counter([cntry.strip() for pub in Variantagmp.objects.all()
+    snp_counts = Counter([cntry.strip() for pub in VariantStudyagmp.objects.all()
                           for cntry in pub.country_of_participants.split(',')])
     star_counts = Counter([cntry.strip() for pub in star_allele.objects.all()
                            for cntry in pub.country_of_participants.split(',')])
