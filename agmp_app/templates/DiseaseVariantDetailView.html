@@ -45,7 +45,9 @@
  {% for my_object in object_list %}
       <tr>
           <td>{{my_object.variantagmp.rs_id}}</td>
-          <td>{{my_object.variantagmp.geneagmp.gene_id}}</td>
+          <td>{{my_object.variantagmp.geneagmp.gene_id}}<br>
+            <a href="/PhamacogeneDrugAssoc/{{my_object.variantagmp.geneagmp.gene_id }}" target="_blank"> {{my_object.variantagmp.geneagmp.gene_id }}</a>
+          </td>
           <td>{{my_object.variantagmp.phenotypeagmp.name}}
             <td>{{my_object.p_value}}</td>
             <td>{{my_object.geographical_regions}}</td>
