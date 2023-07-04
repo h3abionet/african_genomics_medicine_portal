@@ -133,7 +133,7 @@ class VarDrugAssocDetailView(DetailView):
        
         #back up query
         context['object_list'] = VariantStudyagmp.objects.filter(
-            variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))) 
+            variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="DisGeNET") 
         
         # context['object_list'] = Variantagmp.objects.filter(geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id)))
 
