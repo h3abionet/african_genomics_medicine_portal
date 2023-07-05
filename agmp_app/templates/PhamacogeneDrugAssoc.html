@@ -22,11 +22,13 @@
 {% block content %}
 <!-- Initialize DataTables -->
 
-Gene Name: {{variantstudyagmp}} <br>
+<h3>{{data.gene_id}} </h3><hr>
 
-Uniprot ID: <br>
+<p>Gene: {{data.gene_id}}</p>
 
-Function: <br>
+<p>Uniprot ID: <a href="https://www.uniprot.org/uniprotkb/{{data.uniprot_ac}}/entry" target="_blank">{{data.uniprot_ac}}</a></p>
+
+<p>Function: {{data.function}} </p>
 
 <p><h3>Drug Associations </h3></p>
 
@@ -35,7 +37,7 @@ Function: <br>
   <thead>
       <tr>
           <th>Variant</th>
-         <th>Gene</th> 
+          <th>Gene</th> 
           <th>Drug</th>
           <th>Description</th>
           <th>Significance</th>

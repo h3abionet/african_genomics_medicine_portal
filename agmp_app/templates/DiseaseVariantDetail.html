@@ -12,7 +12,6 @@
 
 {% block title %} Variant Drug Associations {% endblock %}
 
-
 {% block banner %}
 
 {% include 'partials/banner_search_results.html' %}
@@ -22,9 +21,11 @@
 {% block content %}
 <!-- Initialize DataTables -->
 
-<p>Gene Name{{object}}</p>
-<p>Uniprot ID{{geneagmp.gene_id}}</p>
-<p>Function{{geneagmp}}</p>
+<p>Gene: {{data.gene_id}}</p>
+
+<p>Uniprot ID: <a href="https://www.uniprot.org/uniprotkb/{{data.uniprot_ac}}/entry" target="_blank">{{data.uniprot_ac}}</a></p>
+
+<p>Function: {{data.function}} </p>
 
 
 <p><h3>Variant-Disease Associations</h3></p>

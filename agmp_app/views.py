@@ -90,7 +90,7 @@ class PhamacogeneDrugAssoc(DetailView):
         context['geneagmp'] = Geneagmp.objects.filter(
             gene_id=gene_id)
         
-      
+        context["data"] = Geneagmp.objects.get(gene_id = gene_id)
        
 
         #exclude multiple fields as an example
@@ -247,15 +247,15 @@ class DiseaseVariantDetailView(DetailView):
     def get_object(self):
         rs_id = self.kwargs.get(self.pk_url_kwarg)
 
-        data = Variantagmp.objects.filter(rs_id=rs_id)
+        data = Variantagmp.objects.get(rs_id=rs_id)
         return data
     
     def get_context_data(self, **kwargs):
         context = super(DiseaseVariantDetailView, self).get_context_data(**kwargs)
         rs_id = self.kwargs.get(self.pk_url_kwarg)
-        print("test")
+    
 
-        context['geneagmp'] = Variantagmp.objects.filter(
+        context['data'] = Variantagmp.objects.get(
             rs_id=rs_id)
         
         context['object_list'] = VariantStudyagmp.objects.select_related().filter(
