@@ -22,10 +22,15 @@
 {% block content %}
 <!-- Initialize DataTables -->
 
-*** 3 lines on top
+<h3>{{data.drug_id}} </h3><hr>
+
+<p>Drug: {{data.drug_id}}</p>
+
+<p>Drug bank ID: <a href="https://go.drugbank.com/drugs/{{data.drug_bank_id}}" target="_blank">{{data.drug_bank_id}}</a></p>
+
+<p>Indication: {{data.indication}} </p>
 
 <p><h3>Variant-Drug Associations</h3></p>
-
 
 <table id="example" class="table table-striped table-bordered">
   <thead>

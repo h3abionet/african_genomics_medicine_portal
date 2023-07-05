@@ -38,10 +38,8 @@ def search_all(request):
             elif search_option == 'Drugagmp':
                 results = Drugagmp.objects.filter(drug_name__icontains=search_query)
             elif search_option == 'Disease':
-                results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__contains=search_query)
-            
-            
-            # return render(request, 'search_results.html', {'form': form, 'results': results, 'search_option':search_option })
+                results= Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__contains=search_query)
+                     
             return render(request, 'search_form.html', {'form': form, 'results': results, 'search_option':search_option, 'search_option':search_option })
     else:
         form = SearchForm()
@@ -181,15 +179,15 @@ class VariantDrugAssociationDetailView(DetailView):
     def get_object(self):
         drug_id = self.kwargs.get(self.pk_url_kwarg)
 
-        data = Drugagmp.objects.filter(drug_id=drug_id)
+        data00 = Drugagmp.objects.filter(drug_id=drug_id)
         # print(data) # for testing purposes
-        return data
+        return data00
     
     def get_context_data(self, **kwargs):
         context = super(VariantDrugAssociationDetailView, self).get_context_data(**kwargs)
         drug_id = self.kwargs.get(self.pk_url_kwarg)
      
-        context['drugagmp'] = Drugagmp.objects.filter(
+        context['data'] = Drugagmp.objects.get(
             drug_id=drug_id)
         #content to display
         variant = Drugagmp.objects.filter(drug_id=drug_id)
