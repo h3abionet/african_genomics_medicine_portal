@@ -79,46 +79,54 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
 
     {% if search_option == "Variantagmp" %}
    
-    {% for result in results %}
-        <b>rs ID: </b>{{ result.rs_id}}<br>
-         <b>Chromosome: </b>{{ result.geneagmp.chromosome}}<br>
-         <b>Gene: </b>{{ result.geneagmp.gene_id}}<br>
-         <a href="{% url 'Var_Drug_Assoc' result.rs_id %}" target="_blank">Variant-Drug Associations </a> <br>
-         <a href="{% url 'Variant_Disease_Assoc' result.rs_id %}" target="_blank">Variant Disease Associations </a><br>
-         
-         <hr>
-     
-     {% endfor %} 
+            {% for result in results %}
+                <b>rs ID: </b>{{ result.rs_id}}<br>
+                <b>Chromosome: </b>{{ result.geneagmp.chromosome}}<br>
+                <b>Gene: </b>{{ result.geneagmp.gene_id}}<br>
+                <a href="{% url 'Var_Drug_Assoc' result.rs_id %}" target="_blank">Variant-Drug Associations </a> <br>
+                <a href="{% url 'Variant_Disease_Assoc' result.rs_id %}" target="_blank">Variant-Disease Associations </a><br>
+                <hr>
+            
+            {% endfor %} 
  
-     {% elif search_option == "Geneagmp" %}
+    {% elif search_option == "Geneagmp" %}
  
-     {% for result in results %}
-        <b>Gene </b>{{ result.gene_id}}<br>
-         <b>Chromosome: </b>{{result.chromosome}}<br>
-         <a href="{% url 'PhamacogeneDrugAssoc' result.gene_id %}" target="_blank">Gene Associations </a> <br><hr>
-     {% endfor %}   
-     {% elif search_option == "Drugagmp" %}
-  {% for result in results %}
-      <b></b>{{result.drug_name}}<br>
-      <b>Drug Bank ID: </b><a href="https://go.drugbank.com/drugs/{{result.drug_bank_id}}" target="_blank">{{result.drug_bank_id}}</a>
-      <br>
-      <b>State: </b>{{result.state}}<br>
-       <a href="{% url 'VariantDrugAssociation' result.drug_id %}">Variant Drug Associations</a><br> 
-    <hr>
-  {% endfor %}   
+            {% for result in results %}
+
+                <b>Gene </b>{{ result.gene_id}}<br>
+                <b>Chromosome: </b>{{result.chromosome}}<br>
+                <a href="{% url 'PhamacogeneDrugAssoc' result.gene_id %}" target="_blank">Gene Associations </a> <br><hr>
+
+            {% endfor %}   
+
+    {% elif search_option == "Drugagmp" %}
+
+            {% for result in results %}
+
+                <b></b>{{result.drug_name}}<br>
+                <b>Drug Bank ID: </b><a href="https://go.drugbank.com/drugs/{{result.drug_bank_id}}" target="_blank">{{result.drug_bank_id}}</a>
+                <br>
+                <b>State: </b>{{result.state}}<br>
+                <a href="{% url 'VariantDrugAssociation' result.drug_id %}">Varian-Drug Associations</a><br> 
+                <hr>
+
+            {% endfor %}   
+
   {% elif search_option == "Disease" %}
-  {% for result in results %}
-  <b>rs ID: </b>{{result.rs_id}}<br>
-  <b></b>{{result.phenotypeagmp.name}}<br>
-  <a href="{% url 'DiseaseVariant' result.rs_id %}" target="_blank">Variant Disease Associations</a><br><hr>
+
+            {% for result in results %}
+
+                {% comment %} <b>rs ID: </b>{{result.rs_id}}<br> {% endcomment %}
+                <b></b>{{result.phenotypeagmp.name}}<br>
+                <a href="{% url 'DiseaseVariant' result.rs_id %}" target="_blank">Variant-Disease Associations</a><br><hr>
+            {% endfor %}  
  
- {% endfor %}  
  
  
- 
- {% else  %}
-     <p class="" width="auto">No results found.</p>
- {% endif %}
+  {% else  %}
+                {% comment %} <p class="" width="auto">No results found.</p>  {% endcomment %}
+
+  {% endif %}
  
  </div>
 

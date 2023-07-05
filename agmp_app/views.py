@@ -42,7 +42,7 @@ def search_all(request):
             
             
             # return render(request, 'search_results.html', {'form': form, 'results': results, 'search_option':search_option })
-            return render(request, 'search_form.html', {'form': form, 'results': results, 'search_option':search_option })
+            return render(request, 'search_form.html', {'form': form, 'results': results, 'search_option':search_option, 'search_option':search_option })
     else:
         form = SearchForm()
         
