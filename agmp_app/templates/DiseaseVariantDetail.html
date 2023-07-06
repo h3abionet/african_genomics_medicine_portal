@@ -21,11 +21,11 @@
 {% block content %}
 <!-- Initialize DataTables -->
 
-<p>Gene: {{data.gene_id}}</p>
+{% comment %} <p>Gene: {{data.gene_id}}</p>
 
 <p>Uniprot ID: <a href="https://www.uniprot.org/uniprotkb/{{data.uniprot_ac}}/entry" target="_blank">{{data.uniprot_ac}}</a></p>
 
-<p>Function: {{data.function}} </p>
+<p>Function: {{data.function}} </p> {% endcomment %}
 
 
 <p><h3>Variant-Disease Associations</h3></p>

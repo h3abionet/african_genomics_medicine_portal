@@ -245,16 +245,16 @@ class DiseaseVariantDetailView(DetailView):
     def get_object(self):
         rs_id = self.kwargs.get(self.pk_url_kwarg)
 
-        data = Variantagmp.objects.get(rs_id=rs_id)
-        return data
+        # data = Variantagmp.objects.get(rs_id=rs_id)
+        # return data
     
     def get_context_data(self, **kwargs):
         context = super(DiseaseVariantDetailView, self).get_context_data(**kwargs)
         rs_id = self.kwargs.get(self.pk_url_kwarg)
     
 
-        context['data'] = Variantagmp.objects.get(
-            rs_id=rs_id)
+        # context['data'] = Variantagmp.objects.get(
+        #     rs_id=rs_id)
         
         context['object_list'] = VariantStudyagmp.objects.select_related().filter(
             variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="PharmGKB")
