@@ -75,7 +75,7 @@ urlpatterns = [
          name='VariantDrugAssociation'),
 
      
-    path('DiseaseVariant/<str:rs_id>/',
+    path('DiseaseVariant/<str:phenotypeagmp__name>/',
          DiseaseVariantDetailView.as_view(),
          name='DiseaseVariant'),
 

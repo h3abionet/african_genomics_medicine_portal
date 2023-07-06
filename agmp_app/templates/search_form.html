@@ -115,15 +115,16 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
   {% elif search_option == "Disease" %}
 
             {% for result in results %}
-
-                <b></b>{{result.phenotypeagmp.name}}<br>
-                <a href="{% url 'DiseaseVariant' result.rs_id %}" target="_blank">Variant-Disease Associations</a><br><hr>
+        
+            {% comment %} <b></b>{{result.id}}<br>     {% endcomment %}
+                <b></b>{{result.phenotypeagmp__name}}<br>
+              <a href="{% url 'DiseaseVariant' result.phenotypeagmp__name %}" target="_blank">Variant-Disease Associations</a><br><hr>
             {% endfor %}  
  
  
  
   {% else  %}
-           <p>No results found... </p>
+          
 
   {% endif %}
  

@@ -38,9 +38,11 @@ def search_all(request):
             elif search_option == 'Drugagmp':
                 results = Drugagmp.objects.filter(drug_name__icontains=search_query)
             elif search_option == 'Disease':
-                results= Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__contains=search_query)
+                #initial_query_results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__contains=search_query)
+                #second_initial_query_results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__contains=search_query).filter(phenotypeagmp__isnull=False).values("phenotypeagmp__name").distinct()
+                results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__contains=search_query).values("phenotypeagmp__name").distinct()
                      
-            return render(request, 'search_form.html', {'form': form, 'results': results, 'search_option':search_option, 'search_option':search_option })
+            return render(request, 'search_form.html', {'form': form, 'results': results, 'search_option':search_option})
     else:
         form = SearchForm()
         
@@ -240,33 +242,31 @@ class VvarDrugAssocDetailView(DetailView):
 class DiseaseVariantDetailView(DetailView):
     model = VariantStudyagmp
     template_name = 'DiseaseVariantDetailView.html'
-    pk_url_kwarg = 'rs_id'
+    pk_url_kwarg = 'phenotypeagmp__name'
 
     def get_object(self):
-        rs_id = self.kwargs.get(self.pk_url_kwarg)
+        phenotypeagmp__name = self.kwargs.get(self.pk_url_kwarg)
 
         # data = Variantagmp.objects.get(rs_id=rs_id)
         # return data
     
     def get_context_data(self, **kwargs):
         context = super(DiseaseVariantDetailView, self).get_context_data(**kwargs)
-        rs_id = self.kwargs.get(self.pk_url_kwarg)
+        phenotypeagmp__name = self.kwargs.get(self.pk_url_kwarg)
     
 
         # context['data'] = Variantagmp.objects.get(
         #     rs_id=rs_id)
         
-        context['object_list'] = VariantStudyagmp.objects.select_related().filter(
-            variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="PharmGKB")
+        # context['object_list_old'] = VariantStudyagmp.objects.select_related().filter(
+        #     variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="PharmGKB")
        
-        #context['object_list'] = VariantStudyagmp.objects.select_related().filter(
-        #variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).filter(variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="PharmGKB")
-        
-        #context['object_list_diseases_old']=VariantStudyagmp.objects.select_related().filter(variantagmp__geneagmp__gene_id__icontains=gene_id)
+        context['object_list'] = VariantStudyagmp.objects.select_related().filter(
+            variantagmp__phenotypeagmp__name__iregex=r"\b{0}\b".format(str(phenotypeagmp__name))).exclude(variantagmp__source_db="PharmGKB")
+       
+    
 
-        #context['object_list_diseases'] = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id)))
-
-        context['object_list_diseases'] = VariantStudyagmp.objects.select_related().filter(variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="PharmGKB")
+        #context['object_list_diseases'] = VariantStudyagmp.objects.select_related().filter(variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="PharmGKB")
         
         
         return context
