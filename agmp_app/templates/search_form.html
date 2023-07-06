@@ -86,6 +86,8 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
                 <a href="{% url 'Var_Drug_Assoc' result.rs_id %}" target="_blank">Variant-Drug Associations </a> <br>
                 <a href="{% url 'Variant_Disease_Assoc' result.rs_id %}" target="_blank">Variant-Disease Associations </a><br>
                 <hr>
+            {% empty %}
+                <p>No results found.</p>
             
             {% endfor %} 
  
@@ -96,6 +98,8 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
                 <b>Gene </b>{{ result.gene_id}}<br>
                 <b>Chromosome: </b>{{result.chromosome}}<br>
                 <a href="{% url 'PhamacogeneDrugAssoc' result.gene_id %}" target="_blank">Gene Associations </a> <br><hr>
+            {% empty %}
+                <p>No results found.</p>
 
             {% endfor %}   
 
@@ -110,6 +114,9 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
                 <a href="{% url 'VariantDrugAssociation' result.drug_id %}">Varian-Drug Associations</a><br> 
                 <hr>
 
+            {% empty %}
+            <p>No results found.</p>
+
             {% endfor %}   
 
   {% elif search_option == "Disease" %}
@@ -119,6 +126,10 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
             {% comment %} <b></b>{{result.id}}<br>     {% endcomment %}
                 <b></b>{{result.phenotypeagmp__name}}<br>
               <a href="{% url 'DiseaseVariant' result.phenotypeagmp__name %}" target="_blank">Variant-Disease Associations</a><br><hr>
+
+              {% empty %}
+              <p>No results found.</p>
+              
             {% endfor %}  
  
  
