@@ -124,7 +124,7 @@ class VarDrugAssocDetailView(DetailView):
         context = super(VarDrugAssocDetailView, self).get_context_data(**kwargs)
         rs_id = self.kwargs.get(self.pk_url_kwarg)
      
-        context['variantagmp'] = Variantagmp.objects.filter(
+        context['data_varagmp'] = Variantagmp.objects.get(
             rs_id=rs_id)
         #content to display
         variant = Variantagmp.objects.filter(rs_id=rs_id)
@@ -255,8 +255,7 @@ class DiseaseVariantDetailView(DetailView):
         phenotypeagmp__name = self.kwargs.get(self.pk_url_kwarg)
     
 
-        # context['data'] = Variantagmp.objects.get(
-        #     rs_id=rs_id)
+    
         
         # context['object_list_old'] = VariantStudyagmp.objects.select_related().filter(
         #     variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="PharmGKB")

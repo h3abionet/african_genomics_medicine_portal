@@ -19,6 +19,7 @@ class GeneagmpAdmin(admin.ModelAdmin):
 
 class VariantStudyagmpAdmin(admin.ModelAdmin):
     list_display = ['id']
+    search_fields =['country_participant','notes']
 
 class StudyagmpAdmin(admin.ModelAdmin):
     list_display = ['id']
