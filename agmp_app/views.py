@@ -805,7 +805,7 @@ def query(request, query_string, **kwargs):
                 disease_name__contains=query_string).values())
             print(pass_list)
         if is_drug:
-            pass_list += _fetch_drug(Drugagmp.objects.filter(
+            paslss_list += _fetch_drug(Drugagmp.objects.filter(
                 drug_name__contains=query_string).values())
         if is_variant:
             pass_list += _fetch_variant(query_string)
