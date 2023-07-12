@@ -22,7 +22,24 @@ from django.views.generic.detail import DetailView
 from django.views.generic import ListView
 from .forms import SearchForm
 
+def summary(request):
+    #Top ten Drugs
+    # topten_drugs = VariantStudyagmp.objects.order_by('-studyagmp')[:10]
 
+    topten_drugz = Drugagmp.objects.all().annotate(num_pubs=Count('drugv')).order_by('-num_pubs')[:10]
+    topten_genez = Geneagmp.objects.all().annotate(num_pubs=Count('variantagmp')).order_by('-num_pubs')[:10]
+
+    qs_drug = Drugagmp.objects.annotate(publicationsCount=Count('drugv'))[:10]
+    qs_gene = Geneagmp.objects.annotate(publicationsCount=Count('variantagmp__studyagmp'))[:10]
+    qs_variant = Variantagmp.objects.values('rs_id').annotate(publicationsCount=Count('studyagmp'))[:10]
+    qs_disease = Phenotypeagmp.objects.exclude(variantagmp__source_db="PharmGKB").annotate(publicationsCount=Count('variantagmp__studyagmp'))[:10]
+
+    print("queryset result:",{qs_disease})
+ 
+
+    context = { 'qs_drug': qs_drug, 'qs_gene': qs_gene,'qs_variant': qs_variant,'qs_disease': qs_disease,}
+ 
+    return render(request, 'summary.html', context )
 
 def search_all(request):
     if request.method == 'POST':
@@ -818,9 +835,7 @@ def query(request, query_string, **kwargs):
     return HttpResponse(res, mimetype)
 
 
-def summary(request):
- 
-    return render(request, 'summary.html', )
+
 
 
 def country_summary(request):

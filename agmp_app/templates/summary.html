@@ -24,56 +24,6 @@
 </style>
 
 
-<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-<!-- loadleaflet-heat.js -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"
-  integrity="sha512-07I2e+7D8p6he1SIM+1twR5TIrhUQn9+I6yjqD53JQjFiMf8EtC93ty0/5vJTZGF8aAocvHYNEDJajGdNx1IsQ=="
-  crossorigin="" />
-<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"
-  integrity="sha512-A7vV8IFfih/D732iSSKi20u/ooOfj/AGehOKq0f4vLT1Zr2Y+RX7C+w8A1gaSasGtRUZpF/NZgzSAu4/Gc41Lg=="
-  crossorigin=""></script>
-<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-<script src="{% static 'js/leaflet-heat.js' %}"></script>
-
-<script src="{% static 'js/2013-earthquake.js' %}"></script>
-<!-- loadleaflet-heat.js -->
-<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css" />
-<script src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js">
-</script>
-<script src="http://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js">
-</script>
-<script>
-
-  var map = L.map('map').setView([-41.5546, 174.146], 10);
-  mapLink =
-    '<a href="http://openstreetmap.org">OpenStreetMap</a>';
-  L.tileLayer(
-    'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; ' + mapLink + ' Contributors',
-    maxZoom: 18,
-  }).addTo(map);
-
-  var heat = L.heatLayer(quakePoints, {
-    radius: 20,
-    blur: 15,
-    maxZoom: 17,
-  }).addTo(map);
-
-</script>
-
-<!-- higchART SCRIPTS -->
-
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<script src="https://code.highcharts.com/maps/highmaps.js"></script>
-<script src="https://code.highcharts.com/mapdata/index.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
-<script src="https://www.highcharts.com/samples/static/jquery.combobox.js"></script>
-
-<link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
-<link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 <style>
   #map {
     height: 100%
@@ -88,61 +38,20 @@
 
 {% block scripts %}
 
+
+
 <script>
-
-  $(document).ready(function () {
-
-    const ctx = document.getElementById('myChart').getContext('2d');
-    const myChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: {{ count_keys| safe }},
-    datasets: [{
-      label: 'Total Numbers',
-      data: {{ count_data| safe }},
-    backgroundColor: [
-      'rgba(255, 99, 132, 0.2)',
-      'rgba(54, 162, 235, 0.2)',
-      'rgba(255, 206, 86, 0.2)',
-      'rgba(75, 192, 192, 0.2)',
-      'rgba(153, 102, 255, 0.2)',
-      'rgba(255, 159, 64, 0.2)'
-    ],
-    borderColor: [
-      'rgba(255, 99, 132, 1)',
-      'rgba(54, 162, 235, 1)',
-      'rgba(255, 206, 86, 1)',
-      'rgba(75, 192, 192, 1)',
-      'rgba(153, 102, 255, 1)',
-      'rgba(255, 159, 64, 1)'
-    ],
-    borderWidth: 1
-    }]
-      },
-    options: {
-    scales: {
-      y: {
-        beginAtZero: true
-      }
-    }
-  }
-    });
-
-
-
-  });
-
   ///graph1
   $(document).ready(function () {
 
     const ctx = document.getElementById('myChart01').getContext('2d');
-    const myChart = new Chart(ctx, {
+    const myChart01 = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: [{% for i in top_ten_drugs %}'{{i.drug_name|safe}}',{% endfor %}],
+        labels: [{% for i in qs_drug %}'{{i.drug_name | safe}}',{% endfor %}],
     datasets: [{
       label: 'No of Publications',
-      data: [{% for i in top_ten_drugs %}'{{i.num_pubs|safe}}', {% endfor %}],
+      data: [{% for i in qs_drug %}'{{i.publicationsCount | safe}}', {% endfor %}],
     backgroundColor: [
     'rgba(255, 99, 132, 0.2)',
     'rgba(54, 162, 235, 0.2)',
@@ -190,10 +99,10 @@
     const myChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: [{% for i in top_ten_pharmacogenes %}'{{i.gene_name|safe}}',{% endfor %}],
+        labels: [{% for i in qs_gene %}'{{i | safe}}',{% endfor %}],
     datasets: [{
       label: 'No of Publications',
-      data: [{% for i in top_ten_pharmacogenes %}'{{i.num_of_publications|safe}}', {% endfor %}],
+      data: [{% for i in qs_gene %}'{{i.publicationsCount | safe}}', {% endfor %}],
     backgroundColor: [
     'rgba(255, 99, 132, 0.2)',
     'rgba(54, 162, 235, 0.2)',
@@ -243,10 +152,10 @@
     const myChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: [{% for i in top_ten_variants %}'{{i.rs_id|safe}}',{% endfor %}],
+        labels: [{% for i in qs_variant %}'{{i.rs_id|safe}}',{% endfor %}],
     datasets: [{
       label: 'No of Publications',
-      data: [{% for i in top_ten_variants %}'{{i.num_pubs|safe}}', {% endfor %}],
+      data: [{% for i in qs_variant %}'{{i.publicationsCount|safe}}', {% endfor %}],
     backgroundColor: [
     'rgba(255, 99, 132, 0.2)',
     'rgba(54, 162, 235, 0.2)',
@@ -295,10 +204,10 @@
     const myChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: [{% for i in top_ten_diseases %}'{{i.disease_name|safe}}',{% endfor %}],
+        labels: [{% for i in qs_disease %}'{{i.name| safe}}',{% endfor %}],
     datasets: [{
       label: 'No of Publications',
-      data: [{% for i in top_ten_diseases %}'{{i.num_of_pubs|safe}}', {% endfor %}],
+      data: [{% for i in qs_disease %}'{{i.publicationsCount|safe}}', {% endfor %}],
     backgroundColor: [
     'rgba(255, 99, 132, 0.2)',
     'rgba(54, 162, 235, 0.2)',
@@ -398,348 +307,11 @@
 
 </script>
 
-<script>
-
-
-  /**
-   * This is a complicated demo of Highcharts Maps, not intended to get you up to
-   * speed quickly, but to show off some basic maps and features in one single
-   * place. For the basic demo, check out
-   * https://www.highcharts.com/maps/demo/geojson instead.
-   *
-   * @todo
-   * - Remove jQuery where not necessary
-   */
-
-  // Base path to maps
-  const baseMapPath = 'https://code.highcharts.com/mapdata/';
-
-  let showDataLabels = false, // Switch for data labels enabled/disabled
-    mapCount = 0,
-    mapOptions = '';
-
-  // Populate dropdown menus and turn into jQuery UI widgets
-  $.each(Highcharts.mapDataIndex, (mapGroup, maps) => {
-    if (mapGroup !== 'version') {
-      mapOptions += `<option class="option-header">${mapGroup}</option>`;
-      $.each(maps, (desc, path) => {
-        mapOptions += `<option value="${path}">${desc}</option>`;
-        mapCount += 1;
-      });
-    }
-  });
-  const searchText = `Search ${mapCount} maps`;
-  mapOptions =
-    `<option value="custom/world.js">${searchText}</option>${mapOptions}`;
-  $("#mapDropdown").append(mapOptions).combobox();
-
-  // Change map when item selected in dropdown
-  $("#mapDropdown").on('change', async function () {
-    const $selectedItem = $('option:selected', this),
-      mapDesc = $selectedItem.text(),
-      mapKey = this.value.slice(0, -3),
-      svgPath = baseMapPath + mapKey + '.svg',
-      geojsonPath = baseMapPath + mapKey + '.geo.json',
-      topojsonPath = baseMapPath + mapKey + '.topo.json',
-      javascriptPath = baseMapPath + this.value,
-      isHeader = $selectedItem.hasClass('option-header');
-
-    // Dim or highlight search box
-    if (mapDesc === searchText || isHeader) {
-      $('.custom-combobox-input').removeClass('valid');
-      location.hash = '';
-    } else {
-      $('.custom-combobox-input').addClass('valid');
-      location.hash = mapKey;
-    }
-
-    if (isHeader) {
-      return false;
-    }
-
-    // Show loading
-    if (Highcharts.charts[0]) {
-      Highcharts.charts[0].showLoading(
-        '<i class="fa fa-spinner fa-spin fa-2x"></i>'
-      );
-    }
-
-    // Load the map
-    let filesize = '';
-    const mapData = await fetch(topojsonPath)
-      .then(response => {
-        const size = response.headers.get('content-length');
-        if (size) {
-          filesize = Math.round(size / 1024) + ' kB';
-        }
-
-        return response.json();
-      })
-      .catch(e => console.log('Error', e));
-
-    if (!mapData) {
-      if (Highcharts.charts[0]) {
-        Highcharts.charts[0].showLoading(
-          '<i class="fa fa-frown"></i> Map not found'
-        );
-      }
-      return;
-    }
-
-    // Update info box download links
-    $("#download").html(
-      '<small>' + filesize + '</small> <br><br>' +
-      '<a class="button" target="_blank" href="https://jsfiddle.net/gh/get/jquery/1.11.0/' +
-      'highcharts/highcharts/tree/master/samples/mapdata/' + mapKey + '">' +
-      'View clean demo</a>' +
-      '<div class="or-view-as">... or view as ' +
-      '<a target="_blank" href="' + svgPath + '">SVG</a>, ' +
-      '<a target="_blank" href="' + geojsonPath + '">GeoJSON</a>, ' +
-      '<a target="_blank" href="' + topojsonPath + '">TopoJSON</a>, ' +
-      '<a target="_blank" href="' + javascriptPath + '">JavaScript</a>.</div>'
-    );
-
-    // Generate non-random data for the map
-    const data = mapData.objects.default.geometries.map((g, value) => ({
-      key: g.properties['hc-key'],
-      value
-    }));
-
-    // Show arrows the first time a real map is shown
-    if (mapDesc !== searchText) {
-      $('.selector .prev-next').show();
-      $('#side-box').show();
-    }
-
-    // Is there a layer above this?
-    const match = mapKey
-      .match(/^(countries\/[a-z]{2}\/[a-z]{2})-[a-z0-9]+-all$/);
-    let parent;
-    if (/^countries\/[a-z]{2}\/[a-z]{2}-all$/.test(mapKey)) { // country
-      parent = {
-        desc: 'World',
-        key: 'custom/world'
-      };
-    } else if (match) { // admin1
-      parent = {
-        desc: $('option[value="' + match[1] + '-all.js"]').text(),
-        key: match[1] + '-all'
-      };
-    }
-    $('#up').html('');
-    if (parent) {
-      $('#up').append(
-        $('<a><i class="fa fa-angle-up"></i> ' + parent.desc + '</a>')
-          .attr({
-            title: parent.key
-          })
-          .on('click', function () {
-            $('#mapDropdown').val(parent.key + '.js').trigger('change');
-          })
-      );
-    }
-
-    // Data labels formatter. Use shorthand codes for world and US
-    const formatter = function () {
-      return (
-        mapKey === 'custom/world' ||
-        mapKey === 'countries/us/us-all'
-      ) ?
-        (this.point.properties && this.point.properties['hc-a2']) :
-        this.point.name;
-    };
-
-    // On point click, look for a detailed map to drill into
-    const onPointClick = function () {
-      const key = this.key;
-      $('#mapDropdown option').each(function () {
-        if (this.value === `countries/${key.substr(0, 2)}/${key}-all.js`) {
-          $('#mapDropdown').val(this.value).trigger('change');
-        }
-      });
-    };
-
-    // Instantiate chart
-    console.time('map');
-    Highcharts.mapChart('mapChart', {
-
-      chart: {
-        map: mapData
-      },
-
-      title: {
-        text: null
-      },
-
-      accessibility: {
-        series: {
-          descriptionFormat: '{series.name}, map with {series.points.length} areas.',
-          pointDescriptionEnabledThreshold: 50
-        }
-      },
-
-      mapNavigation: {
-        enabled: true,
-        buttonOptions: {
-          alignTo: 'spacingBox',
-          x: 10
-        }
-      },
-
-      colorAxis: {
-        min: 0,
-        stops: [
-          [0, '#EFEFFF'],
-          [0.5, Highcharts.getOptions().colors[0]],
-          [
-            1,
-            Highcharts.color(Highcharts.getOptions().colors[0])
-              .brighten(-0.5).get()
-          ]
-        ]
-      },
-
-      legend: {
-        layout: 'vertical',
-        align: 'left',
-        verticalAlign: 'bottom'
-      },
-
-      series: [{
-        data,
-        joinBy: ['hc-key', 'key'],
-        name: 'Random data',
-        states: {
-          hover: {
-            color: Highcharts.getOptions().colors[2]
-          }
-        },
-        dataLabels: {
-          enabled: showDataLabels,
-          formatter,
-          style: {
-            fontWeight: 100,
-            fontSize: '10px',
-            textOutline: 'none'
-          }
-        },
-        point: {
-          events: {
-            click: onPointClick
-          }
-        }
-      }, {
-        type: 'mapline',
-        name: "Lines",
-        accessibility: {
-          enabled: false
-        },
-        data: Highcharts.geojson(mapData, 'mapline'),
-        /*
-        data: [{
-          geometry: mapData.objects.default['hc-recommended-mapview'].insets[0].geoBounds
-        }],
-        // */
-        nullColor: '#333333',
-        showInLegend: false,
-        enableMouseTracking: false
-      }]
-    });
-    console.timeEnd('map');
-
-    showDataLabels = $("#chkDataLabels").prop('checked');
-  });
-
-  // Toggle data labels - Note: Reloads map with new random data
-  $("#chkDataLabels").on('change', function () {
-    showDataLabels = $("#chkDataLabels").prop('checked');
-    $("#mapDropdown").trigger('change');
-  });
-
-  // Switch to previous map on button click
-  $("#btn-prev-map").on('click', function () {
-    $("#mapDropdown option:selected")
-      .prev("option")
-      .prop("selected", true)
-      .trigger('change');
-  });
-
-  // Switch to next map on button click
-  $("#btn-next-map").on('click', function () {
-    $("#mapDropdown option:selected")
-      .next("option")
-      .prop("selected", true)
-      .trigger('change');
-  });
-
-  // Trigger change event to load map on startup
-  if (location.hash) {
-    $('#mapDropdown').val(location.hash.substr(1) + '.js');
-  }
-  $('#mapDropdown').trigger('change');
-</script>
 
 
 
 {% endblock %}
 
-
-<style>
-  body {
-    font-family: Roboto, sans-serif;
-  }
-
-  .node {
-    border: solid 1px white;
-    font: 10px sans-serif;
-    line-height: 12px;
-    overflow: hidden;
-    position: absolute;
-    text-indent: 2px;
-  }
-
-  .c3-line,
-  .c3-focused {
-    stroke-width: 3px !important;
-  }
-
-  .c3-bar {
-    stroke: white !important;
-    stroke-width: 1;
-  }
-
-  .c3 text {
-    font-size: 12px;
-    color: grey;
-  }
-
-  .tick line {
-    stroke: white;
-  }
-
-  .c3-axis path {
-    stroke: grey;
-  }
-
-  .c3-circle {
-    opacity: 1 !important;
-  }
-
-  .c3-xgrid-focus {
-    visibility: hidden !important;
-  }
-
-  .leaflet-container {
-    /* all maps */
-    width: 440%;
-    height: 400px;
-  }
-
-  /* Resize the "display_raw" textbox */
-  .django-leaflet-raw-textarea {
-    width: 100%;
-  }
-</style>
 
 {% endblock %}
 
@@ -789,81 +361,32 @@
 
     </div>
 
-    {% comment %} <div class="page-section" id="2_0">
-      <h3 class="text-center">Genes,Drugs,Variants and Diseases</h3>
-
-      <div class="col-md-8">
-        <canvas id="myChart" width="200" height="100"></canvas>
-
-
-
-      </div>
-    </div> {% endcomment %}
-
-
-    <div class="page-section" id="2_1">
-      <h3 class="text-center">Graphs</h3>
-      <div class="row">
-        <div class="col">
-          <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-              <a class="nav-link active" id="graph1-tab" data-toggle="tab" href="#graph1" role="tab"
-                aria-controls="graph1" aria-selected="true">Top Ten Drugs</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="graph2-tab" data-toggle="tab" href="#graph2" role="tab" aria-controls="graph2"
-                aria-selected="false"> Top Ten Genes</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="graph3-tab" data-toggle="tab" href="#graph3" role="tab" aria-controls="graph3"
-                aria-selected="false">Top Ten Variants</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="4-tab" data-toggle="tab" href="#graph4" role="tab" aria-controls="graph4"
-                aria-selected="false">Top Ten Diseases</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" id="5-tab" data-toggle="tab" href="#graph5" role="tab" aria-controls="graph5"
-                aria-selected="false">Top Ten Countries</a>
-            </li>
-
-          </ul>
-          <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="graph1" role="tabpanel" aria-labelledby="graph1-tab">
-              <div class="col-md-8">
-
-                <canvas id="myChart01" width="200" height="100"></canvas>
-              </div>
-            </div>
-            <div class="tab-pane fade" id="graph2" role="tabpanel" aria-labelledby="graph2-tab">
-
-              <div class="col-md-8">
-                <canvas id="myChart02" width="200" height="100"></canvas>
-              </div>
-            </div>
-            <div class="tab-pane fade" id="graph3" role="tabpanel" aria-labelledby="graph3-tab">
-              <div class="col-md-8">
-                <canvas id="myChart03" width="200" height="100"></canvas>
-              </div>
-            </div>
-
-            <div class="tab-pane fade" id="graph4" role="tabpanel" aria-labelledby="graph4-tab">
-              <div class="col-md-9">
-                <canvas id="myChart04" width="200" height="100"></canvas>
-              </div>
-            </div>
-
-
-            <div class="tab-pane fade" id="graph5" role="tabpanel" aria-labelledby="graph5-tab">
-              <div class="col-md-9">
-                <canvas id="myChart05" width="200" height="100"></canvas>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
+    <div class="mt-4">
+     <span> Top Ten drugs</span>
+    <canvas id="myChart01" width="200" height="100"></canvas>
     </div>
+
+    <div class="">
+      <span> Top Ten genes</span>
+    <canvas id="myChart02" width="200" height="100"></canvas>
+  </div>
+
+  <div class="">
+    <span> Top Ten variants</span>
+    <canvas id="myChart03" width="200" height="100"></canvas>
+  </div>
+
+  <div class="">
+    <span> Top Ten Diseases</span>
+    <canvas id="myChart04" width="300" height="100"></canvas>
+  </div>
+
+
+    {% comment %} <div class="page-section" id="2_1">
+      <h3 class="text-center">Graphs</h3>
+   
+
+    </div> {% endcomment %}
 
     <div class="page-section" id="2">
 
@@ -895,42 +418,6 @@
 {% endblock %}
 
 <script>
-
-  $(document).ready(function () {
-    $('a[href*=#]').bind('click', function (e) {
-      e.preventDefault(); // prevent hard jump, the default behavior
-
-      var target = $(this).attr("href"); // Set the target as variable
-
-      // perform animated scrolling by getting top-position of target-element and set it as scroll target
-      $('html, body').stop().animate({
-        scrollTop: $(target).offset().top
-      }, 600, function () {
-        location.hash = target; //attach the hash (#jumptarget) to the pageurl
-      });
-
-      return false;
-    });
-  });
-
-  $(window).scroll(function () {
-    var scrollDistance = $(window).scrollTop();
-
-    // Show/hide menu on scroll
-    //if (scrollDistance >= 850) {
-    //		$('nav').fadeIn("fast");
-    //} else {
-    //		$('nav').fadeOut("fast");
-    //}
-
-    // Assign active class to nav links while scolling
-    $('.page-section').each(function (i) {
-      if ($(this).position().top <= scrollDistance) {
-        $('.navigation a.active').removeClass('active');
-        $('.navigation a').eq(i).addClass('active');
-      }
-    });
-  }).scroll();
 
 
 </script>
