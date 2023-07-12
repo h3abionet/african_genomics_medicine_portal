@@ -23,16 +23,24 @@ from django.views.generic import ListView
 from .forms import SearchForm
 
 def summary(request):
+
+    #maps
+    #locations = .objects.all()
+
+
     #Top ten Drugs
     # topten_drugs = VariantStudyagmp.objects.order_by('-studyagmp')[:10]
+
+
+
 
     topten_drugz = Drugagmp.objects.all().annotate(num_pubs=Count('drugv')).order_by('-num_pubs')[:10]
     topten_genez = Geneagmp.objects.all().annotate(num_pubs=Count('variantagmp')).order_by('-num_pubs')[:10]
 
-    qs_drug = Drugagmp.objects.annotate(publicationsCount=Count('drugv'))[:10]
+    qs_drug = Drugagmp.objects.annotate(publicationsCount=Count('drugv__studyagmp'))[:10]
     qs_gene = Geneagmp.objects.annotate(publicationsCount=Count('variantagmp__studyagmp'))[:10]
     qs_variant = Variantagmp.objects.values('rs_id').annotate(publicationsCount=Count('studyagmp'))[:10]
-    qs_disease = Phenotypeagmp.objects.exclude(variantagmp__source_db="PharmGKB").annotate(publicationsCount=Count('variantagmp__studyagmp'))[:10]
+    qs_disease = Phenotypeagmp.objects.values('name').annotate(publicationsCount=Count('variantagmp'))[:10]
 
     print("queryset result:",{qs_disease})
  
@@ -270,12 +278,10 @@ class DiseaseVariantDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(DiseaseVariantDetailView, self).get_context_data(**kwargs)
         phenotypeagmp__name = self.kwargs.get(self.pk_url_kwarg)
-    
 
-    
-        
-        # context['object_list_old'] = VariantStudyagmp.objects.select_related().filter(
-        #     variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="PharmGKB")
+        context['data'] = Variantagmp.objects.filter(
+            phenotypeagmp__name=phenotypeagmp__name)
+       
        
         context['object_list'] = VariantStudyagmp.objects.select_related().filter(
             variantagmp__phenotypeagmp__name__iregex=r"\b{0}\b".format(str(phenotypeagmp__name))).exclude(variantagmp__source_db="PharmGKB")

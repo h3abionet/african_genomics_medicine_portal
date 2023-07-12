@@ -21,13 +21,13 @@
     display: none;
     visibility: hidden;
   }
-</style>
-
-
-<style>
   #map {
     height: 100%
   }
+
+  {% comment %} #map {
+    height: 400px;
+} {% endcomment %}
 </style>
 
 {% leaflet_js %}
@@ -38,7 +38,7 @@
 
 {% block scripts %}
 
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
 
 <script>
   ///graph1
@@ -392,7 +392,7 @@
 
 
       <h3 class="text-center">Data Distribution</h3>
-      <div class="row">
+      {% comment %} <div class="row">
         <div class="col-12">
 
           {{map_01|safe}}
@@ -401,8 +401,11 @@
         {% for i in results %}
         <p>{{i.country_of_participants}}: {{i.publication_count}}| {{i.longitude}}{{i.lattitude}}</p>
         {% endfor %}
-      </div>
+      </div> {% endcomment %}
 
+      ---
+      <div id="map"></div>
+      ---
 
 
     </div>
@@ -417,7 +420,17 @@
 
 {% endblock %}
 
-<script>
 
 
+  <script>
+    var map = L.map('map').setView([51.505, -0.09], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    {% for location in locations %}
+        L.marker([{{ location.latitude }}, {{ location.longitude }}]).addTo(map)
+            .bindPopup('{{ location.name }}');
+    {% endfor %}
 </script>
+
