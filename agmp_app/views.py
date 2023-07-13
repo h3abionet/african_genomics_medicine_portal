@@ -23,6 +23,12 @@ from django.views.generic import ListView
 from .forms import SearchForm
 
 def summary(request):
+    gene_count=Geneagmp.objects.all().count()
+    drug_count=Drugagmp.objects.all().count()
+    variant_count=Variantagmp.objects.all().count()
+    disease_count=Variantagmp.objects.select_related().exclude(source_db="PharmGKB").distinct().count()
+
+ 
 
     #maps
     #locations = .objects.all()
@@ -42,10 +48,11 @@ def summary(request):
     qs_variant = Variantagmp.objects.values('rs_id').annotate(publicationsCount=Count('studyagmp'))[:10]
     qs_disease = Phenotypeagmp.objects.values('name').annotate(publicationsCount=Count('variantagmp'))[:10]
 
-    print("queryset result:",{qs_disease})
+ 
  
 
-    context = { 'qs_drug': qs_drug, 'qs_gene': qs_gene,'qs_variant': qs_variant,'qs_disease': qs_disease,}
+    context = { 'gene_count': gene_count,'drug_count': drug_count,'variant_count': variant_count,'disease_count': disease_count,
+               'qs_drug': qs_drug,'qs_gene': qs_gene,'qs_variant': qs_variant,'qs_disease': qs_disease,}
  
     return render(request, 'summary.html', context )
 

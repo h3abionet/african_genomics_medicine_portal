@@ -343,11 +343,11 @@
         </thead>
         <tr>
           <td>GENES</td>
-          <td>{{ gene_count | default_if_none:'0' }}</td>
+          <td>{{ gene_count | default:'0' }}</td>
         </tr>
         <tr>
           <td>DRUGS</td>
-          <td>{{ drug_count | default_if_none:'0' }}</td>
+          <td>{{ drug_count | default:'0' }}</td>
         </tr>
         <tr>
           <td>DISEASES </td>
@@ -355,7 +355,7 @@
         </tr>
         <tr>
           <td>VARIANTS</td>
-          <td>{{ variant_count | default_if_none:'0' }}</td>
+          <td>{{ variant_count | default:'0' }}</td>
         </tr>
       </table>
 
@@ -388,10 +388,10 @@
 
     </div> {% endcomment %}
 
-    <div class="page-section" id="2">
+    {% comment %} <div class="page-section" id="2"> {% endcomment %}
 
 
-      <h3 class="text-center">Data Distribution</h3>
+      {% comment %} <h3 class="text-center">Data Distribution</h3> {% endcomment %}
       {% comment %} <div class="row">
         <div class="col-12">
 
@@ -403,12 +403,12 @@
         {% endfor %}
       </div> {% endcomment %}
 
-      ---
+      {% comment %} ---
       <div id="map"></div>
       ---
 
 
-    </div>
+    </div> {% endcomment %}
 
 
 
