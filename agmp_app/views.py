@@ -27,19 +27,7 @@ def summary(request):
     drug_count=Drugagmp.objects.all().count()
     variant_count=Variantagmp.objects.all().count()
     disease_count=Variantagmp.objects.select_related().exclude(source_db="PharmGKB").distinct().count()
-
- 
-
-    #maps
-    #locations = .objects.all()
-
-
-    #Top ten Drugs
-    # topten_drugs = VariantStudyagmp.objects.order_by('-studyagmp')[:10]
-
-
-
-
+    #test qset
     topten_drugz = Drugagmp.objects.all().annotate(num_pubs=Count('drugv')).order_by('-num_pubs')[:10]
     topten_genez = Geneagmp.objects.all().annotate(num_pubs=Count('variantagmp')).order_by('-num_pubs')[:10]
 
@@ -64,7 +52,7 @@ def search_all(request):
             search_query = form.cleaned_data['search_query']
             
             if search_option == 'Variantagmp':
-                results = Variantagmp.objects.filter(rs_id__icontains=search_query)
+                results = Variantagmp.objects.filter(rs_id__icontains=search_query).values("rs_id").distinct()
             elif search_option == 'Geneagmp':
                 results = Geneagmp.objects.filter(gene_id__icontains=search_query)
             elif search_option == 'Drugagmp':
@@ -156,10 +144,10 @@ class VarDrugAssocDetailView(DetailView):
         context = super(VarDrugAssocDetailView, self).get_context_data(**kwargs)
         rs_id = self.kwargs.get(self.pk_url_kwarg)
      
-        context['data_varagmp'] = Variantagmp.objects.get(
-            rs_id=rs_id)
-        #content to display
-        variant = Variantagmp.objects.filter(rs_id=rs_id)
+        # context['data_varagmp'] = Variantagmp.objects.get(
+        #     rs_id=rs_id)
+      
+        # variant = Variantagmp.objects.filter(rs_id=rs_id)
 
         # context['object_list_01'] = Geneagmp.objects.filter(gene_id__iregex=r"\b{0}\b".format(str(rs_id)))
        
