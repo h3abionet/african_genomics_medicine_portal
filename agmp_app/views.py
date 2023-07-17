@@ -28,16 +28,21 @@ def summary(request):
     variant_count=Variantagmp.objects.all().count()
     disease_count=Variantagmp.objects.select_related().exclude(source_db="PharmGKB").distinct().count()
     #test qset
-    topten_drugz = Drugagmp.objects.all().annotate(num_pubs=Count('drugv')).order_by('-num_pubs')[:10]
+    topten_drugz = Drugagmp.objects.all().annotate(num_pubs=Count('drugs')).order_by('-num_pubs')[:10]
     topten_genez = Geneagmp.objects.all().annotate(num_pubs=Count('variantagmp')).order_by('-num_pubs')[:10]
+    #production qset
+    qs_drug = Drugagmp.objects.all().annotate(frequency=Count('drugs')).order_by("-frequency")[:10]
+    qs_gene = Geneagmp.objects.all().annotate(frequency=Count('variantagmp__studyagmp')).order_by("-frequency")[:10]
+    qs_variant = Variantagmp.objects.all().values('rs_id').annotate(frequency=Count('studyagmp')).order_by("-frequency")[:10]
+    qs_disease = Phenotypeagmp.objects.all().values('name').annotate(frequency=Count('variantagmp')).order_by("-frequency")[:10]
+    #step1
+    #qs_drug_1 = Drugagmp.objects.all().annotate(frequency=Count("drugv")).order_by("-frequency")[:10]
+    qs_drug_1 = Drugagmp.objects.annotate(frequency=Count("drugs")).order_by("-frequency")[:10]
+   
+    # Example from django documentation
+    # The top 5 publishers, in order by number of books.
+    # pubs = Publisher.objects.annotate(num_books=Count("book")).order_by("-num_books")[:5]
 
-    qs_drug = Drugagmp.objects.annotate(publicationsCount=Count('drugv__studyagmp'))[:10]
-    qs_gene = Geneagmp.objects.annotate(publicationsCount=Count('variantagmp__studyagmp'))[:10]
-    qs_variant = Variantagmp.objects.values('rs_id').annotate(publicationsCount=Count('studyagmp'))[:10]
-    qs_disease = Phenotypeagmp.objects.values('name').annotate(publicationsCount=Count('variantagmp'))[:10]
-
- 
- 
 
     context = { 'gene_count': gene_count,'drug_count': drug_count,'variant_count': variant_count,'disease_count': disease_count,
                'qs_drug': qs_drug,'qs_gene': qs_gene,'qs_variant': qs_variant,'qs_disease': qs_disease,}

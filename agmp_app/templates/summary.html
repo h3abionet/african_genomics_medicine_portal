@@ -25,9 +25,11 @@
     height: 100%
   }
 
-  {% comment %} #map {
-    height: 400px;
-} {% endcomment %}
+  {% comment %} css for graphs {% endcomment %}
+  
+
+  {% comment %} css for graphs {% endcomment %}
+  
 </style>
 
 {% leaflet_js %}
@@ -45,13 +47,13 @@
   $(document).ready(function () {
 
     const ctx = document.getElementById('myChart01').getContext('2d');
-    const myChart01 = new Chart(ctx, {
+    const myChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: [{% for i in qs_drug %}'{{i.drug_name | safe}}',{% endfor %}],
+        labels: [{% for i in qs_drug %}'{{i.drug_name}}', {% endfor %}],
     datasets: [{
       label: 'No of Publications',
-      data: [{% for i in qs_drug %}'{{i.publicationsCount | safe}}', {% endfor %}],
+      data: [{% for i in qs_drug %}'{{i.frequency}}', {% endfor %}],
     backgroundColor: [
     'rgba(255, 99, 132, 0.2)',
     'rgba(54, 162, 235, 0.2)',
@@ -99,10 +101,10 @@
     const myChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: [{% for i in qs_gene %}'{{i | safe}}',{% endfor %}],
+        labels: [{% for i in qs_gene %}'{{i.gene_id | safe}}',{% endfor %}],
     datasets: [{
       label: 'No of Publications',
-      data: [{% for i in qs_gene %}'{{i.publicationsCount | safe}}', {% endfor %}],
+      data: [{% for i in qs_gene %}'{{i.frequency | safe}}', {% endfor %}],
     backgroundColor: [
     'rgba(255, 99, 132, 0.2)',
     'rgba(54, 162, 235, 0.2)',
@@ -155,7 +157,7 @@
         labels: [{% for i in qs_variant %}'{{i.rs_id|safe}}',{% endfor %}],
     datasets: [{
       label: 'No of Publications',
-      data: [{% for i in qs_variant %}'{{i.publicationsCount|safe}}', {% endfor %}],
+      data: [{% for i in qs_variant %}'{{i.frequency|safe}}', {% endfor %}],
     backgroundColor: [
     'rgba(255, 99, 132, 0.2)',
     'rgba(54, 162, 235, 0.2)',
@@ -207,7 +209,7 @@
         labels: [{% for i in qs_disease %}'{{i.name| safe}}',{% endfor %}],
     datasets: [{
       label: 'No of Publications',
-      data: [{% for i in qs_disease %}'{{i.publicationsCount|safe}}', {% endfor %}],
+      data: [{% for i in qs_disease %}'{{i.frequency|safe}}', {% endfor %}],
     backgroundColor: [
     'rgba(255, 99, 132, 0.2)',
     'rgba(54, 162, 235, 0.2)',
@@ -361,6 +363,11 @@
 
     </div>
 
+{% comment %} graph section {% endcomment %}
+
+{% comment %} graph section {% endcomment %}
+
+
     <div class="mt-4">
      <span> Top Ten Drugs</span>
     <canvas id="myChart01" width="200" height="100"></canvas>
@@ -380,6 +387,9 @@
     <span> Top Ten Diseases</span>
     <canvas id="myChart04" width="300" height="100"></canvas>
   </div>
+
+
+
 
 
     {% comment %} <div class="page-section" id="2_1">
