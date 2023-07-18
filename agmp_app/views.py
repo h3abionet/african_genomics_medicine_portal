@@ -92,7 +92,7 @@ class VariantStudyagmpListView(ListView):
   
  #################### Variant Drug Details ################################
   
- #################### PharmacoGene Associations ################################
+ #################### PharmacoGene Associations as SAMPLE to fix issues ################################
 class PhamacogeneDrugAssoc(DetailView):
     model = VariantStudyagmp
     template_name = 'PhamacogeneDrugAssoc.html'
@@ -269,6 +269,7 @@ class DiseaseVariantDetailView(DetailView):
     template_name = 'DiseaseVariantDetailView.html'
     pk_url_kwarg = 'phenotypeagmp__name'
 
+
     def get_object(self):
         phenotypeagmp__name = self.kwargs.get(self.pk_url_kwarg)
 
@@ -280,7 +281,7 @@ class DiseaseVariantDetailView(DetailView):
         phenotypeagmp__name = self.kwargs.get(self.pk_url_kwarg)
 
         context['data'] = Variantagmp.objects.filter(
-            phenotypeagmp__name=phenotypeagmp__name)
+            phenotypeagmp__name=phenotypeagmp__name).values("phenotypeagmp__name").distinct()[0]
        
        
         context['object_list'] = VariantStudyagmp.objects.select_related().filter(
