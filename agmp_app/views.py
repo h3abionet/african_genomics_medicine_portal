@@ -191,8 +191,18 @@ class VariantDiseaseAssocDetailView(DetailView):
         context = super(VariantDiseaseAssocDetailView, self).get_context_data(**kwargs)
         rs_id = self.kwargs.get(self.pk_url_kwarg)
      
-        context['variantagmp'] = Variantagmp.objects.filter(
-            rs_id=rs_id)
+        context['variantagmp_rs_id'] = Variantagmp.objects.filter(
+            rs_id=rs_id).values("rs_id").distinct()[0]
+        
+        context['variantagmp_drug'] = Variantagmp.objects.filter(
+            rs_id=rs_id).values("drugagmp__drug_name").distinct()[0]
+        
+        context['variantagmp_drug_bank_id'] = Variantagmp.objects.filter(
+            rs_id=rs_id).values("drugagmp__drug_bank_id").distinct()[0]
+        
+        context['variantagmp_indication'] = Variantagmp.objects.filter(
+            rs_id=rs_id).values("drugagmp__indication").distinct()[0]
+        
         #content to display
         variant = Variantagmp.objects.filter(rs_id=rs_id)
 
