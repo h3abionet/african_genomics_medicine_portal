@@ -22,11 +22,16 @@
 {% block content %}
 <!-- Initialize DataTables -->
 
-<h3>{{data_varagmp.rs_id}} </h3><hr>
 
-<p>Variant: {{data_varagmp.rs_id}}</p>
+<h3>{{data_varagmp_rsid.rs_id}} </h3><hr>
 
- <p>Drug:  <a href="/VariantDrugAssociation/{{data_varagmp.drugagmp.drug_id}}" target="_blank">{{data_varagmp.drugagmp.drug_name}}</a></p> 
+<p><b>Variant ID</b>: {{data_varagmp_rsid.rs_id}}</p>
+
+<p><b>Variant type </b>: {{data_varagmp_vartype.variant_type}}</p>
+
+<p><b>Gene: </b> <a href="/PhamacogeneDrugAssoc/{{data_varagmp_gene.geneagmp__gene_id}}" target="_blank">{{data_varagmp_gene.geneagmp__gene_id}}</a></p> 
+
+<p><b>Chromosome</b>: {{data_varagmp_chromosome.geneagmp__chromosome}}</p>
 
 
 <p><h3>Variant-Drug Associations</h3></p>

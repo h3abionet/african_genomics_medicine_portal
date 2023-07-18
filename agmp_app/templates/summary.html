@@ -26,7 +26,6 @@
   }
 
   {% comment %} css for graphs {% endcomment %}
-  
 
   {% comment %} css for graphs {% endcomment %}
   
@@ -332,6 +331,7 @@
       </ul>
     </nav>
   </div>
+
   <div class="col-md-9 section1">
     <div class="page-section" id="1">
 
@@ -363,9 +363,6 @@
 
     </div>
 
-{% comment %} graph section {% endcomment %}
-
-{% comment %} graph section {% endcomment %}
 
 
     <div class="mt-4">
@@ -378,6 +375,8 @@
     <canvas id="myChart02" width="200" height="100"></canvas>
   </div>
 
+
+
   <div class="">
     <span> Top Ten Variants</span>
     <canvas id="myChart03" width="200" height="100"></canvas>
@@ -387,46 +386,23 @@
     <span> Top Ten Diseases</span>
     <canvas id="myChart04" width="300" height="100"></canvas>
   </div>
+  {% comment %} graph section {% endcomment %}
 
+  
 
-
-
-
-    {% comment %} <div class="page-section" id="2_1">
-      <h3 class="text-center">Graphs</h3>
-   
-
-    </div> {% endcomment %}
-
-    {% comment %} <div class="page-section" id="2"> {% endcomment %}
-
-
-      {% comment %} <h3 class="text-center">Data Distribution</h3> {% endcomment %}
-      {% comment %} <div class="row">
-        <div class="col-12">
-
-          {{map_01|safe}}
-        </div>
-
-        {% for i in results %}
-        <p>{{i.country_of_participants}}: {{i.publication_count}}| {{i.longitude}}{{i.lattitude}}</p>
-        {% endfor %}
-      </div> {% endcomment %}
-
-      {% comment %} ---
-      <div id="map"></div>
-      ---
-
-
-    </div> {% endcomment %}
-
-
+  {% comment %} graph section {% endcomment %}
+  
 
   </div>
 
 
 </div>
+
+
 </div>
+
+
+
 
 {% endblock %}
 

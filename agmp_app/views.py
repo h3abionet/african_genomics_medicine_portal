@@ -141,6 +141,7 @@ class VarDrugAssocDetailView(DetailView):
     def get_object(self):
         rs_id = self.kwargs.get(self.pk_url_kwarg)
 
+
         data = Variantagmp.objects.filter(rs_id=rs_id)
         # print(data) # for testing purposes
         return data
@@ -149,9 +150,17 @@ class VarDrugAssocDetailView(DetailView):
         context = super(VarDrugAssocDetailView, self).get_context_data(**kwargs)
         rs_id = self.kwargs.get(self.pk_url_kwarg)
      
-        # context['data_varagmp'] = Variantagmp.objects.get(
-        #     rs_id=rs_id)
-      
+        context['data_varagmp_rsid'] = Variantagmp.objects.filter(
+            rs_id=rs_id).values("rs_id").distinct()[0]
+          
+  
+        context['data_varagmp_vartype'] = Variantagmp.objects.all().values("variant_type").distinct()[0]
+
+        context['data_varagmp_gene'] = Variantagmp.objects.all().values("geneagmp__gene_id").distinct()[0]
+
+        context['data_varagmp_chromosome'] = Variantagmp.objects.all().values("geneagmp__chromosome").distinct()[0]
+
+       
         # variant = Variantagmp.objects.filter(rs_id=rs_id)
 
         # context['object_list_01'] = Geneagmp.objects.filter(gene_id__iregex=r"\b{0}\b".format(str(rs_id)))
