@@ -34,7 +34,7 @@ def summary(request):
     qs_drug = Drugagmp.objects.exclude(drug_name="").annotate(frequency=Count('drugs')).order_by("-frequency")[:10]
     qs_gene = Geneagmp.objects.all().annotate(frequency=Count('variantagmp__studyagmp')).order_by("-frequency")[:10]
     qs_variant = Variantagmp.objects.all().values('rs_id').annotate(frequency=Count('studyagmp')).order_by("-frequency")[:10]
-    qs_disease = Phenotypeagmp.objects.all().values('name').annotate(frequency=Count('variantagmp')).order_by("-frequency")[:10]
+    qs_disease = Phenotypeagmp.objects.exclude(variantagmp__source_db="PharmGKB").values('name').annotate(frequency=Count('variantagmp')).order_by("-frequency")[:10]
     #step1
     #qs_drug_1 = Drugagmp.objects.all().annotate(frequency=Count("drugv")).order_by("-frequency")[:10]
     qs_drug_1 = Drugagmp.objects.annotate(frequency=Count("drugs")).order_by("-frequency")[:10]
