@@ -31,7 +31,7 @@ def summary(request):
     topten_drugz = Drugagmp.objects.all().annotate(num_pubs=Count('drugs')).order_by('-num_pubs')[:10]
     topten_genez = Geneagmp.objects.all().annotate(num_pubs=Count('variantagmp')).order_by('-num_pubs')[:10]
     #production qset
-    qs_drug = Drugagmp.objects.all().annotate(frequency=Count('drugs')).order_by("-frequency")[:10]
+    qs_drug = Drugagmp.objects.exclude(drug_name="").annotate(frequency=Count('drugs')).order_by("-frequency")[:10]
     qs_gene = Geneagmp.objects.all().annotate(frequency=Count('variantagmp__studyagmp')).order_by("-frequency")[:10]
     qs_variant = Variantagmp.objects.all().values('rs_id').annotate(frequency=Count('studyagmp')).order_by("-frequency")[:10]
     qs_disease = Phenotypeagmp.objects.all().values('name').annotate(frequency=Count('variantagmp')).order_by("-frequency")[:10]
