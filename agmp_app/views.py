@@ -303,10 +303,12 @@ class DiseaseVariantDetailView(DetailView):
             phenotypeagmp__name=phenotypeagmp__name).values("phenotypeagmp__name").distinct()[0]
        
        
-        context['object_list'] = VariantStudyagmp.objects.select_related().filter(
+        context['object_list1'] = VariantStudyagmp.objects.select_related().filter(
             variantagmp__phenotypeagmp__name__iregex=r"\b{0}\b".format(str(phenotypeagmp__name))).exclude(variantagmp__source_db="PharmGKB")
        
-    
+        context['object_list'] = VariantStudyagmp.objects.select_related().filter(
+            variantagmp__phenotypeagmp__name__iexact=phenotypeagmp__name).exclude(variantagmp__source_db="PharmGKB")
+       
 
         #context['object_list_diseases'] = VariantStudyagmp.objects.select_related().filter(variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="PharmGKB")
         
