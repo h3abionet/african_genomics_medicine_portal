@@ -27,9 +27,12 @@
 
   {% comment %} css for graphs {% endcomment %}
 
+
   {% comment %} css for graphs {% endcomment %}
   
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 
 {% leaflet_js %}
 {% endblock %}
@@ -39,7 +42,7 @@
 
 {% block scripts %}
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+
 
 <script>
   ///graph1
@@ -363,40 +366,77 @@
 
     </div>
 
+  {% comment %} graph section {% endcomment %}
 
+<br>
 
-    <div class="mt-4">
-     <span> Top Ten Drugs</span>
-    <canvas id="myChart01" width="200" height="100"></canvas>
+  <ul id="clothing-nav" class="nav nav-tabs" role="tablist">
+    
+    <li class="nav-item">
+      <a class="nav-link active" href="#home" id="home-tab" role="tab"
+        data-toggle="tab" aria-controls="home" aria-expanded="true"> Top Ten Drugs</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-link" href="#hats" role="tab" id="hats-tab"
+        data-toggle="tab" aria-controls="hats"> Top Ten Genes</a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" href="#hats01" role="tab" id="hats-tab01"
+        data-toggle="tab" aria-controls="hats"> Top Ten Variants</a>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" href="#hats02" role="tab" id="hats-tab02"
+        data-toggle="tab" aria-controls="hats">Top Ten Diseases</a>
+    </li>
+
+    
+  </ul>
+  
+  
+  <!-- Панель содержимого -->
+  
+  
+  <div id="clothing-nav-content" class="tab-content">
+    
+    <div role="tabpanel" class="tab-pane fade show active" id="home" aria-labelledby="home-tab">
+      <canvas id="myChart01" width="200" height="100"></canvas>
+    </div>
+    
+    <div role="tabpanel" class="tab-pane fade" id="hats" aria-labelledby="hats-tab">
+      <canvas id="myChart02" width="200" height="100"></canvas>
+    </div>
+    
+    <div role="tabpanel" class="tab-pane fade" id="hats01" aria-labelledby="hats-tab01">
+      <canvas id="myChart03" width="200" height="100"></canvas>
     </div>
 
-    <div class="">
-      <span> Top Ten Genes</span>
-    <canvas id="myChart02" width="200" height="100"></canvas>
+
+    <div role="tabpanel" class="tab-pane fade" id="hats02" aria-labelledby="hats-tab02">
+      <canvas id="myChart04" width="300" height="100"></canvas>
+    </div>
+
   </div>
-
-
-
-  <div class="">
-    <span> Top Ten Variants</span>
-    <canvas id="myChart03" width="200" height="100"></canvas>
-  </div>
-
-  <div class="">
-    <span> Top Ten Diseases</span>
-    <canvas id="myChart04" width="300" height="100"></canvas>
-  </div>
-  {% comment %} graph section {% endcomment %}
-
+  
+  
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
   
 
   {% comment %} graph section {% endcomment %}
   
 
-  </div>
+   
+  
 
 
-</div>
+
+
+
+
 
 
 </div>
@@ -408,15 +448,10 @@
 
 
 
-  <script>
-    var map = L.map('map').setView([51.505, -0.09], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+<script>
 
-    {% for location in locations %}
-        L.marker([{{ location.latitude }}, {{ location.longitude }}]).addTo(map)
-            .bindPopup('{{ location.name }}');
-    {% endfor %}
+
+
+    
 </script>
 
