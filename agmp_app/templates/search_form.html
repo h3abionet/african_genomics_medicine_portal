@@ -80,7 +80,7 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
     {% if search_option == "Variantagmp" %}
    
             {% for result in results %}
-                <b>rs ID: </b>{{ result.rs_id}}<br>
+                <b>Variant ID: </b>{{ result.rs_id}}<br>
                 <b>Chromosome: </b>{{result.geneagmp__chromosome}}<br>
                 <b>Gene: </b>{{ result.geneagmp__gene_id}}<br>
                 <a href="{% url 'Var_Drug_Assoc' result.rs_id %}" target="_blank">Variant-Drug Associations </a> <br>
