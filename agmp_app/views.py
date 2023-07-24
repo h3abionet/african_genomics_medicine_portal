@@ -35,14 +35,9 @@ def summary(request):
     qs_gene = Geneagmp.objects.all().annotate(frequency=Count('variantagmp__studyagmp')).order_by("-frequency")[:10]
     qs_variant = Variantagmp.objects.all().values('rs_id').annotate(frequency=Count('studyagmp')).order_by("-frequency")[:10]
     qs_disease = Phenotypeagmp.objects.exclude(variantagmp__source_db="PharmGKB").values('name').annotate(frequency=Count('variantagmp')).order_by("-frequency")[:10]
-    #step1
-    #qs_drug_1 = Drugagmp.objects.all().annotate(frequency=Count("drugv")).order_by("-frequency")[:10]
-    qs_drug_1 = Drugagmp.objects.annotate(frequency=Count("drugs")).order_by("-frequency")[:10]
-   
-    # Example from django documentation
-    # The top 5 publishers, in order by number of books.
-    # pubs = Publisher.objects.annotate(num_books=Count("book")).order_by("-num_books")[:5]
 
+  
+   
 
     context = { 'gene_count': gene_count,'drug_count': drug_count,'variant_count': variant_count,'disease_count': disease_count,
                'qs_drug': qs_drug,'qs_gene': qs_gene,'qs_variant': qs_variant,'qs_disease': qs_disease,}
@@ -57,7 +52,7 @@ def search_all(request):
             search_query = form.cleaned_data['search_query']
             
             if search_option == 'Variantagmp':
-                results = Variantagmp.objects.filter(rs_id__icontains=search_query).values("rs_id").distinct()
+                results = Variantagmp.objects.filter(rs_id__icontains=search_query).values("rs_id","geneagmp__gene_id","geneagmp__chromosome").distinct()
             elif search_option == 'Geneagmp':
                 results = Geneagmp.objects.filter(gene_id__icontains=search_query)
             elif search_option == 'Drugagmp':
