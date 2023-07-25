@@ -23,15 +23,14 @@
 <!-- Initialize DataTables -->
 
 
-<h3>{{data_varagmp_rsid.rs_id}} </h3><hr>
+<h3>{{rs_id_display.rs_id}} </h3><hr>
 
-<p><b>Variant ID</b>: {{data_varagmp_rsid.rs_id}}</p>
+<p><b>Variant ID</b>: {{rs_id_display.rs_id}}</p>
 
-{% comment %} <p><b>Variant type </b>: {{data_varagmp_vartype.variant_type}}</p> {% endcomment %}
 
-{% comment %} <p><b>Gene: </b> <a href="/PhamacogeneDrugAssoc/{{data_varagmp_gene.geneagmp__gene_id}}" target="_blank">{{data_varagmp_gene.geneagmp__gene_id}}</a></p> 
+ <p><b>Gene: </b> <a href="/PhamacogeneDrugAssoc/{{gene_id_display.geneagmp__gene_id}}" target="_blank">{{gene_id_display.geneagmp__gene_id}}</a></p> 
 
-<p><b>Chromosome</b>: {{data_varagmp_chromosome.geneagmp__chromosome}}</p> {% endcomment %}
+ <p><b>Chromosome</b>: {{chromosome_display.geneagmp__chromosome}}</p> 
 
 
 <p><h3>Variant-Drug Associations</h3></p>
