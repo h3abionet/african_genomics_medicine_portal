@@ -146,9 +146,9 @@ class VarDrugAssocDetailView(DetailView):
         context = super(VarDrugAssocDetailView, self).get_context_data(**kwargs)
         rs_id = self.kwargs.get(self.pk_url_kwarg)
           
-        context['gene_id_display'] = Variantagmp.objects.values("geneagmp__gene_id").get(rs_id=rs_id)
-        context['chromosome_display'] = Variantagmp.objects.values("geneagmp__chromosome").get(rs_id=rs_id)
-        context['rs_id_display'] = Variantagmp.objects.values("rs_id").get(rs_id=rs_id)
+        context['gene_id_display'] = Variantagmp.objects.values("geneagmp__gene_id").filter(rs_id=rs_id).first()
+        context['chromosome_display'] = Variantagmp.objects.values("geneagmp__chromosome").filter(rs_id=rs_id).first()
+        context['rs_id_display'] = Variantagmp.objects.values("rs_id").filter(rs_id=rs_id).first()
   
 
         #back up query
@@ -177,13 +177,11 @@ class VariantDiseaseAssocDetailView(DetailView):
         context = super(VariantDiseaseAssocDetailView, self).get_context_data(**kwargs)
         rs_id = self.kwargs.get(self.pk_url_kwarg)
      
-        context['rs_id_display'] = Variantagmp.objects.values("rs_id").get(rs_id=rs_id)
+        context['rs_id_display'] = (Variantagmp.objects.values("rs_id").filter(rs_id=rs_id))[0]
 
-        context['drug_name_display'] = Variantagmp.objects.values("drugagmp__drug_name").get(rs_id=rs_id)
+        context['gene_name_display'] = Variantagmp.objects.values("geneagmp__gene_id").filter(rs_id=rs_id).first()
 
-        context['drug_bank_id_display'] = Variantagmp.objects.values("drugagmp__drug_bank_id").get(rs_id=rs_id)
-
-        context['indication_display'] = Variantagmp.objects.values("drugagmp__indication").get(rs_id=rs_id)
+        context['chromosome_display'] = Variantagmp.objects.values("geneagmp__chromosome").filter(rs_id=rs_id).first()
 
         context['object_list'] = VariantStudyagmp.objects.filter(
             variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="PharmGKB")
