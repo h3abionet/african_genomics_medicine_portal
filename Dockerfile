@@ -1,28 +1,40 @@
-# syntax=docker/dockerfile:1
-FROM python:3
+# reference a linux image to avoid associated dependancies issues with pip
 
-ENV PYTHONDONTWRITEBYTECODE=1
+FROM --platform=linux/amd64 python:3.9.13-alpine3.15
+
+
+LABEL maintainer="mtrper001@myuct.ac.za"
+
+
 ENV PYTHONUNBUFFERED=1
+   
 
-RUN mkdir /agp
+COPY ./requirements.txt /requirements.txt
+COPY ./african_genomics_medicine_portal /african_genomics_medicine_portal
+COPY ./scripts /scripts
 
-WORKDIR /agp
-COPY requirements.txt /agp
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    binutils \
-    libproj-dev \
-    libgdal-dev \
-    gdal-bin \
-    g++
+WORKDIR /african_genomics_medicine_portal
+EXPOSE 8000
+RUN apk add vim
+RUN python -m venv /py && \
+    /py/bin/pip install --upgrade pip && \
+    apk add --update --no-cache --virtual .tmp-deps \
+        build-base musl-dev linux-headers && \
+    /py/bin/pip install -r /requirements.txt && \
+    apk del .tmp-deps && \
+    adduser --disabled-password --no-create-home -D african_genomics_medicine_portal && \
+    mkdir -p /vol/web/static && \
+    mkdir -p /vol/web/media && \
+    chown -R african_genomics_medicine_portal:african_genomics_medicine_portal /vol && \
+    chmod -R 755 /vol && \
+    chmod -R +x /scripts
 
-ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
-ENV C_INCLUDE_PATH=/usr/include/gdal
-
-RUN python -m pip install --upgrade pip
-RUN python -m pip install -r requirements.txt
 
 
-COPY . /agp
+ENV PATH="/scripts:/py/bin:$PATH"
 
-RUN python manage.py migrate
+ENV PATH="/py/bin:$PATH"
+
+USER african_genomics_medicine_portal
+
+CMD ["run.sh"]

@@ -1,0 +1,59 @@
+version: "3"
+
+services:
+  african_genomics_medicine_portal:
+    container_name: agmp_django_code_container
+    build:
+      context: .
+    restart: always
+    volumes:
+      - static-data:/vol/web
+    environment:
+      - DB_HOST=db
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+    depends_on:
+      - db
+
+  db:
+    container_name: agmp_postgres_container
+    image: postgres:13-alpine
+    restart: always
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+
+  pgadmin:
+    container_name: agmp_pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+
+    ports:
+      - 5111:80
+    depends_on:
+      - db
+
+  proxy:
+    container_name: agmp_nginx_proxy_container
+    build:
+      context: ./proxy
+    restart: always
+    depends_on:
+      - african_genomics_medicine_portal
+    ports:
+      - 8111:8000
+    volumes:
+      - static-data:/vol/static
+   
+volumes:
+  postgres-data:
+  static-data:

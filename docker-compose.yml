@@ -1,33 +1,49 @@
 version: '3'
 
 services:
-    djangoapp:
-        restart: unless-stopped
-        image: agmp
-        container_name: agmp_instance
-        build: .
-        command: python manage.py runserver 0.0.0.0:8000
-        #`command: tail -f /dev/null
-        volumes:
-            - .:/agp
-        ports:
-            - 8008:8000
-        networks:  # <-- here
-        - nginx_network
-    
-    nginx:
-        restart: unless-stopped
-        image: nginx:1.13
-        container_name: agmp_nginx_instance
-        volumes:
-            - ./config/nginx/conf.d:/etc/nginx/conf.d
-        ports:
-            - 8000:80
-        depends_on:  # <-- wait for djangoapp to be "ready" before starting this service
-            - djangoapp
-        networks:  # <-- here
-            - nginx_network
+  african_genomics_medicine_portal:
+    container_name: agmp_djangocode_container
+    build:
+      context: .
+    command: >
+        sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - 8000:8000
+    volumes:
+      - ./african_genomics_medicine_portal:/african_genomics_medicine_portal
+      - ./data/web:/vol/web
+    environment:
+      - SECRET_KEY=devsecretkey
+      - DEBUG=1
+      - DB_HOST=db
+      - DB_NAME=devdb
+      - DB_USER=devuser
+      - DB_PASS=changeme 
+    depends_on:
+      - db
+  db:
+    container_name: agmp_postgres_container
+    image: postgres:13-alpine
+    environment:
+      - POSTGRES_DB=devdb
+      - POSTGRES_USER=devuser
+      - POSTGRES_PASSWORD=changeme
 
-networks:  # <-- and here
-  nginx_network:
-    driver: bridge
+  pgadmin:
+    container_name: agmp_pgadmin4_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - 5111:80
+    depends_on:
+      - db
+
+volumes:
+  postgres-data:
+  static-data:
+
+

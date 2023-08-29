@@ -48,6 +48,74 @@ Project will now be running on the server.
 
 
 
-# Data import run job
+# Data injest from csv
 
 * python3 manage.py runscript load_data
+
+
+# Docker commands in dev 
+
+$ docker-compose build
+
+1. Makemigrations: 
+$ docker-compose run --rm african_genomics_medicine_portal sh -c "python manage.py makemigrations"
+
+2. Migrate: 
+$ docker-compose run --rm african_genomics_medicine_portal sh -c "python manage.py migrate"
+
+3. Create superuser: 
+$ docker-compose run --rm african_genomics_medicine_portal sh -c "python manage.py createsuperuser"
+
+4. Data injest: 
+$ docker-compose run --rm african_genomics_medicine_portal sh -c "python3 manage.py runscript load_data"
+
+$ docker-compose up
+
+
+# Django operations in Docker Production environment
+
+1. Create superuser: 
+$ docker-compose -f docker-compose-deploy.yml run --rm african_genomics_medicine_portal sh -c "python manage.py createsuperuser"
+
+2. Makemigrations: 
+$ docker-compose -f docker-compose-deploy.yml run --rm african_genomics_medicine_portal sh -c "python manage.py makemigrations"
+
+3. Migrate: 
+$ docker-compose -f docker-compose-deploy.yml run --rm african_genomics_medicine_portal sh -c "python manage.py migrate"
+
+
+** the /scripts directory is added to the git ignore file so all scripts will have to be manually added to the server. (load_data.py)
+
+$ docker-compose -f docker-compose-deploy.yml run --rm african_genomics_medicine_portal sh -c "python3 manage.py runscript load_data"
+
+
+# Docker in dev
+
+
+
+# Docker in prod
+
+$ docker-compose -f docker-compose-deploy.yml build
+
+$ docker-compose -f docker-compose-deploy.yml up -d
+
+
+# Docker containers
+
+1. agmp_nginx_proxy_container
+    - proxy
+2. agmp_djangocode_container
+    - this is a container with the code base
+3. agmp_postgres_container
+    - this is a db container
+
+
+### Docker bash on container
+
+1. $ docker exec -it container_id sh 
+
+### Docker bash as root on a container
+
+1.  docker exec -u 0 -it container_id sh | where 0 represents user with root priviledges
+
+   
