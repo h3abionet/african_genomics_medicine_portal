@@ -42,9 +42,9 @@ Project will now be running on the server.
 
 # Screen shots of tabular presentation of PharmaGKb data
 
-![](images/drug.png?raw=true)
-![](images/snp.png?raw=true)
-![](images/snp_ethnic.png?raw=true)
+![](african_genomics_medicine_portal/images/drug.png?raw=true)
+![](african_genomics_medicine_portal/images/snp.png?raw=true)
+![](african_genomics_medicine_portal/images/snp_ethnic.png?raw=true)
 
 
 
@@ -83,14 +83,7 @@ $ docker-compose -f docker-compose-deploy.yml run --rm african_genomics_medicine
 3. Migrate: 
 $ docker-compose -f docker-compose-deploy.yml run --rm african_genomics_medicine_portal sh -c "python manage.py migrate"
 
-
-** the /scripts directory is added to the git ignore file so all scripts will have to be manually added to the server. (load_data.py)
-
 $ docker-compose -f docker-compose-deploy.yml run --rm african_genomics_medicine_portal sh -c "python3 manage.py runscript load_data"
-
-
-# Docker in dev
-
 
 
 # Docker in prod
@@ -104,7 +97,7 @@ $ docker-compose -f docker-compose-deploy.yml up -d
 
 1. agmp_nginx_proxy_container
     - proxy
-2. agmp_djangocode_container
+2. agmp_django_code_container
     - this is a container with the code base
 3. agmp_postgres_container
     - this is a db container
