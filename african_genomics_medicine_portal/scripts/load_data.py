@@ -11,7 +11,7 @@ from agmp_app.models import Variantagmp, Drugagmp, Geneagmp, Studyagmp, Phenotyp
 
 def run():
 
-    fhand = open('csv/agmp_import_12_aug_23.csv',encoding='latin-1')
+    fhand = open('csv/final_agmp_import_05_sept_23.csv',encoding='latin-1')
     # fhand = open('csv/data_AGMP_NotesRemoved.csv',encoding='latin-1')
     reader = csv.reader(fhand)
     next(reader)  # Advance past the header
@@ -23,17 +23,26 @@ def run():
     Phenotypeagmp.objects.all().delete()
     VariantStudyagmp.objects.all().delete()
     
-    print("Import running ....")
+    # print("Import running ....")
     for row in reader:
-        # print("Import running ....")
-        # print(row)
+      
+        print(row)
         p, created = Phenotypeagmp.objects.get_or_create(name=row[2])
         s, created = Studyagmp.objects.get_or_create(data_ac=row[15], publication_id=row[1], publication_year=row[19], study_type=row[9], title=row[17], publication_type=row[16])
         d, created = Drugagmp.objects.get_or_create(drug_name=row[23], indication=row[26], drug_bank_id=row[24], iupac_name_seq=row[27],state=row[25])
         g, created = Geneagmp.objects.get_or_create(gene_name=row[11],gene_id=row[10],chromosome=row[12],function=row[14],uniprot_ac=row[13])
         v = Variantagmp(studyagmp=s,drugagmp=d,phenotypeagmp=p, geneagmp=g, source_db=row[20], id_in_source_db=row[2], variant_type=row[21], rs_id=row[0],)
         v.save()
-        vs = VariantStudyagmp(studyagmp=s,variantagmp=v,country_participant=row[3], country_participant_01=row[29],country_participant_02=row[30],country_participant_03=row[31],country_participant_04=row[32],country_participant_05=row[33],country_participant_06=row[34],country_participant_07=row[35], geographical_regions=row[4], p_value=row[7], ethnicity=row[5], notes=row[28])
+        vs = VariantStudyagmp(studyagmp=s,variantagmp=v,country_participant=row[3], country_participant_01=row[29],country_participant_02=row[30],country_participant_03=row[31],country_participant_04=row[32],country_participant_05=row[33],country_participant_06=row[34],country_participant_07=row[35], geographical_regions=row[4], p_value=row[7], ethnicity=row[5], notes=row[28],
+                               latitude_01=row[36],longitude_01=row[37],
+                               latitude_02=row[38],longitude_02=row[39],
+                               latitude_03=row[40],longitude_03=row[41],
+                               latitude_04=row[42],longitude_04=row[43],
+                               latitude_05=row[44],longitude_05=row[45],
+                               latitude_06=row[46],longitude_06=row[47],
+                               latitude_07=row[48],longitude_07=row[49],
+                               
+                               )
         vs.save()
 
 
