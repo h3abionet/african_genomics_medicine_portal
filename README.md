@@ -53,7 +53,7 @@ Project will now be running on the server.
 * python3 manage.py runscript load_data
 
 
-# Docker commands in dev 
+# Django operations in Docker Development
 
 $ docker-compose build
 
@@ -72,7 +72,7 @@ $ docker-compose run --rm african_genomics_medicine_portal sh -c "python3 manage
 $ docker-compose up
 
 
-# Django operations in Docker Production environment
+# Django operations in Docker Production 
 
 1. Create superuser: 
 $ docker-compose -f docker-compose-deploy.yml run --rm african_genomics_medicine_portal sh -c "python manage.py createsuperuser"

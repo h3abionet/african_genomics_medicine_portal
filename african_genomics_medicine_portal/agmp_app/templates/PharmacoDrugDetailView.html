@@ -25,7 +25,7 @@
 
 <p><b>Gene:</b> {{data.gene_id}}</p>
 
-<p><b>Uniprot ID:</b> <a href="https://www.uniprot.org/uniprotkb/{{data.uniprot_ac}}/entry" target="_blank">{{data.uniprot_ac}}</a></p>
+<p><b>Uniprot ID:</b> <a href="https://www.uniprot.org/uniprotkb/{{data.uniprot_ac}}/entry">{{data.uniprot_ac}}</a></p>
 
 <p><b>Function:</b> {{data.function}} </p>
 
@@ -47,11 +47,11 @@
      {% for my_object in object_list %}
       <tr>
           <td>{{my_object.variantagmp.rs_id}}</td>
-          <td><a href="https://go.drugbank.com/drugs/{{my_object.variantagmp.drugagmp.drug_bank_id}}" target="_blank">{{my_object.variantagmp.drugagmp.drug_name}}</a>
+          <td><a href="https://go.drugbank.com/drugs/{{my_object.variantagmp.drugagmp.drug_bank_id}}">{{my_object.variantagmp.drugagmp.drug_name}}</a>
           </td>
           <td>{{my_object.variantagmp.phenotypeagmp.name}}</td>
           <td>{{my_object.p_value}}</td>
-          <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}" target="_blank">{{my_object.studyagmp.publication_id}}</a></td>
+          <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}" >{{my_object.studyagmp.publication_id}}</a></td>
           <td>{{my_object.geographical_regions}}</td>
           <td>{{my_object.country_participant}}</td>
           
@@ -87,7 +87,7 @@
               <td>{{my_object.variantagmp.phenotypeagmp.name }}</td>
               <td>{{my_object.p_value}}
               </td>
-              <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}" target="_blank">{{my_object.studyagmp.publication_id}}</a></td>
+              <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}">{{my_object.studyagmp.publication_id}}</a></td>
               <td>{{my_object.geographical_regions}}</td>
               <td>{{my_object.country_participant}}</td>
            
