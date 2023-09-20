@@ -24,6 +24,8 @@ import re
 
 
 
+
+
 def summary(request):
     gene_count=Geneagmp.objects.all().count()
     drug_count=Drugagmp.objects.all().count()
@@ -127,6 +129,7 @@ def summary(request):
 
 
 def search_all(request):
+    
     if request.method == 'POST':
         form = SearchForm(request.POST)
         if form.is_valid():
@@ -144,11 +147,22 @@ def search_all(request):
                 #second_initial_query_results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__contains=search_query).filter(phenotypeagmp__isnull=False).values("phenotypeagmp__name").distinct()
                 results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__icontains=search_query).values("phenotypeagmp__name").distinct()
                      
-            return render(request, 'search_form.html', {'form': form, 'results': results, 'search_option':search_option})
+            return render(request, 'search_form.html', {'form': form, 'results': results, 'search_option':search_option })
     else:
         form = SearchForm()
         
     return render(request, 'search_form.html', {'form': form})
+
+
+def autocomplete_search(request):
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            query = request.GET.get('term', '')
+            # search_query = form.cleaned_data['search_query']
+            results =  Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__icontains=search_query).values("phenotypeagmp__name").distinct()
+            suggestions = [result.phenotypeagmp__name for result in results]
+            return JsonResponse(suggestions, safe=False)
 
 
  #################### Variant Drug Details 1 ################################

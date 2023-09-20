@@ -4,16 +4,19 @@
 {% load static %}
 
 
-
-{% block title%}Search{% endblock %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">  
+    </script>  
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">  
+    </script>  
+    
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css" rel="stylesheet" type="text/css" />  
+{% block title %}Search{% endblock %}
 
 {% block js %}
-<script src="{% static 'js/search.js' %}" type="text/JavaScript"></script>
+{% comment %} <script src="{% static 'js/search.js' %}" type="text/JavaScript"></script> {% endcomment %}
 {% endblock %}
 
-{% comment %}
-https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4-forms-with-django.html
-{% endcomment %}
 
 
 
@@ -24,10 +27,9 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
 
 {% endblock %}
 {% block content %}
+
+
 <style>    
-
-
-
 
 
 .centered-columns {
@@ -60,7 +62,7 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
 
         <div class="row centered-columns mt-3 mb-3 ml-7">
 
-            <div class="col-md-9 col-sm-9 text-center ">{{ form.search_query}}</div>
+            <div class="col-md-9 col-sm-9 text-center" onkeyup="search_animal()">{{ form.search_query}}</div>
             <div class="col-md-3 col-sm-3 text-center ">
                 <button class= "btn btn-success btn-sm" type="submit">Search</button> </div>
 
@@ -75,7 +77,11 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
     </div>
 </form>
 
-<div class="text-left">
+
+
+<input type="text" id="search-input">
+<ul id="suggestions"></ul>
+
 
     {% if search_option == "Variantagmp" %}
    
@@ -122,10 +128,11 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
   {% elif search_option == "Disease" %}
 
             {% for result in results %}
-        
-            {% comment %} <b></b>{{result.id}}<br>     {% endcomment %}
+          
                 <b></b>{{result.phenotypeagmp__name}}<br>
-              <a href="{% url 'DiseaseVariant' result.phenotypeagmp__name %}">Variant-Disease Associations</a><br><hr>
+              
+                 <a href="{% url 'DiseaseVariant' result.phenotypeagmp__name %}">Variant-Disease Associations</a><br><hr>
+
 
               {% empty %}
               <p>No results found.</p>
@@ -144,3 +151,28 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
 </div>
 
         {% endblock %}
+
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#search-input').on('input', function() {
+                    var query = $(this).val();
+                    $.ajax({
+                        url: '/autocomplete-search/',
+                        data: {
+                            'term': query
+                        },
+                        success: function(data) {
+                            var suggestions = $('#suggestions');
+                            suggestions.empty();
+                            $.each(data, function(index, item) {
+                                suggestions.append('<li>' + item + '</li>');
+                            });
+                        }
+                    });
+                });
+            });
+        </script>
+        
+
