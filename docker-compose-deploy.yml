@@ -15,6 +15,7 @@ services:
       - DB_PASS=${DB_PASS}
       - SECRET_KEY=${SECRET_KEY}
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+
   # Commented postgres database configurations for future use or when need arises
   #   depends_on:
   #     - db
@@ -48,12 +49,13 @@ services:
     build:
       context: ./proxy
     restart: always
-    depends_on:
-      - african_genomics_medicine_portal
+    # depends_on:
+    #   - african_genomics_medicine_portal
     ports:
       - 8111:8000
     volumes:
       - static-data:/vol/static
+
    
 volumes:
   postgres-data:
