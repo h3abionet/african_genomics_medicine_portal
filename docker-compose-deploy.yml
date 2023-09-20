@@ -2,7 +2,7 @@ version: "3"
 
 services:
   african_genomics_medicine_portal:
-    container_name: agmp_django_code_container
+    container_name: agmp_djangocode_container
     build:
       context: .
     restart: always
