@@ -7,7 +7,6 @@ whitenoise
 gunicorn
 pillow==9.1.1
 asgiref==3.5.2
-psycopg2-binary
 uWSGI>=2.0.19.1,<2.1
 geopy
 numpy

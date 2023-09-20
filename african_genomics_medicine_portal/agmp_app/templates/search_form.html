@@ -79,10 +79,6 @@
 
 
 
-<input type="text" id="search-input">
-<ul id="suggestions"></ul>
-
-
     {% if search_option == "Variantagmp" %}
    
             {% for result in results %}
@@ -153,26 +149,9 @@
         {% endblock %}
 
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+   
         <script>
-            $(document).ready(function() {
-                $('#search-input').on('input', function() {
-                    var query = $(this).val();
-                    $.ajax({
-                        url: '/autocomplete-search/',
-                        data: {
-                            'term': query
-                        },
-                        success: function(data) {
-                            var suggestions = $('#suggestions');
-                            suggestions.empty();
-                            $.each(data, function(index, item) {
-                                suggestions.append('<li>' + item + '</li>');
-                            });
-                        }
-                    });
-                });
-            });
+
         </script>
         
 

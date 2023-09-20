@@ -20,27 +20,29 @@ services:
       - DB_NAME=devdb
       - DB_USER=devuser
       - DB_PASS=changeme 
-    depends_on:
-      - db
-  db:
-    container_name: agmp_postgres_container
-    image: postgres:13-alpine
-    environment:
-      - POSTGRES_DB=devdb
-      - POSTGRES_USER=devuser
-      - POSTGRES_PASSWORD=changeme
 
-  pgadmin:
-    container_name: agmp_pgadmin4_container
-    image: dpage/pgadmin4
-    restart: always
-    environment:
-      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
-      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
-    ports:
-      - 5111:80
-    depends_on:
-      - db
+  # Commented if postgress is going to be used in future
+  #   depends_on:
+  #     - db
+  # db:
+  #   container_name: agmp_postgres_container
+  #   image: postgres:13-alpine
+  #   environment:
+  #     - POSTGRES_DB=devdb
+  #     - POSTGRES_USER=devuser
+  #     - POSTGRES_PASSWORD=changeme
+
+  # pgadmin:
+  #   container_name: agmp_pgadmin4_container
+  #   image: dpage/pgadmin4
+  #   restart: always
+  #   environment:
+  #     - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+  #     - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+  #   ports:
+  #     - 5111:80
+  #   depends_on:
+  #     - db
 
 volumes:
   postgres-data:

@@ -154,15 +154,6 @@ def search_all(request):
     return render(request, 'search_form.html', {'form': form})
 
 
-def autocomplete_search(request):
-    if request.method == 'POST':
-        form = SearchForm(request.POST)
-        if form.is_valid():
-            query = request.GET.get('term', '')
-            # search_query = form.cleaned_data['search_query']
-            results =  Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__icontains=search_query).values("phenotypeagmp__name").distinct()
-            suggestions = [result.phenotypeagmp__name for result in results]
-            return JsonResponse(suggestions, safe=False)
 
 
  #################### Variant Drug Details 1 ################################

@@ -31,7 +31,7 @@ DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'agmp.h3abionet.org','85.159.209.149',
+    'agmp.h3abionet.org','85.159.209.149','dockerhost02.cbio.uct.ac.za',
 ]
 
 ADMIN_URL = "accounts/login/"
@@ -93,14 +93,22 @@ WSGI_APPLICATION = 'african_genomics_medicine_portal.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.environ.get('DB_HOST'),
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASS'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
-
 }
+
+#postgres db settings if postgress has to be used
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'HOST': os.environ.get('DB_HOST'),
+#         'NAME': os.environ.get('DB_NAME'),
+#         'USER': os.environ.get('DB_USER'),
+#         'PASSWORD': os.environ.get('DB_PASS'),
+#     }
+
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators

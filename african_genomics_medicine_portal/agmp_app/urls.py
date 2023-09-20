@@ -3,7 +3,7 @@ from django.urls import path, re_path, include
 # from core.views import BootstrapFilterView
 from . import views
 from .views import (DrugDetailView,PharmacoDrugDetailView, DrugagmpDetailView, VariantStudyagmpListView, PhamacogeneDrugAssoc, VarDrugAssocDetailView, VvarDrugAssocDetailView, VarDisAssocDetailView, VariantDiseaseAssocDetailView,
-                    VariantDrugAssociationDetailView, DiseaseVariantDetailView, autocomplete_search)
+                    VariantDrugAssociationDetailView, DiseaseVariantDetailView)
 
 
 
@@ -73,7 +73,7 @@ urlpatterns = [
 
      ##### New URLS for data tables ######
 
-      path('autocomplete-search/', autocomplete_search, name='autocomplete_search'),
+  
 ]
 
 
