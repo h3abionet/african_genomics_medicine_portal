@@ -1,0 +1,143 @@
+{% extends "mainLayout.html" %}
+{% load crispy_forms_tags %}
+{% load bootstrap4 %}
+{% load static %}
+
+
+
+{% block title%}Search{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/search.js' %}" type="text/JavaScript"></script>
+{% endblock %}
+
+{% comment %}
+https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4-forms-with-django.html
+{% endcomment %}
+
+
+
+{% block banner %}
+
+
+{% include 'partials/banner_search.html' %}
+
+{% endblock %}
+{% block content %}
+<style>    
+
+
+
+
+
+.centered-columns {
+    display: flex;
+    justify-content: center;
+  }
+
+  #id_search_query{
+    width:100%;
+  }
+  .btn{
+    width:100%;
+  }
+ 
+ </style>
+<!-- search.html -->
+<form method="post" action="{% url 'search_results' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Search</button>
+</form>
+
+ <!--<div class="text-left">
+
+    {% if search_option == "Variantagmp" %}
+   
+            {% for result in results %}
+                <b>Variant ID: </b>{{ result.rs_id}}<br>
+                <b>Chromosome: </b>{{result.geneagmp__chromosome}}<br>
+                <b>Gene: </b>{{ result.geneagmp__gene_id}}<br>
+                <a href="{% url 'Var_Drug_Assoc' result.rs_id %}">Variant-Drug Associations </a> <br>
+                <a href="{% url 'Variant_Disease_Assoc' result.rs_id %}">Variant-Disease Associations </a><br>
+                <hr>
+            {% empty %}
+                <p>No results found.</p>
+            
+            {% endfor %} 
+ 
+    {% elif search_option == "Geneagmp" %}
+ 
+            {% for result in results %}
+
+                <b>Gene </b>{{ result.gene_id}}<br>
+                <b>Chromosome: </b>{{result.chromosome}}<br>
+                <a href="{% url 'PhamacogeneDrugAssoc' result.gene_id %}">Gene Associations </a> <br><hr>
+            {% empty %}
+                <p>No results found.</p>
+
+            {% endfor %}   
+
+    {% elif search_option == "Drugagmp" %}
+
+            {% for result in results %}
+
+                <b></b>{{result.drug_name}}<br>
+                <b>Drug Bank ID: </b><a href="https://go.drugbank.com/drugs/{{result.drug_bank_id}}">{{result.drug_bank_id}}</a>
+                <br>
+                <b>State: </b>{{result.state}}<br>
+                <a href="{% url 'VariantDrugAssociation' result.drug_id %}">Varian-Drug Associations</a><br> 
+                <hr>
+
+            {% empty %}
+            <p>No results found.</p>
+
+            {% endfor %}   
+
+  {% elif search_option == "Disease" %}
+
+            {% for result in results %}
+        
+            {% comment %} <b></b>{{result.id}}<br>     {% endcomment %}
+                <b></b>{{result.phenotypeagmp__name}}<br>
+              <a href="{% url 'DiseaseVariant' result.phenotypeagmp__name %}">Variant-Disease Associations</a><br><hr>
+
+              {% empty %}
+              <p>No results found.</p>
+              
+            {% endfor %}  
+ 
+ 
+ 
+  {% else  %}
+          
+
+  {% endif %}
+ 
+ </div>
+
+</div> 
+ -->
+
+<!-- Add this script to your search.html template -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('form').on('submit', function(event) {
+            event.preventDefault();
+            const formData = $(this).serialize();
+            const url = $(this).attr('search_results');
+
+            $.post(url, formData, function(data) {
+                $('#search-results').html(data);
+            });
+        });
+    });
+</script>
+
+<div id="search-results">
+    <!-- Display search results here -->
+</div>
+
+
+        {% endblock %}

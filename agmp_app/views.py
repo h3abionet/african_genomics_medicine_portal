@@ -6,7 +6,7 @@ from django.core import serializers
 from itertools import chain
 
 from .models import disease, pharmacogenes, drug, snp as SnpModel, star_allele, study
-from .forms import PostForm, CountryDataFrom
+from .forms import PostForm, CountryDataFrom, SearchForm
 import json
 import folium
 import geocoder
@@ -19,9 +19,29 @@ from collections import Counter
 from django_pandas.io import read_frame
 
 
-# def index(request):
-#     return render(request, 'index.html')
-
+def search_all(request):
+    if request.method == 'POST':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            search_option = form.cleaned_data['search_option']
+            search_query = form.cleaned_data['search_query']
+            
+            if search_option == 'Variantagmp':
+                results = Variantagmp.objects.filter(rs_id__icontains=search_query).values("rs_id","geneagmp__gene_id","geneagmp__chromosome","variant_type").distinct()
+            elif search_option == 'Geneagmp':
+                results = Geneagmp.objects.filter(gene_id__icontains=search_query)
+            elif search_option == 'Drugagmp':
+                results = Drugagmp.objects.filter(drug_name__icontains=search_query)
+            elif search_option == 'Disease':
+                #initial_query_results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__contains=search_query)
+                #second_initial_query_results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__contains=search_query).filter(phenotypeagmp__isnull=False).values("phenotypeagmp__name").distinct()
+                results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__icontains=search_query).values("phenotypeagmp__name").distinct()
+                     
+            return render(request, 'search_form.html', {'form': form, 'results': results, 'search_option':search_option})
+    else:
+        form = SearchForm()
+        
+    return render(request, 'search_form.html', {'form': form})
 
 def about(request):
     return render(request, 'about.html')

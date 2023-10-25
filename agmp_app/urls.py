@@ -6,7 +6,7 @@ from . import views
 urlpatterns = [
     # path('', views.home, name='index'),
     path('about', views.about, name='about'),
-    path('', views.search, name='search'),
+    path('', views.search_all, name='search_v'),  
     path('home', views.home, name='home'),
 
     # call search query with optional parameters 

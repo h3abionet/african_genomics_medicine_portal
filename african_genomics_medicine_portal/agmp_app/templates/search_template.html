@@ -1,0 +1,106 @@
+{% extends "mainLayout.html" %}
+{% load crispy_forms_tags %}
+{% load bootstrap4 %}
+{% load static %}
+
+
+
+{% block title%}Search{% endblock %}
+
+{% block js %}
+
+{% endblock %}
+
+{% comment %}
+https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4-forms-with-django.html
+{% endcomment %}
+
+
+
+{% block banner %}
+
+
+{% include 'partials/banner_search.html' %}
+
+{% endblock %}
+{% block content %}
+<style>    
+
+.centered-columns {
+    display: flex;
+    justify-content: center;
+  }
+
+  #id_search_query{
+    width:100%;
+  }
+  .btn{
+    width:100%;
+  }
+ 
+ </style>
+
+<!-- search_template.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Content</title>
+</head>
+<body>
+    <form id="search-form" action={% 'search_template' %}  method="GET">
+        <select id="model-selector">
+            <option value="model1">Model 1</option>
+            <option value="model2">Model 2</option>
+        </select>
+        <input type="text" id="search-input" placeholder="Search...">
+    </form>
+    <div id="search-results"></div>
+    
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#search-form').submit(function (e) {
+                e.preventDefault();
+                let query = $('#search-input').val();
+                let selectedModel = $('#model-selector').val();
+    
+                $.ajax({
+                    type: 'GET',
+                    url: '/search/',
+                    data: {
+                        'query': query,
+                        'selected_model': selectedModel,
+                    },
+                    success: function (data) {
+                        let results = data.results;
+                        let resultsContainer = $('#search-results');
+                        resultsContainer.empty();
+                        results.forEach(function (result) {
+                            resultsContainer.append('<p>' + result + '</p>');
+                        });
+                    }
+                });
+            });
+    
+            // Trigger search as you type
+            $('#search-input').on('input', function () {
+                $('#search-form').submit();
+            });
+        });
+    </script>
+    
+    
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+{% endblock %}
