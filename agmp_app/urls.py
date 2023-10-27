@@ -2,12 +2,16 @@ from django.urls import path, re_path, include
 # from django.conf.urls import url
 
 from . import views
+from .views import (DrugagmpDetailView, VariantStudyagmpListView)
 
 urlpatterns = [
     # path('', views.home, name='index'),
     path('about', views.about, name='about'),
     path('', views.search_all, name='search_v'),  
     path('home', views.home, name='home'),
+    #new views
+    path('drug-detail/<int:pk>/', DrugagmpDetailView.as_view(), name='drug-detail'),
+    path('variant-drug-list/<int:pk>/',VariantStudyagmpListView.as_view(), name='variant-drug-list'),
 
     # call search query with optional parameters 
     path('search/<str:query_string>', views.query, kwargs={'disease': 0, 'drug': 0, 'variant': 0, 'gene': 0}, name='query'),

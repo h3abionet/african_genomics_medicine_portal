@@ -17,6 +17,9 @@ from django.db.models import Avg, Min, Max, Count, Q
 import pandas as pd
 from collections import Counter
 from django_pandas.io import read_frame
+from django.views.generic.detail import DetailView
+
+from django.views.generic import ListView
 
 
 def search_all(request):
@@ -42,6 +45,27 @@ def search_all(request):
         form = SearchForm()
         
     return render(request, 'search_form.html', {'form': form})
+
+
+
+ #################### Variant Drug Details 1 ################################
+
+class DrugagmpDetailView(DetailView):
+    model = Drugagmp
+    template_name = 'drugagmp_detail.html'  # Template to display the post details
+
+class VariantStudyagmpListView(ListView):
+    model = VariantStudyagmp
+    template_name = 'variantstudyagmp_list.html'  # Template to display the comment list
+
+    def get_queryset(self):
+        drug_id = self.kwargs['pk']  # Get the post id from URL parameter
+        return VariantStudyagmp.objects.filter(Variantagmp__drugagmp_icontains=drug_id)  # Filter comments by post id
+
+
+  
+ #################### Variant Drug Details ################################
+
 
 def about(request):
     return render(request, 'about.html')
