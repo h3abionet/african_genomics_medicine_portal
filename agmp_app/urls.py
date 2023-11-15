@@ -2,10 +2,16 @@ from django.urls import path, re_path, include
 # from django.conf.urls import url
 
 from . import views
-from .views import (DrugagmpDetailView, PhamacogeneDrugAssoc, VariantStudyagmpListView,VarDrugAssocDetailView,VvarDrugAssocDetailView,DiseaseVariantDetailView,VarDisAssocDetailView, PharmacoDrugDetailView,VariantDiseaseAssocDetailView,VariantDrugAssociationDetailView)
+from .views import (DrugagmpDetailView, PhamacogeneDrugAssoc, VariantStudyagmpListView,VarDrugAssocDetailView,VvarDrugAssocDetailView,DiseaseVariantDetailView,VarDisAssocDetailView, PharmacoDrugDetailView,VariantDiseaseAssocDetailView,VariantDrugAssociationDetailView,search_view,ModelAAutocomplete, ModelBAutocomplete, auto)
 
 urlpatterns = [
-    # path('', views.home, name='index'),
+
+
+     path('model_a_autocomplete/', ModelAAutocomplete.as_view(), name='model_a_autocomplete'),
+    path('model_b_autocomplete/', ModelBAutocomplete.as_view(), name='model_b_autocomplete'),
+        path('auto/', views.auto, name='auto'),
+    path('search_view/', views.search_view, name='search_view'),
+    path('autocomplete/', views.autocomplete, name='autocomplete'),
     path('about', views.about, name='about'),
     path('', views.search_all, name='search_v'),  
     path('home', views.home, name='home'),
@@ -51,8 +57,6 @@ urlpatterns = [
      ##### New URLS for data tables ######
 
     # call search query with optional parameters 
-    path('search/<str:query_string>', views.query, kwargs={'disease': 0, 'drug': 0, 'variant': 0, 'gene': 0}, name='query'),
-    path('search_details/<str:search_type>/<str:query_id>', views.search_details, name='search_details'),
     path('summary/', views.summary, name='summary'),
     path('summary/countries', views.country_summary, name='country_summary'),
     path('resources/', views.resources, name='resources'),

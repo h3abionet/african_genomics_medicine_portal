@@ -1,0 +1,55 @@
+{% extends "mainLayout.html" %}
+{% load static %}
+{% comment %} {% block title %} {% endcomment %}
+{% comment %} Welcome to the database {% endcomment %}
+{% comment %} {% endblock %} {% endcomment %}
+{% comment %} {% endcomment %}
+
+
+
+{% block banner %}
+
+
+{% include 'partials/banner_search.html' %}
+
+{% endblock %}
+{% block content %}
+
+
+<h1>Search Results</h1>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>   
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">   
+</script><link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css" rel="stylesheet" type="text/css" /> 
+
+<form method="get" action="">
+    {% csrf_token %}
+	<input type="text" id="search-input" placeholder="Search products">
+
+
+</form>
+
+<div id="search-results"></div>
+
+<!-- template.html -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#search-input').on('input', function() {
+        const query = $(this).val();
+
+        $.get('/search_product/', { query: query }, function(data) {
+            const resultsContainer = $('#search-results');
+            resultsContainer.empty();
+
+            data.forEach(function(item) {
+                const resultItem = $('<div>').text(item.name);
+                resultsContainer.append(resultItem);
+            });
+        });
+    });
+});
+</script>
+
+
+
+{% endblock %}

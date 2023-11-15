@@ -5,21 +5,81 @@ from django.http import FileResponse
 from django.core import serializers
 from itertools import chain
 
-from .models import disease, pharmacogenes, drug, snp as SnpModel, star_allele, study
-from .forms import PostForm, CountryDataFrom, SearchForm
+from .models import disease, pharmacogenes, drug, snp as SnpModel, star_allele, study, Product, ModelA, ModelB, Item
+from .forms import PostForm, SearchForm, SearchFormNew
 import json
 import folium
 import geocoder
 from folium import plugins
 
 from agmp_app.models import *
-from django.db.models import Avg, Min, Max, Count, Q
+from django.db.models import Avg, Min, Max, Count, Q,F
 import pandas as pd
 from collections import Counter
 from django_pandas.io import read_frame
 from django.views.generic.detail import DetailView
 
 from django.views.generic import ListView
+
+from django.http import JsonResponse
+from django.views.generic import TemplateView
+
+from dal import autocomplete
+
+from collections import defaultdict
+
+
+def auto(request):
+    return render(request, 'search_template.html')
+
+class ModelAAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = ModelA.objects.all()
+
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
+
+        return qs
+
+class ModelBAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = ModelB.objects.all()
+
+        if self.q:
+            qs = qs.filter(title__icontains=self.q)
+
+        return qs
+
+def search_view(request):
+    if request.method == 'POST':
+        form = SearchFormNew(request.POST)
+        if form.is_valid():
+            choice = form.cleaned_data['choice']
+            query = form.cleaned_data['query']
+            
+            if choice == 'Drugagmp':
+                results = Drugagmp.objects.filter(drug_name__icontains=query).values('drug_name')
+            if choice == 'Variantagmp':
+                results = Variantagmp.objects.filter(rs_id__icontains=query).values('rs_id')
+    else:
+        form = SearchFormNew()
+        results = None
+
+    return render(request, 'search_template.html', {'form': form, 'results': results})
+
+
+def autocomplete(request):
+    choice = request.GET.get('choice')
+    query = request.GET.get('term')
+    
+    if choice == 'Drugagmp':
+        results = Drugagmp.objects.filter(drug_name__icontains=query)
+    else:
+        results = Variantagmp.objects.filter(rs_id__icontains=query)
+    
+    suggestions = [str(item) for item in results]
+    
+    return JsonResponse(suggestions, safe=False)
 
 
 def search_all(request):
@@ -716,154 +776,104 @@ def query(request, query_string, **kwargs):
 
 
 def summary(request):
-    '''
-    :return JSON of table counts
 
-    Returns the counts of records for the major models;
-    drug, variant, disease, gene,
+    gene_count=Geneagmp.objects.all().count()
+    drug_count=Drugagmp.objects.all().count()
+    variant_count=Variantagmp.objects.all().count()
+    disease_count=Variantagmp.objects.select_related().exclude(source_db="PharmGKB").count()
+    #test qset
+    topten_drugz = Drugagmp.objects.all().annotate(num_pubs=Count('drugs')).order_by('-num_pubs')[:10]
+    topten_genez = Geneagmp.objects.all().annotate(num_pubs=Count('variantagmp')).order_by('-num_pubs')[:10]
+    #production qset
+    qs_drug = Drugagmp.objects.exclude(drug_name="").annotate(frequency=Count('drugs')).order_by("-frequency")[:10]
+    qs_gene = Geneagmp.objects.all().annotate(frequency=Count('variantagmp__studyagmp')).order_by("-frequency")[:10]
+    qs_variant = Variantagmp.objects.all().values('rs_id').annotate(frequency=Count('studyagmp')).order_by("-frequency")[:10]
+    qs_disease = Phenotypeagmp.objects.exclude(variantagmp__source_db="PharmGKB").values('name').annotate(frequency=Count('variantagmp')).order_by("-frequency")[:10]
 
-    '''
-    # top ten countries using Counter per @Ayton 25Jul2022
-    snp_counts = Counter([cntry.strip() for pub in snp.objects.all()
-                          for cntry in pub.country_of_participants.split(',')])
-    star_counts = Counter([cntry.strip() for pub in star_allele.objects.all()
-                           for cntry in pub.country_of_participants.split(',')])
-    both_counts = snp_counts + star_counts
+    # Map Data # Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data
+    
+    locations_01 = VariantStudyagmp.objects.all().exclude(Q(longitude_01__isnull=True) | Q(longitude_01__exact ='')).exclude(Q(latitude_01__isnull=True) | Q(latitude_01__exact ='')).values('studyagmp__publication_id','latitude_01','longitude_01')
+    renamed_queryset_01 = locations_01.values('studyagmp__publication_id').annotate(
+    latitude=F('latitude_01'),
+    longitude=F('longitude_01')
+    ).values('latitude', 'longitude')
 
-    top_ten_both_counts = both_counts.most_common(10)
+    locations_02 = VariantStudyagmp.objects.all().exclude(Q(longitude_02__isnull=True) | Q(longitude_02__exact ='')).exclude(Q(latitude_02__isnull=True) | Q(latitude_02__exact ='')).values('studyagmp__publication_id','latitude_02','longitude_02')
+    renamed_queryset_02 = locations_02.values('studyagmp__publication_id').annotate(
+    latitude=F('latitude_02'),
+    longitude=F('longitude_02')
+    ).values('latitude', 'longitude')
 
-    a_list = top_ten_both_counts
+    locations_03 = VariantStudyagmp.objects.all().exclude(Q(longitude_03__isnull=True) | Q(longitude_03__exact ='')).exclude(Q(latitude_03__isnull=True) | Q(latitude_03__exact ='')).values('studyagmp__publication_id','latitude_03','longitude_03')
+    renamed_queryset_03 = locations_03.values('studyagmp__publication_id').annotate(
+    latitude=F('latitude_03'),
+    longitude=F('longitude_03')
+    ).values('latitude', 'longitude')
 
-    country = [country[1] for country in a_list]
-    publications = [publication[0] for publication in a_list]
+    locations_04 = VariantStudyagmp.objects.all().exclude(Q(longitude_04__isnull=True) | Q(longitude_04__exact ='')).exclude(Q(latitude_04__isnull=True) | Q(latitude_04__exact ='')).values('studyagmp__publication_id','latitude_04','longitude_04')
+    renamed_queryset_04 = locations_04.values('studyagmp__publication_id').annotate(
+    latitude=F('latitude_04'),
+    longitude=F('longitude_04')
+    ).values('latitude', 'longitude')
 
-    country_by_publications = {
-        publications[i]: country[i] for i in range(len(publications))}
+    locations_05 = VariantStudyagmp.objects.all().exclude(Q(longitude_05__isnull=True) | Q(longitude_05__exact ='')).exclude(Q(latitude_05__isnull=True) | Q(latitude_05__exact ='')).values('studyagmp__publication_id','studyagmp__publication_id','latitude_05','longitude_05')
+    renamed_queryset_05 = locations_05.values('studyagmp__publication_id').annotate(
+    latitude=F('latitude_05'),
+    longitude=F('longitude_05')
+    ).values('latitude', 'longitude')
 
-    countries = list(country_by_publications.keys())
+    locations_06 = VariantStudyagmp.objects.all().exclude(Q(longitude_06__isnull=True) | Q(longitude_06__exact ='')).exclude(Q(latitude_06__isnull=True) | Q(latitude_06__exact ='')).values('studyagmp__publication_id','latitude_06','longitude_06')
+    renamed_queryset_06 = locations_06.values('studyagmp__publication_id').annotate(
+    latitude=F('latitude_06'),
+    longitude=F('longitude_06')
+    ).values('latitude', 'longitude')
 
-    publications = list(country_by_publications.values())
+    locations_07 = VariantStudyagmp.objects.all().exclude(Q(longitude_07__isnull=True) | Q(longitude_07__exact ='')).exclude(Q(latitude_07__isnull=True) | Q(latitude_07__exact ='')).values('studyagmp__publication_id','latitude_07','longitude_07')
+    renamed_queryset_07 = locations_07.annotate(
+    latitude=F('latitude_07'),
+    longitude=F('longitude_07')
+    ).values('latitude', 'longitude')
 
-    ######## generating a data frame with longitudes and latitudes ###############
+    locations = list(renamed_queryset_01) + list(renamed_queryset_02) +  list(renamed_queryset_03) +  list(renamed_queryset_04) +  list(renamed_queryset_05)  +  list(renamed_queryset_06)  +  list(renamed_queryset_07)
 
-    results = snp.objects.all().values('latitude', 'longitude', 'snp_id',
-                                       'country_of_participants', 'reference').annotate(publication_count=Count('reference'))
+    combined_queryset = renamed_queryset_01 | renamed_queryset_02 | renamed_queryset_03 | renamed_queryset_04 | renamed_queryset_05 | renamed_queryset_06 | renamed_queryset_07
 
-    # django pandas
-    query_set = snp.objects.values('latitude', 'longitude', 'reference').annotate(
-        publication_count=Count('reference'))
+    records = locations
+    count_per_coordinates = defaultdict(int)
+    for record in records:
+        coordinates = (record["latitude"], record["longitude"])
+        count_per_coordinates[coordinates] += 1
+    
 
-    data_frame = read_frame(query_set)
-   
-    #  working python pandas
-    # df = pd.DataFrame(list(snp.objects.all().values(
-    #     'latitude', 'longitude', 'snp_id', 'country_of_participants', 'reference')))
+    for coordinates, count in count_per_coordinates.items():
+        latitude, longitude = coordinates
+        # print(f"Latitude: {latitude}, Longitude: {longitude} - Publications: {count}")
 
-    # df = pd.DataFrame(list(snp.objects.values('latitude', 'longitude', 'reference')
-    #                        .annotate(publication_count=Count('reference'))))
+    coord_per_publications_dict=count_per_coordinates.items()
 
-    locations = data_frame[["latitude", "longitude", "publication_count"]]
+    m = folium.Map(location=[-4.0335, 21.7501], zoom_start=3)
+    data_set = coord_per_publications_dict
+    for coordinates, value in data_set:
+        latitude, longitude = coordinates
+        clean_latitude = float(coordinates[0])
+        clean_longitude = float(coordinates[1])
+        # print(f"Lllatitude: {clean_latitude}, Llllongitude: {clean_longitude}, Value: {value}")
+        popup_text = "Publications"
+        popup_number = value  # Replace with your desired number
+        popup_content = f"{popup_text}: {popup_number}"
+        popup = folium.Popup(popup_content, parse_html=True)
+        folium.Marker([clean_latitude, clean_longitude], popup=popup).add_to(m)
+    
 
-    map_01 = folium.Map(
-        location=[4, 21], tiles='OpenStreetMap', control_scale=True, prefer_canvas=True, zoom_start=3)
+    m = m._repr_html_()
+    
+    # Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data
+  
+    context = { 'gene_count': gene_count,'drug_count': drug_count,'variant_count': variant_count,'disease_count': disease_count,
+               'qs_drug': qs_drug,'qs_gene': qs_gene,'qs_variant': qs_variant,'qs_disease': qs_disease, 'locations':locations ,'coord_per_publications_dict':coord_per_publications_dict,'map': m,'data_set':data_set}
 
-    # print out all locations on the map
-    for index, location_info in locations.iterrows():
-        folium.Marker([location_info["latitude"],
-                       location_info["longitude"]], popup=f'Publications: {location_info["publication_count"]}').add_to(map_01)
-
-    # code to test location and heat map intensity
-    # data = [[-33.918861, 18.423300, 3330], [55, 3, 100]]
-
-    # plugins
-    # plugins.HeatMap(data).add_to(map_01)
-    plugins.Fullscreen(position='topleft').add_to(map_01)
-    folium.Marker(location=[5.655576044317193, -
-                            0.1830446720123291]).add_to(map_01)
-
-    folium.raster_layers.TileLayer('Stamen Terrain').add_to(map_01)
-    folium.raster_layers.TileLayer('Stamen Toner').add_to(map_01)
-    folium.raster_layers.TileLayer('Stamen Watercolor').add_to(map_01)
-    folium.raster_layers.TileLayer('CartoDB Positron').add_to(map_01)
-    folium.raster_layers.TileLayer('CartoDB Dark_Matter').add_to(map_01)
-    folium.LayerControl().add_to(map_01)
-    map_01 = map_01._repr_html_()
-
-    dgc = drug.objects.count()
-    dsc = disease.objects.count()
-    vtc = SnpModel.objects.count()
-    gec = pharmacogenes.objects.count()
-
-    # new gene graph Queries 12 June 2022
-    top_ten_pharmacogenes = pharmacogenes.objects.all().annotate(
-        num_of_publications=Count('snp')).order_by('-num_of_publications')[:10]
-
-    # new drug graph 26 June 2022
-    top_ten_drugs = drug.objects.all().annotate(
-        num_pubs=Count('snp')).order_by('-num_pubs')[:10]
-    # top_ten_variants1 = snp.objects.values('rs_id').order_by( ##### working
-    #     'rs_id').annotate(count=Count('rs_id'))[:10]
-  # new graph variants 26 June 2022
-    top_ten_variants = snp.objects.values('rs_id').annotate(num_pubs=Count('rs_id')).order_by(
-        '-num_pubs')[:10]
-
-    # top_ten_variants = star_allele.objects.all().annotate(
-    #     num_pubs=Count('star_id')).order_by('-num_pubs')[:10]
-    # print(top_ten_variants1)
-    # top ten diseases 26 June 2022
-    top_ten_diseases = disease.objects.annotate(
-        num_of_pubs=Count('snp')).order_by('-num_of_pubs')[:10]
-    # top ten genes query2
-    # top_ten_genes = snp.objects.annotate(
-    #     num_of_genes=Count('gene_id')).order_by('-gene_id')[:10]
-
-    # //new graph queries
-    snp_data = snp.objects.all()
-    snp_data_by_country = snp.objects.all().values('country_of_participants')
-    # where country=USA
-    snp_usa = snp.objects.all().filter(
-        country_of_participants__iexact="USA")
-
-    snp_usa_number = snp.objects.all().filter(
-        country_of_participants__iexact="USA").count()
-    snp_distinct_country = snp.objects.all().values(
-        'country_of_participants', 'reference', 'id_in_source').filter(country_of_participants__icontains="USA")
-
-    # print("USA=", snp_usa)
-    # print("SSNP=", snp_data_by_country)
-
-    counts = {}
-    counts["Drugs"] = drug.objects.count()
-    counts["Variants"] = snp.objects.count() + star_allele.objects.count()
-    counts["Diseases"] = disease.objects.count()
-    counts["Genes"] = pharmacogenes.objects.count()
-    context = {
-
-        # Top ten countries
-
-        'countries': countries,
-        'publications': publications,
-        'top_ten_both_counts': top_ten_both_counts,
-        'map_01': map_01,
-        'top_ten_diseases': top_ten_diseases,
-        'top_ten_drugs': top_ten_drugs,
-        # 'top_ten_variants': top_ten_variants,
-        'top_ten_variants': top_ten_variants,
-        'top_ten_pharmacogenes': top_ten_pharmacogenes,
-        # 'top_ten_genes': top_ten_genes,
-        'snp_usa_number': snp_usa_number,
-        'snp_usa': snp_usa,
-        'snp_data': snp_data,
-        'drug_count': dgc,
-        'disease_count': dsc,
-        'variant_count': vtc,
-        'gene_count': gec,
-        'count_keys': json.dumps(list(counts.keys())),
-        'count_data': json.dumps(list(counts.values())),
-        'records': [{'LAT': 1.000, 'LON': -1.000, }]
-    }
-    return render(request, 'summary.html', context)
-
+    
+    return render(request, 'summary.html', context , )
 
 def country_summary(request):
     '''
@@ -932,7 +942,6 @@ def tutorial(request):
 
 def home(request):
     return render(request, 'home.html')
-
 # def download_file(request, file_name):
 #     response = FileResponse(open(f"{file_name}", 'rb'))
 #     return response
