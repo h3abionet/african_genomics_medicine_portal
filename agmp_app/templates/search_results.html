@@ -21,35 +21,39 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">   
 </script><link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css" rel="stylesheet" type="text/css" /> 
 
-<form method="get" action="">
-    {% csrf_token %}
-	<input type="text" id="search-input" placeholder="Search products">
+<!-- search_form.html -->
+<!-- search_form.html -->
+<form>
+    <input type="radio" name="model_type" value="surname"> Surname
+    <input type="radio" name="model_type" value="name"> Name
 
-
+    <input type="text" id="searchInput" oninput="search()" placeholder="Search...">
 </form>
 
-<div id="search-results"></div>
+<div id="searchResults"></div>
 
-<!-- template.html -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function() {
-    $('#search-input').on('input', function() {
-        const query = $(this).val();
 
-        $.get('/search_product/', { query: query }, function(data) {
-            const resultsContainer = $('#search-results');
-            resultsContainer.empty();
+// script.js
+function search() {
+    const model_type = document.querySelector('input[name="model_type"]:checked').value;
+    const query = document.getElementById('searchInput').value;
 
-            data.forEach(function(item) {
-                const resultItem = $('<div>').text(item.name);
-                resultsContainer.append(resultItem);
+    fetch(`/search/${model_type}/?q=${query}`)
+        .then(response => response.json())
+        .then(data => {
+            const resultsContainer = document.getElementById('searchResults');
+            resultsContainer.innerHTML = '';
+
+            data.forEach(result => {
+                const resultElement = document.createElement('div');
+                resultElement.textContent = result;
+                resultsContainer.appendChild(resultElement);
             });
         });
-    });
-});
+}
+
+
 </script>
-
-
 
 {% endblock %}

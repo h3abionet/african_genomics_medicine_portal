@@ -8,7 +8,7 @@
 {% block title%}Search{% endblock %}
 
 {% block js %}
-<script src="{% static 'js/search.js' %}" type="text/JavaScript"></script>
+<!-- <script src="{% static 'js/search.js' %}" type="text/JavaScript"></script> -->
 {% endblock %}
 
 {% comment %}
@@ -26,99 +26,42 @@ https://simpleisbetterthancomplex.com/tutorial/2018/08/13/how-to-use-bootstrap-4
 {% block content %}
 
 
-<style>
 
 
-</style>
-
-<div class="search">
-  <form action='/microbiome/results/' method='GET' id="search-form" novalidate>
-    {% csrf_token %}
-    <div class="row">
-      <div class="col-md-12 text-center">
-        <div class="search_type">
-          <div class="tag">Choose a category to search by</div>
-          <div class="row">
-            <div class="col-md-3">
-              <input name="search_type_check" value="disease" type="radio" id="checkbox-2-1"
-                class="regular-checkbox big-checkbox" />
-              <label id="checkbox_2_1" for="checkbox-2-1"></label><br>
-              Disease
-            </div>
-            <div class="col-md-3">
-              <input name="search_type_check" value="drug" type="radio" id="checkbox-2-2"
-                class="regular-checkbox big-checkbox" />
-              <label id="checkbox_2_2" for="checkbox-2-2"></label><br>
-              Drug
-            </div>
-            <div class="col-md-3">
-              <input name="search_type_check" value="SNP ID" type="radio" id="checkbox-2-3"
-                class="regular-checkbox big-checkbox" />
-              <label id="checkbox_2_3" for="checkbox-2-3"></label><br>
-              Variant
-            </div>
-            <div class="col-md-3">
-              <input name="search_type_check" value="gene" type="radio" id="checkbox-2-4"
-                class="regular-checkbox big-checkbox" />
-              <label id="checkbox_2_4" for="checkbox-2-4"></label><br>
-              Gene
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row" style="margin-top: 20px">
-      <div class="col-sm-9">
-        {% comment %} {{ form.gene_name | as_crispy_field}} {% endcomment %}
-        <input id="search-input" placeholder="" class='form-control' data-agnocomplete />
-      </div>
-      <div class="col-sm-3">
-        <button type="submit" class="search-btn btn btn-success col">Search</button>
-      </div>
-    </div>
-    {% comment %}
-</div> {% endcomment %}
-{% comment %} {{ form.job_title | as_crispy_field }} {% endcomment %}
-{% comment %} {{ form.bio | as_crispy_field }} {% endcomment %}
+<form id="search-form">
+  <input type="search" id="search-term" placeholder="Search">
+  <label for="model1">Model 1</label>
+  <input type="radio" id="model1" name="model">
+  <label for="model2">Model 2</label>
+  <input type="radio" id="model2" name="model">
+  <div id="search-results"></div>
 </form>
-</div>
-<div id="results">
-  <!-- <div class="row" style="margin-top: 50px">
-    <div class="col-md-1"></div>
-    <div class="col-md-10">
-      <div class="result-container">
-        <div class="result-meta">
-          <span><b>Name</b>: Alzheimer's Disease</span> <br />
-          <span><b>Type</b>: disease</span><br />
-        </div>
-        <div class="database-results" style="margin-top: 10px">
-          <button id="pharmgkb-btn" class="btn btn-light col">
-              <span class="pharmgkb-icon"><img src="{% static 'img/pharmgkb.svg' %}" alt=""> PharmGKB</span>
-          </button> <br/>
-          <button id="gwascatalog-btn" class="btn btn-light col">
-              <span class="gwascatalog-icon"><img src="{% static 'img/gwas_catalog.png' %}" alt=""> GWAS Catalog</span>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-1"></div>
-  </div> -->
-</div>
-{% comment %} [> https://getbootstrap.com/docs/4.1/components/forms/ <] {% endcomment %} {% comment %} <table>
-  {% endcomment %}
-  {% comment %} <tr>
-    <td>Country</td>
-    <td>Source</td>
-  </tr> {% endcomment %}
-  {% comment %} <tr>
-    <td>{{form.country}}</td>
-    <td>{{form.isolation_source}}</td>
-  </tr> {% endcomment %}
-  {% comment %} </table> {% endcomment %}
-  {% comment %} [> {{form.as_p}} <] {% endcomment %} {% comment %} [> {{form.as_p}} <] {% endcomment %} {% comment %} [>
-      {{form.as_ul}} <] {% endcomment %} {% comment %} <!--TODO: Learn to make form auto arrange based on the number of
-        inputs--> {% endcomment %}
-        {% comment %} <button type="Submit" name="Submit">Submit</button> {% endcomment %}
-        {% comment %} </form> {% endcomment %}
-        {% comment %} {% endcomment %}
-        {% endblock %}
+
+
+<script>
+$(document).ready(function() {
+  $('#search-form').submit(function(event) {
+    event.preventDefault();
+
+    var searchTerm = $('#search-term').val();
+    var selectedModel = $('input[name="model"]:checked').val();
+
+    $.ajax({
+      url: '/search/',
+      data: {
+        search_term: searchTerm,
+        selected_model: selectedModel
+      },
+      method: 'GET',
+      success: function(response) {
+        $('#search-results').html(response);
+      }
+    });
+  });
+});
+</script>
+
+
+
+
+{% endblock %}

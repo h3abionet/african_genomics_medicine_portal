@@ -5,8 +5,8 @@ from django.http import FileResponse
 from django.core import serializers
 from itertools import chain
 
-from .models import disease, pharmacogenes, drug, snp as SnpModel, star_allele, study, Product, ModelA, ModelB, Item
-from .forms import PostForm, SearchForm, SearchFormNew
+from .models import disease, pharmacogenes, drug, snp as SnpModel, star_allele, study
+from .forms import PostForm, SearchForm,ModelSearchForm
 import json
 import folium
 import geocoder
@@ -24,63 +24,40 @@ from django.views.generic import ListView
 from django.http import JsonResponse
 from django.views.generic import TemplateView
 
-from dal import autocomplete
+
 
 from collections import defaultdict
 
-
-def auto(request):
-    return render(request, 'search_template.html')
-
-class ModelAAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        qs = ModelA.objects.all()
-
-        if self.q:
-            qs = qs.filter(name__icontains=self.q)
-
-        return qs
-
-class ModelBAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        qs = ModelB.objects.all()
-
-        if self.q:
-            qs = qs.filter(title__icontains=self.q)
-
-        return qs
-
 def search_view(request):
-    if request.method == 'POST':
-        form = SearchFormNew(request.POST)
-        if form.is_valid():
-            choice = form.cleaned_data['choice']
-            query = form.cleaned_data['query']
+    form = ModelSearchForm(request.GET)
+    model_selection = ""
+
+    if form.is_valid():
+        model_selection = form.cleaned_data['model_selection']
+        search_query = form.cleaned_data['search_query']
+
+        # print(model_selection)
+        # print(search_query)
+     
+        if model_selection == 'variantagmp':
+            results = Variantagmp.objects.filter(rs_id__icontains=search_query)
+
+        elif model_selection == 'geneagmp':
+            results = Geneagmp.objects.filter(gene_id__icontains=search_query) 
+
+        elif model_selection == 'drugagmp':
+            results = Drugagmp.objects.filter(drug_name__icontains=search_query)
             
-            if choice == 'Drugagmp':
-                results = Drugagmp.objects.filter(drug_name__icontains=query).values('drug_name')
-            if choice == 'Variantagmp':
-                results = Variantagmp.objects.filter(rs_id__icontains=query).values('rs_id')
+        elif model_selection == 'disease':
+           results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__icontains=search_query).values("phenotypeagmp__name").distinct()
     else:
-        form = SearchFormNew()
-        results = None
-
-    return render(request, 'search_template.html', {'form': form, 'results': results})
+        results = []
+     
 
 
-def autocomplete(request):
-    choice = request.GET.get('choice')
-    query = request.GET.get('term')
-    
-    if choice == 'Drugagmp':
-        results = Drugagmp.objects.filter(drug_name__icontains=query)
-    else:
-        results = Variantagmp.objects.filter(rs_id__icontains=query)
-    
-    suggestions = [str(item) for item in results]
-    
-    return JsonResponse(suggestions, safe=False)
+    # return HttpResponse('Hello, world!')
 
+    return render(request, 'search_list_template.html', {'form': form, 'results': results, 'model_selection': model_selection})
 
 def search_all(request):
     if request.method == 'POST':

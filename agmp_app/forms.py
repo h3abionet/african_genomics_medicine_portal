@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import pharmacogenes,Product
+from .models import pharmacogenes
 
 class ModelSelectForm(forms.Form):
     MODELS = [
@@ -36,7 +36,17 @@ class SearchForm(forms.Form):
     search_query = forms.CharField(max_length=100)
 
 
-class SearchFormNew(forms.Form):
-    CHOICES = [('Variantagmp', 'Variantagmp'), ('Drugagmp', 'Drugagmp')]
-    choice = forms.ChoiceField(choices=CHOICES)
-    query = forms.CharField(widget=forms.TextInput(attrs={'class': 'autocomplete'}))
+class ModelSearchForm(forms.Form):
+
+
+    MODELS_CHOICES = [
+        ('variantagmp', 'Variantagmp'),
+        ('geneagmp', 'Geneagmp'),
+        ('drugagmp', 'Drugagmp'),
+        ('disease', 'Disease'),
+    ]
+
+    model_selection = forms.ChoiceField(choices=MODELS_CHOICES, widget=forms.RadioSelect,label="Choose a category to search by")
+    search_query = forms.CharField(max_length=100, required=False)
+
+

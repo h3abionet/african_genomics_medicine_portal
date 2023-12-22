@@ -1,0 +1,58 @@
+{% extends "mainLayout.html" %}
+{% load static %}
+{% comment %} {% block title %} {% endcomment %}
+{% comment %} Welcome to the database {% endcomment %}
+{% comment %} {% endblock %} {% endcomment %}
+{% comment %} {% endcomment %}
+
+
+
+{% block banner %}
+
+
+{% include 'partials/banner_search.html' %}
+
+{% endblock %}
+{% block content %}
+
+
+<h1>Search Results</h1>
+
+<!-- search_form.html -->
+<form id="search-form">
+    <input type="text" id="search-input" placeholder="Search...">
+    <label><input type="radio" name="model" value="model" checked> Model 1</label>
+    <label><input type="radio" name="model" value="model1"> Model 2</label>
+</form>
+
+<div id="search-results"></div>
+
+<!-- search_results.html -->
+{% for result in results %}
+    <p>{{ result.name}}</p>
+{% endfor %}
+
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#search-input').on('input', function() {
+            var query = $(this).val();
+            var model = $('input[name="model"]:checked').val();
+            
+            $.ajax({
+                type: 'GET',
+                url: '/search2/',
+                data: {
+                    'query': query,
+                    'model': model
+                },
+                success: function(data) {
+                    $('#search-results').html(data);
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}

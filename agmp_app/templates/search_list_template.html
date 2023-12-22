@@ -1,0 +1,143 @@
+{% extends "mainLayout.html" %}
+{% load static %}
+{% comment %} {% block title %} {% endcomment %}
+{% comment %} Welcome to the database {% endcomment %}
+{% comment %} {% endblock %} {% endcomment %}
+
+
+
+
+{% block banner %}
+
+
+{% include 'partials/banner_search.html' %}
+
+{% endblock %}
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Searching Page</title>
+
+    <!-- Include jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            var debounceTimer;
+
+            // Function to handle input keyup event
+            $('#id_search_query').on('keyup', function () {
+                // Debounce the keyup event to reduce rapid AJAX requests
+                clearTimeout(debounceTimer);
+
+                debounceTimer = setTimeout(function () {
+                    // Get the search query from the input field
+                    var searchQuery = $('#id_search_query').val();
+
+                    // Get the selected model from the radio buttons
+                    var modelSelection = $('input[name=model_selection]:checked').val();
+
+                    // Make an AJAX request to the backend
+                    $.ajax({
+                        type: 'GET',
+                        url: '{% url "search_view" %}',
+                        data: {
+                            search_query: searchQuery,
+                            model_selection: modelSelection
+                        },
+                        success: function (data) {
+                            // Extract and update only the #results-list from the received data
+                            var updatedResults = $(data).find('#results-list').html();
+                            $('#results-list').html(updatedResults);
+                        },
+                        error: function (error) {
+                            console.log('Error:', error);
+                        }
+                    });
+                }, 100); // Debounce time (in milliseconds)
+            });
+        });
+    </script>
+</head>
+
+<body>
+
+    <div id="origin-page">
+        <form>
+  
+            {{ form.as_p }}
+            <input type="submit" value="Search" style="display: none;"> <!-- Hide the submit button -->
+        </form>
+
+        <ul id="results-list">
+            <!-- Results will be dynamically updated here -->
+
+
+            {% if model_selection == "variantagmp" %}
+   
+            {% for result in results %}
+                <b>Variant ID: </b>{{ result.rs_id}}<br>
+                <b>Chromosome: </b>{{result.geneagmp__chromosome}}<br>
+                <b>Gene: </b>{{ result.geneagmp__gene_id}}<br>
+                <a href="{% url 'Var_Drug_Assoc' result.rs_id %}">Variant-Drug Associations </a> <br>
+                <a href="{% url 'Variant_Disease_Assoc' result.rs_id %}">Variant-Disease Associations </a><br>
+                <hr>
+            {% empty %}
+                <p>No results found.</p>
+            
+            {% endfor %} 
+
+
+            {% elif model_selection == "geneagmp" %}
+ 
+            {% for result in results %}
+
+                <b>Gene </b>{{ result.gene_id}}<br>
+                <b>Chromosome: </b>{{result.chromosome}}<br>
+                <a href="{% url 'PhamacogeneDrugAssoc' result.gene_id %}">Gene Associations </a> <br><hr>
+            {% empty %}
+                <p>No results found.</p>
+
+            {% endfor %}   
+            {% elif model_selection == "drugagmp" %}
+
+            {% for result in results %}
+
+                <b></b>{{result.drug_name}}<br>
+                <b>Drug Bank ID: </b><a href="https://go.drugbank.com/drugs/{{result.drug_bank_id}}">{{result.drug_bank_id}}</a>
+                <br>
+                <b>State: </b>{{result.state}}<br>
+                <a href="{% url 'VariantDrugAssociation' result.drug_id %}">Varian-Drug Associations</a><br> 
+                <hr>
+
+            {% empty %}
+            <p>No results found.</p>
+
+            {% endfor %}   
+
+            {% elif model_selection == "disease" %}
+
+            {% for result in results %}
+        
+                <b></b>{{result.phenotypeagmp__name}}<br>
+                {% comment %}  <!-- <a href="{% url 'DiseaseVariant' result.phenotypeagmp__name %}">Variant-Disease Associations</a><br><hr> -->
+
+         {% endcomment %}
+
+              {% empty %}
+              <p>No results found.</p>
+              
+            {% endfor %}  
+ 
+
+
+
+            {% endif %}
+
+        </ul>
+    </div>
+
+</body>
+{% endblock %}

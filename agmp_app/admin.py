@@ -1,19 +1,8 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import pharmacogenes, drug, snp, star_allele, study, Variantagmp, Drugagmp, Geneagmp, VariantStudyagmp, Studyagmp, Phenotypeagmp,Product, ModelA, ModelB,Item
+from .models import pharmacogenes, drug, snp, star_allele, study, Variantagmp, Drugagmp, Geneagmp, VariantStudyagmp, Studyagmp, Phenotypeagmp
 
-
-class ModelAAdmin(admin.ModelAdmin):
-    list_display = ['id']
-
-class ModelBAdmin(admin.ModelAdmin):
-    list_display = ['id']
-
-class ItemAdmin(admin.ModelAdmin):
-    list_display = ['id']
-class ProductAdmin(admin.ModelAdmin):
-    list_display = ['id']
 class VariantagmpAdmin(admin.ModelAdmin):
     list_display = ['id']
     # pass
@@ -37,10 +26,6 @@ class PhenotypeagmpAdmin(admin.ModelAdmin):
     list_display = ['id']
 
 ###### site.register ######
-admin.site.register(ModelA, ModelAAdmin)
-admin.site.register(ModelB, ModelBAdmin)
-admin.site.register(Item, ItemAdmin)
-admin.site.register(Product, ProductAdmin)
 admin.site.register(Drugagmp, DrugagmpAdmin)
 admin.site.register(Variantagmp, VariantagmpAdmin)
 admin.site.register(Geneagmp, GeneagmpAdmin)

@@ -2,16 +2,10 @@ from django.urls import path, re_path, include
 # from django.conf.urls import url
 
 from . import views
-from .views import (DrugagmpDetailView, PhamacogeneDrugAssoc, VariantStudyagmpListView,VarDrugAssocDetailView,VvarDrugAssocDetailView,DiseaseVariantDetailView,VarDisAssocDetailView, PharmacoDrugDetailView,VariantDiseaseAssocDetailView,VariantDrugAssociationDetailView,search_view,ModelAAutocomplete, ModelBAutocomplete, auto)
+from .views import (DrugagmpDetailView, PhamacogeneDrugAssoc, VariantStudyagmpListView,VarDrugAssocDetailView,VvarDrugAssocDetailView,DiseaseVariantDetailView,VarDisAssocDetailView, PharmacoDrugDetailView,VariantDiseaseAssocDetailView,VariantDrugAssociationDetailView,search_view,search,)
 
 urlpatterns = [
-
-
-     path('model_a_autocomplete/', ModelAAutocomplete.as_view(), name='model_a_autocomplete'),
-    path('model_b_autocomplete/', ModelBAutocomplete.as_view(), name='model_b_autocomplete'),
-        path('auto/', views.auto, name='auto'),
-    path('search_view/', views.search_view, name='search_view'),
-    path('autocomplete/', views.autocomplete, name='autocomplete'),
+    path('search-view/', search_view, name='search_view'),
     path('about', views.about, name='about'),
     path('', views.search_all, name='search_v'),  
     path('home', views.home, name='home'),

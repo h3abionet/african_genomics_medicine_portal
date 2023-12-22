@@ -1,0 +1,9 @@
+{% block content %}
+    <h1>Search Results</h1>
+
+    <ul id="search_results">
+        {% for result in results %}
+            <li>{{ result }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
