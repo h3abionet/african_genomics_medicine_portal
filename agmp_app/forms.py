@@ -40,9 +40,9 @@ class ModelSearchForm(forms.Form):
 
 
     MODELS_CHOICES = [
-        ('variantagmp', 'Variantagmp'),
-        ('geneagmp', 'Geneagmp'),
-        ('drugagmp', 'Drugagmp'),
+        ('variantagmp', 'Variant'),
+        ('geneagmp', 'Gene'),
+        ('drugagmp', 'Drug'),
         ('disease', 'Disease'),
     ]
 
