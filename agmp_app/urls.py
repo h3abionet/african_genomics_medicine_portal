@@ -5,9 +5,9 @@ from . import views
 from .views import (DrugagmpDetailView, PhamacogeneDrugAssoc, VariantStudyagmpListView,VarDrugAssocDetailView,VvarDrugAssocDetailView,DiseaseVariantDetailView,VarDisAssocDetailView, PharmacoDrugDetailView,VariantDiseaseAssocDetailView,VariantDrugAssociationDetailView,search_view,search,)
 
 urlpatterns = [
-    path('search-view/', search_view, name='search_view'),
+    path('', search_view, name='search_view'),
     path('about', views.about, name='about'),
-    path('', views.search_all, name='search_v'),  
+#  old url for search   path('search_v', views.search_all, name='search_v'),  
     path('home', views.home, name='home'),
     #new views
     path('drug-detail/<int:pk>/', DrugagmpDetailView.as_view(), name='drug-detail'),

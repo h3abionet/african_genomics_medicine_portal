@@ -20,6 +20,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Searching Page</title>
 
+
+    <style>
+#id_model_selection li {
+    display: inline-block; /* or 'inline' */
+    margin-right: 10px; /* Optional: to add some space between items */
+    list-style-type: none;
+}
+
+
+.errorlist {
+    display: none;
+}
+
+.center_form_contents {
+  text-align: center;
+
+}
+
+.center_search_results {
+  text-align: center;
+ 
+}
+
+#id_search_query {              
+width: 50%;
+}
+
+
+.id_model_selection_3 {
+    background-image: url("{% static 'img/noun_Disease_2078983.svg' %}");
+    background-size: 200px 200px;  /* Adjust the size of your image */
+    background-position: 100px 100px; /* Adjust the position of your image */
+    background-repeat: no-repeat;
+    padding-left: 40px; /* Adjust padding to make space for the image */
+    /* Add more styling as needed */
+}
+
+
+</style>
     <!-- Include jQuery library -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
@@ -65,12 +104,22 @@
 <body>
 
     <div id="origin-page">
+        <div class="center_form_contents">
         <form>
   
             {{ form.as_p }}
             <input type="submit" value="Search" style="display: none;"> <!-- Hide the submit button -->
         </form>
+        </div>
+    </div>
 
+    <div class="id_model_selection_3 ">
+        <!-- Your content goes here -->
+    </div>
+    
+
+
+    <div class="center_search_results">
         <ul id="results-list">
             <!-- Results will be dynamically updated here -->
 
@@ -137,7 +186,7 @@
             {% endif %}
 
         </ul>
-    </div>
-
+    
+</div>
 </body>
 {% endblock %}
