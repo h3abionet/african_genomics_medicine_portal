@@ -94,7 +94,6 @@ config.py
 .python-version
 
 ## databases
-db.sqlite3
 dbs
 
 # Jupyter
