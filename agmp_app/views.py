@@ -652,7 +652,6 @@ def _fetch_variant(qs):
     ret = []
     snps = SnpModel.objects.select_related(
         'gene').filter(rs_id__icontains=qs).all()
-    print(snps)
     for snp in snps:
         # snp = snp.values()
         variant_object = dict()
@@ -769,43 +768,43 @@ def summary(request):
 
     # Map Data # Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data
     
-    locations_01 = VariantStudyagmp.objects.all().exclude(Q(longitude_01__isnull=True) | Q(longitude_01__exact ='')).exclude(Q(latitude_01__isnull=True) | Q(latitude_01__exact ='')).values('studyagmp__publication_id','latitude_01','longitude_01')
-    renamed_queryset_01 = locations_01.values('studyagmp__publication_id').annotate(
+    locations_01 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_01__isnull=True) | Q(longitude_01__exact ='')).exclude(Q(latitude_01__isnull=True) | Q(latitude_01__exact ='')).values('studyagmp__publication_id','latitude_01','longitude_01')
+    renamed_queryset_01 = (locations_01.values('studyagmp__publication_id').annotate(
     latitude=F('latitude_01'),
     longitude=F('longitude_01')
-    ).values('latitude', 'longitude')
+    ).values('latitude', 'longitude'))
 
-    locations_02 = VariantStudyagmp.objects.all().exclude(Q(longitude_02__isnull=True) | Q(longitude_02__exact ='')).exclude(Q(latitude_02__isnull=True) | Q(latitude_02__exact ='')).values('studyagmp__publication_id','latitude_02','longitude_02')
+    locations_02 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_02__isnull=True) | Q(longitude_02__exact ='')).exclude(Q(latitude_02__isnull=True) | Q(latitude_02__exact ='')).values('studyagmp__publication_id','latitude_02','longitude_02')
     renamed_queryset_02 = locations_02.values('studyagmp__publication_id').annotate(
     latitude=F('latitude_02'),
     longitude=F('longitude_02')
     ).values('latitude', 'longitude')
 
-    locations_03 = VariantStudyagmp.objects.all().exclude(Q(longitude_03__isnull=True) | Q(longitude_03__exact ='')).exclude(Q(latitude_03__isnull=True) | Q(latitude_03__exact ='')).values('studyagmp__publication_id','latitude_03','longitude_03')
+    locations_03 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_03__isnull=True) | Q(longitude_03__exact ='')).exclude(Q(latitude_03__isnull=True) | Q(latitude_03__exact ='')).values('studyagmp__publication_id','latitude_03','longitude_03')
     renamed_queryset_03 = locations_03.values('studyagmp__publication_id').annotate(
     latitude=F('latitude_03'),
     longitude=F('longitude_03')
     ).values('latitude', 'longitude')
 
-    locations_04 = VariantStudyagmp.objects.all().exclude(Q(longitude_04__isnull=True) | Q(longitude_04__exact ='')).exclude(Q(latitude_04__isnull=True) | Q(latitude_04__exact ='')).values('studyagmp__publication_id','latitude_04','longitude_04')
+    locations_04 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_04__isnull=True) | Q(longitude_04__exact ='')).exclude(Q(latitude_04__isnull=True) | Q(latitude_04__exact ='')).values('studyagmp__publication_id','latitude_04','longitude_04')
     renamed_queryset_04 = locations_04.values('studyagmp__publication_id').annotate(
     latitude=F('latitude_04'),
     longitude=F('longitude_04')
     ).values('latitude', 'longitude')
 
-    locations_05 = VariantStudyagmp.objects.all().exclude(Q(longitude_05__isnull=True) | Q(longitude_05__exact ='')).exclude(Q(latitude_05__isnull=True) | Q(latitude_05__exact ='')).values('studyagmp__publication_id','studyagmp__publication_id','latitude_05','longitude_05')
+    locations_05 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_05__isnull=True) | Q(longitude_05__exact ='')).exclude(Q(latitude_05__isnull=True) | Q(latitude_05__exact ='')).values('studyagmp__publication_id','studyagmp__publication_id','latitude_05','longitude_05')
     renamed_queryset_05 = locations_05.values('studyagmp__publication_id').annotate(
     latitude=F('latitude_05'),
     longitude=F('longitude_05')
     ).values('latitude', 'longitude')
 
-    locations_06 = VariantStudyagmp.objects.all().exclude(Q(longitude_06__isnull=True) | Q(longitude_06__exact ='')).exclude(Q(latitude_06__isnull=True) | Q(latitude_06__exact ='')).values('studyagmp__publication_id','latitude_06','longitude_06')
+    locations_06 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_06__isnull=True) | Q(longitude_06__exact ='')).exclude(Q(latitude_06__isnull=True) | Q(latitude_06__exact ='')).values('studyagmp__publication_id','latitude_06','longitude_06')
     renamed_queryset_06 = locations_06.values('studyagmp__publication_id').annotate(
     latitude=F('latitude_06'),
     longitude=F('longitude_06')
     ).values('latitude', 'longitude')
 
-    locations_07 = VariantStudyagmp.objects.all().exclude(Q(longitude_07__isnull=True) | Q(longitude_07__exact ='')).exclude(Q(latitude_07__isnull=True) | Q(latitude_07__exact ='')).values('studyagmp__publication_id','latitude_07','longitude_07')
+    locations_07 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_07__isnull=True) | Q(longitude_07__exact ='')).exclude(Q(latitude_07__isnull=True) | Q(latitude_07__exact ='')).values('studyagmp__publication_id','latitude_07','longitude_07')
     renamed_queryset_07 = locations_07.annotate(
     latitude=F('latitude_07'),
     longitude=F('longitude_07')
