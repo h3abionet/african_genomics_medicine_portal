@@ -47,6 +47,6 @@ class ModelSearchForm(forms.Form):
     ]
 
     model_selection = forms.ChoiceField(choices=MODELS_CHOICES, widget=forms.RadioSelect,label="Choose a category to search by")
-    search_query = forms.CharField(max_length=100, required=False, label=" Search")
+    search_query = forms.CharField(max_length=100, required=False, label="Search")
 
 

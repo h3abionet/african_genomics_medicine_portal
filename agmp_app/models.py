@@ -69,7 +69,7 @@ class Phenotypeagmp(models.Model): # will be the diseases
         verbose_name_plural = "* Phenotype"
    
 class Variantagmp(models.Model):
-    geneagmp = models.ForeignKey(Geneagmp, on_delete=models.CASCADE, default="GENE",null=True, blank=True)
+    geneagmp = models.ForeignKey(Geneagmp, on_delete=models.CASCADE,related_name='genetable', default="GENE",null=True, blank=True)
     allele = models.CharField(max_length=500, null=True, blank=True)
     drugagmp = models.ForeignKey(Drugagmp, on_delete=models.CASCADE, related_name="drugs", default="DRUG",null=True, blank=True)
     source_db = models.CharField(max_length=500, null=True, blank=True)
