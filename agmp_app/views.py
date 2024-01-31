@@ -282,9 +282,11 @@ class DiseaseVariantDetailView(DetailView):
 
     def get_object(self):
         phenotypeagmp__name = self.kwargs.get(self.pk_url_kwarg)
+    
 
         # data = Variantagmp.objects.get(rs_id=rs_id)
         # return data
+
     
     def get_context_data(self, **kwargs):
         context = super(DiseaseVariantDetailView, self).get_context_data(**kwargs)
