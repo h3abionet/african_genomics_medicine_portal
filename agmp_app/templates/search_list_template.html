@@ -24,7 +24,7 @@
     <style>
 #id_model_selection li {
     display: inline-block; /* or 'inline' */
-    margin-right: 10%; /* Optional: to add some space between items */
+    margin-right: 5%; /* Optional: to add some space between items */
     list-style-type: none;
 }
 
@@ -51,109 +51,57 @@
 width: 65%;
 
 }
-#id_model_selection_3 {
-    position: relative; 
-   
-    /* Allows precise positioning of the image */
-}
 
-#id_model_selection_3::before {
-    content: '';
-    position: absolute;
-  
-   /* transform: translateY(-50%);   */
-   background: url("{% static 'img/noun_Disease_2078983.svg' %}"); 
 
-    /* background-size: 60px 60px; */
-    display: inline-block;
+/* display gene in production */
+#id_model_selection_gene{
+    background-image: url('static/img/noun_genes_1767492.svg');
+    background-position: right center;
     background-repeat: no-repeat;
-    width: 50px; /* Same as background-size */
-    height: 50px; /* Same as background-size */
-    vertical-align: middle;
-    top:-1.4em;
-    left: 4.3em;
-    z-index: 20;
-    z-index: 98;
-    overflow: hidden;
-
-   
-}
-
-#id_model_selection_2 {
-    position: relative; 
-    padding-top: 50%;
-    /* Allows precise positioning of the image */
-}
-
-#id_model_selection_2::before {
-    content: '';
-    position: absolute;
-    background-image: url("{% static 'img/noun_Drug_2227411.svg' %}");
-
-    display: inline-block;
-    background-repeat: no-repeat;
-    width: 50px; 
-    height: 50px;  
-    vertical-align: middle;
-    top:-1.4em;
-    left: 3.5em; 
-
-   
-}
-
-.btn-success {
-
-    margin-top: 3%;
-}
-
-#id_model_selection_1 {
-    position: relative; 
-    /* Allows precise positioning of the image */
-}
-
-#id_model_selection_1::before {
-    content: '';
-    position: absolute;
-    /* left: 40px; 
-    top: -250%; */
-    /* transform: translateY(-50%);  */
-    background-image: url("{% static 'img/noun_genes_1767492.svg' %}");
-    /* background-size: 60px 60px; */
-    display: inline-block;
-    background-repeat: no-repeat;
-    width: 50px; /* Same as background-size */
-    height: 50px; /* Same as background-size */
-    vertical-align: middle;
-    top:-1.4em;
-    left: 4.0em; 
-
-   
-}
-
-
-#id_model_selection_0 {
-    position: relative; 
-    /* Allows precise positioning of the image */
+    -webkit-appearance: none; /* Removes default style of select in Safari */
+    -moz-appearance: none; /* Removes default style of select in Firefox */
+    appearance: none; /* Removes default style of select in modern browsers */
+    padding-right: 30px; /* Make space for the image */
  
+
 }
 
-#id_model_selection_0::before {
-    content: '';
-    position: absolute;
-    /* left: 40px; 
-    top: -250%; */
-    /* transform: translateY(-50%);  */
-    background-image: url("{% static 'img/noun_choice_of_option_2765906.svg' %}");
-    /* background-size: 60px 60px; */
-    display: inline-block;
+#id_model_selection_variant{
+    background-image: url('static/img/noun_choice_of_option_2765906.svg');
+    background-position: right center;
     background-repeat: no-repeat;
-    width: 50px; /* Same as background-size */
-    height: 50px; /* Same as background-size */
-    vertical-align: middle;
-    top:-1.4em;
-    left: 4.5em; 
+    -webkit-appearance: none; /* Removes default style of select in Safari */
+    -moz-appearance: none; /* Removes default style of select in Firefox */
+    appearance: none; /* Removes default style of select in modern browsers */
+    padding-right: 30px; /* Make space for the image */
+ 
+
 }
 
+#id_model_selection_drug{
+    background-image: url('static/img/noun_Drug_2227411.svg');
+    background-position: right center;
+    background-repeat: no-repeat;
+    -webkit-appearance: none; /* Removes default style of select in Safari */
+    -moz-appearance: none; /* Removes default style of select in Firefox */
+    appearance: none; /* Removes default style of select in modern browsers */
+    padding-right: 30px; /* Make space for the image */
+ 
+
+}
+
+
+#id_model_selection_disease{
+    background-image: url('static/img/noun_Disease_2078983.svg');
+    background-position: right center;
+    background-repeat: no-repeat;
+    -webkit-appearance: none; /* Removes default style of select in Safari */
+    -moz-appearance: none; /* Removes default style of select in Firefox */
+    appearance: none; /* Removes default style of select in modern browsers */
+    padding-right: 30px; /* Make space for the image */
+ 
+
+}
 
 
 </style>
@@ -200,13 +148,41 @@ width: 65%;
 </head>
 
 <body>
-
     <div id="origin-page">
         <div class="center_form_contents">
         <form >
-  
-            {{ form.as_p }}
-            <input type="submit" class="btn btn-success " value="Search" style="display: none;"> <!-- Hide the submit button -->
+           
+            <div>
+                <label>{{ form.model_selection.label }}</label>
+                <ul id="id_model_selection">
+                <li>
+                    <input type="radio" name="{{ form.model_selection.html_name }}" value="variantagmp" id="id_model_selection_0">
+                    <label for="id_model_selection_1" id ="id_model_selection_variant" >Variant</label>
+                </li>
+                <li>
+                    <input type="radio" name="{{ form.model_selection.html_name }}" value="geneagmp" id="id_model_selection_1">
+                    <label for="id_model_selection_1" id ="id_model_selection_gene">Gene</label>
+                </li>
+                <li>
+                    <input type="radio" name="{{ form.model_selection.html_name }}" value="drugagmp" id="id_model_selection_2">
+                    <label for="id_model_selection_2" id ="id_model_selection_drug">Drug</label>
+                </li>
+                <li>
+                    <input type="radio" name="{{ form.model_selection.html_name }}" value="disease" id="id_model_selection_3">
+                    <label for="id_model_selection_3" id="id_model_selection_disease">Disease</label>
+                </li>
+                <ul>
+            </div>
+            <div>
+                <label for="{{ form.search_query.id_for_label }}">{{ form.search_query.label }}</label>
+                <input type="text" name="{{ form.search_query.html_name }}" value="" id="{{ form.search_query.id_for_label }}" maxlength="100">
+
+            </div>
+            <button type="submit" style="display: none;">Search</button>
+        
+        
+        
+        
         </form>
         </div>
     </div>
