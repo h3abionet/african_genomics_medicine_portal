@@ -558,10 +558,7 @@ transform: translateY(-50%); */
    min-height: 35vh;
  }
 
-
-
- /* css jan 2024 */
- /* Home page css for select options and images next to options, Feb 2024 */
+ /* Home page css for select options and images next to options, 6 Feb 2024 */
 
  #id_model_selection li {
   display: inline-block; /* or 'inline' */
@@ -634,7 +631,6 @@ width: 65%;
 
 
 #id_model_selection_disease{
-  background-image: url('static/img/noun_Disease_2078983.svg');
   background-image: url("/static/img/noun_Disease_2078983.svg");
   background-color: white;
   background-position: right center;
@@ -642,7 +638,11 @@ width: 65%;
   -webkit-appearance: none; /* Removes default style of select in Safari */
   -moz-appearance: none; /* Removes default style of select in Firefox */
   appearance: none; /* Removes default style of select in modern browsers */
- 
-
 }
-/* Home page css for select options and images next to options, Feb 2024 */
+/* Home page css for select options and images next to options, 6 Feb 2024 */
+
+/* Summary page css  6 Feb 2024 */
+.graph-custom-class .nav-link {
+  color: #0056b3 !important; /* Red font color for links */
+}
+/* Summary page css  6 Feb 2024 */
