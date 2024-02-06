@@ -561,3 +561,88 @@ transform: translateY(-50%); */
 
 
  /* css jan 2024 */
+ /* Home page css for select options and images next to options, Feb 2024 */
+
+ #id_model_selection li {
+  display: inline-block; /* or 'inline' */
+  margin-right: 5%; /* Optional: to add some space between items */
+  list-style-type: none;
+}
+
+#id_model_selection {
+
+  padding-bottom: 3%;
+  padding-top: 3%;
+}
+
+
+
+.errorlist {
+  display: none;
+}
+
+.center_form_contents {
+text-align: center;
+
+}
+
+
+
+#id_search_query {              
+width: 65%;
+
+}
+
+/* display gene in production */
+#id_model_selection_gene{
+  background-image: url("/static/img/noun_genes_1767492.svg");
+  background-color: white;
+  background-position: right center;
+  background-repeat: no-repeat;
+  -webkit-appearance: none; /* Removes default style of select in Safari */
+  -moz-appearance: none; /* Removes default style of select in Firefox */
+  appearance: none; /* Removes default style of select in modern browsers */
+
+
+}
+
+#id_model_selection_variant{
+  background-image: url("/static/img/noun_choice_of_option_2765906.svg");
+  background-color: white;
+  background-position: right center;
+  background-repeat: no-repeat;
+  -webkit-appearance: none; /* Removes default style of select in Safari */
+  -moz-appearance: none; /* Removes default style of select in Firefox */
+  appearance: none; /* Removes default style of select in modern browsers */
+ 
+
+
+}
+
+#id_model_selection_drug{
+
+  background-image: url("/static/img/noun_Drug_2227411.svg");
+  background-color: white;
+  background-position: right center;
+  background-repeat: no-repeat;
+  -webkit-appearance: none; /* Removes default style of select in Safari */
+  -moz-appearance: none; /* Removes default style of select in Firefox */
+  appearance: none; /* Removes default style of select in modern browsers */
+ 
+
+}
+
+
+#id_model_selection_disease{
+  background-image: url('static/img/noun_Disease_2078983.svg');
+  background-image: url("/static/img/noun_Disease_2078983.svg");
+  background-color: white;
+  background-position: right center;
+  background-repeat: no-repeat;
+  -webkit-appearance: none; /* Removes default style of select in Safari */
+  -moz-appearance: none; /* Removes default style of select in Firefox */
+  appearance: none; /* Removes default style of select in modern browsers */
+ 
+
+}
+/* Home page css for select options and images next to options, Feb 2024 */

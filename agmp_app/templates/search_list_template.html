@@ -1,10 +1,5 @@
 {% extends "mainLayout.html" %}
 {% load static %}
-{% comment %} {% block title %} {% endcomment %}
-{% comment %} Welcome to the database {% endcomment %}
-{% comment %} {% endblock %} {% endcomment %}
-
-
 
 
 {% block banner %}
@@ -22,86 +17,6 @@
 
 
     <style>
-#id_model_selection li {
-    display: inline-block; /* or 'inline' */
-    margin-right: 5%; /* Optional: to add some space between items */
-    list-style-type: none;
-}
-
-#id_model_selection {
-
-    padding-bottom: 3%;
-    padding-top: 3%;
-}
-
-
-
-.errorlist {
-    display: none;
-}
-
-.center_form_contents {
-  text-align: center;
-
-}
-
-
-
-#id_search_query {              
-width: 65%;
-
-}
-
-
-/* display gene in production */
-#id_model_selection_gene{
-    background-image: url('static/img/noun_genes_1767492.svg');
-    background-position: right center;
-    background-repeat: no-repeat;
-    -webkit-appearance: none; /* Removes default style of select in Safari */
-    -moz-appearance: none; /* Removes default style of select in Firefox */
-    appearance: none; /* Removes default style of select in modern browsers */
-    padding-right: 30px; /* Make space for the image */
- 
-
-}
-
-#id_model_selection_variant{
-    background-image: url('static/img/noun_choice_of_option_2765906.svg');
-    background-position: right center;
-    background-repeat: no-repeat;
-    -webkit-appearance: none; /* Removes default style of select in Safari */
-    -moz-appearance: none; /* Removes default style of select in Firefox */
-    appearance: none; /* Removes default style of select in modern browsers */
-    padding-right: 30px; /* Make space for the image */
- 
-
-}
-
-#id_model_selection_drug{
-    background-image: url('static/img/noun_Drug_2227411.svg');
-    background-position: right center;
-    background-repeat: no-repeat;
-    -webkit-appearance: none; /* Removes default style of select in Safari */
-    -moz-appearance: none; /* Removes default style of select in Firefox */
-    appearance: none; /* Removes default style of select in modern browsers */
-    padding-right: 30px; /* Make space for the image */
- 
-
-}
-
-
-#id_model_selection_disease{
-    background-image: url('static/img/noun_Disease_2078983.svg');
-    background-position: right center;
-    background-repeat: no-repeat;
-    -webkit-appearance: none; /* Removes default style of select in Safari */
-    -moz-appearance: none; /* Removes default style of select in Firefox */
-    appearance: none; /* Removes default style of select in modern browsers */
-    padding-right: 30px; /* Make space for the image */
- 
-
-}
 
 
 </style>
@@ -157,19 +72,24 @@ width: 65%;
                 <ul id="id_model_selection">
                 <li>
                     <input type="radio" name="{{ form.model_selection.html_name }}" value="variantagmp" id="id_model_selection_0">
-                    <label for="id_model_selection_1" id ="id_model_selection_variant" >Variant</label>
+                    Variant<label for="id_model_selection_1" id ="id_model_selection_variant"> &#160; &#160; &#160; &#160; &#160;</label>
+
+                    
                 </li>
                 <li>
                     <input type="radio" name="{{ form.model_selection.html_name }}" value="geneagmp" id="id_model_selection_1">
-                    <label for="id_model_selection_1" id ="id_model_selection_gene">Gene</label>
+                   Gene <label for="id_model_selection_1" id ="id_model_selection_gene"> &#160; &#160; &#160; &#160; &#160;</label>
+
                 </li>
                 <li>
                     <input type="radio" name="{{ form.model_selection.html_name }}" value="drugagmp" id="id_model_selection_2">
-                    <label for="id_model_selection_2" id ="id_model_selection_drug">Drug</label>
+                   Drug <label for="id_model_selection_2" id ="id_model_selection_drug"> &#160; &#160; &#160; &#160; &#160;</label>
+
                 </li>
                 <li>
                     <input type="radio" name="{{ form.model_selection.html_name }}" value="disease" id="id_model_selection_3">
-                    <label for="id_model_selection_3" id="id_model_selection_disease">Disease</label>
+                    Disease<label for="id_model_selection_3" id="id_model_selection_disease"> &#160; &#160; &#160; &#160; &#160;</label>
+
                 </li>
                 <ul>
             </div>
