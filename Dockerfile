@@ -11,6 +11,7 @@ RUN apt-get update && \
     libgdal-dev \
     gdal-bin \
     build-essential \
+    vim \
     nano \
     cmake \
     g++
@@ -34,4 +35,4 @@ RUN python -m pip install -r requirements.txt
 COPY --chown=django_user:django_user . /agmp
 
 RUN python manage.py migrate
-RUN python manage.py collectstatic --no-input
+RUN sudo python manage.py collectstatic --no-input
