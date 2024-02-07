@@ -28,7 +28,7 @@ SECRET_KEY = config.SECRET_KEY
 DEBUG = config.DEBUG
 
 ALLOWED_HOSTS = [
-    '85.159.209.149',
+    '85.159.209.149','137.158.204.58',
     'localhost',
     '127.0.0.1',
     'agmp.h3abionet.org',
