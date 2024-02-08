@@ -30,12 +30,21 @@ conda activate env_pm
 Install the following packages (if you have not done so already):
 `django-bootstrap4 django-crispy-forms django-leaflet django-agnocomplete`
 
-### Running the application
+### Running the application in development
 
 * clone from Github
 * `python manage.py makemigrations agmp_app`
 * `python manage.py migrate`
 * `python manage.py runserver`
+
+
+### Running the application in production
+
+* clone from Github 'git clone  https://github.com/h3abionet/african_genomics_medicine_portal.git'
+* `vim config.py {changed debug from true to false} # on the host machine`
+* `mkdir static_cdn # inside project directory on the host machine`
+* `docker-compose build`
+* `docker-compose up -d`
 
 Project will now be running on the server.
 
