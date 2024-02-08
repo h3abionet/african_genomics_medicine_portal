@@ -38,13 +38,13 @@ Install the following packages (if you have not done so already):
 * `python manage.py runserver`
 
 
-### Running the application in production
+### Running the application in docker production
 
 * clone from Github 'git clone  https://github.com/h3abionet/african_genomics_medicine_portal.git'
-* `vim config.py {changed debug from true to false} # on the host machine`
-* `mkdir static_cdn # inside project directory on the host machine`
-* `docker-compose build`
-* `docker-compose up -d`
+* `sudo vim config.py #change debug from true to false on the host machine`
+* `sudo mkdir static_cdn # inside the project directory on the host machine`
+* `sudo docker-compose build or docker-compose build`
+* `sudo docker-compose up -d or docker-compose up -d`
 
 Project will now be running on the server.
 
