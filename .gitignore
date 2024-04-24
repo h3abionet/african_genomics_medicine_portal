@@ -97,7 +97,7 @@ config.py
 dbs
 
 # Jupyter
-*.ipynb
+
 .ipynb_checkpoints
 
 # other
