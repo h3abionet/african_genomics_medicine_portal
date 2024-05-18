@@ -101,7 +101,6 @@ dbs
 .ipynb_checkpoints
 
 # other
-scripts
 agmp-portal.service
 notes.md
 config/nginx/conf.d
