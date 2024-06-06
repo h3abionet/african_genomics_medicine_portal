@@ -120,6 +120,26 @@ class VariantStudyagmp(models.Model):
     latitude_07 = models.CharField(max_length=500, null=True, blank=True)
     longitude_07 = models.CharField(max_length=500, null=True, blank=True)
      #country participant
+
+    country_participant_08 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_08 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_08 = models.CharField(max_length=500, null=True, blank=True)
+     #country participant
+
+    country_participant_09 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_09 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_09 = models.CharField(max_length=500, null=True, blank=True)
+     #country participant
+
+    country_participant_010 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_10 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_10 = models.CharField(max_length=500, null=True, blank=True)
+    #country participant
+
+    country_participant_011 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_11 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_11 = models.CharField(max_length=500, null=True, blank=True)
+
     ethnicity = models.CharField(max_length=500, null=True, blank=True)
     geographical_regions = models.CharField(max_length=500, null=True, blank=True)
     notes = models.TextField(max_length=500, null=True, blank=True)

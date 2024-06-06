@@ -12,7 +12,7 @@ from agmp_app.models import Variantagmp, Drugagmp, Geneagmp, Studyagmp, Phenotyp
  ################### April May 2024 ####################################
 def run():
 
-    df = pd.read_csv('csv/first_import_job_run.csv',encoding='latin-1')
+    df = pd.read_csv('/Users/perceval/development/cbio/agmp_data/csv/first_import_job_run.csv',encoding='latin-1')
    
 
     Variantagmp.objects.all().delete()
@@ -36,10 +36,6 @@ def run():
                                latitude_01=row['latitude_01'],longitude_01=row['longitude_01'],
                                latitude_02=row['latitude_02'],longitude_02=row['longitude_02'],
                                latitude_03=row['latitude_03'],longitude_03=row['longitude_03'],
-                               latitude_04=row['latitude_04'],longitude_04=row['longitude_04'],
-                               latitude_05=row['latitude_05'],longitude_05=row['longitude_05'],
-                               latitude_06=row['latitude_06'],longitude_06=row['longitude_06'],
-                               latitude_07=row['latitude_07'],longitude_07=row['longitude_07'],
                                p_value=row['p-value'],
                                ethnicity=row['Ethnicity'],
                                geographical_regions=row['geographical_region'],
@@ -75,7 +71,7 @@ def run():
 
 
     ################### April May 2024 ####################################
-    df = pd.read_csv('csv/second_import_job_run.csv',encoding='latin-1')
+    df = pd.read_csv('/Users/perceval/development/cbio/agmp_data/csv/second_import_job_run.csv',encoding='latin-1')
 
 
     for index, row in df.iterrows():
@@ -95,6 +91,10 @@ def run():
                                latitude_05=row['latitude_05'],longitude_05=row['longitude_05'],
                                latitude_06=row['latitude_06'],longitude_06=row['longitude_06'],
                                latitude_07=row['latitude_07'],longitude_07=row['longitude_07'],
+                            #    latitude_08=row['latitude_08'],longitude_08=row['longitude_08'],
+                               latitude_09=row['latitude_09'],longitude_09=row['longitude_09'],
+                               latitude_10=row['latitude_10'],longitude_10=row['longitude_10'],
+                               latitude_11=row['latitude_11'],longitude_11=row['longitude_11'],
                                p_value=row['p-value'],
                                ethnicity=row['Ethnicity'],
                                geographical_regions=row['geographical_region'],
