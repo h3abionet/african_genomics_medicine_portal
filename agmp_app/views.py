@@ -27,6 +27,7 @@ from django.views.generic import TemplateView
 
 
 from collections import defaultdict
+import logging
 
 def search_view(request):
     form = ModelSearchForm(request.GET)
@@ -753,106 +754,199 @@ def query(request, query_string, **kwargs):
     return HttpResponse(res, mimetype)
 
 
-def summary(request):
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
 
-    gene_count=Geneagmp.objects.all().count()
-    drug_count=Drugagmp.objects.all().count()
-    variant_count=Variantagmp.objects.all().count()
-    disease_count=Variantagmp.objects.select_related().exclude(source_db="PharmGKB").count()
-    #test qset
+def summary(request):
+    gene_count = Geneagmp.objects.all().count()
+    drug_count = Drugagmp.objects.all().count()
+    variant_count = Variantagmp.objects.all().count()
+    disease_count = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").count()
+
+    # Test and production query sets
     topten_drugz = Drugagmp.objects.all().annotate(num_pubs=Count('drugs')).order_by('-num_pubs')[:10]
     topten_genez = Geneagmp.objects.all().annotate(num_pubs=Count('variantagmp')).order_by('-num_pubs')[:10]
-    #production qset
+
     qs_drug = Drugagmp.objects.exclude(drug_name="").annotate(frequency=Count('drugs')).order_by("-frequency")[:10]
     qs_gene = Geneagmp.objects.all().annotate(frequency=Count('variantagmp__studyagmp')).order_by("-frequency")[:10]
     qs_variant = Variantagmp.objects.all().values('rs_id').annotate(frequency=Count('studyagmp')).order_by("-frequency")[:10]
     qs_disease = Phenotypeagmp.objects.exclude(variantagmp__source_db="PharmGKB").values('name').annotate(frequency=Count('variantagmp')).order_by("-frequency")[:10]
 
-    # Map Data # Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data
-    
-    locations_01 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_01__isnull=True) | Q(longitude_01__exact ='')).exclude(Q(latitude_01__isnull=True) | Q(latitude_01__exact ='')).values('studyagmp__publication_id','latitude_01','longitude_01')
-    renamed_queryset_01 = (locations_01.values('studyagmp__publication_id').annotate(
-    latitude=F('latitude_01'),
-    longitude=F('longitude_01')
-    ).values('latitude', 'longitude'))
+    # Function to retrieve and clean location data
+    def get_location_data(lat_field, lon_field):
+        locations = VariantStudyagmp.objects.exclude(
+            Q(**{f'{lon_field}__isnull': True}) | Q(**{f'{lon_field}__exact': ''}) |
+            Q(**{f'{lat_field}__isnull': True}) | Q(**{f'{lat_field}__exact': ''})
+        ).values('studyagmp__publication_id', lat_field, lon_field)
 
-    locations_02 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_02__isnull=True) | Q(longitude_02__exact ='')).exclude(Q(latitude_02__isnull=True) | Q(latitude_02__exact ='')).values('studyagmp__publication_id','latitude_02','longitude_02')
-    renamed_queryset_02 = locations_02.values('studyagmp__publication_id').annotate(
-    latitude=F('latitude_02'),
-    longitude=F('longitude_02')
-    ).values('latitude', 'longitude')
+        logging.debug(f"Retrieved {lat_field}, {lon_field} locations: {list(locations)}")
 
-    locations_03 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_03__isnull=True) | Q(longitude_03__exact ='')).exclude(Q(latitude_03__isnull=True) | Q(latitude_03__exact ='')).values('studyagmp__publication_id','latitude_03','longitude_03')
-    renamed_queryset_03 = locations_03.values('studyagmp__publication_id').annotate(
-    latitude=F('latitude_03'),
-    longitude=F('longitude_03')
-    ).values('latitude', 'longitude')
+        renamed_queryset = locations.values('studyagmp__publication_id').annotate(
+            latitude=F(lat_field),
+            longitude=F(lon_field)
+        ).values('latitude', 'longitude')
 
-    locations_04 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_04__isnull=True) | Q(longitude_04__exact ='')).exclude(Q(latitude_04__isnull=True) | Q(latitude_04__exact ='')).values('studyagmp__publication_id','latitude_04','longitude_04')
-    renamed_queryset_04 = locations_04.values('studyagmp__publication_id').annotate(
-    latitude=F('latitude_04'),
-    longitude=F('longitude_04')
-    ).values('latitude', 'longitude')
+        return renamed_queryset
 
-    locations_05 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_05__isnull=True) | Q(longitude_05__exact ='')).exclude(Q(latitude_05__isnull=True) | Q(latitude_05__exact ='')).values('studyagmp__publication_id','studyagmp__publication_id','latitude_05','longitude_05')
-    renamed_queryset_05 = locations_05.values('studyagmp__publication_id').annotate(
-    latitude=F('latitude_05'),
-    longitude=F('longitude_05')
-    ).values('latitude', 'longitude')
+    locations_01 = get_location_data('latitude_01', 'longitude_01')
+    locations_02 = get_location_data('latitude_02', 'longitude_02')
+    locations_03 = get_location_data('latitude_03', 'longitude_03')
+    locations_04 = get_location_data('latitude_04', 'longitude_04')
+    locations_05 = get_location_data('latitude_05', 'longitude_05')
+    locations_06 = get_location_data('latitude_06', 'longitude_06')
+    locations_07 = get_location_data('latitude_07', 'longitude_07')
+    locations_08 = get_location_data('latitude_08', 'longitude_08')
+    locations_09 = get_location_data('latitude_09', 'longitude_09')
+    locations_10 = get_location_data('latitude_10', 'longitude_10')
+    locations_11 = get_location_data('latitude_11', 'longitude_11')
 
-    locations_06 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_06__isnull=True) | Q(longitude_06__exact ='')).exclude(Q(latitude_06__isnull=True) | Q(latitude_06__exact ='')).values('studyagmp__publication_id','latitude_06','longitude_06')
-    renamed_queryset_06 = locations_06.values('studyagmp__publication_id').annotate(
-    latitude=F('latitude_06'),
-    longitude=F('longitude_06')
-    ).values('latitude', 'longitude')
+    locations = list(locations_01) + list(locations_02) + list(locations_03) + list(locations_04) + list(locations_05) + list(locations_06) + list(locations_07) + list(locations_08) + list(locations_09) + list(locations_10) + list(locations_11)
 
-    locations_07 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_07__isnull=True) | Q(longitude_07__exact ='')).exclude(Q(latitude_07__isnull=True) | Q(latitude_07__exact ='')).values('studyagmp__publication_id','latitude_07','longitude_07')
-    renamed_queryset_07 = locations_07.annotate(
-    latitude=F('latitude_07'),
-    longitude=F('longitude_07')
-    ).values('latitude', 'longitude')
-
-    locations = list(renamed_queryset_01) + list(renamed_queryset_02) +  list(renamed_queryset_03) +  list(renamed_queryset_04) +  list(renamed_queryset_05)  +  list(renamed_queryset_06)  +  list(renamed_queryset_07)
-
-    combined_queryset = renamed_queryset_01 | renamed_queryset_02 | renamed_queryset_03 | renamed_queryset_04 | renamed_queryset_05 | renamed_queryset_06 | renamed_queryset_07
+    # Log combined locations
+    logging.debug(f"Combined locations: {locations}")
 
     records = locations
     count_per_coordinates = defaultdict(int)
     for record in records:
         coordinates = (record["latitude"], record["longitude"])
         count_per_coordinates[coordinates] += 1
-    
 
-    for coordinates, count in count_per_coordinates.items():
-        latitude, longitude = coordinates
-        # print(f"Latitude: {latitude}, Longitude: {longitude} - Publications: {count}")
-
-    coord_per_publications_dict=count_per_coordinates.items()
+    coord_per_publications_dict = count_per_coordinates.items()
 
     m = folium.Map(location=[-4.0335, 21.7501], zoom_start=3)
     data_set = coord_per_publications_dict
     for coordinates, value in data_set:
-        latitude, longitude = coordinates
-        clean_latitude = float(coordinates[0])
-        clean_longitude = float(coordinates[1])
-        # print(f"Lllatitude: {clean_latitude}, Llllongitude: {clean_longitude}, Value: {value}")
-        popup_text = "Publications"
-        popup_number = value  # Replace with your desired number
-        popup_content = f"{popup_text}: {popup_number}"
-        popup = folium.Popup(popup_content, parse_html=True)
-        folium.Marker([clean_latitude, clean_longitude], popup=popup).add_to(m)
-    
+        try:
+            clean_latitude = float(coordinates[0])
+            clean_longitude = float(coordinates[1])
+            popup_text = "Publications"
+            popup_number = value  # Replace with your desired number
+            popup_content = f"{popup_text}: {popup_number}"
+            popup = folium.Popup(popup_content, parse_html=True)
+            folium.Marker([clean_latitude, clean_longitude], popup=popup).add_to(m)
+        except ValueError:
+            logging.warning(f"Skipping invalid coordinates: {coordinates}")
 
     m = m._repr_html_()
+
+    context = {
+        'gene_count': gene_count,
+        'drug_count': drug_count,
+        'variant_count': variant_count,
+        'disease_count': disease_count,
+        'qs_drug': qs_drug,
+        'qs_gene': qs_gene,
+        'qs_variant': qs_variant,
+        'qs_disease': qs_disease,
+        'locations': locations,
+        'coord_per_publications_dict': coord_per_publications_dict,
+        'map': m,
+        'data_set': data_set
+    }
+
+    return render(request, 'summary.html', context)
+
+########### old summary view ###########
+# def summary(request):
+
+#     gene_count=Geneagmp.objects.all().count()
+#     drug_count=Drugagmp.objects.all().count()
+#     variant_count=Variantagmp.objects.all().count()
+#     disease_count=Variantagmp.objects.select_related().exclude(source_db="PharmGKB").count()
+#     #test qset
+#     topten_drugz = Drugagmp.objects.all().annotate(num_pubs=Count('drugs')).order_by('-num_pubs')[:10]
+#     topten_genez = Geneagmp.objects.all().annotate(num_pubs=Count('variantagmp')).order_by('-num_pubs')[:10]
+#     #production qset
+#     qs_drug = Drugagmp.objects.exclude(drug_name="").annotate(frequency=Count('drugs')).order_by("-frequency")[:10]
+#     qs_gene = Geneagmp.objects.all().annotate(frequency=Count('variantagmp__studyagmp')).order_by("-frequency")[:10]
+#     qs_variant = Variantagmp.objects.all().values('rs_id').annotate(frequency=Count('studyagmp')).order_by("-frequency")[:10]
+#     qs_disease = Phenotypeagmp.objects.exclude(variantagmp__source_db="PharmGKB").values('name').annotate(frequency=Count('variantagmp')).order_by("-frequency")[:10]
+
+#     # Map Data # Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data
     
-    # Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data
+#     locations_01 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_01__isnull=True) | Q(longitude_01__exact ='')).exclude(Q(latitude_01__isnull=True) | Q(latitude_01__exact ='')).values('studyagmp__publication_id','latitude_01','longitude_01')
+#     renamed_queryset_01 = (locations_01.values('studyagmp__publication_id').annotate(
+#     latitude=F('latitude_01'),
+#     longitude=F('longitude_01')
+#     ).values('latitude', 'longitude'))
+
+#     locations_02 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_02__isnull=True) | Q(longitude_02__exact ='')).exclude(Q(latitude_02__isnull=True) | Q(latitude_02__exact ='')).values('studyagmp__publication_id','latitude_02','longitude_02')
+#     renamed_queryset_02 = locations_02.values('studyagmp__publication_id').annotate(
+#     latitude=F('latitude_02'),
+#     longitude=F('longitude_02')
+#     ).values('latitude', 'longitude')
+
+#     locations_03 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_03__isnull=True) | Q(longitude_03__exact ='')).exclude(Q(latitude_03__isnull=True) | Q(latitude_03__exact ='')).values('studyagmp__publication_id','latitude_03','longitude_03')
+#     renamed_queryset_03 = locations_03.values('studyagmp__publication_id').annotate(
+#     latitude=F('latitude_03'),
+#     longitude=F('longitude_03')
+#     ).values('latitude', 'longitude')
+
+#     locations_04 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_04__isnull=True) | Q(longitude_04__exact ='')).exclude(Q(latitude_04__isnull=True) | Q(latitude_04__exact ='')).values('studyagmp__publication_id','latitude_04','longitude_04')
+#     renamed_queryset_04 = locations_04.values('studyagmp__publication_id').annotate(
+#     latitude=F('latitude_04'),
+#     longitude=F('longitude_04')
+#     ).values('latitude', 'longitude')
+
+#     locations_05 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_05__isnull=True) | Q(longitude_05__exact ='')).exclude(Q(latitude_05__isnull=True) | Q(latitude_05__exact ='')).values('studyagmp__publication_id','studyagmp__publication_id','latitude_05','longitude_05')
+#     renamed_queryset_05 = locations_05.values('studyagmp__publication_id').annotate(
+#     latitude=F('latitude_05'),
+#     longitude=F('longitude_05')
+#     ).values('latitude', 'longitude')
+
+#     locations_06 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_06__isnull=True) | Q(longitude_06__exact ='')).exclude(Q(latitude_06__isnull=True) | Q(latitude_06__exact ='')).values('studyagmp__publication_id','latitude_06','longitude_06')
+#     renamed_queryset_06 = locations_06.values('studyagmp__publication_id').annotate(
+#     latitude=F('latitude_06'),
+#     longitude=F('longitude_06')
+#     ).values('latitude', 'longitude')
+
+#     locations_07 = VariantStudyagmp.objects.all().annotate(dcount=Count('studyagmp__publication_id')).exclude(Q(longitude_07__isnull=True) | Q(longitude_07__exact ='')).exclude(Q(latitude_07__isnull=True) | Q(latitude_07__exact ='')).values('studyagmp__publication_id','latitude_07','longitude_07')
+#     renamed_queryset_07 = locations_07.annotate(
+#     latitude=F('latitude_07'),
+#     longitude=F('longitude_07')
+#     ).values('latitude', 'longitude')
+
+#     locations = list(renamed_queryset_01) + list(renamed_queryset_02) +  list(renamed_queryset_03) +  list(renamed_queryset_04) +  list(renamed_queryset_05)  +  list(renamed_queryset_06)  +  list(renamed_queryset_07)
+
+#     combined_queryset = renamed_queryset_01 | renamed_queryset_02 | renamed_queryset_03 | renamed_queryset_04 | renamed_queryset_05 | renamed_queryset_06 | renamed_queryset_07
+
+#     records = locations
+#     count_per_coordinates = defaultdict(int)
+#     for record in records:
+#         coordinates = (record["latitude"], record["longitude"])
+#         count_per_coordinates[coordinates] += 1
+    
+
+#     for coordinates, count in count_per_coordinates.items():
+#         latitude, longitude = coordinates
+#         # print(f"Latitude: {latitude}, Longitude: {longitude} - Publications: {count}")
+
+#     coord_per_publications_dict=count_per_coordinates.items()
+
+#     m = folium.Map(location=[-4.0335, 21.7501], zoom_start=3)
+#     data_set = coord_per_publications_dict
+#     for coordinates, value in data_set:
+#         latitude, longitude = coordinates
+#         clean_latitude = float(coordinates[0])
+#         clean_longitude = float(coordinates[1])
+#         # print(f"Lllatitude: {clean_latitude}, Llllongitude: {clean_longitude}, Value: {value}")
+#         popup_text = "Publications"
+#         popup_number = value  # Replace with your desired number
+#         popup_content = f"{popup_text}: {popup_number}"
+#         popup = folium.Popup(popup_content, parse_html=True)
+#         folium.Marker([clean_latitude, clean_longitude], popup=popup).add_to(m)
+    
+
+#     m = m._repr_html_()
+    
+#     # Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data# Map Data
   
-    context = { 'gene_count': gene_count,'drug_count': drug_count,'variant_count': variant_count,'disease_count': disease_count,
-               'qs_drug': qs_drug,'qs_gene': qs_gene,'qs_variant': qs_variant,'qs_disease': qs_disease, 'locations':locations ,'coord_per_publications_dict':coord_per_publications_dict,'map': m,'data_set':data_set}
+#     context = { 'gene_count': gene_count,'drug_count': drug_count,'variant_count': variant_count,'disease_count': disease_count,
+#                'qs_drug': qs_drug,'qs_gene': qs_gene,'qs_variant': qs_variant,'qs_disease': qs_disease, 'locations':locations ,'coord_per_publications_dict':coord_per_publications_dict,'map': m,'data_set':data_set}
 
     
-    return render(request, 'summary.html', context , )
-
+#     return render(request, 'summary.html', context , )
+########### old summary view ###########
 def country_summary(request):
     '''
     :return JSON of country summary
