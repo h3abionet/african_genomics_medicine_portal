@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import pharmacogenes
+
 
 class ModelSelectForm(forms.Form):
     MODELS = [
@@ -13,16 +13,6 @@ class ModelSelectForm(forms.Form):
 
 
 
-class PostForm(forms.ModelForm):
-    class Meta:
-        model = pharmacogenes
-        # list fields
-        fields = ('gene_name', 'function')
-        error_css_class = 'error'
-        required_css_class = 'bold'
-        # https://www.webforefront.com/django/formtemplatelayout.html
-        # TODO: allow empty fields
-    
 
 
 class SearchForm(forms.Form):

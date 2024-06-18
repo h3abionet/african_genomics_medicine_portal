@@ -71,7 +71,7 @@ def run():
 
 
     ################### April May 2024 ####################################
-    df = pd.read_csv('/Users/perceval/development/cbio/agmp_data/csv/second_import_job_run.csv',encoding='latin-1')
+    df = pd.read_excel('/Users/perceval/development/cbio/agmp_data/csv/second_import_job_run.xlsx')
 
 
     for index, row in df.iterrows():
