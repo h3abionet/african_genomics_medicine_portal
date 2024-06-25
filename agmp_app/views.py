@@ -412,12 +412,13 @@ logging.basicConfig(level=logging.DEBUG)
 
 def summary(request):
     gene_count = Geneagmp.objects.all().count()
-    drug_count = Drugagmp.objects.all().count()
+    drug_count = Drugagmp.objects.all().exclude(drug_name__iexact="nan").count()
     variant_count = Variantagmp.objects.all().count()
     disease_count = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").count()
 
     # Test and production query sets
-    topten_drugz = Drugagmp.objects.all().annotate(num_pubs=Count('drugs')).order_by('-num_pubs')[:10]
+    #drug_name
+    topten_drugz = Drugagmp.objects.exclude(drug_name__iexact="nan").annotate(num_pubs=Count('drugs')).order_by('-num_pubs')[:10]
     topten_genez = Geneagmp.objects.all().annotate(num_pubs=Count('variantagmp')).order_by('-num_pubs')[:10]
 
     qs_drug = Drugagmp.objects.exclude(drug_name="").annotate(frequency=Count('drugs')).order_by("-frequency")[:10]
