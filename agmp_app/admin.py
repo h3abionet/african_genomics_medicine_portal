@@ -6,14 +6,17 @@ from .models import Variantagmp, Drugagmp, Geneagmp, VariantStudyagmp, Studyagmp
 class VariantagmpAdmin(admin.ModelAdmin):
     list_display = ['id','rs_id','source_db','id_in_source_db','variant_type','geneagmp',]
     search_fields =['rs_id']
+    list_per_page = 500
     # pass
 class DrugagmpAdmin(admin.ModelAdmin):
     list_display = ['id','drug_id','drug_name','drug_bank_id','indication','state']
     search_fields =['drug_id']
+    list_per_page = 500
 
 class GeneagmpAdmin(admin.ModelAdmin):
     list_display = ['id', 'gene_id','gene_name','chromosome','function','uniprot_ac']
     search_fields =['gene_id']
+    list_per_page = 500
   
 
 class VariantStudyagmpAdmin(admin.ModelAdmin):
@@ -22,11 +25,13 @@ class VariantStudyagmpAdmin(admin.ModelAdmin):
     list_per_page = 500
 
 class StudyagmpAdmin(admin.ModelAdmin):
-    list_display = ['id','study_type','publication_id','publication_type','publication_year']
+    list_display = ['id','study_type','publication_id','publication_type','publication_year','title']
+    list_per_page = 500
 
 class PhenotypeagmpAdmin(admin.ModelAdmin):
     list_display = ['id','name']
     search_fields =['name']
+    list_per_page = 500
 
 ###### site.register ######
 admin.site.register(Drugagmp, DrugagmpAdmin)

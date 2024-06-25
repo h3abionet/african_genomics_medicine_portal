@@ -33,7 +33,7 @@ class Drugagmp(models.Model):
     drug_id = models.CharField(
         max_length=255, default=increment_drug_id, null=True, blank=True)
     class Meta:
-        verbose_name_plural = "* Drugs"
+        verbose_name_plural = "Drugs"
         
     def __str__(self):
         return f"{self.drug_id}"
@@ -48,7 +48,7 @@ class Geneagmp(models.Model):
     uniprot_ac= models.CharField(max_length=500, null=True, blank=True)
  
     class Meta:
-        verbose_name_plural = "* Gene"
+        verbose_name_plural = "Gene"
 
     def __str__(self):
         return f"{self.gene_id}"
@@ -61,12 +61,12 @@ class Studyagmp(models.Model):
     study_type = models.CharField(max_length=500, null=True, blank=True)
     title = models.TextField(max_length=500, null=True, blank=True)
     class Meta:
-        verbose_name_plural = "* Studies"
+        verbose_name_plural = "Studies"
 
 class Phenotypeagmp(models.Model): # will be the diseases
     name = models.TextField(max_length=500, null=True, blank=True)
     class Meta:
-        verbose_name_plural = "* Phenotype"
+        verbose_name_plural = "Phenotype"
    
 class Variantagmp(models.Model):
     geneagmp = models.ForeignKey(Geneagmp, on_delete=models.CASCADE, default="GENE",null=True, blank=True)
@@ -81,7 +81,7 @@ class Variantagmp(models.Model):
     variant_type = models.CharField(max_length=500, null=True, blank=True)
     rs_id = models.CharField(max_length=500, null=True, blank=True)
     class Meta:
-        verbose_name_plural = "* Variant"
+        verbose_name_plural = " Variant"
 
 class VariantStudyagmp(models.Model):
     variantagmp = models.ForeignKey(Variantagmp, on_delete=models.CASCADE,null=True, blank=True)
@@ -147,7 +147,7 @@ class VariantStudyagmp(models.Model):
 
 
     class Meta:
-        verbose_name_plural = "* Variant Studies"
+        verbose_name_plural = " Variant Studies"
 
 #====New Models=======#
 
