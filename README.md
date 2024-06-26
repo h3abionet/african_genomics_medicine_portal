@@ -52,7 +52,7 @@ Install the following packages (if you have not done so already):
 3. The script imports
                 <br>1.<b>first_import_job_run.csv <b> file 
                <br> 2. the second script imports a <b>second_import_job_run.xlsx</b> file
-4. The import script are all writing to select the column name instead of the column number.
+4. The import script selects the column name instead of the column number.
 
 # Other project files
 1. Other project files not limitted to ERD's, data wrangling scripts, csv files are located <a href="https://drive.google.com/drive/u/0/folders/17vzyy3QGL466uH5uxAXDXiCySe3rZD36" target="_blank">here</a>
@@ -64,8 +64,11 @@ Install the following packages (if you have not done so already):
 
 # Generating and ERD Diagram
 
-* Generates ERD for the agmp_app only `python3 manage.py graph_models agmp_app -g -o agmp_app_erd.png` 
-* Generates ERD for all apps in the project, incluing authentication `python3 manage.py graph_models -a -g -o project_erd.png` 
+* Generates ERD for the agmp_app only: <br> `python3 manage.py graph_models agmp_app -g -o agmp_app_erd.png` 
+* Generates ERD for all apps in the project, incluing authentication:<br> `python3 manage.py graph_models -a -g -o project_erd.png` 
+
+# Fix the issue with git large files
+* run the below within the terminal of your repository for a csv large file: <br> git lfs migrate import --include="*.csv"
 
 <hr>      
 Learning Resources for Beginers
