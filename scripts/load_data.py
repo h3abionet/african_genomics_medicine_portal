@@ -15,16 +15,18 @@ from agmp_app.models import Variantagmp, Drugagmp, Geneagmp, Studyagmp, Phenotyp
 
 def run():
 
-    # Import data from the first CSV file
-
-    df_csv = pd.read_csv('/Users/perceval/development/cbio/agmp_data/csv/first_import_job_run.csv', encoding='latin-1')
-
+    # Delete all models
     Variantagmp.objects.all().delete()
     Drugagmp.objects.all().delete()
     Geneagmp.objects.all().delete()
     Studyagmp.objects.all().delete()
     Phenotypeagmp.objects.all().delete()
     VariantStudyagmp.objects.all().delete()
+
+    # Import the first file
+    df_csv = pd.read_csv('/Users/perceval/development/cbio/agmp_data/csv/first_import_job_run.csv', encoding='latin-1')
+
+
 
     for index, row in df_csv.iterrows():
         print(row)

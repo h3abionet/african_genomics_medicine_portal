@@ -418,13 +418,43 @@ def summary(request):
 
     # Test and production query sets
     #drug_name
-    topten_drugz = Drugagmp.objects.exclude(drug_name__iexact="nan").annotate(num_pubs=Count('drugs')).order_by('-num_pubs')[:10]
+    topten_drugz = Drugagmp.objects.all().annotate(num_pubs=Count('drugs')).order_by('-num_pubs')[:10]
+
+
+
     topten_genez = Geneagmp.objects.all().annotate(num_pubs=Count('variantagmp')).order_by('-num_pubs')[:10]
 
-    qs_drug = Drugagmp.objects.exclude(drug_name="").annotate(frequency=Count('drugs')).order_by("-frequency")[:10]
-    qs_gene = Geneagmp.objects.all().annotate(frequency=Count('variantagmp__studyagmp')).order_by("-frequency")[:10]
-    qs_variant = Variantagmp.objects.all().values('rs_id').annotate(frequency=Count('studyagmp')).order_by("-frequency")[:10]
-    qs_disease = Phenotypeagmp.objects.exclude(variantagmp__source_db="PharmGKB").values('name').annotate(frequency=Count('variantagmp')).order_by("-frequency")[:10]
+    qs_drug = (
+    Drugagmp.objects.exclude(drug_name="nan")
+    .values('drug_name')  # Group by drug_name to get unique entries
+    .annotate(frequency=Count('drugs'))  # Count occurrences based on unique drug names
+    .order_by('-frequency')[:10]  # Order by frequency and limit to top 10
+)
+
+    qs_gene = ( 
+    Geneagmp.objects.exclude(gene_name="nan")
+    .values('gene_id') 
+    .annotate(frequency=Count('variantagmp__studyagmp'))
+    .order_by("-frequency")[:10]
+    )
+    qs_variant = (
+    Variantagmp.objects.exclude(rs_id="nan")
+    .values('rs_id') 
+    .annotate(frequency=Count('studyagmp'))
+    .order_by("-frequency")[:10]
+    )
+    qs_disease = (
+    Phenotypeagmp.objects.exclude(variantagmp__source_db="PharmGKB").exclude(variantagmp__source_db="nan")
+    .values('name')
+    .annotate(frequency=Count('variantagmp'))
+    .order_by("-frequency")[:10]
+    )
+    #qs_drug = Drugagmp.objects.exclude(drug_name="nan").annotate(frequency=Count('drugs')).order_by("-frequency")[:10]
+    #qs_gene = Geneagmp.objects.exclude(gene_name="nan").annotate(frequency=Count('variantagmp__studyagmp')).order_by("-frequency")[:10]
+    
+    
+    #qs_variant = Variantagmp.objects.all().values('rs_id').annotate(frequency=Count('studyagmp')).order_by("-frequency")[:10]
+    #qs_disease = Phenotypeagmp.objects.exclude(variantagmp__source_db="PharmGKB").values('name').annotate(frequency=Count('variantagmp')).order_by("-frequency")[:10]
 
     # Function to retrieve and clean location data
     def get_location_data(lat_field, lon_field):
