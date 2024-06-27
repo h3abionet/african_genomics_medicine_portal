@@ -46,7 +46,7 @@ Install the following packages (if you have not done so already):
 * `docker-compose build or docker-compose build`
 * `docker-compose up -d or docker-compose up -d`
 
-# Import script notes
+### Import script notes
 1. The import script exist in /scripts/load_data.py.
 2. To run the import script # python3 manage.py runscript load_data
 3. The script imports
@@ -54,7 +54,7 @@ Install the following packages (if you have not done so already):
                <br> 2. the second script imports a <b>second_import_job_run.xlsx</b> file
 4. The import script selects the column name instead of the column number.
 
-# Other project files
+### Other project files
 1. Other project files not limitted to ERD's, data wrangling scripts, csv files are located <a href="https://drive.google.com/drive/u/0/folders/17vzyy3QGL466uH5uxAXDXiCySe3rZD36" target="_blank">here</a>
 
 <!-- # Screen shots of tabular presentation of PharmaGKb data -->
@@ -62,12 +62,12 @@ Install the following packages (if you have not done so already):
 ![](images/snp.png?raw=true)
 ![](images/snp_ethnic.png?raw=true) -->
 
-# Generating and ERD Diagram
+### Generating and ERD Diagram
 
 * Generates ERD for the specified agmp_app only: <br> `python3 manage.py graph_models agmp_app -g -o agmp_app_erd.png` 
 * Generates ERD for all apps in the project, including the authentication model:<br> `python3 manage.py graph_models -a -g -o project_erd.png` 
 
-# Fix the issue with git large files
+### Fix the issue with git large files
 * run the below within the terminal of your repository for a csv large file: <br> git lfs migrate import --include="*.csv"
 
 <hr>      

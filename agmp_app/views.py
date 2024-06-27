@@ -23,7 +23,6 @@ from django.http import JsonResponse
 from django.views.generic import TemplateView
 
 
-
 from collections import defaultdict
 import logging
 
@@ -430,7 +429,6 @@ def summary(request):
     .annotate(frequency=Count('drugs'))  # Count occurrences based on unique drug names
     .order_by('-frequency')[:10]  # Order by frequency and limit to top 10
 )
-
     qs_gene = ( 
     Geneagmp.objects.exclude(gene_name="nan")
     .values('gene_id') 
