@@ -24,7 +24,7 @@ def run():
     VariantStudyagmp.objects.all().delete()
 
     # Import the first file
-    df_csv = pd.read_csv('csv/first_import_job_run.csv', encoding='latin-1')
+    df_csv = pd.read_csv('import_csv/first_import_job_run.csv', encoding='latin-1')
 
 
 
@@ -64,7 +64,7 @@ def run():
     print("############ First JOB ENDED ################")
 
     # Import data from the second Excel file
-    df_excel = pd.read_excel('csv/second_import_job_run.xlsx')
+    df_excel = pd.read_excel('import_csv/second_import_job_run.xlsx')
 
     for index, row in df_excel.iterrows():
         print(row)
