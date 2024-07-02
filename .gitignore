@@ -92,8 +92,7 @@ local_settings.py
 env_pm
 config.py
 .python-version
-*.csv
-*.sqlite3
+.sqlite3
 ## databases
 dbs
 
