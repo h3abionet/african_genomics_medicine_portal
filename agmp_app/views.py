@@ -22,9 +22,10 @@ from django.views.generic import ListView
 from django.http import JsonResponse
 from django.views.generic import TemplateView
 
-
 from collections import defaultdict
+import folium
 import logging
+
 
 def search_view(request):
     form = ModelSearchForm(request.GET)
@@ -406,53 +407,47 @@ def about(request):
 
 
 
-# Configure logging
-logging.basicConfig(level=logging.DEBUG)
-
 def summary(request):
-    gene_count = Geneagmp.objects.all().count()
-    drug_count = Drugagmp.objects.all().exclude(drug_name__iexact="nan").count()
-    variant_count = Variantagmp.objects.all().count()
-    disease_count = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").count()
+    # Basic counts
+    gene_count = Geneagmp.objects.count()
+    drug_count = Drugagmp.objects.exclude(drug_name__iexact="nan").count()
+    variant_count = Variantagmp.objects.count()
+    disease_count = Variantagmp.objects.exclude(source_db="PharmGKB").count()
 
-    # Test and production query sets
-    #drug_name
-    topten_drugz = Drugagmp.objects.all().annotate(num_pubs=Count('drugs')).order_by('-num_pubs')[:10]
+    # Optimized query for top 10 drugs by publications
+    topten_drugz = Drugagmp.objects.annotate(num_pubs=Count('drugs')).order_by('-num_pubs')[:10]
 
+    # Optimized query for top 10 genes by publications
+    topten_genez = Geneagmp.objects.annotate(num_pubs=Count('variantagmp')).order_by('-num_pubs')[:10]
 
-
-    topten_genez = Geneagmp.objects.all().annotate(num_pubs=Count('variantagmp')).order_by('-num_pubs')[:10]
-
+    # Optimized top 10 querysets
     qs_drug = (
-    Drugagmp.objects.exclude(drug_name="nan")
-    .values('drug_name')  # Group by drug_name to get unique entries
-    .annotate(frequency=Count('drugs'))  # Count occurrences based on unique drug names
-    .order_by('-frequency')[:10]  # Order by frequency and limit to top 10
-)
-    qs_gene = ( 
-    Geneagmp.objects.exclude(gene_name="nan")
-    .values('gene_id') 
-    .annotate(frequency=Count('variantagmp__studyagmp'))
-    .order_by("-frequency")[:10]
+        Drugagmp.objects.exclude(drug_name="nan")
+        .values('drug_name')
+        .annotate(frequency=Count('drugs'))
+        .order_by('-frequency')[:10]
     )
+
+    qs_gene = (
+        Geneagmp.objects.exclude(gene_name="nan")
+        .values('gene_id')
+        .annotate(frequency=Count('variantagmp__studyagmp'))
+        .order_by('-frequency')[:10]
+    )
+
     qs_variant = (
-    Variantagmp.objects.exclude(rs_id="nan")
-    .values('rs_id') 
-    .annotate(frequency=Count('studyagmp'))
-    .order_by("-frequency")[:10]
+        Variantagmp.objects.exclude(rs_id="nan")
+        .values('rs_id')
+        .annotate(frequency=Count('studyagmp'))
+        .order_by('-frequency')[:10]
     )
+
     qs_disease = (
-    Phenotypeagmp.objects.exclude(variantagmp__source_db="PharmGKB").exclude(variantagmp__source_db="nan")
-    .values('name')
-    .annotate(frequency=Count('variantagmp'))
-    .order_by("-frequency")[:10]
+        Phenotypeagmp.objects.exclude(variantagmp__source_db="PharmGKB").exclude(variantagmp__source_db="nan")
+        .values('name')
+        .annotate(frequency=Count('variantagmp'))
+        .order_by('-frequency')[:10]
     )
-    #qs_drug = Drugagmp.objects.exclude(drug_name="nan").annotate(frequency=Count('drugs')).order_by("-frequency")[:10]
-    #qs_gene = Geneagmp.objects.exclude(gene_name="nan").annotate(frequency=Count('variantagmp__studyagmp')).order_by("-frequency")[:10]
-    
-    
-    #qs_variant = Variantagmp.objects.all().values('rs_id').annotate(frequency=Count('studyagmp')).order_by("-frequency")[:10]
-    #qs_disease = Phenotypeagmp.objects.exclude(variantagmp__source_db="PharmGKB").values('name').annotate(frequency=Count('variantagmp')).order_by("-frequency")[:10]
 
     # Function to retrieve and clean location data
     def get_location_data(lat_field, lon_field):
@@ -463,31 +458,32 @@ def summary(request):
 
         logging.debug(f"Retrieved {lat_field}, {lon_field} locations: {list(locations)}")
 
-        renamed_queryset = locations.values('studyagmp__publication_id').annotate(
+        renamed_queryset = locations.annotate(
             latitude=F(lat_field),
             longitude=F(lon_field)
         ).values('latitude', 'longitude')
 
         return renamed_queryset
 
-    locations_01 = get_location_data('latitude_01', 'longitude_01')
-    locations_02 = get_location_data('latitude_02', 'longitude_02')
-    locations_03 = get_location_data('latitude_03', 'longitude_03')
-    locations_04 = get_location_data('latitude_04', 'longitude_04')
-    locations_05 = get_location_data('latitude_05', 'longitude_05')
-    locations_06 = get_location_data('latitude_06', 'longitude_06')
-    locations_07 = get_location_data('latitude_07', 'longitude_07')
-    locations_08 = get_location_data('latitude_08', 'longitude_08')
-    locations_09 = get_location_data('latitude_09', 'longitude_09')
-    locations_10 = get_location_data('latitude_10', 'longitude_10')
-    locations_11 = get_location_data('latitude_11', 'longitude_11')
+    # Collect all location data
+    location_fields = [
+        ('latitude_01', 'longitude_01'), ('latitude_02', 'longitude_02'),
+        ('latitude_03', 'longitude_03'), ('latitude_04', 'longitude_04'),
+        ('latitude_05', 'longitude_05'), ('latitude_06', 'longitude_06'),
+        ('latitude_07', 'longitude_07'), ('latitude_08', 'longitude_08'),
+        ('latitude_09', 'longitude_09'), ('latitude_10', 'longitude_10'),
+        ('latitude_11', 'longitude_11')
+    ]
 
-    locations = list(locations_01) + list(locations_02) + list(locations_03) + list(locations_04) + list(locations_05) + list(locations_06) + list(locations_07) + list(locations_08) + list(locations_09) + list(locations_10) + list(locations_11)
+    locations = [get_location_data(lat, lon) for lat, lon in location_fields]
+
+    # Flatten the list of location querysets
+    flattened_locations = [item for sublist in locations for item in sublist]
 
     # Log combined locations
-    logging.debug(f"Combined locations: {locations}")
+    logging.debug(f"Combined locations: {flattened_locations}")
 
-    records = locations
+    records = flattened_locations
     count_per_coordinates = defaultdict(int)
     for record in records:
         coordinates = (record["latitude"], record["longitude"])
@@ -520,13 +516,15 @@ def summary(request):
         'qs_gene': qs_gene,
         'qs_variant': qs_variant,
         'qs_disease': qs_disease,
-        'locations': locations,
+        'locations': flattened_locations,
         'coord_per_publications_dict': coord_per_publications_dict,
         'map': m,
         'data_set': data_set
     }
 
     return render(request, 'summary.html', context)
+
+
 
 ########### old summary view ###########
 # def summary(request):
