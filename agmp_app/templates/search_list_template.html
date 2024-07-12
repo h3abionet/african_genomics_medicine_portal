@@ -27,6 +27,7 @@
 
 $(document).ready(function () {
     var debounceTimer;
+    var cache = {};
 
     // Function to handle input keyup event
     $('#id_search_query').on('keyup', function () {
@@ -35,10 +36,25 @@ $(document).ready(function () {
 
         debounceTimer = setTimeout(function () {
             // Get the search query from the input field
-            var searchQuery = $('#id_search_query').val();
+            var searchQuery = $('#id_search_query').val().trim();
+
+            // If the search query is empty, clear the results
+            if (searchQuery === "") {
+                $('#results-list').empty();
+                return;
+            }
 
             // Get the selected model from the radio buttons
             var modelSelection = $('input[name=model_selection]:checked').val();
+
+            // Create a cache key
+            var cacheKey = searchQuery + "|" + modelSelection;
+
+            // Check if results are cached
+            if (cache[cacheKey]) {
+                $('#results-list').html(cache[cacheKey]);
+                return;
+            }
 
             // Show loading indicator
             $('#results-list').html('<div class="loading">Loading...</div>');
@@ -54,6 +70,8 @@ $(document).ready(function () {
                 success: function (data) {
                     // Extract and update only the #results-list from the received data
                     var updatedResults = $(data).find('#results-list').html();
+                    // Cache the results
+                    cache[cacheKey] = updatedResults;
                     $('#results-list').html(updatedResults);
                 },
                 error: function (error) {
@@ -62,9 +80,10 @@ $(document).ready(function () {
                     $('#results-list').html('<div class="error">An error occurred. Please try again.</div>');
                 }
             });
-        }, 300); // Debounce time (in milliseconds)
+        }, 200); // Debounce time (in milliseconds)
     });
 });
+
 
 
 
@@ -103,7 +122,6 @@ $(document).ready(function () {
         //         }, 100); // Debounce time (in milliseconds)
         //     });
         // });
-        
     </script>
 </head>
 
