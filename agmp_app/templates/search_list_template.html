@@ -25,9 +25,67 @@
 
     <script>
 
+// $(document).ready(function () {
+//     var debounceTimer;
+//     var cache = {};
+
+
+//     $('#id_search_query').on('keyup', function () {
+
+//         clearTimeout(debounceTimer);
+
+//         debounceTimer = setTimeout(function () {
+          
+//             var searchQuery = $('#id_search_query').val().trim();
+
+       
+//             if (searchQuery === "") {
+//                 $('#results-list').empty();
+//                 return;
+//             }
+
+          
+//             var modelSelection = $('input[name=model_selection]:checked').val();
+
+   
+//             var cacheKey = searchQuery + "|" + modelSelection;
+
+        
+//             if (cache[cacheKey]) {
+//                 $('#results-list').html(cache[cacheKey]);
+//                 return;
+//             }
+
+        
+//             $('#results-list').html('<div class="loading">Loading...</div>');
+
+       
+//             $.ajax({
+//                 type: 'GET',
+//                 url: '{% url "search_view" %}',
+//                 data: {
+//                     search_query: searchQuery,
+//                     model_selection: modelSelection
+//                 },
+//                 success: function (data) {
+
+//                     var updatedResults = $(data).find('#results-list').html();
+
+//                     cache[cacheKey] = updatedResults;
+//                     $('#results-list').html(updatedResults);
+//                 },
+//                 error: function (error) {
+//                     console.log('Error:', error);
+
+//                     $('#results-list').html('<div class="error">An error occurred. Please try again.</div>');
+//                 }
+//             });
+//         }, 200); 
+//     });
+// });
+
 $(document).ready(function () {
     var debounceTimer;
-    var cache = {};
 
     // Function to handle input keyup event
     $('#id_search_query').on('keyup', function () {
@@ -36,28 +94,13 @@ $(document).ready(function () {
 
         debounceTimer = setTimeout(function () {
             // Get the search query from the input field
-            var searchQuery = $('#id_search_query').val().trim();
-
-            // If the search query is empty, clear the results
-            if (searchQuery === "") {
-                $('#results-list').empty();
-                return;
-            }
+            var searchQuery = $('#id_search_query').val();
 
             // Get the selected model from the radio buttons
             var modelSelection = $('input[name=model_selection]:checked').val();
 
-            // Create a cache key
-            var cacheKey = searchQuery + "|" + modelSelection;
-
-            // Check if results are cached
-            if (cache[cacheKey]) {
-                $('#results-list').html(cache[cacheKey]);
-                return;
-            }
-
-            // Show loading indicator
-            $('#results-list').html('<div class="loading">Loading...</div>');
+            // Show loading message
+            $('#results-list').html('Loading...');
 
             // Make an AJAX request to the backend
             $.ajax({
@@ -70,59 +113,19 @@ $(document).ready(function () {
                 success: function (data) {
                     // Extract and update only the #results-list from the received data
                     var updatedResults = $(data).find('#results-list').html();
-                    // Cache the results
-                    cache[cacheKey] = updatedResults;
                     $('#results-list').html(updatedResults);
                 },
                 error: function (error) {
                     console.log('Error:', error);
-                    // Show error message
-                    $('#results-list').html('<div class="error">An error occurred. Please try again.</div>');
+                    $('#results-list').html('Error fetching data.');
                 }
             });
-        }, 200); // Debounce time (in milliseconds)
+        }, 300); // Debounce time (in milliseconds)
     });
 });
 
 
-
-
-        // $(document).ready(function () {
-        //     var debounceTimer;
-
-        //     // Function to handle input keyup event
-        //     $('#id_search_query').on('keyup', function () {
-        //         // Debounce the keyup event to reduce rapid AJAX requests
-        //         clearTimeout(debounceTimer);
-
-        //         debounceTimer = setTimeout(function () {
-        //             // Get the search query from the input field
-        //             var searchQuery = $('#id_search_query').val();
-
-        //             // Get the selected model from the radio buttons
-        //             var modelSelection = $('input[name=model_selection]:checked').val();
-
-        //             // Make an AJAX request to the backend
-        //             $.ajax({
-        //                 type: 'GET',
-        //                 url: '{% url "search_view" %}',
-        //                 data: {
-        //                     search_query: searchQuery,
-        //                     model_selection: modelSelection
-        //                 },
-        //                 success: function (data) {
-        //                     // Extract and update only the #results-list from the received data
-        //                     var updatedResults = $(data).find('#results-list').html();
-        //                     $('#results-list').html(updatedResults);
-        //                 },
-        //                 error: function (error) {
-        //                     console.log('Error:', error);
-        //                 }
-        //             });
-        //         }, 100); // Debounce time (in milliseconds)
-        //     });
-        // });
-    </script>
+</script>
 </head>
 
 <!-- <body> -->
@@ -183,7 +186,7 @@ $(document).ready(function () {
    
             {% for result in results %}
 
-            
+
                 <b>Variant ID: </b>{{ result.rs_id}}<br>
                 <b>Gene: </b>{{ result.geneagmp.gene_id}}<br>
                 <b>Chromosome: </b>{{result.geneagmp.chromosome}}<br>

@@ -12,3 +12,4 @@ pandas # old version ==1.4.3
 django-pandas
 django-autocomplete-light
 openpyxl
+python-memcached
