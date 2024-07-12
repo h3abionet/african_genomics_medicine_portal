@@ -27,6 +27,7 @@ import folium
 import logging
 
 
+ #current search view
 def search_view(request):
     form = ModelSearchForm(request.GET)
     model_selection = ""
@@ -35,14 +36,12 @@ def search_view(request):
         model_selection = form.cleaned_data['model_selection']
         search_query = form.cleaned_data['search_query']
 
-        # print(model_selection)
-        # print(search_query)
      
         if model_selection == 'variantagmp':
             results = Variantagmp.objects.filter(rs_id__icontains=search_query)
 
         elif model_selection == 'geneagmp':
-            results = Geneagmp.objects.filter(gene_id__icontains=search_query) 
+            results = Geneagmp.objects.filter(gene_id__icontains=search_query)
 
         elif model_selection == 'drugagmp':
             results = Drugagmp.objects.filter(drug_name__icontains=search_query)
@@ -51,10 +50,7 @@ def search_view(request):
            results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__icontains=search_query).values("phenotypeagmp__name").distinct()
     else:
         results = []
-     
 
-
-    # return HttpResponse('Hello, world!')
 
     return render(request, 'search_list_template.html', {'form': form, 'results': results, 'model_selection': model_selection})
 

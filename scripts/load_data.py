@@ -24,7 +24,7 @@ def run():
     VariantStudyagmp.objects.all().delete()
 
     # Import the first file
-    df_csv = pd.read_csv('import_csv/first_import_job_run.csv', encoding='latin-1')
+    df_csv = pd.read_csv('import_csv/first_import_job_run_error_fix.csv', encoding='latin-1')
 
 
 
