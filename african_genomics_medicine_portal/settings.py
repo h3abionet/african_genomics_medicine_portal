@@ -170,3 +170,13 @@ LEAFLET_CONFIG = {
 }
 
 
+# cache
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',  # In-memory cache for development
+        # For production, use 'django_redis.cache.RedisCache' or 'django.core.cache.backends.memcached.MemcachedCache'
+        'LOCATION': 'unique-snowflake',
+    }
+}
+

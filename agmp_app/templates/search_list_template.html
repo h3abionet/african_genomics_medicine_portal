@@ -182,12 +182,16 @@ $(document).ready(function () {
             {% if model_selection == "variantagmp" %}
    
             {% for result in results %}
+
+            
                 <b>Variant ID: </b>{{ result.rs_id}}<br>
                 <b>Gene: </b>{{ result.geneagmp.gene_id}}<br>
                 <b>Chromosome: </b>{{result.geneagmp.chromosome}}<br>
                 <a href="{% url 'Var_Drug_Assoc' result.rs_id %}">Variant-Drug Associations </a> <br>
                 <a href="{% url 'Variant_Disease_Assoc' result.rs_id %}">Variant-Disease Associations </a><br>
                 <hr>
+
+
             {% empty %}
                 <p class="text-center" >No results found.</p>
             

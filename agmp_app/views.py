@@ -26,20 +26,28 @@ from collections import defaultdict
 import folium
 import logging
 
+from django.core.cache import cache
 
  #current search view
 def search_view(request):
+
     form = ModelSearchForm(request.GET)
     model_selection = ""
 
     if form.is_valid():
         model_selection = form.cleaned_data['model_selection']
         search_query = form.cleaned_data['search_query']
+        #cache code
+        cache_key = f"variantagmp_{search_query}"
+        results = cache.get(cache_key)
+        #cache code
 
      
         if model_selection == 'variantagmp':
             results = Variantagmp.objects.filter(rs_id__icontains=search_query)
-
+            #cache code bit
+            cache.set(cache_key, results, timeout=300)
+            #cache code bit
         elif model_selection == 'geneagmp':
             results = Geneagmp.objects.filter(gene_id__icontains=search_query)
 
