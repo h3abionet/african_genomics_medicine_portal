@@ -24,41 +24,86 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <script>
-        $(document).ready(function () {
-            var debounceTimer;
 
-            // Function to handle input keyup event
-            $('#id_search_query').on('keyup', function () {
-                // Debounce the keyup event to reduce rapid AJAX requests
-                clearTimeout(debounceTimer);
+$(document).ready(function () {
+    var debounceTimer;
 
-                debounceTimer = setTimeout(function () {
-                    // Get the search query from the input field
-                    var searchQuery = $('#id_search_query').val();
+    // Function to handle input keyup event
+    $('#id_search_query').on('keyup', function () {
+        // Debounce the keyup event to reduce rapid AJAX requests
+        clearTimeout(debounceTimer);
 
-                    // Get the selected model from the radio buttons
-                    var modelSelection = $('input[name=model_selection]:checked').val();
+        debounceTimer = setTimeout(function () {
+            // Get the search query from the input field
+            var searchQuery = $('#id_search_query').val();
 
-                    // Make an AJAX request to the backend
-                    $.ajax({
-                        type: 'GET',
-                        url: '{% url "search_view" %}',
-                        data: {
-                            search_query: searchQuery,
-                            model_selection: modelSelection
-                        },
-                        success: function (data) {
-                            // Extract and update only the #results-list from the received data
-                            var updatedResults = $(data).find('#results-list').html();
-                            $('#results-list').html(updatedResults);
-                        },
-                        error: function (error) {
-                            console.log('Error:', error);
-                        }
-                    });
-                }, 50); // Debounce time (in milliseconds)
+            // Get the selected model from the radio buttons
+            var modelSelection = $('input[name=model_selection]:checked').val();
+
+            // Show loading indicator
+            $('#results-list').html('<div class="loading">Loading...</div>');
+
+            // Make an AJAX request to the backend
+            $.ajax({
+                type: 'GET',
+                url: '{% url "search_view" %}',
+                data: {
+                    search_query: searchQuery,
+                    model_selection: modelSelection
+                },
+                success: function (data) {
+                    // Extract and update only the #results-list from the received data
+                    var updatedResults = $(data).find('#results-list').html();
+                    $('#results-list').html(updatedResults);
+                },
+                error: function (error) {
+                    console.log('Error:', error);
+                    // Show error message
+                    $('#results-list').html('<div class="error">An error occurred. Please try again.</div>');
+                }
             });
-        });
+        }, 300); // Debounce time (in milliseconds)
+    });
+});
+
+
+
+        // $(document).ready(function () {
+        //     var debounceTimer;
+
+        //     // Function to handle input keyup event
+        //     $('#id_search_query').on('keyup', function () {
+        //         // Debounce the keyup event to reduce rapid AJAX requests
+        //         clearTimeout(debounceTimer);
+
+        //         debounceTimer = setTimeout(function () {
+        //             // Get the search query from the input field
+        //             var searchQuery = $('#id_search_query').val();
+
+        //             // Get the selected model from the radio buttons
+        //             var modelSelection = $('input[name=model_selection]:checked').val();
+
+        //             // Make an AJAX request to the backend
+        //             $.ajax({
+        //                 type: 'GET',
+        //                 url: '{% url "search_view" %}',
+        //                 data: {
+        //                     search_query: searchQuery,
+        //                     model_selection: modelSelection
+        //                 },
+        //                 success: function (data) {
+        //                     // Extract and update only the #results-list from the received data
+        //                     var updatedResults = $(data).find('#results-list').html();
+        //                     $('#results-list').html(updatedResults);
+        //                 },
+        //                 error: function (error) {
+        //                     console.log('Error:', error);
+        //                 }
+        //             });
+        //         }, 100); // Debounce time (in milliseconds)
+        //     });
+        // });
+        
     </script>
 </head>
 
