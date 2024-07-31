@@ -7,18 +7,10 @@
 
 {% endblock %}
    
-<head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/2.1.2/css/dataTables.foundation.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.0/css/buttons.foundation.css">
-  
-
-  
-
-</head>
 <style>
 
 </style>
+
 
 {% block content %}
 <div class="container">
@@ -507,9 +499,15 @@
 {% endblock %}
 
 {% block js %}
+
 <script>
         $(document).ready(function() {
             $('#example_1').DataTable({
+                dom: 'lBfrtip',
+                lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
                 layout: {
                     topStart: {
                         buttons: ['colvis']
