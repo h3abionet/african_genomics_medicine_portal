@@ -678,3 +678,5 @@ def home(request):
 # def download_file(request, file_name):
 #     response = FileResponse(open(f"{file_name}", 'rb'))
 #     return response
+def test_data_table(request):
+    return render(request, 'test_data_table.html')

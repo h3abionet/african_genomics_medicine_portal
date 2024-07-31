@@ -21,6 +21,7 @@
 	</title>
 	{% block js_top %}
 	{% endblock %}
+
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel='stylesheet' href='https://use.fontawesome.com/releases/v5.7.0/css/all.css'
@@ -29,19 +30,25 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" rel="stylesheet"
 		crossorigin="anonymous">
-	<link rel="stylesheet" type="text/css" href="{% static 'css/jquery.dataTables.css' %}">
-	<!-- commented for now -->
-	<!-- <script src="{% static 'css/datatableActions/pdfmake.cs' %}"></script>
-	<script src="{% static 'css/datatableActions/buttons.bootstrap4.css' %}"></script>
-	<script src="{% static 'css/datatableActions/buttons.dataTables.css' %}"></script> -->
-	<!-- commented for now -->
-
 	<link rel="shortcut icon" href="{% static 'img/bionetlogo.png' %}" />
+
+	<link rel="stylesheet" type="text/css" href="{% static 'css/dt_colfilt_css/buttons.foundation.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/dt_colfilt_css/dataTables.foundation.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/dt_colfilt_css/foundation.min.css' %}">
+
+	<script type="text/javascript" src="{% static 'js/dt_colfilt/jquery-3.7.1.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/dt_colfilt/foundation.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/dt_colfilt/dataTables.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/dt_colfilt/dataTables.foundation.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/dt_colfilt/dataTables.buttons.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/dt_colfilt/buttons.foundation.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/dt_colfilt/buttons.colVis.min.js' %}"></script>
+
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700;900&display=swap" rel="stylesheet">
 	
 
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
-	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
 
 
 	
@@ -97,23 +104,6 @@
 						<li class="nav-item ml-auto py-0">
 							<a class="nav-link text-bigblue" href="/resources">Resources</a>
 						</li>
-						<!-- <li class="nav-item ml-auto py-0">
-							<div class="dropdown">
-								<button class="btn dropdown-toggle nav-link text-blue" type="button"
-									data-toggle="dropdown" aria-haspopup="true">
-									Resources
-								</button>
-								<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-									<a class="dropdown-item" href="/databases">Databases</a>
-									<a class="dropdown-item" href="/tools_pipelines">Tools &amp;
-										Pipelines</a>
-									<a class="dropdown-item" href="/online_courses">Online Courses</a>
-								</div>
-							</div>
-						</li> -->
-						<!-- <li class="nav-item ml-auto py-0">
-						<a class="nav-link text-blue" href="/outreach/">Outreach</a>
-					</li> -->
 						<li class="nav-item ml-auto py-0">
 							<a class="nav-link text-bigblue" href="/help">Help</a>
 						</li>
@@ -146,8 +136,7 @@
 		<div class="container main_min_height">
 			{% block content %}
 			{% endblock %}
-			<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
-				crossorigin="anonymous"></script>
+
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
 				integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
 				crossorigin="anonymous"></script>
