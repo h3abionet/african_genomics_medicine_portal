@@ -37,6 +37,9 @@
           <td>{{my_object.country_participant}}</td>
           <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}" target="_blank">{{my_object.studyagmp.title}}</a></td>
       </tr>
+
+      {% empty %}
+
       {% endfor %}   {% endcomment %}
       <!-- ... more rows ... -->
   </tbody>
