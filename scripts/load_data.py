@@ -43,6 +43,7 @@ def run():
                               p_value=row['p-value'],
                               ethnicity=row['Ethnicity'],
                               geographical_regions=row['geographical_region'],
+                              country_participant=row['origin_of_participants'],
                               )
         vs.save()
 
@@ -89,6 +90,7 @@ def run():
                                 p_value=row['p-value'],
                                 ethnicity=row['Ethnicity'],
                                 geographical_regions=row['geographical_region'],
+                                country_participant=row['origin_of_participants'],
                                 )
         vs01.save()
 
