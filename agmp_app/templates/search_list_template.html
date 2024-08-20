@@ -25,64 +25,6 @@
 
     <script>
 
-// $(document).ready(function () {
-//     var debounceTimer;
-//     var cache = {};
-
-
-//     $('#id_search_query').on('keyup', function () {
-
-//         clearTimeout(debounceTimer);
-
-//         debounceTimer = setTimeout(function () {
-          
-//             var searchQuery = $('#id_search_query').val().trim();
-
-       
-//             if (searchQuery === "") {
-//                 $('#results-list').empty();
-//                 return;
-//             }
-
-          
-//             var modelSelection = $('input[name=model_selection]:checked').val();
-
-   
-//             var cacheKey = searchQuery + "|" + modelSelection;
-
-        
-//             if (cache[cacheKey]) {
-//                 $('#results-list').html(cache[cacheKey]);
-//                 return;
-//             }
-
-        
-//             $('#results-list').html('<div class="loading">Loading...</div>');
-
-       
-//             $.ajax({
-//                 type: 'GET',
-//                 url: '{% url "search_view" %}',
-//                 data: {
-//                     search_query: searchQuery,
-//                     model_selection: modelSelection
-//                 },
-//                 success: function (data) {
-
-//                     var updatedResults = $(data).find('#results-list').html();
-
-//                     cache[cacheKey] = updatedResults;
-//                     $('#results-list').html(updatedResults);
-//                 },
-//                 error: function (error) {
-//                     console.log('Error:', error);
-
-//                     $('#results-list').html('<div class="error">An error occurred. Please try again.</div>');
-//                 }
-//             });
-//         }, 200); 
-//     });
-// });
 
 $(document).ready(function () {
     var debounceTimer;
@@ -160,7 +102,7 @@ $(document).ready(function () {
                 <ul>
             </div>
             <div>
-                <label for="{{ form.search_query.id_for_label }}">{{ form.search_query.label }}</label>
+                <label class="mb-4" for="{{ form.search_query.id_for_label }}">{{ form.search_query.label }}</label>
                 <input type="text" name="{{ form.search_query.html_name }}" value="" id="{{ form.search_query.id_for_label }}" maxlength="100">
 
             </div>
@@ -172,10 +114,6 @@ $(document).ready(function () {
         </form>
         </div>
     </div>
-
-
-    
-
 
     <div class="">
         <ul id="results-list">

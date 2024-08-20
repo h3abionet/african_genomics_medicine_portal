@@ -1,5 +1,5 @@
  {% extends 'mainLayout.html' %} 
-
+ {% load static %}
 
 {% block title %} Variant Drug Associations {% endblock %}
 
@@ -89,9 +89,7 @@
           </tr>
 
           {% empty %}
-          <p class="empty-message">
-            No data available in table
-          </p>
+
           {% endfor %}  
        
          

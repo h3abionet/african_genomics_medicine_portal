@@ -1,5 +1,6 @@
  {% extends 'mainLayout.html' %} 
 
+ {% load static %}
 
 
 {% block title %} Variant Drug Associations {% endblock %}
@@ -53,9 +54,6 @@
           <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}">{{my_object.studyagmp.publication_id}}</a></td>
       </tr>
       {% empty %}
-      <p class="empty-message">
-        No data available in table
-      </p>
 
       {% endfor %}  
       <!-- ... more rows ... -->
