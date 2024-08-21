@@ -57,15 +57,70 @@
 <script type="text/javascript">
 
 
-    $('#example').DataTable( {
-        dom: 'Bfrtip',
-         
-          buttons: [
-          'copy', 'csv', 'excel', 'pdf', 'print'
-        ],
-        
-     } );
-  
+$(document).ready(function() {
+    function initializeTable(tableId, columnSelectId) {
+        var table = $(tableId).DataTable({
+            dom: 'lBfrtip',
+            buttons: [
+                {
+                    extend: 'collection',
+                    text: 'Export',
+                    buttons: [
+                        {
+                            extend: 'copy',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'excel',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'csv',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        },
+                        {
+                            extend: 'pdf',
+                            exportOptions: {
+                                columns: ':visible'
+                            }
+                        }
+                    ]
+                },
+                'colvis'
+            ],
+            columnDefs: [{
+                targets: '_all',
+                visible: true // Display all columns by default
+            }]
+        });
+
+        // Create checkboxes for column selection
+        table.columns().every(function(index) {
+            var column = this;
+            var checked = column.visible() ? 'checked' : '';
+            var checkbox = $('<label><input type="checkbox" ' + checked + '>' + $(column.header()).text() + '</label>');
+
+            // Handle checkbox click event
+            checkbox.find('input').on('click', function() {
+                var isChecked = this.checked;
+                column.visible(isChecked);
+            });
+
+            $(columnSelectId).append(checkbox);
+        });
+    }
+
+    initializeTable('#example', '#columnSelect1');
+    // initializeTable('#example3', '#columnSelect2');
+});
+
+ 
 
 </script>
 
