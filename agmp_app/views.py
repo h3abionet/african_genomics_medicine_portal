@@ -123,7 +123,7 @@ class PhamacogeneDrugAssoc(DetailView):
         context['geneagmp'] = Geneagmp.objects.filter(
             gene_id=gene_id)
         
-        context["data"] = Geneagmp.objects.get(gene_id = gene_id)
+        context["data"] = Geneagmp.objects.filter(gene_id = gene_id).first()
        
 
         #exclude multiple fields as an example
