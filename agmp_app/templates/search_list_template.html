@@ -159,7 +159,7 @@ $(document).ready(function () {
                 <b>Drug Bank ID: </b><a href="https://go.drugbank.com/drugs/{{result.drug_bank_id}}">{{result.drug_bank_id}}</a>
                 <br>
                 <b>State: </b>{{result.state}}<br>
-                <a href="{% url 'VariantDrugAssociation' result.drug_id %}">Varian-Drug Associations</a><br>  
+                <a href="{% url 'VariantDrugAssociation' result.drug_id %}">Variant-Drug Associations</a><br>  
                 <hr>
 
             {% empty %}
