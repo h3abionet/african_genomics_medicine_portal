@@ -32,7 +32,7 @@ def run():
         print(row)
         p, created = Phenotypeagmp.objects.get_or_create(name=row['phenotype'])
         s, created = Studyagmp.objects.get_or_create(data_ac=row['data_ac'], publication_id=row['publication'], publication_year=row['publication_year'], study_type=row['study_type'], title=row['title'])
-        d, created = Drugagmp.objects.get_or_create(drug_id=row['ID Drug bank'], drug_name=row['drug_name'], indication=row['Indication'], state=row['state'], iupac_name_seq=row['IUPAC_name'])
+        d, created = Drugagmp.objects.get_or_create(drug_bank_id=row['ID Drug bank'], drug_name=row['drug_name'], indication=row['Indication'], state=row['state'], iupac_name_seq=row['IUPAC_name'])
         g, created = Geneagmp.objects.get_or_create(gene_name=row['gene_name'], gene_id=row['curated_gene_symbol'], chromosome=row['chromosome'], uniprot_ac=row['uniprot'], function=row['function'])
         v = Variantagmp(studyagmp=s, drugagmp=d, phenotypeagmp=p, geneagmp=g, variant_type=row['variant_type'], source_db=row['source'], id_in_source_db=row['id_in_source'], rs_id=row['id'])
         v.save()

@@ -126,8 +126,8 @@ $(document).ready(function () {
 
 
                 <b>Variant ID: </b>{{ result.rs_id}}<br>
-                <b>Gene: </b>{{ result.geneagmp.gene_id}}<br>
-                <b>Chromosome: </b>{{result.geneagmp.chromosome}}<br>
+                <b>Gene:</b> {{result.geneagmp__gene_id}}<br>
+                <b>Chromosome: </b>{{result.geneagmp__chromosome}}<br>
                 <a href="{% url 'Var_Drug_Assoc' result.rs_id %}">Variant-Drug Associations </a> <br>
                 <a href="{% url 'Variant_Disease_Assoc' result.rs_id %}">Variant-Disease Associations </a><br>
                 <hr>
@@ -150,6 +150,7 @@ $(document).ready(function () {
                 <p class="text-center">No results found.</p>
 
             {% endfor %}   
+
             {% elif model_selection == "drugagmp" %}
 
             {% for result in results %}
@@ -158,7 +159,7 @@ $(document).ready(function () {
                 <b>Drug Bank ID: </b><a href="https://go.drugbank.com/drugs/{{result.drug_bank_id}}">{{result.drug_bank_id}}</a>
                 <br>
                 <b>State: </b>{{result.state}}<br>
-                <a href="{% url 'VariantDrugAssociation' result.drug_id %}">Varian-Drug Associations</a><br> 
+                <a href="{% url 'VariantDrugAssociation' result.drug_id %}">Varian-Drug Associations</a><br>  
                 <hr>
 
             {% empty %}

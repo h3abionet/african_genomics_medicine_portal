@@ -41,13 +41,13 @@ def search_view(request):
 
      
         if model_selection == 'variantagmp':
-            results = Variantagmp.objects.filter(rs_id__icontains=search_query).values('rs_id').distinct()
+            results = Variantagmp.objects.filter(rs_id__icontains=search_query).values('rs_id','geneagmp__gene_id','geneagmp__chromosome').distinct()
       
         elif model_selection == 'geneagmp':
-            results = Geneagmp.objects.filter(gene_id__icontains=search_query).values('gene_id').distinct()
+            results = Geneagmp.objects.filter(gene_id__icontains=search_query).values('gene_id','chromosome').distinct()
 
         elif model_selection == 'drugagmp':
-            results = Drugagmp.objects.filter(drug_name__icontains=search_query).values('drug_name').distinct()
+            results = Drugagmp.objects.filter(drug_name__icontains=search_query).values('drug_name','drug_id','drug_bank_id','state').distinct()
             
         elif model_selection == 'disease':
            results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__icontains=search_query).values("phenotypeagmp__name").distinct()
