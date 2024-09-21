@@ -90,6 +90,7 @@ local_settings.py
 ## envs
 .env
 env_pm
+venv
 config.py
 .python-version
 
