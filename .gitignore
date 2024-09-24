@@ -95,7 +95,7 @@ config.py
 .sqlite3
 ## databases
 dbs
-
+*.sqlite3
 # Jupyter
 
 .ipynb_checkpoints
