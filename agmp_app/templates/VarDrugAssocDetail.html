@@ -33,6 +33,9 @@
   <thead>
       <tr>
           <th>Variant</th>
+          <th>Variant Type</th>
+          <th>Source DB</th>
+          <th>Study Type</th>
           <th>Gene</th>
           <th>Drug</th>
           <th>Significance</th>
@@ -45,6 +48,9 @@
  {% for my_object in object_list %}
       <tr>
           <td>{{my_object.variantagmp.rs_id }}</td>
+          <td>{{my_object.variantagmp.variant_type }}</td>
+          <td>{{my_object.variantagmp.source_db }}</td>
+          <td>{{my_object.studyagmp.study_type}}</td>
           <td>
             <a href="/PhamacogeneDrugAssoc/{{my_object.variantagmp.geneagmp.gene_id }}"> {{my_object.variantagmp.geneagmp.gene_id }}</a>
             <td>
