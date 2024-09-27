@@ -100,7 +100,7 @@ class VariantStudyagmpListView(ListView):
   
  #################### Variant Drug Details ################################
   
- #################### PharmacoGene Associations as SAMPLE to fix issues ################################
+ #################### PharmacoGene Associations exclude Gwas catalogue in the first queryset ################################
 class PhamacogeneDrugAssoc(DetailView):
     model = VariantStudyagmp
     template_name = 'PhamacogeneDrugAssoc.html'
@@ -129,7 +129,7 @@ class PhamacogeneDrugAssoc(DetailView):
         #exclude multiple fields as an example
         exclude_list = ['A', 'B', 'C']
         context['object_list'] = VariantStudyagmp.objects.filter(
-            variantagmp__geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id))).exclude(variantagmp__source_db="DisGeNET")
+            variantagmp__geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id))).exclude(variantagmp__source_db="DisGeNET").exclude(variantagmp__source_db="GWAS Catalog")
         
 
         context['object_list_diseases'] = VariantStudyagmp.objects.filter(
@@ -140,7 +140,7 @@ class PhamacogeneDrugAssoc(DetailView):
  #################### Gene Drug Associations ################################
 
 
- #################### Var Drug Associations ################################
+ #################### Var Drug Associations exclude gwas catalogue ################################
 class VarDrugAssocDetailView(DetailView):
     model = VariantStudyagmp
     template_name = 'VarDrugAssocDetail.html'
@@ -166,7 +166,7 @@ class VarDrugAssocDetailView(DetailView):
 
         #back up query
         context['object_list'] = VariantStudyagmp.objects.filter(
-            variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="DisGeNET") 
+            variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="DisGeNET").exclude(variantagmp__source_db="GWAS Catalog")
         
 
 

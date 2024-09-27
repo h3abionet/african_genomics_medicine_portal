@@ -36,3 +36,4 @@ networks:  # <-- and here
 
 volumes:
     static:
+    data:

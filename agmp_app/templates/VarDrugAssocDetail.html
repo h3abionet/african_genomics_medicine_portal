@@ -33,24 +33,21 @@
   <thead>
       <tr>
           <th>Variant</th>
-          <th>Variant Type</th>
-          <th>Source DB</th>
-          <th>Study Type</th>
           <th>Gene</th>
           <th>Drug</th>
           <th>Significance</th>
           <th>Region</th>
           <th>Country</th>
           <th>Study</th>
+          <th>Variant Type</th>
+          <th>Source DB</th>
+          <th>Study Type</th>
       </tr>
   </thead>
   <tbody>
  {% for my_object in object_list %}
       <tr>
           <td>{{my_object.variantagmp.rs_id }}</td>
-          <td>{{my_object.variantagmp.variant_type }}</td>
-          <td>{{my_object.variantagmp.source_db }}</td>
-          <td>{{my_object.studyagmp.study_type}}</td>
           <td>
             <a href="/PhamacogeneDrugAssoc/{{my_object.variantagmp.geneagmp.gene_id }}"> {{my_object.variantagmp.geneagmp.gene_id }}</a>
             <td>
@@ -60,6 +57,9 @@
         <td>{{my_object.geographical_regions}}</td>
           <td>{{my_object.country_participant}}</td>
           <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}">{{my_object.studyagmp.publication_id}}</a></td>
+          <td>{{my_object.variantagmp.variant_type }}</td>
+          <td>{{my_object.variantagmp.source_db }}</td>
+          <td>{{my_object.studyagmp.study_type}}</td>
       </tr>
 
       {% empty %}
@@ -80,71 +80,74 @@
 
 
 <script>
-$(document).ready(function() {
-    function initializeTable(tableId, columnSelectId) {
-        var table = $(tableId).DataTable({
-            dom: 'lBfrtip',
-            buttons: [
-                {
-                    extend: 'collection',
-                    text: 'Export',
-                    buttons: [
-                        {
-                            extend: 'copy',
-                            exportOptions: {
-                                columns: ':visible'
-                            }
-                        },
-                        {
-                            extend: 'excel',
-                            exportOptions: {
-                                columns: ':visible'
-                            }
-                        },
-                        {
-                            extend: 'csv',
-                            exportOptions: {
-                                columns: ':visible'
-                            }
-                        },
-                        {
-                            extend: 'pdf',
-                            exportOptions: {
-                                columns: ':visible'
-                            }
+    $(document).ready(function() {
+ function initializeTable(tableId, columnSelectId) {
+    var table = $(tableId).DataTable({
+        dom: 'lBfrtip',
+        buttons: [
+            {
+                extend: 'collection',
+                text: 'Export',
+                buttons: [
+                    {
+                        extend: 'copy',
+                        exportOptions: {
+                            columns: ':visible'
                         }
-                    ]
-                },
-                'colvis'
-            ],
-            columnDefs: [{
-                targets: '_all',
-                visible: true // Display all columns by default
-            }]
-        });
+                    },
+                    {
+                        extend: 'excel',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'csv',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }
+                ]
+            },
+            'colvis'
+        ],
+        columnDefs: [{
+            targets: '_all',
+            visible: true
+        }]
+    });
 
-        // Create checkboxes for column selection
-        table.columns().every(function(index) {
-            var column = this;
-            var checked = column.visible() ? 'checked' : '';
-            var checkbox = $('<label><input type="checkbox" ' + checked + '>' + $(column.header()).text() + '</label>');
-
-            // Handle checkbox click event
-            checkbox.find('input').on('click', function() {
-                var isChecked = this.checked;
-                column.visible(isChecked);
-            });
-
-            $(columnSelectId).append(checkbox);
-        });
+    // Hide the last 3 columns
+    var columnsCount = table.columns().nodes().length;
+    for (var i = 1; i <= 3; i++) {
+        table.column(columnsCount - i).visible(false);
     }
 
-    initializeTable('#example', '#columnSelect1');
-    // initializeTable('#example3', '#columnSelect2');
+    // Create checkboxes for column selection
+    table.columns().every(function(index) {
+        var column = this;
+        var checked = column.visible() ? 'checked' : '';
+        var checkbox = $('<label><input type="checkbox" ' + checked + '>' + $(column.header()).text() + '</label>');
+        
+        // Handle checkbox click event
+        checkbox.find('input').on('click', function() {
+            var isChecked = this.checked;
+            column.visible(isChecked);
+        });
+        $(columnSelectId).append(checkbox);
+    });
+ }
+
+ initializeTable('#example', '#columnSelect1');
+ // initializeTable('#example3', '#columnSelect2');
 });
 </script>
-
-
 
 
 {% endblock %}
