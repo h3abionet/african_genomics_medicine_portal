@@ -146,7 +146,7 @@ class VariantStudyagmp(models.Model):
     country_participant_011 = models.CharField(max_length=500, null=True, blank=True)
     latitude_11 = models.CharField(max_length=500, null=True, blank=True)
     longitude_11 = models.CharField(max_length=500, null=True, blank=True)
-
+    mixed_population = models.CharField(max_length=8, null=True, blank=True)
     ethnicity = models.CharField(max_length=500, null=True, blank=True)
     geographical_regions = models.CharField(max_length=500, null=True, blank=True)
     notes = models.TextField(max_length=500, null=True, blank=True)

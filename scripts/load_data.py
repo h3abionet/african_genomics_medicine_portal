@@ -42,6 +42,7 @@ def run():
                               latitude_03=row['latitude_03'], longitude_03=row['longitude_03'],
                               p_value=row['p-value'],
                               ethnicity=row['Ethnicity'],
+                              mixed_population=row['mixed_population'],
                               geographical_regions=row['geographical_region'],
                               country_participant=row['origin_of_participants'],
                               )
