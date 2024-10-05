@@ -72,7 +72,7 @@ def run():
     for index, row in df_excel.iterrows():
         print(row)
         p01, created = Phenotypeagmp.objects.get_or_create(name=row['phenotype'])
-        s01, created = Studyagmp.objects.get_or_create(data_ac=row['data_ac'], publication_id=row['publication'], publication_year=row['publication_year'], study_type=row['study_type'], title=row['title'])
+        s01, created = Studyagmp.objects.get_or_create(data_ac=row['data_ac'], publication_id=row['PUBMEDID'], publication_year=row['publication_year'], study_type=row['study_type'], title=row['title'])
         g01, created = Geneagmp.objects.get_or_create(gene_name=row['gene_name'], gene_id=row['curated_gene_symbol'], chromosome=row['chromosome'], uniprot_ac=row['uniprot'], function=row['function'])
         v01 = Variantagmp(studyagmp=s01, phenotypeagmp=p01, geneagmp=g01, variant_type=row['variant_type'], source_db=row['source'], id_in_source_db=row['id_in_source'], rs_id=row['id'])
         v01.save()

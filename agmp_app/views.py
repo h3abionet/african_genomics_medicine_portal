@@ -128,6 +128,7 @@ class PhamacogeneDrugAssoc(DetailView):
 
         #exclude multiple fields as an example
         exclude_list = ['A', 'B', 'C']
+        
         context['object_list'] = VariantStudyagmp.objects.filter(
             variantagmp__geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id))).exclude(variantagmp__source_db="DisGeNET").exclude(variantagmp__source_db="GWAS Catalog")
         

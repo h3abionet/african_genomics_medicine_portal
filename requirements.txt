@@ -13,4 +13,6 @@ django-pandas
 django-autocomplete-light
 openpyxl
 python-memcached
+graphviz
+pygraphviz
 
