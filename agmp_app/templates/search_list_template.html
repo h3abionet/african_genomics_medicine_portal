@@ -20,174 +20,123 @@
 
 
 </style>
-    <!-- Include jQuery library -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+ <!-- Include jQuery library -->
+ <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-    <script>
+ <script>
+ $(document).ready(function () {
+     // Function to handle form submission
+     $('#search-form').on('submit', function (e) {
+         e.preventDefault(); // Prevent default form submission
 
+         // Get the search query from the input field
+         var searchQuery = $('#id_search_query').val();
 
-$(document).ready(function () {
-    var debounceTimer;
+         // Get the selected model from the radio buttons
+         var modelSelection = $('input[name=model_selection]:checked').val();
 
-    // Function to handle input keyup event
-    $('#id_search_query').on('keyup', function () {
-        // Debounce the keyup event to reduce rapid AJAX requests
-        clearTimeout(debounceTimer);
+         // Show loading message
+         $('#results-list').html('Loading...');
 
-        debounceTimer = setTimeout(function () {
-            // Get the search query from the input field
-            var searchQuery = $('#id_search_query').val();
-
-            // Get the selected model from the radio buttons
-            var modelSelection = $('input[name=model_selection]:checked').val();
-
-            // Show loading message
-            $('#results-list').html('Loading...');
-
-            // Make an AJAX request to the backend
-            $.ajax({
-                type: 'GET',
-                url: '{% url "search_view" %}',
-                data: {
-                    search_query: searchQuery,
-                    model_selection: modelSelection
-                },
-                success: function (data) {
-                    // Extract and update only the #results-list from the received data
-                    var updatedResults = $(data).find('#results-list').html();
-                    $('#results-list').html(updatedResults);
-                },
-                error: function (error) {
-                    console.log('Error:', error);
-                    $('#results-list').html('Error fetching data.');
-                }
-            });
-        }, 300); // Debounce time (in milliseconds)
-    });
-});
-
-
-</script>
+         // Make an AJAX request to the backend
+         $.ajax({
+             type: 'GET',
+             url: '{% url "search_view" %}',
+             data: {
+                 search_query: searchQuery,
+                 model_selection: modelSelection
+             },
+             success: function (data) {
+                 // Extract and update only the #results-list from the received data
+                 var updatedResults = $(data).find('#results-list').html();
+                 $('#results-list').html(updatedResults);
+             },
+             error: function (error) {
+                 console.log('Error:', error);
+                 $('#results-list').html('Error fetching data.');
+             }
+         });
+     });
+ });
+ </script>
 </head>
-
-<!-- <body> -->
-    <div id="origin-page">
-        <div class="center_form_contents">
-        <form >
-           
-            <div>
-                <label>{{ form.model_selection.label }}</label>
-                <ul id="id_model_selection">
-                <li>
-                    <input type="radio" name="{{ form.model_selection.html_name }}" value="variantagmp" id="id_model_selection_0">
-                    Variant<label for="id_model_selection_1" id ="id_model_selection_variant"> &#160; &#160; &#160; &#160; &#160;</label>
-
-                    
-                </li>
-                <li>
-                    <input type="radio" name="{{ form.model_selection.html_name }}" value="geneagmp" id="id_model_selection_1">
-                   Gene <label for="id_model_selection_1" id ="id_model_selection_gene"> &#160; &#160; &#160; &#160; &#160;</label>
-
-                </li>
-                <li>
-                    <input type="radio" name="{{ form.model_selection.html_name }}" value="drugagmp" id="id_model_selection_2">
-                   Drug <label for="id_model_selection_2" id ="id_model_selection_drug"> &#160; &#160; &#160; &#160; &#160;</label>
-
-                </li>
-                <li>
-                    <input type="radio" name="{{ form.model_selection.html_name }}" value="disease" id="id_model_selection_3">
-                    Disease<label for="id_model_selection_3" id="id_model_selection_disease"> &#160; &#160; &#160; &#160; &#160;</label>
-
-                </li>
-                <ul>
-            </div>
-            <div>
-                <label class="mb-4" for="{{ form.search_query.id_for_label }}">{{ form.search_query.label }}</label>
-                <input type="text" name="{{ form.search_query.html_name }}" value="" id="{{ form.search_query.id_for_label }}" maxlength="100">
-
-            </div>
-            <button type="submit" style="display: none;">Search</button>
+<body>
+ <div id="origin-page">
+     <div class="center_form_contents">
+     <form id="search-form">
         
-        
-        
-        
-        </form>
-        </div>
-    </div>
+         <div>
+             <label>{{ form.model_selection.label }}</label>
+             <ul id="id_model_selection">
+             <li>
+                 <input type="radio" name="{{ form.model_selection.html_name }}" value="variantagmp" id="id_model_selection_0">
+                 Variant<label for="id_model_selection_1" id ="id_model_selection_variant"> &#160; &#160; &#160; &#160; &#160;</label>
+             </li>
+             <li>
+                 <input type="radio" name="{{ form.model_selection.html_name }}" value="geneagmp" id="id_model_selection_1">
+                Gene <label for="id_model_selection_1" id ="id_model_selection_gene"> &#160; &#160; &#160; &#160; &#160;</label>
+             </li>
+             <li>
+                 <input type="radio" name="{{ form.model_selection.html_name }}" value="drugagmp" id="id_model_selection_2">
+                Drug <label for="id_model_selection_2" id ="id_model_selection_drug"> &#160; &#160; &#160; &#160; &#160;</label>
+             </li>
+             <li>
+                 <input type="radio" name="{{ form.model_selection.html_name }}" value="disease" id="id_model_selection_3">
+                 Disease<label for="id_model_selection_3" id="id_model_selection_disease"> &#160; &#160; &#160; &#160; &#160;</label>
+             </li>
+             </ul>
+         </div>
+         <div>
+             <!-- <label class="mb-4" for="{{ form.search_query.id_for_label }}">{{ form.search_query.label }}</label> -->
+             <input type="text" name="{{ form.search_query.html_name }}" value="" id="{{ form.search_query.id_for_label }}" maxlength="100">
+         </div>
+         <button type="submit" class="btn btn-sm btn-outline-primary rounded">Search</button>
+     </form>
+     </div>
+ </div>
 
-    <div class="">
-        <ul id="results-list">
-            <!-- Results will be dynamically updated here -->
-
-
-            {% if model_selection == "variantagmp" %}
-   
-            {% for result in results %}
-
-
-                <b>Variant ID: </b>{{ result.rs_id}}<br>
-                <b>Gene:</b> {{result.geneagmp__gene_id}}<br>
-                <b>Chromosome: </b>{{result.geneagmp__chromosome}}<br>
-                <a href="{% url 'Var_Drug_Assoc' result.rs_id %}">Variant-Drug Associations </a> <br>
-                <a href="{% url 'Variant_Disease_Assoc' result.rs_id %}">Variant-Disease Associations </a><br>
-                <hr>
-
-
-            {% empty %}
-                <p class="text-center" >No results found.</p>
-            
-            {% endfor %} 
-
-
-            {% elif model_selection == "geneagmp" %}
- 
-            {% for result in results %}
-
-                <b>Gene: </b>{{ result.gene_id}}<br>
-                <b>Chromosome: </b>{{result.chromosome}}<br>
-                <a href="{% url 'PhamacogeneDrugAssoc' result.gene_id %}">Gene Associations </a> <br><hr>
-            {% empty %}
-                <p class="text-center">No results found.</p>
-
-            {% endfor %}   
-
-            {% elif model_selection == "drugagmp" %}
-
-            {% for result in results %}
-
-                <b>Drug Name: </b>{{result.drug_name}}<br>
-                <b>Drug Bank ID: </b><a href="https://go.drugbank.com/drugs/{{result.drug_bank_id}}">{{result.drug_bank_id}}</a>
-                <br>
-                <b>State: </b>{{result.state}}<br>
-                <a href="{% url 'VariantDrugAssociation' result.drug_id %}">Variant-Drug Associations</a><br>  
-                <hr>
-
-            {% empty %}
-            <p class="text-center">No results found.</p>
-
-            {% endfor %}   
-
-            {% elif model_selection == "disease" %}
-
-            {% for result in results %}
-        
-                <b>Disease:</b> {{result.phenotypeagmp__name}}<br>
-              <a href="{% url 'DiseaseVariant' result.phenotypeagmp__name %}">Variant-Disease Associations</a><br><hr> 
-
-     
-
-              {% empty %}
-              <p class="text-center">No results found.</p>
-              
-            {% endfor %}  
- 
-
-
-
-            {% endif %}
-
-        </ul>
-    
-</div>
+ <div class="">
+     <ul id="results-list">
+         <!-- Results will be dynamically updated here -->
+         {% if model_selection == "variantagmp" %}
+             {% for result in results %}
+                 <b>Variant ID: </b>{{ result.rs_id}}<br>
+                 <b>Gene:</b> {{result.geneagmp__gene_id}}<br>
+                 <b>Chromosome: </b>{{result.geneagmp__chromosome}}<br>
+                 <a href="{% url 'Var_Drug_Assoc' result.rs_id %}">Variant-Drug Associations </a> <br>
+                 <a href="{% url 'Variant_Disease_Assoc' result.rs_id %}">Variant-Disease Associations </a><br>
+                 <hr>
+             {% empty %}
+                 <p class="text-center" >No results found.</p>
+             {% endfor %} 
+         {% elif model_selection == "geneagmp" %}
+             {% for result in results %}
+                 <b>Gene: </b>{{ result.gene_id}}<br>
+                 <b>Chromosome: </b>{{result.chromosome}}<br>
+                 <a href="{% url 'PhamacogeneDrugAssoc' result.gene_id %}">Gene Associations </a> <br><hr>
+             {% empty %}
+                 <p class="text-center">No results found.</p>
+             {% endfor %}   
+         {% elif model_selection == "drugagmp" %}
+             {% for result in results %}
+                 <b>Drug Name: </b>{{result.drug_name}}<br>
+                 <b>Drug Bank ID: </b><a href="https://go.drugbank.com/drugs/{{result.drug_bank_id}}">{{result.drug_bank_id}}</a>
+                 <br>
+                 <b>State: </b>{{result.state}}<br>
+                 <a href="{% url 'VariantDrugAssociation' result.drug_id %}">Variant-Drug Associations</a><br>  
+                 <hr>
+             {% empty %}
+                 <p class="text-center">No results found.</p>
+             {% endfor %}   
+         {% elif model_selection == "disease" %}
+             {% for result in results %}
+                 <b>Disease:</b> {{result.phenotypeagmp__name}}<br>
+                 <a href="{% url 'DiseaseVariant' result.phenotypeagmp__name %}">Variant-Disease Associations</a><br><hr> 
+             {% empty %}
+                 <p class="text-center">No results found.</p>
+             {% endfor %}  
+         {% endif %}
+     </ul>
+ </div>
 <!-- </body> -->
 {% endblock %}
