@@ -57,6 +57,42 @@
              }
          });
      });
+
+
+
+ // Function to update input field placeholder based on selected option
+ $('input[name=model_selection]').on('change', function() {
+        var selectedOption = $(this).val();
+        var inputField = $('#id_search_query');
+        var placeholder = '';
+
+        switch(selectedOption) {
+            case 'variantagmp':
+                placeholder = 'Enter variant ID (e.g., rs123456)';
+                break;
+            case 'geneagmp':
+                placeholder = 'Enter gene name (e.g., UGT2B7)';
+                break;
+            case 'drugagmp':
+                placeholder = 'Enter drug name (e.g., Carbamazepine)';
+                break;
+            case 'disease':
+                placeholder = 'Enter disease name (e.g., Diabetes)';
+                break;
+        }
+
+        inputField.attr('placeholder', placeholder);
+    });
+
+
+
+
+
+
+
+
+
+
  });
  </script>
 </head>
