@@ -16,9 +16,7 @@
     <title>Searching Page</title>
 
 
-    <style>
-
-
+<style>
 </style>
  <!-- Include jQuery library -->
  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -53,7 +51,7 @@
              },
              error: function (error) {
                  console.log('Error:', error);
-                 $('#results-list').html('Error fetching data.');
+                 $('#results-list').html('Error fetching data, try again.');
              }
          });
      });
@@ -118,7 +116,7 @@
              </li>
              <li>
                  <input type="radio" name="{{ form.model_selection.html_name }}" value="disease" id="id_model_selection_3">
-                 Disease<label for="id_model_selection_3" id="id_model_selection_disease"> &#160; &#160; &#160; &#160; &#160;</label>
+                 Phenotype<label for="id_model_selection_3" id="id_model_selection_disease"> &#160; &#160; &#160; &#160; &#160;</label>
              </li>
              </ul>
          </div>

@@ -473,7 +473,7 @@ transform: translateY(-50%); */
 
  h3 {
    font-size: 36px !important;
-   color: rgb(40, 64, 94);
+   color: rgb(40, 64, 94) !important;
  }
 
  .top_title_text {
