@@ -507,7 +507,10 @@ def summary(request):
 
     m = m._repr_html_()
 
+
+
     context = {
+        
         'gene_count': gene_count,
         'drug_count': drug_count,
         'variant_count': variant_count,
