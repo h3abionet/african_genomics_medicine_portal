@@ -18,19 +18,19 @@
 
 <style>
 .placeholder::placeholder {
-  color: #262626 !important;
+  color: #444 !important;
 }
 
 .placeholder::-webkit-input-placeholder {
-  color: #262626 !important;
+  color: #444 !important;
 }
 
 .placeholder::-moz-placeholder {
-  color: #262626 !important;
+  color: #444 !important;
 }
 
 .placeholder:-ms-input-placeholder {
-  color: #262626 !important;
+  color: #444 !important;
 }
 
 </style>
@@ -82,16 +82,16 @@
 
         switch(selectedOption) {
             case 'variantagmp':
-                placeholder = 'Enter Variant ID (e.g., rs123456)';
+                placeholder = 'Enter Variant ID (e.g. rs123456)';
                 break;
             case 'geneagmp':
-                placeholder = 'Enter Gene name (e.g., UGT2B7)';
+                placeholder = 'Enter Gene name (e.g. UGT2B7)';
                 break;
             case 'drugagmp':
-                placeholder = 'Enter Drug name (e.g., Carbamazepine)';
+                placeholder = 'Enter Drug name (e.g. Carbamazepine)';
                 break;
             case 'disease':
-                placeholder = 'Enter Phenotype (e.g., Diabetes)';
+                placeholder = 'Enter Phenotype (e.g. Diabetes)';
                 break;
         }
 
@@ -116,7 +116,7 @@
      <form id="search-form">
         
          <div>
-             <label>{{ form.model_selection.label }}</label>
+             <label><h5><b>{{ form.model_selection.label }}<h5></b></label>
              <ul id="id_model_selection">
              <li>
                  <input type="radio" name="{{ form.model_selection.html_name }}" value="variantagmp" id="id_model_selection_0">
@@ -137,8 +137,7 @@
              </ul>
          </div>
          <div>
-             <!-- <label class="mb-4" for="{{ form.search_query.id_for_label }}">{{ form.search_query.label }}</label> -->
-             <input class="placeholder" type="text" name="{{ form.search_query.html_name }}" value="" id="{{ form.search_query.id_for_label }}" maxlength="100">
+             <input class="placeholder mb+2" type="text" name="{{ form.search_query.html_name }}" value="" id="{{ form.search_query.id_for_label }}" maxlength="100">
          </div>
          <button type="submit" class="btn btn-sm btn-outline-primary rounded">Search</button>
      </form>

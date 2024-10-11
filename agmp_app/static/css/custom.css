@@ -568,8 +568,8 @@ transform: translateY(-50%); */
 
 #id_model_selection {
 
-  padding-bottom: 3%;
-  padding-top: 3%;
+  padding-bottom: 0% !important;
+  padding-top: 1% !important;
 }
 
 
