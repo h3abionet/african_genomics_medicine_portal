@@ -17,6 +17,22 @@
 
 
 <style>
+.placeholder::placeholder {
+  color: #262626 !important;
+}
+
+.placeholder::-webkit-input-placeholder {
+  color: #262626 !important;
+}
+
+.placeholder::-moz-placeholder {
+  color: #262626 !important;
+}
+
+.placeholder:-ms-input-placeholder {
+  color: #262626 !important;
+}
+
 </style>
  <!-- Include jQuery library -->
  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -122,7 +138,7 @@
          </div>
          <div>
              <!-- <label class="mb-4" for="{{ form.search_query.id_for_label }}">{{ form.search_query.label }}</label> -->
-             <input type="text" name="{{ form.search_query.html_name }}" value="" id="{{ form.search_query.id_for_label }}" maxlength="100">
+             <input class="placeholder" type="text" name="{{ form.search_query.html_name }}" value="" id="{{ form.search_query.id_for_label }}" maxlength="100">
          </div>
          <button type="submit" class="btn btn-sm btn-outline-primary rounded">Search</button>
      </form>
