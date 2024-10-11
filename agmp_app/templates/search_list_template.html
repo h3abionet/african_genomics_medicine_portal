@@ -66,16 +66,16 @@
 
         switch(selectedOption) {
             case 'variantagmp':
-                placeholder = 'Enter variant ID (e.g., rs123456)';
+                placeholder = 'Enter Variant ID (e.g., rs123456)';
                 break;
             case 'geneagmp':
-                placeholder = 'Enter gene name (e.g., UGT2B7)';
+                placeholder = 'Enter Gene name (e.g., UGT2B7)';
                 break;
             case 'drugagmp':
-                placeholder = 'Enter drug name (e.g., Carbamazepine)';
+                placeholder = 'Enter Drug name (e.g., Carbamazepine)';
                 break;
             case 'disease':
-                placeholder = 'Enter disease name (e.g., Diabetes)';
+                placeholder = 'Enter Phenotype (e.g., Diabetes)';
                 break;
         }
 
@@ -138,7 +138,7 @@
                  <b>Gene:</b> {{result.geneagmp__gene_id}}<br>
                  <b>Chromosome: </b>{{result.geneagmp__chromosome}}<br>
                  <a href="{% url 'Var_Drug_Assoc' result.rs_id %}">Variant-Drug Associations </a> <br>
-                 <a href="{% url 'Variant_Disease_Assoc' result.rs_id %}">Variant-Disease Associations </a><br>
+                 <a href="{% url 'Variant_Disease_Assoc' result.rs_id %}">Variant-Phenotype Associations </a><br>
                  <hr>
              {% empty %}
                  <p class="text-center" >No results found.</p>
@@ -164,8 +164,8 @@
              {% endfor %}   
          {% elif model_selection == "disease" %}
              {% for result in results %}
-                 <b>Disease:</b> {{result.phenotypeagmp__name}}<br>
-                 <a href="{% url 'DiseaseVariant' result.phenotypeagmp__name %}">Variant-Disease Associations</a><br><hr> 
+                 <b>Phenotype:</b> {{result.phenotypeagmp__name}}<br>
+                 <a href="{% url 'DiseaseVariant' result.phenotypeagmp__name %}">Variant-Phenotype Associations</a><br><hr> 
              {% empty %}
                  <p class="text-center">No results found.</p>
              {% endfor %}  
