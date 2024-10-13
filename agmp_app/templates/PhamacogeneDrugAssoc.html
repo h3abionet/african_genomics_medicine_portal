@@ -82,6 +82,7 @@
           <thead>
               <tr>
                   <th>Variant</th>
+                  <th>Gene</th>
                   <th>Phenotype</th>
                   <th>Significance</th>
                   <th>Region</th>
@@ -97,6 +98,7 @@
               {% for my_object in object_list_diseases %}
               <tr>
                   <td>{{my_object.variantagmp.rs_id }}</td>
+                  <td>{{my_object.variantagmp.geneagmp.gene_id}}</td>
                   <td>{{my_object.variantagmp.phenotypeagmp.name}}</td>
                   <td>{{my_object.p_value}}</td>
                   <td>{{my_object.geographical_regions}}</td>

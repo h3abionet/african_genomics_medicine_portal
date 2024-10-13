@@ -7,6 +7,8 @@ from itertools import chain
 from .forms import SearchForm,ModelSearchForm
 import json
 import folium
+from folium.plugins import HeatMap
+import math
 import geocoder
 from folium import plugins
 
@@ -505,12 +507,44 @@ def summary(request):
         except ValueError:
             logging.warning(f"Skipping invalid coordinates: {coordinates}")
 
+    
     m = m._repr_html_()
+
+    m2 = folium.Map(location=[-4.0335, 21.7501], zoom_start=3)
+    
+    # Sample data: List of [latitude, longitude, intensity]
+
+    heat_data = []
+    max_value = max(value for _, value in data_set)  # Find the maximum value for normalization
+
+    for coordinates, value in data_set:
+        try:
+            clean_latitude = float(coordinates[0])
+            clean_longitude = float(coordinates[1])
+            
+            # Check for NaN values
+            if math.isnan(clean_latitude) or math.isnan(clean_longitude):
+                raise ValueError("NaN found in coordinates")
+
+            # Normalize the value to be between 0 and 1
+            normalized_value = value / max_value
+            
+            heat_data.append([clean_latitude, clean_longitude, normalized_value])
+        except ValueError as e:
+            logging.warning(f"Skipping invalid coordinates: {coordinates}. Error: {str(e)}")
+    # return heat_data
+    print(heat_data)
+    
+    # Add heatmap to the map
+    HeatMap(heat_data).add_to(m2)
+    
+    # Get the HTML representation of the map
+    map_html = m2._repr_html_()
 
 
 
     context = {
-        
+        'map_html': map_html,
         'gene_count': gene_count,
         'drug_count': drug_count,
         'variant_count': variant_count,
