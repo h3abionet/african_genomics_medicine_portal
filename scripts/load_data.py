@@ -25,6 +25,11 @@ def run():
 
     # Import the first file
     df_csv = pd.read_csv('import_csv/first_import_job_run_error_fix.csv', encoding='latin-1')
+    # replaces NS and nan with NR
+    def normalize_01_p_value(value):
+        if pd.isna(value) or value in ['NS', 'nan']:
+            return 'NR'
+        return value
 
 
 
@@ -36,11 +41,15 @@ def run():
         g, created = Geneagmp.objects.get_or_create(gene_name=row['gene_name'], gene_id=row['curated_gene_symbol'], chromosome=row['chromosome'], uniprot_ac=row['uniprot'], function=row['function'])
         v = Variantagmp(studyagmp=s, drugagmp=d, phenotypeagmp=p, geneagmp=g, variant_type=row['variant_type'], source_db=row['source'], id_in_source_db=row['id_in_source'], rs_id=row['id'])
         v.save()
+
+        normalized_01_p_value = normalize_01_p_value(row['p-value'])
+
         vs = VariantStudyagmp(studyagmp=s, variantagmp=v,
                               latitude_01=row['latitude_01'], longitude_01=row['longitude_01'],
                               latitude_02=row['latitude_02'], longitude_02=row['longitude_02'],
                               latitude_03=row['latitude_03'], longitude_03=row['longitude_03'],
-                              p_value=row['p-value'],
+                            #   p_value=row['p-value'],
+                              p_value=normalized_01_p_value,
                               ethnicity=row['Ethnicity'],
                               mixed_population=row['mixed_population'],
                               geographical_regions=row['geographical_region'],
@@ -68,6 +77,12 @@ def run():
     # Import data from the second Excel file
     df_excel = pd.read_excel('import_csv/second_import_job_run_sept_2024.xlsx')
 
+    # replaces NS and nan with NR
+    def normalize_p_value(value):
+        if pd.isna(value) or value in ['NS', 'nan']:
+            return 'NR'
+        return value
+
     # removed the drug_bank_id=row['ID Drug bank'], in drug second import job run
     for index, row in df_excel.iterrows():
         print(row)
@@ -76,6 +91,9 @@ def run():
         g01, created = Geneagmp.objects.get_or_create(gene_name=row['gene_name'], gene_id=row['curated_gene_symbol'], chromosome=row['chromosome'], uniprot_ac=row['uniprot'], function=row['function'])
         v01 = Variantagmp(studyagmp=s01, phenotypeagmp=p01, geneagmp=g01, variant_type=row['variant_type'], source_db=row['source'], id_in_source_db=row['id_in_source'], rs_id=row['id'])
         v01.save()
+        
+        normalized_p_value = normalize_p_value(row['p-value'])
+
         vs01 = VariantStudyagmp(studyagmp=s01, variantagmp=v01,
                                 latitude_01=row['latitude_01'], longitude_01=row['longitude_01'],
                                 latitude_02=row['latitude_02'], longitude_02=row['longitude_02'],
@@ -88,7 +106,8 @@ def run():
                                 latitude_09=row['latitude_09'], longitude_09=row['longitude_09'],
                                 latitude_10=row['latitude_10'], longitude_10=row['longitude_10'],
                                 latitude_11=row['latitude_11'], longitude_11=row['longitude_11'],
-                                p_value=row['p-value'],
+                                # p_value=row['p-value'],
+                                p_value=normalized_p_value,
                                 ethnicity=row['Ethnicity'],
                                 mixed_population=row['mixed_population'],
                                 geographical_regions=row['geographical_region'],
