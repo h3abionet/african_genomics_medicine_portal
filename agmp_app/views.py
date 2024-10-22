@@ -28,6 +28,12 @@ from collections import defaultdict
 import folium
 import logging
 
+import numpy as np
+import logging
+
+from django.db.models import Subquery, OuterRef
+
+# Get distinct drug_ids first
 
 
  #current search view
@@ -49,10 +55,12 @@ def search_view(request):
             results = Geneagmp.objects.filter(gene_id__icontains=search_query).values('gene_id','chromosome').distinct()
 
         elif model_selection == 'drugagmp':
-            results = Drugagmp.objects.filter(drug_name__icontains=search_query).values('drug_name','drug_id','drug_bank_id','state').distinct()
-            
+            #results = Drugagmp.objects.filter(drug_name__icontains=search_query).distinct() 
+            results = Drugagmp.objects.filter(drug_name__icontains=search_query).values('drug_name','drug_id','drug_bank_id','state','indication','iupac_name_seq').distinct()
+
+                  
         elif model_selection == 'disease':
-           results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__icontains=search_query).values("phenotypeagmp__name").distinct()
+            results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__icontains=search_query).values("phenotypeagmp__name").distinct()
     else:
         results = []
 
@@ -71,7 +79,8 @@ def search_all(request):
             elif search_option == 'Geneagmp':
                 results = Geneagmp.objects.filter(gene_id__icontains=search_query)
             elif search_option == 'Drugagmp':
-                results = Drugagmp.objects.filter(drug_name__icontains=search_query)
+                results = Drugagmp.objects.filter(drug_name__contains=search_query).order_by('drug_name').distinct(F('drug_name').desc())
+                #results = Drugagmp.objects.filter(drug_name__contains=search_query)
             elif search_option == 'Disease':
                 #initial_query_results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__contains=search_query)
                 #second_initial_query_results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__contains=search_query).filter(phenotypeagmp__isnull=False).values("phenotypeagmp__name").distinct()
@@ -510,38 +519,58 @@ def summary(request):
     
     m = m._repr_html_()
 
+    # Initialize the map
     m2 = folium.Map(location=[-4.0335, 21.7501], zoom_start=3)
-    
-    # Sample data: List of [latitude, longitude, intensity]
 
+# Function to apply logarithmic scaling
+    def log_scale(value, min_value, max_value):
+        return np.log1p(value - min_value) / np.log1p(max_value - min_value)
+
+# Process the data
     heat_data = []
-    max_value = max(value for _, value in data_set)  # Find the maximum value for normalization
+    values = [value for _, value in data_set]
+    min_value = min(values)
+    max_value = max(values)
 
     for coordinates, value in data_set:
         try:
             clean_latitude = float(coordinates[0])
             clean_longitude = float(coordinates[1])
-            
-            # Check for NaN values
+        
+        # Check for NaN values
             if math.isnan(clean_latitude) or math.isnan(clean_longitude):
                 raise ValueError("NaN found in coordinates")
-
-            # Normalize the value to be between 0 and 1
-            normalized_value = value / max_value
-            
-            heat_data.append([clean_latitude, clean_longitude, normalized_value])
+        
+        # Apply logarithmic scaling to enhance visibility of different intensity levels
+            scaled_value = log_scale(value, min_value, max_value)
+        
+        # Append the scaled value along with coordinates to the heat_data
+            heat_data.append([clean_latitude, clean_longitude, scaled_value])
         except ValueError as e:
             logging.warning(f"Skipping invalid coordinates: {coordinates}. Error: {str(e)}")
-    # return heat_data
-    print(heat_data)
-    
-    # Add heatmap to the map
-    HeatMap(heat_data).add_to(m2)
-    
-    # Get the HTML representation of the map
+
+# Custom color gradient to show full intensity range
+    color_gradient = {
+    0.0: 'blue',    # Low intensity
+    0.25: 'cyan',   # Medium-low intensity
+    0.5: 'lime',    # Medium intensity
+    0.75: 'yellow', # Medium-high intensity
+    1.0: 'red'      # High intensity
+    }
+
+# Add heatmap to the map with custom gradient and options to emphasize intensity
+    HeatMap(
+    heat_data,
+    gradient=color_gradient,   # Apply custom gradient
+    min_opacity=0.5,           # Minimum opacity for lower intensity
+    max_opacity=1.0,           # Maximum opacity for full intensity
+    radius=20,                 # Increase radius for better visibility
+    blur=15,                   # Adjust blur for smoother color transitions
+    max_zoom=1                 # Control zoom level to maintain clarity
+    ).add_to(m2)
+
+# Get the HTML representation of the map
     map_html = m2._repr_html_()
-
-
 
     context = {
         'map_html': map_html,

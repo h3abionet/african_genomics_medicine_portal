@@ -167,16 +167,25 @@
                  <p class="text-center">No results found.</p>
              {% endfor %}   
          {% elif model_selection == "drugagmp" %}
-             {% for result in results %}
-                 <b>Drug Name: </b>{{result.drug_name}}<br>
-                 <b>Drug Bank ID: </b><a href="https://go.drugbank.com/drugs/{{result.drug_bank_id}}">{{result.drug_bank_id}}</a>
-                 <br>
-                 <b>State: </b>{{result.state}}<br>
-                 <a href="{% url 'VariantDrugAssociation' result.drug_id %}">Variant-Drug Associations</a><br>  
+         <!-- fixed duplicate drugs -->
+         {% regroup results by drug_bank_id as grouped_results %}
+
+         {% for group in grouped_results %}
+             {% with first_item=group.list|first %}
+                 <div class="drug-entry">
+                     <b>Drug Name: </b>{{ first_item.drug_name }}<br>
+                     <b>Drug Bank ID: </b><a href="https://go.drugbank.com/drugs/{{ first_item.drug_bank_id }}">{{ first_item.drug_bank_id }}</a><br>
+                     <b>State: </b>{{ first_item.state }}
+              <br>
+                     <a href="{% url 'VariantDrugAssociation' first_item.drug_id %}">Variant-Drug Associations</a><br> 
+                 </div>
                  <hr>
-             {% empty %}
-                 <p class="text-center">No results found.</p>
-             {% endfor %}   
+             {% endwith %}
+         {% empty %}
+             <p class="text-center">No results found.</p>
+         {% endfor %} 
+
+         <!-- fixed duplicate drugs -->
          {% elif model_selection == "disease" %}
              {% for result in results %}
                  <b>Phenotype:</b> {{result.phenotypeagmp__name}}<br>

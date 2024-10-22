@@ -10,7 +10,7 @@ class VariantagmpAdmin(admin.ModelAdmin):
     # pass
 class DrugagmpAdmin(admin.ModelAdmin):
     list_display = ['id','drug_id','drug_name','drug_bank_id','indication','state']
-    search_fields =['drug_id']
+    search_fields =['drug_id','drug_name']
     list_per_page = 500
 
 class GeneagmpAdmin(admin.ModelAdmin):

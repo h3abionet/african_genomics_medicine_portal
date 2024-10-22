@@ -27,7 +27,7 @@ def run():
     df_csv = pd.read_csv('import_csv/first_import_job_run_error_fix.csv', encoding='latin-1')
     # replaces NS and nan with NR
     def normalize_01_p_value(value):
-        if pd.isna(value) or value in ['NS', 'nan']:
+        if pd.isna(value) or value in ['NS','ns','nan']:
             return 'NR'
         return value
 
@@ -79,7 +79,7 @@ def run():
 
     # replaces NS and nan with NR
     def normalize_p_value(value):
-        if pd.isna(value) or value in ['NS', 'nan']:
+        if pd.isna(value) or value in ['NS', 'ns','nan']:
             return 'NR'
         return value
 
