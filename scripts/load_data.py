@@ -77,7 +77,7 @@ def run():
     # Import data from the second Excel file
     df_excel = pd.read_excel('import_csv/second_import_job_run_sept_2024.xlsx')
 
-    # replaces NS and nan with NR
+    # replaces NS, ns and nan with NR
     def normalize_p_value(value):
         if pd.isna(value) or value in ['NS', 'ns','nan']:
             return 'NR'
