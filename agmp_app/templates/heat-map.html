@@ -1,0 +1,48 @@
+{% extends 'mainLayout.html' %}
+{% load static %}
+
+
+{% block title%}About{% endblock %}
+
+
+{% block banner %}
+
+
+{% include 'partials/banner_about.html' %}
+
+{% endblock %}
+
+{% block content %}
+
+
+
+
+
+<div class="container">
+
+
+	    <h1>Heatmap</h1>
+
+        {{ map|safe }}
+
+</div>
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block js %}
+<script>
+
+
+
+</script>
+
+
+{% endblock %}
