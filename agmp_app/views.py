@@ -36,105 +36,9 @@ from django.db.models import Subquery, OuterRef
 import os
 
 from django.conf import settings
+import geopandas as gpd
+from shapely.geometry import Point
 
-def heatmap_view(request):
-    # Data: Country names and values for five African countries
-    data = [
-        {"name": "Nigeria", "value": 1},
-        {"name": "Egypt", "value": 50},
-        {"name": "South Africa", "value": 60},
-        {"name": "Ethiopia", "value": 1200},
-        {"name": "Kenya", "value": 45},
-    ]
-
-    # Create a map centered on Africa
-    m2 = folium.Map(location=[1.2921, 36.8219], zoom_start=3)
-
-    # Load GeoJSON file for African countries (path to your GeoJSON file)
-    geojson_path = os.path.join(settings.BASE_DIR, 'agmp_app/static/maps/countries.geo.json')
-
-    # Define the color gradient based on the value
-    def get_color(value):
-        if value > 1000:
-            return "darkred"
-        elif value > 100:
-            return "red"
-        elif value > 50:
-            return "orange"
-        elif value > 10:
-            return "yellow"
-        else:
-            return "lightyellow"
-
-    # Style function for filling each country based on value intensity
-    def style_function(feature):
-        country_name = feature["properties"]["name"]
-        # Find the data point associated with the country
-        country_data = next((d for d in data if d["name"] == country_name), None)
-        if country_data:
-            color = get_color(country_data["value"])
-            return {
-                "fillColor": color,
-                "color": "black",
-                "weight": 1,
-                "fillOpacity": 0.7,  # Fills country area based on intensity
-            }
-        return {
-            "fillColor": "white",
-            "color": "black",
-            "weight": 1,
-            "fillOpacity": 0.1
-        }
-
-    # Apply GeoJson with custom style function and add country name as tooltip
-    geo_json = folium.GeoJson(
-        geojson_path,
-        style_function=style_function,
-        tooltip=folium.features.GeoJsonTooltip(fields=["name"], labels=False, sticky=False)  # Show country names
-    )
-    geo_json.add_to(m2)
-
-    # Add the original custom legend at the bottom left
-    custom_legend_html = '''
-     <div style="
-     position: fixed; 
-     bottom: 50px; left: 50px; width: 150px; height: 180px; 
-     background-color: white; border:2px solid grey; z-index:9999; font-size:14px;
-     ">
-     &nbsp; <b>Intensity Legend</b> <br>
-     &nbsp; > 1000 &nbsp; <i style="background:darkred; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
-     &nbsp; 100 - 1000 &nbsp; <i style="background:red; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
-     &nbsp; 50 - 100 &nbsp; <i style="background:orange; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
-     &nbsp; 10 - 50 &nbsp; <i style="background:yellow; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
-     &nbsp; 0 - 10 &nbsp; <i style="background:lightyellow; width:20px; height:20px; float:right; margin-top:3px;"></i>
-     </div>
-     '''
-    m2.get_root().html.add_child(folium.Element(custom_legend_html))
-
-    # Add a ruler-style color gradient legend at the top right
-    gradient_legend_html = '''
-    <div style="
-    position: fixed; 
-    top: 50px; right: 50px; width: 200px; height: 20px; 
-    background: linear-gradient(to right, lightyellow, yellow, orange, red, darkred);
-    border: 2px solid grey; z-index: 9999; font-size: 12px;
-    text-align: center; color: black;">
-        <span style="float: left;">0</span>
-        <span style="float: right;">>1000</span>
-        <div style="clear: both;"></div>
-        <b>Intensity Scale</b>
-    </div>
-    '''
-    m2.get_root().html.add_child(folium.Element(gradient_legend_html))
-
-    # Add a layer control to toggle between the heatmap and choropleth
-    folium.LayerControl().add_to(m2)
-
-    # Render the map to HTML
-    map_html = m2._repr_html_()
-
-    # Pass map to the template
-    return render(request, 'heat-map.html', {'map':  map_html})
 
  #current search view
 def search_view(request):
@@ -619,61 +523,102 @@ def summary(request):
     
     m = m._repr_html_()
 
-    # Initialize the map
-    m2 = folium.Map(location=[-4.0335, 21.7501], zoom_start=3, tiles="cartodb positron")
 
-# Function to apply logarithmic scaling
-    def log_scale(value, min_value, max_value):
-        return np.log1p(value - min_value) / np.log1p(max_value - min_value)
+    # Fetch and flatten all location data
+    flattened_locations = []
+    for lat_field, lon_field in location_fields:
+        flattened_locations.extend(get_location_data(lat_field, lon_field))
+    
+    logging.debug(f"Combined locations: {flattened_locations}")
 
-# Process the data
-    heat_data = []
-    values = [value for _, value in data_set]
-    min_value = min(values)
-    max_value = max(values)
+    # Count occurrences of each coordinate
+    count_per_coordinates = defaultdict(int)
+    for record in flattened_locations:
+        coordinates = (record["latitude"], record["longitude"])
+        count_per_coordinates[coordinates] += 1
 
-    for coordinates, value in data_set:
-        try:
-            clean_latitude = float(coordinates[0])
-            clean_longitude = float(coordinates[1])
-        
-        # Check for NaN values
-            if math.isnan(clean_latitude) or math.isnan(clean_longitude):
-                raise ValueError("NaN found in coordinates")
-        
-        # Apply logarithmic scaling to enhance visibility of different intensity levels
-            scaled_value = log_scale(value, min_value, max_value)
-        
-        # Append the scaled value along with coordinates to the heat_data
-            heat_data.append([clean_latitude, clean_longitude, scaled_value])
-        except ValueError as e:
-            logging.warning(f"Skipping invalid coordinates: {coordinates}. Error: {str(e)}")
+    # Prepare the data_set for plotting
+    data_set = count_per_coordinates.items()
 
-# Custom color gradient to show full intensity range
-    color_gradient = {
-    0.0: 'blue',    # Low intensity
-    0.25: 'cyan',   # Medium-low intensity
-    0.5: 'lime',    # Medium intensity
-    0.75: 'yellow', # Medium-high intensity
-    1.0: 'red'      # High intensity
-    }
+    # Initialize map centered on Africa
+    m2 = folium.Map(location=[1.2921, 36.8219], zoom_start=3)
 
-# Add heatmap to the map with custom gradient and options to emphasize intensity
-    HeatMap(
-    heat_data,
-    gradient=color_gradient,   # Apply custom gradient
-    min_opacity=0.5,           # Minimum opacity for lower intensity
-    max_opacity=1.0,           # Maximum opacity for full intensity
-    radius=20,                 # Increase radius for better visibility
-    blur=15,                   # Adjust blur for smoother color transitions
-    max_zoom=1                 # Control zoom level to maintain clarity
-    ).add_to(m2)
+    # Load GeoJSON for African countries
+    geojson_path = os.path.join(settings.BASE_DIR, 'agmp_app/static/maps/countries.geo.json')
+    gdf = gpd.read_file(geojson_path)
 
-# Get the HTML representation of the map
+    # Define color gradient for intensity values
+    def get_color(value):
+        if value > 1000:
+            return "darkred"
+        elif value > 100:
+            return "red"
+        elif value > 50:
+            return "orange"
+        elif value > 10:
+            return "yellow"
+        else:
+            return "lightyellow"
+
+    # Plot points with color-coded intensity based on data_set
+    for (lat, lon), value in data_set:
+        point = Point(lon, lat)
+        for _, row in gdf.iterrows():
+            if row['geometry'].contains(point):
+                color = get_color(value)
+                folium.GeoJson(
+                    row['geometry'],
+                    style_function=lambda feature, color=color: {
+                        "fillColor": color,
+                        "color": "black",
+                        "weight": 1,
+                        "fillOpacity": 0.7,
+                    },
+                    tooltip=folium.Tooltip(row['name'])  # Add tooltip with country name
+                ).add_to(m2)
+                break
+
+    # Add custom legends
+    custom_legend_html = '''
+     <div style="
+     position: fixed; 
+     bottom: 50px; left: 50px; width: 150px; height: 180px; 
+     background-color: white; border:2px solid grey; z-index:9999; font-size:14px;
+     ">
+     &nbsp; <b>Intensity Legend</b> <br>
+     &nbsp; > 1000 &nbsp; <i style="background:darkred; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
+     &nbsp; 100 - 1000 &nbsp; <i style="background:red; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
+     &nbsp; 50 - 100 &nbsp; <i style="background:orange; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
+     &nbsp; 10 - 50 &nbsp; <i style="background:yellow; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
+     &nbsp; 0 - 10 &nbsp; <i style="background:lightyellow; width:20px; height:20px; float:right; margin-top:3px;"></i>
+     </div>
+     '''
+    m2.get_root().html.add_child(folium.Element(custom_legend_html))
+
+    gradient_legend_html = '''
+    <div style="
+    position: fixed; 
+    top: 50px; right: 50px; width: 200px; height: 20px; 
+    background: linear-gradient(to right, lightyellow, yellow, orange, red, darkred);
+    border: 2px solid grey; z-index: 9999; font-size: 12px;
+    text-align: center; color: black;">
+        <span style="float: left;">0</span>
+        <span style="float: right;">>1000</span>
+        <div style="clear: both;"></div>
+        <b>Intensity Scale</b>
+    </div>
+    '''
+    m2.get_root().html.add_child(folium.Element(gradient_legend_html))
+
+    # Render map as HTML
     map_html = m2._repr_html_()
 
+
+
+
+
     context = {
-        'map_html': map_html,
+     
         'gene_count': gene_count,
         'drug_count': drug_count,
         'variant_count': variant_count,
@@ -685,6 +630,7 @@ def summary(request):
         'locations': flattened_locations,
         'coord_per_publications_dict': coord_per_publications_dict,
         'map': m,
+        'map2': map_html,
         'data_set': data_set
     }
 
@@ -739,3 +685,122 @@ def home(request):
 #     return response
 def test_data_table(request):
     return render(request, 'test_data_table.html')
+
+def heatmap_view(request):
+    # Function to retrieve and clean location data
+    def get_location_data(lat_field, lon_field):
+        locations = VariantStudyagmp.objects.exclude(
+            Q(**{f'{lon_field}__isnull': True}) | Q(**{f'{lon_field}__exact': ''}) |
+            Q(**{f'{lat_field}__isnull': True}) | Q(**{f'{lat_field}__exact': ''})
+        ).values('studyagmp__publication_id', lat_field, lon_field)
+
+        logging.debug(f"Retrieved {lat_field}, {lon_field} locations: {list(locations)}")
+
+        # Renaming fields for uniformity
+        renamed_queryset = locations.annotate(
+            latitude=F(lat_field),
+            longitude=F(lon_field)
+        ).values('latitude', 'longitude')
+
+        return renamed_queryset
+
+    # Collect all location data from various latitude/longitude fields
+    location_fields = [
+        ('latitude_01', 'longitude_01'), ('latitude_02', 'longitude_02'),
+        ('latitude_03', 'longitude_03'), ('latitude_04', 'longitude_04'),
+        ('latitude_05', 'longitude_05'), ('latitude_06', 'longitude_06'),
+        ('latitude_07', 'longitude_07'), ('latitude_08', 'longitude_08'),
+        ('latitude_09', 'longitude_09'), ('latitude_10', 'longitude_10'),
+        ('latitude_11', 'longitude_11')
+    ]
+    
+    # Fetch and flatten all location data
+    flattened_locations = []
+    for lat_field, lon_field in location_fields:
+        flattened_locations.extend(get_location_data(lat_field, lon_field))
+    
+    logging.debug(f"Combined locations: {flattened_locations}")
+
+    # Count occurrences of each coordinate
+    count_per_coordinates = defaultdict(int)
+    for record in flattened_locations:
+        coordinates = (record["latitude"], record["longitude"])
+        count_per_coordinates[coordinates] += 1
+
+    # Prepare the data_set for plotting
+    data_set = count_per_coordinates.items()
+
+    # Initialize map centered on Africa
+    m2 = folium.Map(location=[1.2921, 36.8219], zoom_start=3)
+
+    # Load GeoJSON for African countries
+    geojson_path = os.path.join(settings.BASE_DIR, 'agmp_app/static/maps/countries.geo.json')
+    gdf = gpd.read_file(geojson_path)
+
+    # Define color gradient for intensity values
+    def get_color(value):
+        if value > 1000:
+            return "darkred"
+        elif value > 100:
+            return "red"
+        elif value > 50:
+            return "orange"
+        elif value > 10:
+            return "yellow"
+        else:
+            return "lightyellow"
+
+    # Plot points with color-coded intensity based on data_set
+    for (lat, lon), value in data_set:
+        point = Point(lon, lat)
+        for _, row in gdf.iterrows():
+            if row['geometry'].contains(point):
+                color = get_color(value)
+                folium.GeoJson(
+                    row['geometry'],
+                    style_function=lambda feature, color=color: {
+                        "fillColor": color,
+                        "color": "black",
+                        "weight": 1,
+                        "fillOpacity": 0.7,
+                    },
+                    tooltip=folium.Tooltip(row['name'])  # Add tooltip with country name
+                ).add_to(m2)
+                break
+
+    # Add custom legends
+    custom_legend_html = '''
+     <div style="
+     position: fixed; 
+     bottom: 50px; left: 50px; width: 150px; height: 180px; 
+     background-color: white; border:2px solid grey; z-index:9999; font-size:14px;
+     ">
+     &nbsp; <b>Intensity Legend</b> <br>
+     &nbsp; > 1000 &nbsp; <i style="background:darkred; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
+     &nbsp; 100 - 1000 &nbsp; <i style="background:red; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
+     &nbsp; 50 - 100 &nbsp; <i style="background:orange; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
+     &nbsp; 10 - 50 &nbsp; <i style="background:yellow; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
+     &nbsp; 0 - 10 &nbsp; <i style="background:lightyellow; width:20px; height:20px; float:right; margin-top:3px;"></i>
+     </div>
+     '''
+    m2.get_root().html.add_child(folium.Element(custom_legend_html))
+
+    gradient_legend_html = '''
+    <div style="
+    position: fixed; 
+    top: 50px; right: 50px; width: 200px; height: 20px; 
+    background: linear-gradient(to right, lightyellow, yellow, orange, red, darkred);
+    border: 2px solid grey; z-index: 9999; font-size: 12px;
+    text-align: center; color: black;">
+        <span style="float: left;">0</span>
+        <span style="float: right;">>1000</span>
+        <div style="clear: both;"></div>
+        <b>Intensity Scale</b>
+    </div>
+    '''
+    m2.get_root().html.add_child(folium.Element(gradient_legend_html))
+
+    # Render map as HTML
+    map_html = m2._repr_html_()
+
+    return render(request, 'heat-map.html', {'map': map_html})

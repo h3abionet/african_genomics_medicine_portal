@@ -15,4 +15,4 @@ openpyxl
 python-memcached
 graphviz
 pymemcache
-
+geopandas

@@ -5,7 +5,7 @@ from . import views
 from .views import (DrugagmpDetailView, PhamacogeneDrugAssoc, VariantStudyagmpListView,VarDrugAssocDetailView,VvarDrugAssocDetailView,DiseaseVariantDetailView,VarDisAssocDetailView, PharmacoDrugDetailView,VariantDiseaseAssocDetailView,VariantDrugAssociationDetailView,search_view, test_data_table,heatmap_view)
 
 urlpatterns = [
-path('heat-map', heatmap_view, name='heatmap'),
+path('heat-map-102024/', heatmap_view, name='heatmap'),
     path('test', test_data_table, name='test_data_table'),
     path('', search_view, name='search_view'),
     path('about', views.about, name='about'),
