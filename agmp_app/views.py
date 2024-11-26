@@ -490,14 +490,13 @@ def summary(request):
         ('latitude_11', 'longitude_11')
     ]
 
+    # Fetch and flatten all location data
     locations = [get_location_data(lat, lon) for lat, lon in location_fields]
-
-    # Flatten the list of location querysets
     flattened_locations = [item for sublist in locations for item in sublist]
-
-    # Log combined locations
+    
     logging.debug(f"Combined locations: {flattened_locations}")
 
+    # Create first map (original point-based map)
     records = flattened_locations
     count_per_coordinates = defaultdict(int)
     for record in records:
@@ -506,48 +505,44 @@ def summary(request):
 
     coord_per_publications_dict = count_per_coordinates.items()
 
+    # Create the first map with individual points
     m = folium.Map(location=[-4.0335, 21.7501], zoom_start=3)
-    data_set = coord_per_publications_dict
-    for coordinates, value in data_set:
+    for coordinates, value in coord_per_publications_dict:
         try:
             clean_latitude = float(coordinates[0])
             clean_longitude = float(coordinates[1])
             popup_text = "Publications"
-            popup_number = value  # Replace with your desired number
+            popup_number = value
             popup_content = f"{popup_text}: {popup_number}"
             popup = folium.Popup(popup_content, parse_html=True)
             folium.Marker([clean_latitude, clean_longitude], popup=popup).add_to(m)
         except ValueError:
             logging.warning(f"Skipping invalid coordinates: {coordinates}")
 
-    
     m = m._repr_html_()
 
-
-    # Fetch and flatten all location data
-    flattened_locations = []
-    for lat_field, lon_field in location_fields:
-        flattened_locations.extend(get_location_data(lat_field, lon_field))
-    
-    logging.debug(f"Combined locations: {flattened_locations}")
-
-    # Count occurrences of each coordinate
-    count_per_coordinates = defaultdict(int)
-    for record in flattened_locations:
-        coordinates = (record["latitude"], record["longitude"])
-        count_per_coordinates[coordinates] += 1
-
-    # Prepare the data_set for plotting
-    data_set = count_per_coordinates.items()
-
-    # Initialize map centered on Africa
+    # Initialize second map (choropleth map)
     m2 = folium.Map(location=[1.2921, 36.8219], zoom_start=3)
 
     # Load GeoJSON for African countries
     geojson_path = os.path.join(settings.BASE_DIR, 'agmp_app/static/maps/countries.geo.json')
     gdf = gpd.read_file(geojson_path)
 
-    # Define color gradient for intensity values
+    # Initialize dictionary to store publications per country
+    publications_per_country = defaultdict(int)
+
+    # First pass: Count publications for each country
+    for (lat, lon), value in coord_per_publications_dict:
+        try:
+            point = Point(float(lon), float(lat))
+            for _, row in gdf.iterrows():
+                if row['geometry'].contains(point):
+                    publications_per_country[row['name']] += value
+                    break
+        except (ValueError, TypeError):
+            logging.warning(f"Invalid coordinates: lat={lat}, lon={lon}")
+            continue
+
     def get_color(value):
         if value > 1000:
             return "darkred"
@@ -560,23 +555,36 @@ def summary(request):
         else:
             return "lightyellow"
 
-    # Plot points with color-coded intensity based on data_set
-    for (lat, lon), value in data_set:
-        point = Point(lon, lat)
-        for _, row in gdf.iterrows():
-            if row['geometry'].contains(point):
-                color = get_color(value)
-                folium.GeoJson(
-                    row['geometry'],
-                    style_function=lambda feature, color=color: {
-                        "fillColor": color,
-                        "color": "black",
-                        "weight": 1,
-                        "fillOpacity": 0.7,
-                    },
-                    tooltip=folium.Tooltip(row['name'])  # Add tooltip with country name
-                ).add_to(m2)
-                break
+    # Second pass: Create the visualization with country-specific data
+    for _, row in gdf.iterrows():
+        country_name = row['name']
+        publication_count = publications_per_country[country_name]
+        color = get_color(publication_count)
+        
+        # Create tooltip with country name and publication count
+        tooltip_text = f"{country_name}: {publication_count:,} publications"
+        
+        folium.GeoJson(
+            row['geometry'],
+            style_function=lambda feature, color=color: {
+                "fillColor": color,
+                "color": "black",
+                "weight": 1,
+                "fillOpacity": 0.7,
+            },
+            tooltip=folium.Tooltip(
+                tooltip_text,
+                style="""
+                    background-color: white;
+                    color: black;
+                    font-family: arial;
+                    font-size: 12px;
+                    padding: 10px;
+                    border-radius: 3px;
+                    box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
+                """
+            )
+        ).add_to(m2)
 
     # Add custom legends
     custom_legend_html = '''
@@ -584,8 +592,9 @@ def summary(request):
      position: fixed; 
      bottom: 50px; left: 50px; width: 150px; height: 180px; 
      background-color: white; border:2px solid grey; z-index:9999; font-size:14px;
+     border-radius: 5px; box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
      ">
-     &nbsp; <b>Intensity Legend</b> <br>
+     &nbsp; <b>Publications</b> <br>
      &nbsp; > 1000 &nbsp; <i style="background:darkred; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
      &nbsp; 100 - 1000 &nbsp; <i style="background:red; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
      &nbsp; 50 - 100 &nbsp; <i style="background:orange; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
@@ -601,11 +610,13 @@ def summary(request):
     top: 50px; right: 50px; width: 200px; height: 20px; 
     background: linear-gradient(to right, lightyellow, yellow, orange, red, darkred);
     border: 2px solid grey; z-index: 9999; font-size: 12px;
-    text-align: center; color: black;">
-        <span style="float: left;">0</span>
-        <span style="float: right;">>1000</span>
+    text-align: center; color: black; border-radius: 5px;
+    box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
+    ">
+        <span style="float: left; padding-left: 5px;">0</span>
+        <span style="float: right; padding-right: 5px;">>1000</span>
         <div style="clear: both;"></div>
-        <b>Intensity Scale</b>
+        <b>Publications by Country</b>
     </div>
     '''
     m2.get_root().html.add_child(folium.Element(gradient_legend_html))
@@ -613,12 +624,8 @@ def summary(request):
     # Render map as HTML
     map_html = m2._repr_html_()
 
-
-
-
-
+    # Prepare context with all data
     context = {
-     
         'gene_count': gene_count,
         'drug_count': drug_count,
         'variant_count': variant_count,
@@ -631,7 +638,8 @@ def summary(request):
         'coord_per_publications_dict': coord_per_publications_dict,
         'map': m,
         'map2': map_html,
-        'data_set': data_set
+        'data_set': coord_per_publications_dict,
+        'publications_per_country': dict(publications_per_country)
     }
 
     return render(request, 'summary.html', context)
