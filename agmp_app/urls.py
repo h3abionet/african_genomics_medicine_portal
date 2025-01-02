@@ -2,10 +2,10 @@ from django.urls import path, re_path, include
 # from django.conf.urls import url
 
 from . import views
-from .views import (DrugagmpDetailView, PhamacogeneDrugAssoc, VariantStudyagmpListView,VarDrugAssocDetailView,VvarDrugAssocDetailView,DiseaseVariantDetailView,VarDisAssocDetailView, PharmacoDrugDetailView,VariantDiseaseAssocDetailView,VariantDrugAssociationDetailView,search_view, test_data_table,heatmap_view)
+from .views import (DrugagmpDetailView, PhamacogeneDrugAssoc, VariantStudyagmpListView,VarDrugAssocDetailView,VvarDrugAssocDetailView,DiseaseVariantDetailView,VarDisAssocDetailView, PharmacoDrugDetailView,VariantDiseaseAssocDetailView,VariantDrugAssociationDetailView,search_view, test_data_table)
 
 urlpatterns = [
-path('heat-map-102024/', heatmap_view, name='heatmap'),
+
     path('test', test_data_table, name='test_data_table'),
     path('', search_view, name='search_view'),
     path('about', views.about, name='about'),
