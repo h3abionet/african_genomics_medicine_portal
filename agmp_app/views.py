@@ -430,227 +430,209 @@ def about(request):
 
 
 def summary(request):
-    # Basic counts
-    gene_count = Geneagmp.objects.count()
-    drug_count = Drugagmp.objects.exclude(drug_name__iexact="nan").count()
-    variant_count = Variantagmp.objects.count()
-    disease_count = Variantagmp.objects.exclude(source_db="PharmGKB").count()
+   # Basic counts
+   gene_count = Geneagmp.objects.count()
+   drug_count = Drugagmp.objects.exclude(drug_name__iexact="nan").count()
+   variant_count = Variantagmp.objects.count()
+   disease_count = Variantagmp.objects.exclude(source_db="PharmGKB").count()
 
-    # Optimized query for top 10 drugs by publications
-    topten_drugz = Drugagmp.objects.annotate(num_pubs=Count('drugs')).order_by('-num_pubs')[:10]
+   # Get study type filter
+   study_type = request.GET.get('study_type', None)
+   
+   # Base queryset for variant studies 
+   variant_studies = VariantStudyagmp.objects.all()
+   if study_type:
+       variant_studies = variant_studies.filter(studyagmp__study_type=study_type)
 
-    # Optimized query for top 10 genes by publications
-    topten_genez = Geneagmp.objects.annotate(num_pubs=Count('variantagmp')).order_by('-num_pubs')[:10]
+   # Optimized queries
+   topten_drugz = Drugagmp.objects.annotate(num_pubs=Count('drugs')).order_by('-num_pubs')[:10]
+   topten_genez = Geneagmp.objects.annotate(num_pubs=Count('variantagmp')).order_by('-num_pubs')[:10]
 
-    # Optimized top 10 querysets
-    qs_drug = (
-        Drugagmp.objects.exclude(drug_name="nan")
-        .values('drug_name')
-        .annotate(frequency=Count('drugs'))
-        .order_by('-frequency')[:10]
-    )
+   qs_drug = (
+       Drugagmp.objects.exclude(drug_name="nan")
+       .values('drug_name')
+       .annotate(frequency=Count('drugs'))
+       .order_by('-frequency')[:10]
+   )
 
-    qs_gene = (
-        Geneagmp.objects.exclude(gene_name="nan")
-        .values('gene_id')
-        .annotate(frequency=Count('variantagmp__studyagmp'))
-        .order_by('-frequency')[:10]
-    )
+   qs_gene = (
+       Geneagmp.objects.exclude(gene_name="nan")
+       .values('gene_id')
+       .annotate(frequency=Count('variantagmp__studyagmp'))
+       .order_by('-frequency')[:10]
+   )
 
-    qs_variant = (
-        Variantagmp.objects.exclude(rs_id="nan")
-        .values('rs_id')
-        .annotate(frequency=Count('studyagmp'))
-        .order_by('-frequency')[:10]
-    )
+   qs_variant = (
+       Variantagmp.objects.exclude(rs_id="nan")
+       .values('rs_id')
+       .annotate(frequency=Count('studyagmp'))
+       .order_by('-frequency')[:10]
+   )
 
-    qs_disease = (
-        Phenotypeagmp.objects.exclude(variantagmp__source_db="PharmGKB").exclude(variantagmp__source_db="nan")
-        .values('name')
-        .annotate(frequency=Count('variantagmp'))
-        .order_by('-frequency')[:10]
-    )
+   qs_disease = (
+       Phenotypeagmp.objects.exclude(variantagmp__source_db="PharmGKB").exclude(variantagmp__source_db="nan")
+       .values('name')
+       .annotate(frequency=Count('variantagmp'))
+       .order_by('-frequency')[:10]
+   )
 
-    # Function to retrieve and clean location data
-    def get_location_data(lat_field, lon_field):
-        locations = VariantStudyagmp.objects.exclude(
-            Q(**{f'{lon_field}__isnull': True}) | Q(**{f'{lon_field}__exact': ''}) |
-            Q(**{f'{lat_field}__isnull': True}) | Q(**{f'{lat_field}__exact': ''})
-        ).values('studyagmp__publication_id', lat_field, lon_field)
+   def get_location_data(lat_field, lon_field, queryset):
+       return queryset.exclude(
+           Q(**{f'{lon_field}__isnull': True}) | Q(**{f'{lon_field}__exact': ''}) |
+           Q(**{f'{lat_field}__isnull': True}) | Q(**{f'{lat_field}__exact': ''})
+       ).values('studyagmp__publication_id', lat_field, lon_field).annotate(
+           latitude=F(lat_field),
+           longitude=F(lon_field)
+       ).values('latitude', 'longitude')
 
-        logging.debug(f"Retrieved {lat_field}, {lon_field} locations: {list(locations)}")
+   location_fields = [
+       ('latitude_01', 'longitude_01'), ('latitude_02', 'longitude_02'),
+       ('latitude_03', 'longitude_03'), ('latitude_04', 'longitude_04'),
+       ('latitude_05', 'longitude_05'), ('latitude_06', 'longitude_06'),
+       ('latitude_07', 'longitude_07'), ('latitude_08', 'longitude_08'),
+       ('latitude_09', 'longitude_09'), ('latitude_10', 'longitude_10'),
+       ('latitude_11', 'longitude_11')
+   ]
 
-        renamed_queryset = locations.annotate(
-            latitude=F(lat_field),
-            longitude=F(lon_field)
-        ).values('latitude', 'longitude')
+   locations = [get_location_data(lat, lon, variant_studies) for lat, lon in location_fields]
+   flattened_locations = [item for sublist in locations for item in sublist]
+   
+   logging.debug(f"Combined locations: {flattened_locations}")
 
-        return renamed_queryset
+   records = flattened_locations
+   count_per_coordinates = defaultdict(int)
+   for record in records:
+       coordinates = (record["latitude"], record["longitude"])
+       count_per_coordinates[coordinates] += 1
 
-    # Collect all location data
-    location_fields = [
-        ('latitude_01', 'longitude_01'), ('latitude_02', 'longitude_02'),
-        ('latitude_03', 'longitude_03'), ('latitude_04', 'longitude_04'),
-        ('latitude_05', 'longitude_05'), ('latitude_06', 'longitude_06'),
-        ('latitude_07', 'longitude_07'), ('latitude_08', 'longitude_08'),
-        ('latitude_09', 'longitude_09'), ('latitude_10', 'longitude_10'),
-        ('latitude_11', 'longitude_11')
-    ]
+   coord_per_publications_dict = count_per_coordinates.items()
 
-    # Fetch and flatten all location data
-    locations = [get_location_data(lat, lon) for lat, lon in location_fields]
-    flattened_locations = [item for sublist in locations for item in sublist]
-    
-    logging.debug(f"Combined locations: {flattened_locations}")
+   # First map
+   m = folium.Map(location=[-4.0335, 21.7501], zoom_start=3)
+   for coordinates, value in coord_per_publications_dict:
+       try:
+           clean_latitude = float(coordinates[0])
+           clean_longitude = float(coordinates[1])
+           popup_text = "Publications"
+           popup_number = value
+           popup_content = f"{popup_text}: {popup_number}"
+           popup = folium.Popup(popup_content, parse_html=True)
+           folium.Marker([clean_latitude, clean_longitude], popup=popup).add_to(m)
+       except ValueError:
+           logging.warning(f"Skipping invalid coordinates: {coordinates}")
 
-    # Create first map (original point-based map)
-    records = flattened_locations
-    count_per_coordinates = defaultdict(int)
-    for record in records:
-        coordinates = (record["latitude"], record["longitude"])
-        count_per_coordinates[coordinates] += 1
+   m = m._repr_html_()
 
-    coord_per_publications_dict = count_per_coordinates.items()
+   # Second map (choropleth)
+   m2 = folium.Map(location=[1.2921, 36.8219], zoom_start=3)
+   geojson_path = os.path.join(settings.BASE_DIR, 'agmp_app/static/maps/countries.geo.json')
+   gdf = gpd.read_file(geojson_path)
 
-    # Create the first map with individual points
-    m = folium.Map(location=[-4.0335, 21.7501], zoom_start=3)
-    for coordinates, value in coord_per_publications_dict:
-        try:
-            clean_latitude = float(coordinates[0])
-            clean_longitude = float(coordinates[1])
-            popup_text = "Publications"
-            popup_number = value
-            popup_content = f"{popup_text}: {popup_number}"
-            popup = folium.Popup(popup_content, parse_html=True)
-            folium.Marker([clean_latitude, clean_longitude], popup=popup).add_to(m)
-        except ValueError:
-            logging.warning(f"Skipping invalid coordinates: {coordinates}")
+   publications_per_country = defaultdict(int)
 
-    m = m._repr_html_()
+   for (lat, lon), value in coord_per_publications_dict:
+       try:
+           point = Point(float(lon), float(lat))
+           for _, row in gdf.iterrows():
+               if row['geometry'].contains(point):
+                   publications_per_country[row['name']] += value
+                   break
+       except (ValueError, TypeError):
+           logging.warning(f"Invalid coordinates: lat={lat}, lon={lon}")
+           continue
 
-    # Initialize second map (choropleth map)
-    m2 = folium.Map(location=[1.2921, 36.8219], zoom_start=3)
+   def get_color(value):
+       if value > 1000:
+           return "#8B0000" 
+       elif value > 100:
+           return "#CD5C5C"
+       elif value > 50:
+           return "#DAA520"
+       elif value > 10:
+           return "#F0E68C"
+       else:
+           return "#FFFFE0"
 
-    # Load GeoJSON for African countries
-    geojson_path = os.path.join(settings.BASE_DIR, 'agmp_app/static/maps/countries.geo.json')
-    gdf = gpd.read_file(geojson_path)
+   for _, row in gdf.iterrows():
+       country_name = row['name']
+       publication_count = publications_per_country[country_name]
+       color = get_color(publication_count)
+       
+       tooltip_text = f"{country_name}: {publication_count:,} publications"
+       
+       folium.GeoJson(
+           row['geometry'],
+           style_function=lambda feature, color=color: {
+               "fillColor": color,
+               "color": "black",
+               "weight": 1,
+               "fillOpacity": 0.7,
+           },
+           tooltip=folium.Tooltip(
+               tooltip_text,
+               style="""
+                   background-color: white;
+                   color: black;
+                   font-family: arial;
+                   font-size: 12px;
+                   padding: 10px;
+                   border-radius: 3px;
+                   box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
+               """
+           )
+       ).add_to(m2)
 
-    # Initialize dictionary to store publications per country
-    publications_per_country = defaultdict(int)
-
-    # First pass: Count publications for each country
-    for (lat, lon), value in coord_per_publications_dict:
-        try:
-            point = Point(float(lon), float(lat))
-            for _, row in gdf.iterrows():
-                if row['geometry'].contains(point):
-                    publications_per_country[row['name']] += value
-                    break
-        except (ValueError, TypeError):
-            logging.warning(f"Invalid coordinates: lat={lat}, lon={lon}")
-            continue
-
-    def get_color(value):
-
-        if value > 1000:
-            return "#8B0000" # Dark brick red
-        elif value > 100:
-            return "#CD5C5C" # Indian red
-        elif value > 50:
-            return "#DAA520" # Goldenrod
-        elif value > 10:
-            return "#F0E68C"  # Khaki
-        else:
-            return "#FFFFE0" # Light yellow
-
-    # Second pass: Create the visualization with country-specific data
-    for _, row in gdf.iterrows():
-        country_name = row['name']
-        publication_count = publications_per_country[country_name]
-        color = get_color(publication_count)
-        
-        # Create tooltip with country name and publication count
-        tooltip_text = f"{country_name}: {publication_count:,} publications"
-        
-        folium.GeoJson(
-            row['geometry'],
-            style_function=lambda feature, color=color: {
-                "fillColor": color,
-                "color": "black",
-                "weight": 1,
-                "fillOpacity": 0.7,
-            },
-            tooltip=folium.Tooltip(
-                tooltip_text,
-                style="""
-                    background-color: white;
-                    color: black;
-                    font-family: arial;
-                    font-size: 12px;
-                    padding: 10px;
-                    border-radius: 3px;
-                    box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
-                """
-            )
-        ).add_to(m2)
-
-    # Add custom legends
-    custom_legend_html = '''
-     <div style="
-     position: fixed; 
-     bottom: 50px; left: 50px; width: 200px; height: 200px; 
-     background-color: white; border:2px solid grey; z-index:9999; font-size:14px;
-     border-radius: 5px; box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
-     ">
-     &nbsp; <b>Publications</b> <br>
-     &nbsp; > 1000 &nbsp; <i style="background: #8B0000; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
-     &nbsp; 100 - 1000 &nbsp; <i style="background: #CD5C5C; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
-     &nbsp; 50 - 100 &nbsp; <i style="background: #DAA520; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
-     &nbsp; 10 - 50 &nbsp; <i style="background:  #F0E68C; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
-     &nbsp; 0 - 10 &nbsp; <i style="background: #FFFFE0; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
-     </div>
-     '''
-    m2.get_root().html.add_child(folium.Element(custom_legend_html))
-
-    gradient_legend_html = '''
-    <div style="
-    position: fixed; 
-    top: 50px; right: 50px; width: 200px; height: 20px; 
-    background: linear-gradient(to right, #FFFFE0, #F0E68C, #DAA520, #CD5C5C, #8B0000);
-    border: 2px solid grey; z-index: 9999; font-size: 12px;
-    text-align: center; color: black; border-radius: 5px;
-    box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
-    ">
-        <span style="float: left; padding-left: 5px;">0</span>
-        <span style="float: right; padding-right: 5px;">>1000</span>
-        <div style="clear: both;"></div>
-        <b>Publications by Country</b>
+   # Custom legends
+   custom_legend_html = '''
+    <div style="position: fixed; bottom: 50px; left: 50px; width: 200px; height: 200px; 
+    background-color: white; border:2px solid grey; z-index:9999; font-size:14px;
+    border-radius: 5px; box-shadow: 3px 3px 3px rgba(0,0,0,0.2);">
+    &nbsp; <b>Publications</b> <br>
+    &nbsp; > 1000 &nbsp; <i style="background: #8B0000; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
+    &nbsp; 100 - 1000 &nbsp; <i style="background: #CD5C5C; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
+    &nbsp; 50 - 100 &nbsp; <i style="background: #DAA520; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
+    &nbsp; 10 - 50 &nbsp; <i style="background:  #F0E68C; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
+    &nbsp; 0 - 10 &nbsp; <i style="background: #FFFFE0; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
     </div>
     '''
-    m2.get_root().html.add_child(folium.Element(gradient_legend_html))
+   m2.get_root().html.add_child(folium.Element(custom_legend_html))
 
-    # Render map as HTML
-    map_html = m2._repr_html_()
+   gradient_legend_html = '''
+   <div style="position: fixed; top: 50px; right: 50px; width: 200px; height: 20px; 
+   background: linear-gradient(to right, #FFFFE0, #F0E68C, #DAA520, #CD5C5C, #8B0000);
+   border: 2px solid grey; z-index: 9999; font-size: 12px;
+   text-align: center; color: black; border-radius: 5px;
+   box-shadow: 3px 3px 3px rgba(0,0,0,0.2);">
+       <span style="float: left; padding-left: 5px;">0</span>
+       <span style="float: right; padding-right: 5px;">>1000</span>
+       <div style="clear: both;"></div>
+       <b>Publications by Country</b>
+   </div>
+   '''
+   m2.get_root().html.add_child(folium.Element(gradient_legend_html))
 
-    # Prepare context with all data
-    context = {
-        'gene_count': gene_count,
-        'drug_count': drug_count,
-        'variant_count': variant_count,
-        'disease_count': disease_count,
-        'qs_drug': qs_drug,
-        'qs_gene': qs_gene,
-        'qs_variant': qs_variant,
-        'qs_disease': qs_disease,
-        'locations': flattened_locations,
-        'coord_per_publications_dict': coord_per_publications_dict,
-        'map': m,
-        'map2': map_html,
-        'data_set': coord_per_publications_dict,
-        'publications_per_country': dict(publications_per_country)
-    }
+   map_html = m2._repr_html_()
 
-    return render(request, 'summary.html', context)
+   context = {
+       'gene_count': gene_count,
+       'drug_count': drug_count,
+       'variant_count': variant_count,
+       'disease_count': disease_count,
+       'qs_drug': qs_drug,
+       'qs_gene': qs_gene,
+       'qs_variant': qs_variant,
+       'qs_disease': qs_disease,
+       'locations': flattened_locations,
+       'coord_per_publications_dict': coord_per_publications_dict,
+       'map': m,
+       'map2': map_html,
+       'data_set': coord_per_publications_dict,
+       'publications_per_country': dict(publications_per_country),
+       'current_study_type': study_type,
+       'study_types': ['GWAS', 'Association']
+   }
+
+   return render(request, 'summary.html', context)
 
 
 

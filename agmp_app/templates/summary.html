@@ -424,6 +424,14 @@
   <h3 class="text-center">Map</h3> 
   <div style="height: 500px;">  {{ map | safe}}</div>
 
+  <div class="filter-controls">
+    <select id="study-type-filter" onchange="window.location.href='?study_type=' + this.value">
+        <option value="">All Studies</option>
+        <option value="GWAS" {% if current_study_type == 'GWAS' %}selected{% endif %}>GWAS</option>
+        <option value="Association" {% if current_study_type == 'Association' %}selected{% endif %}>Association</option>
+    </select>
+</div>
+
 </div>
 <br>
 <br>
