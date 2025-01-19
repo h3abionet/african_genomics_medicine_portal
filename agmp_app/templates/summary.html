@@ -3,317 +3,212 @@
 {% block title %}Summary{% endblock %}
 
 {% block banner %}
-
-
 {% include 'partials/banner_summary.html' %}
-
 {% endblock %}
 
-
-
 {% block content %}
-
-
 {% block js%}
-
 <style>
-
-
-
-
-
-
-
+/* Keep existing styles */
 </style>
-
-
-
-
 {% endblock %}
 
 {%block css%}
-
-
 {% block scripts %}
-
-
-
 <script>
   ///graph1
   $(document).ready(function () {
-
     const ctx = document.getElementById('myChart01').getContext('2d');
     const myChart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: [{% for i in qs_drug %}'{{i.drug_name}}', {% endfor %}],
-    datasets: [{
-      label: 'No of Publications',
-      data: [{% for i in qs_drug %}'{{i.frequency}}', {% endfor %}],
-    backgroundColor: [
-    'rgba(255, 99, 132, 0.2)',
-    'rgba(54, 162, 235, 0.2)',
-    'rgba(255, 206, 86, 0.2)',
-    'rgba(75, 192, 192, 0.2)',
-    'rgba(153, 102, 255, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(195, 79, 64, 5.2)',
-    'rgba(285, 159, 64, 5.2)',
-    'rgba(0, 128, 0, 3.2)',
-    'rgba(108, 122, 137, 0.2)',
-  ],
-    borderColor: [
-    'rgba(255, 99, 132, 1)',
-    'rgba(54, 162, 235, 1)',
-    'rgba(255, 206, 86, 1)',
-    'rgba(75, 192, 192, 1)',
-    'rgba(153, 102, 255, 1)',
-    'rgba(255, 159, 64, 1)',
-    'rgba(195, 79, 64, 5.2)',
-    'rgba(255, 159, 64, 1)',
-    'rgba(0, 128, 0, 3.2)',
-    'rgba(108, 122, 137, 0.2)',
-  ],
-    borderWidth: 1
-    }]
+        datasets: [{
+          label: 'No of Publications',
+          data: [{% for i in qs_drug %}'{{i.frequency}}', {% endfor %}],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(195, 79, 64, 5.2)',
+            'rgba(285, 159, 64, 5.2)',
+            'rgba(0, 128, 0, 3.2)',
+            'rgba(108, 122, 137, 0.2)',
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(195, 79, 64, 5.2)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(0, 128, 0, 3.2)',
+            'rgba(108, 122, 137, 0.2)',
+          ],
+          borderWidth: 1
+        }]
       },
-    options: {
-    scales: {
-      y: {
-        beginAtZero: true
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
       }
-    }
-  }
     });
-
-
-
   });
 
   ///graph2
   $(document).ready(function () {
-
     const ctx = document.getElementById('myChart02').getContext('2d');
     const myChart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: [{% for i in qs_gene %}'{{i.gene_id | safe}}',{% endfor %}],
-    datasets: [{
-      label: 'No of Publications',
-      data: [{% for i in qs_gene %}'{{i.frequency | safe}}', {% endfor %}],
-    backgroundColor: [
-    'rgba(255, 99, 132, 0.2)',
-    'rgba(54, 162, 235, 0.2)',
-    'rgba(255, 206, 86, 0.2)',
-    'rgba(75, 192, 192, 0.2)',
-    'rgba(153, 102, 255, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(195, 79, 64, 5.2)',
-    'rgba(285, 159, 64, 5.2)',
-    'rgba(0, 128, 0, 3.2)',
-    'rgba(108, 122, 137, 0.2)',
-
-  ],
-    borderColor: [
-    'rgba(255, 99, 132, 1)',
-    'rgba(54, 162, 235, 1)',
-    'rgba(255, 206, 86, 1)',
-    'rgba(75, 192, 192, 1)',
-    'rgba(153, 102, 255, 1)',
-    'rgba(255, 159, 64, 1)',
-    'rgba(195, 79, 64, 5.2)',
-    'rgba(255, 159, 64, 1)',
-    'rgba(0, 128, 0, 3.2)',
-    'rgba(108, 122, 137, 0.2)',
-  ],
-    borderWidth: 1
-    }]
+        datasets: [{
+          label: 'No of Publications',
+          data: [{% for i in qs_gene %}'{{i.frequency | safe}}', {% endfor %}],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(195, 79, 64, 5.2)',
+            'rgba(285, 159, 64, 5.2)',
+            'rgba(0, 128, 0, 3.2)',
+            'rgba(108, 122, 137, 0.2)',
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(195, 79, 64, 5.2)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(0, 128, 0, 3.2)',
+            'rgba(108, 122, 137, 0.2)',
+          ],
+          borderWidth: 1
+        }]
       },
-    options: {
-    scales: {
-      y: {
-        beginAtZero: true
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
       }
-    }
-  }
     });
-
-
-
   });
-
 
   ///graph3
   $(document).ready(function () {
-
     const ctx = document.getElementById('myChart03').getContext('2d');
     const myChart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: [{% for i in qs_variant %}'{{i.rs_id|safe}}',{% endfor %}],
-    datasets: [{
-      label: 'No of Publications',
-      data: [{% for i in qs_variant %}'{{i.frequency|safe}}', {% endfor %}],
-    backgroundColor: [
-    'rgba(255, 99, 132, 0.2)',
-    'rgba(54, 162, 235, 0.2)',
-    'rgba(255, 206, 86, 0.2)',
-    'rgba(75, 192, 192, 0.2)',
-    'rgba(153, 102, 255, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(195, 79, 64, 5.2)',
-    'rgba(285, 159, 64, 5.2)',
-    'rgba(0, 128, 0, 3.2)',
-    'rgba(108, 122, 137, 0.2)',
-  ],
-    borderColor: [
-    'rgba(255, 99, 132, 1)',
-    'rgba(54, 162, 235, 1)',
-    'rgba(255, 206, 86, 1)',
-    'rgba(75, 192, 192, 1)',
-    'rgba(153, 102, 255, 1)',
-    'rgba(255, 159, 64, 1)',
-    'rgba(195, 79, 64, 5.2)',
-    'rgba(255, 159, 64, 1)',
-    'rgba(0, 128, 0, 3.2)',
-    'rgba(108, 122, 137, 0.2)',
-  ],
-    borderWidth: 1
-    }]
+        datasets: [{
+          label: 'No of Publications',
+          data: [{% for i in qs_variant %}'{{i.frequency|safe}}', {% endfor %}],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(195, 79, 64, 5.2)',
+            'rgba(285, 159, 64, 5.2)',
+            'rgba(0, 128, 0, 3.2)',
+            'rgba(108, 122, 137, 0.2)',
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(195, 79, 64, 5.2)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(0, 128, 0, 3.2)',
+            'rgba(108, 122, 137, 0.2)',
+          ],
+          borderWidth: 1
+        }]
       },
-    options: {
-    scales: {
-      y: {
-        beginAtZero: true
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
       }
-    }
-  }
     });
-
-
-
   });
-
 
   ///graph4
   $(document).ready(function () {
-
     const ctx = document.getElementById('myChart04').getContext('2d');
     const myChart = new Chart(ctx, {
       type: 'bar',
       data: {
         labels: [{% for i in qs_disease %}'{{i.name| safe}}',{% endfor %}],
-    datasets: [{
-      label: 'No of Publications',
-      data: [{% for i in qs_disease %}'{{i.frequency|safe}}', {% endfor %}],
-    backgroundColor: [
-    'rgba(255, 99, 132, 0.2)',
-    'rgba(54, 162, 235, 0.2)',
-    'rgba(255, 206, 86, 0.2)',
-    'rgba(75, 192, 192, 0.2)',
-    'rgba(153, 102, 255, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(195, 79, 64, 5.2)',
-    'rgba(285, 159, 64, 5.2)',
-    'rgba(0, 128, 0, 3.2)',
-    'rgba(108, 122, 137, 0.2)',
-  ],
-    borderColor: [
-    'rgba(255, 99, 132, 1)',
-    'rgba(54, 162, 235, 1)',
-    'rgba(255, 206, 86, 1)',
-    'rgba(75, 192, 192, 1)',
-    'rgba(153, 102, 255, 1)',
-    'rgba(255, 159, 64, 1)',
-    'rgba(195, 79, 64, 5.2)',
-    'rgba(255, 159, 64, 1)',
-    'rgba(0, 128, 0, 3.2)',
-    'rgba(108, 122, 137, 0.2)',
-  ],
-    borderWidth: 1
-}]
-  },
-    options: {
-    scales: {
-      y: {
-        beginAtZero: true
+        datasets: [{
+          label: 'No of Publications',
+          data: [{% for i in qs_disease %}'{{i.frequency|safe}}', {% endfor %}],
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(195, 79, 64, 5.2)',
+            'rgba(285, 159, 64, 5.2)',
+            'rgba(0, 128, 0, 3.2)',
+            'rgba(108, 122, 137, 0.2)',
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(195, 79, 64, 5.2)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(0, 128, 0, 3.2)',
+            'rgba(108, 122, 137, 0.2)',
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
       }
-    }
-  }
-});
-
-
-
-});
-{% comment %} 
-
-  ///graph5
-  $(document).ready(function () {
-
-    const ctx = document.getElementById('myChart05').getContext('2d');
-    const myChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: [{% for i in countries %} '{{i}}',{% endfor %}],
-    datasets: [{
-      label: 'No of Publications',
-      data: [{% for i in publications %} {{ i }}, {% endfor %}],
-    backgroundColor: [
-    'rgba(255, 99, 132, 0.2)',
-    'rgba(54, 162, 235, 0.2)',
-    'rgba(255, 206, 86, 0.2)',
-    'rgba(75, 192, 192, 0.2)',
-    'rgba(153, 102, 255, 0.2)',
-    'rgba(255, 159, 64, 0.2)',
-    'rgba(195, 79, 64, 5.2)',
-    'rgba(285, 159, 64, 5.2)',
-    'rgba(0, 128, 0, 3.2)',
-    'rgba(108, 122, 137, 0.2)',
-  ],
-    borderColor: [
-    'rgba(255, 99, 132, 1)',
-    'rgba(54, 162, 235, 1)',
-    'rgba(255, 206, 86, 1)',
-    'rgba(75, 192, 192, 1)',
-    'rgba(153, 102, 255, 1)',
-    'rgba(255, 159, 64, 1)',
-    'rgba(195, 79, 64, 5.2)',
-    'rgba(255, 159, 64, 1)',
-    'rgba(0, 128, 0, 3.2)',
-    'rgba(108, 122, 137, 0.2)',
-  ],
-    borderWidth: 1
-}]
-},
-    options: {
-    scales: {
-      y: {
-        beginAtZero: true
-      }
-    }
-  }
-});
-
-
-
-});
-
- {% endcomment %}
-
+    });
+  });
 </script>
-
-
-
-
 {% endblock %}
-
-
 {% endblock %}
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-
-
 
 <div class="row">
   <div class="col-md-3">
@@ -323,15 +218,14 @@
           <li><a class="tag-link" href="#section1">Data Overview</a></li>
           <li><a class="tag-link" href="#section2">Graphs</a></li>
           <li><a class="tag-link" href="#section3">Map</a></li>
-
         </div>
       </ul>
     </nav>
   </div>
 
   <div class="col-md-9 section1">
+    <!-- Data Overview Section -->
     <div id="section1" class="section">
-
       <h3 class="text-center">Data Overview</h3>
       <table class="table table-hover">
         <thead>
@@ -357,139 +251,127 @@
           <td>{{ variant_count | default:'0' }}</td>
         </tr>
       </table>
-
     </div>
 
-  {% comment %} graph section {% endcomment %}
+    <!-- Graphs Section -->
+    <div id="section2" class="section">
+      <h3 class="text-center">Graphs</h3>
+      
+      <ul id="clothing-nav" class="nav nav-tabs graph-custom-class" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" href="#drug-graph" id="home-tab" role="tab"
+            data-toggle="tab" aria-controls="home" aria-expanded="true">Top Ten Drugs</a>
+        </li>
+        
+        <li class="nav-item">
+          <a class="nav-link" href="#gene-graph" role="tab" id="hats-tab"
+            data-toggle="tab" aria-controls="hats">Top Ten Genes</a>
+        </li>
 
-<br>
-<br>
+        <li class="nav-item">
+          <a class="nav-link" href="#variant-graph" role="tab" id="hats-tab01"
+            data-toggle="tab" aria-controls="hats">Top Ten Variants</a>
+        </li>
 
-<div id="section2" class="section">
-  <h3 class="text-center">Graphs</h3>
+        <li class="nav-item">
+          <a class="nav-link" href="#disease" role="tab" id="hats-tab02"
+            data-toggle="tab" aria-controls="hats">Top Ten Phenotypes</a>
+        </li>
+      </ul>
 
-  <ul id="clothing-nav" class="nav nav-tabs graph-custom-class" role="tablist">
-    
-    <li class="nav-item">
-      <a class="nav-link active" href="#drug-graph" id="home-tab" role="tab"
-        data-toggle="tab" aria-controls="home" aria-expanded="true"> Top Ten Drugs</a>
-    </li>
-    
-    <li class="nav-item">
-      <a class="nav-link" href="#gene-graph" role="tab" id="hats-tab"
-        data-toggle="tab" aria-controls="hats"> Top Ten Genes</a>
-    </li>
+      <div id="clothing-nav-content" class="tab-content">
+        <div role="tabpanel" class="tab-pane fade show active" id="drug-graph" aria-labelledby="home-tab">
+          <canvas id="myChart01" width="200" height="100"></canvas>
+        </div>
+        
+        <div role="tabpanel" class="tab-pane fade" id="gene-graph" aria-labelledby="hats-tab">
+          <canvas id="myChart02" width="200" height="100"></canvas>
+        </div>
+        
+        <div role="tabpanel" class="tab-pane fade" id="variant-graph" aria-labelledby="hats-tab01">
+          <canvas id="myChart03" width="200" height="100"></canvas>
+        </div>
 
-    <li class="nav-item">
-      <a class="nav-link" href="#variant-graph" role="tab" id="hats-tab01"
-        data-toggle="tab" aria-controls="hats"> Top Ten Variants</a>
-    </li>
-
-    <li class="nav-item">
-      <a class="nav-link" href="#disease" role="tab" id="hats-tab02"
-        data-toggle="tab" aria-controls="hats">Top Ten Phenotypes</a>
-    </li>
-
-    
-  </ul>
-  
-
-
-  
-  <div id="clothing-nav-content" class="tab-content">
-    
-    <div role="tabpanel" class="tab-pane fade show active" id="drug-graph" aria-labelledby="home-tab">
-      <canvas id="myChart01" width="200" height="100"></canvas>
-    </div>
-    
-    <div role="tabpanel" class="tab-pane fade" id="gene-graph" aria-labelledby="hats-tab">
-      <canvas id="myChart02" width="200" height="100"></canvas>
-    </div>
-    
-    <div role="tabpanel" class="tab-pane fade" id="variant-graph" aria-labelledby="hats-tab01">
-      <canvas id="myChart03" width="200" height="100"></canvas>
+        <div role="tabpanel" class="tab-pane fade" id="disease" aria-labelledby="hats-tab02">
+          <canvas id="myChart04" width="300" height="100"></canvas>
+        </div>
+      </div>
     </div>
 
 
-    <div role="tabpanel" class="tab-pane fade" id="disease" aria-labelledby="hats-tab02">
-      <canvas id="myChart04" width="300" height="100"></canvas>
+    <!-- Map Section with Updated Filters -->
+    <div id="section3" class="section">
+      <h3 class="text-center">Map</h3>
+      
+      <!-- Updated filter controls for first map -->
+      <div class="filter-controls mb-3">
+        <label for="map1-filter">Filter Marker Map:</label>
+        <select id="map1-filter" class="form-control" 
+                onchange="window.location.href = updateQueryString('map1_study_type', this.value)">
+          {% for type in study_types %}
+            <option value="{{ type }}" {% if type == map1_study_type %}selected{% endif %}>
+              {{ type }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      
+      <div style="height: 500px;">
+        {{ map|safe }}
+      </div>
     </div>
 
+    <!-- Heatmap Section with Updated Filters -->
+    <div id="section4" class="section">
+      <h3 class="text-center">Heatmap</h3>
+      
+      <!-- Updated filter controls for second map -->
+      <div class="filter-controls mb-3">
+        <label for="map2-filter">Filter Heatmap:</label>
+        <select id="map2-filter" class="form-control"
+                onchange="window.location.href = updateQueryString('map2_study_type', this.value)">
+          {% for type in study_types %}
+            <option value="{{ type }}" {% if type == map2_study_type %}selected{% endif %}>
+              {{ type }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      
+      <div style="height: 500px;">
+        {{ map2|safe }}
+      </div>
+    </div>
   </div>
- 
-</div> 
-<br>
-<br>
-<div id="section3" class="section">
-  <h3 class="text-center">Map</h3> 
-  <div style="height: 500px;">  {{ map | safe}}</div>
-
-  <div class="filter-controls">
-    <select id="study-type-filter" onchange="window.location.href='?study_type=' + this.value">
-        <option value="">All Studies</option>
-        <option value="GWAS" {% if current_study_type == 'GWAS' %}selected{% endif %}>GWAS</option>
-        <option value="Association" {% if current_study_type == 'Association' %}selected{% endif %}>Association</option>
-    </select>
 </div>
 
-</div>
-<br>
-<br>
-
-<div id="section4" class="section">
-  <h3 class="text-center">Heatmap</h3> 
-  <div style="height: 500px;">  {{ map2|safe }} </div>
-
-</div>
-
-
+<!-- Add JavaScript for handling URL parameters -->
 <script>
-// Add a click event listener to each tag link
-document.addEventListener('DOMContentLoaded', function() {
-  const tagLinks = document.querySelectorAll('.tag-link');
-  
-  tagLinks.forEach(tagLink => {
-      tagLink.addEventListener('click', function(event) {
-          event.preventDefault(); // Prevent the default link behavior
-          
-          const targetSectionId = tagLink.getAttribute('href'); // Get the target section ID
-          
-          // Scroll smoothly to the target section
-          document.querySelector(targetSectionId).scrollIntoView({
-              behavior: 'smooth'
-          });
-      });
-  });
-});
+function updateQueryString(key, value) {
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set(key, value);
+    return `${window.location.pathname}?${urlParams.toString()}`;
+}
 
+// Add smooth scrolling for navigation
+document.addEventListener('DOMContentLoaded', function() {
+    const tagLinks = document.querySelectorAll('.tag-link');
+    
+    tagLinks.forEach(tagLink => {
+        tagLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            const targetSectionId = tagLink.getAttribute('href');
+            document.querySelector(targetSectionId).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+});
 </script>
 
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-  
-
-  
-
-   
-  
-
-
-
-
-
-
-
-
-</div>
+<!-- Bootstrap and other scripts -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
 {% endblock %}
-  <script>
-
-        
-</script>
-
-
-
-
