@@ -9,6 +9,7 @@ urlpatterns = [
     path('test', test_data_table, name='test_data_table'),
     path('', search_view, name='search_view'),
     path('about', views.about, name='about'),
+    path('get-map-data/<str:map_type>/', views.get_map_data, name='get_map_data'),
 #  old url for search   path('search_v', views.search_all, name='search_v'),  
     path('home', views.home, name='home'),
     #new views
