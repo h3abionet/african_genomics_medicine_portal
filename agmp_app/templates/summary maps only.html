@@ -1,0 +1,194 @@
+{% extends 'mainLayout.html' %}
+{% load static %}
+
+{% block title %}Summary{% endblock %}
+
+{% block content %}
+<!-- Styles -->
+<style>
+.map-container {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    overflow: hidden;
+}
+
+.map-header {
+    background: #f8f9fa;
+    padding: 20px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.map-title {
+    margin: 0;
+    color: #333;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.filter-controls {
+    background: #fff;
+    padding: 15px 20px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.filter-controls label {
+    font-weight: 500;
+    color: #495057;
+    margin-right: 10px;
+}
+
+.filter-controls select {
+    width: 200px;
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+    color: #495057;
+}
+
+.map-content {
+    height: 500px;
+    position: relative;
+}
+
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.section-divider {
+    margin: 40px 0;
+    border-top: 2px solid #dee2e6;
+}
+</style>
+
+<!-- First Map Section -->
+<div class="map-container">
+    <div class="map-header">
+        <h3 class="map-title">Publication Distribution Map</h3>
+    </div>
+    
+    <div class="filter-controls">
+        <label for="map1-filter">Filter by Study Type:</label>
+        <select id="map1-filter" class="form-control">
+            <option value="All">All Studies</option>
+            {% for type in study_types %}
+                {% if type != 'All' %}
+                    <option value="{{ type }}">{{ type }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    
+    <div id="map1-container" class="map-content">
+        <div class="loading-overlay">
+            <div class="loading-spinner"></div>
+        </div>
+        <div class="map-display"></div>
+    </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- Second Map Section -->
+<div class="map-container">
+    <div class="map-header">
+        <h3 class="map-title">Publication Density Heatmap</h3>
+    </div>
+    
+    <div class="filter-controls">
+        <label for="map2-filter">Filter by Study Type:</label>
+        <select id="map2-filter" class="form-control">
+            <option value="All">All Studies</option>
+            {% for type in study_types %}
+                {% if type != 'All' %}
+                    <option value="{{ type }}">{{ type }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+    
+    <div id="map2-container" class="map-content">
+        <div class="loading-overlay">
+            <div class="loading-spinner"></div>
+        </div>
+        <div class="map-display"></div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+function showLoading(mapId) {
+    $(`#${mapId} .loading-overlay`).css('display', 'flex');
+}
+
+function hideLoading(mapId) {
+    $(`#${mapId} .loading-overlay`).css('display', 'none');
+}
+
+function updateMap(mapType, studyType) {
+    const containerId = mapType === 'marker' ? 'map1-container' : 'map2-container';
+    showLoading(containerId);
+    
+    $.ajax({
+        url: `/get-map-data/${mapType}/`,
+        method: 'GET',
+        data: { study_type: studyType },
+        success: function(response) {
+            $(`#${containerId} .map-display`).html(response.map_html);
+        },
+        error: function(xhr, status, error) {
+            $(`#${containerId} .map-display`).html(
+                '<div class="alert alert-danger m-3">Error loading map. Please try again.</div>'
+            );
+            console.error('Error updating map:', error);
+        },
+        complete: function() {
+            hideLoading(containerId);
+        }
+    });
+}
+
+// Initialize maps when document is ready
+$(document).ready(function() {
+    // Initial load of maps
+    updateMap('marker', 'All');
+    updateMap('heatmap', 'All');
+    
+    // Event listeners for filters
+    $('#map1-filter').change(function() {
+        updateMap('marker', $(this).val());
+    });
+    
+    $('#map2-filter').change(function() {
+        updateMap('heatmap', $(this).val());
+    });
+});
+</script>
+{% endblock %}
