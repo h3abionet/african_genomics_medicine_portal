@@ -582,6 +582,7 @@ def summary(request):
     drug_count = Drugagmp.objects.exclude(drug_name__iexact="nan").count()
     variant_count = Variantagmp.objects.count()
     disease_count = Variantagmp.objects.exclude(source_db="PharmGKB").count()
+    publication_count = Studyagmp.objects.values('publication_id').distinct().count()
 
     # Optimized queries for graphs
     qs_drug = (
@@ -615,6 +616,7 @@ def summary(request):
 
     context = {
         'gene_count': gene_count,
+        'publication_count': publication_count,
         'drug_count': drug_count,
         'variant_count': variant_count,
         'disease_count': disease_count,
