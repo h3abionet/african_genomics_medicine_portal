@@ -15,9 +15,14 @@
  }
 
  .bg-mibio {
-   background-color: #337ab7;
-   border-bottom: 2px #337ab7 solid;
+   background-color: rgb(0, 83, 3);
+   border-bottom: 2px rgb(0, 83, 3) solid;
  }
+
+ .bg-border-bottom-mibio {
+ 
+  border-bottom: 2px rgb(0, 83, 3) solid;
+}
 
  .text-bigblue {
    color: white;
@@ -268,7 +273,7 @@
 
  /* footer css 22october */
  .page-footer_new {
-   background-color: #337ab7;
+   background-color:rgb(0, 0, 0);
    color: #ffffff !important;
    position: initial;
    /* bottom: 0; */
@@ -288,19 +293,52 @@
  }
 
 
+ .footer_top_bg {
+  position: relative; /* Required for pseudo-element positioning */
+  padding-top: 15px; /* Adds space between the line and content */
+}
+
+/* Gradient line above the footer */
+.footer_top_bg::before {
+  content: '';
+  position: absolute;
+  top: -15px; /* Positions line at the TOP of the div */
+  left: 0;
+  right: 0;
+  height: 25px; /* Thickness of the line */
+  background: linear-gradient(to right, rgb(0, 189, 69), rgb(255, 205, 0), rgb(214, 0, 15));
+}
+
+
+
+
  /* 
   ######## css for background image######## */
- .header_top_bg_search {
-   /* height: 100%; */
-   background: url("/static/img/banner5.jpeg");
-   /* width: 100%; */
-   background-repeat: no-repeat;
-   background-position: center;
-   background-size: cover;
-   /* background-attachment: fixed; */
-   min-height: 25vh;
-   margin-top: 0%;
- }
+.header_top_bg_search {
+  background: url("/static/img/banner5.jpeg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  min-height: 25vh;
+  margin-top: 0%;
+  position: relative; /* Needed for pseudo-element border */
+
+  /* OPTION 1: Simple solid border */
+  border-bottom: 5px solid #ffffff; /* White border */
+  
+  /* OPTION 2: Gradient border using pseudo-element (recommended) */
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 25px; /* Border thickness */
+    background: linear-gradient(to right, rgb(0, 189, 69), rgb(255, 205, 0), rgb(214, 0, 15));
+  }
+}
+
+
 
 
  .header_top_bg_about {
@@ -313,6 +351,21 @@
    /* background-attachment: fixed; */
    min-height: 25vh;
    margin-top: 0%;
+   position: relative; /* Needed for pseudo-element border */
+
+   /* OPTION 1: Simple solid border */
+   border-bottom: 5px solid #ffffff; /* White border */
+   
+   /* OPTION 2: Gradient border using pseudo-element (recommended) */
+   &::after {
+     content: '';
+     position: absolute;
+     bottom: 0;
+     left: 0;
+     right: 0;
+     height: 25px; /* Border thickness */
+     background: linear-gradient(to right, rgb(0, 189, 69), rgb(255, 205, 0), rgb(214, 0, 15));
+   }
  }
 
 
@@ -326,6 +379,21 @@
    /* background-attachment: fixed; */
    min-height: 25vh;
    margin-top: 0%;
+   position: relative; /* Needed for pseudo-element border */
+
+   /* OPTION 1: Simple solid border */
+   border-bottom: 5px solid #ffffff; /* White border */
+   
+   /* OPTION 2: Gradient border using pseudo-element (recommended) */
+   &::after {
+     content: '';
+     position: absolute;
+     bottom: 0;
+     left: 0;
+     right: 0;
+     height: 25px; /* Border thickness */
+     background: linear-gradient(to right, rgb(0, 189, 69), rgb(255, 205, 0), rgb(214, 0, 15));
+   }
  }
 
 
@@ -339,6 +407,21 @@
    /* background-attachment: fixed; */
    min-height: 25vh;
    margin-top: 0%;
+   position: relative; /* Needed for pseudo-element border */
+
+   /* OPTION 1: Simple solid border */
+   border-bottom: 5px solid #ffffff; /* White border */
+   
+   /* OPTION 2: Gradient border using pseudo-element (recommended) */
+   &::after {
+     content: '';
+     position: absolute;
+     bottom: 0;
+     left: 0;
+     right: 0;
+     height: 25px; /* Border thickness */
+     background: linear-gradient(to right, rgb(0, 189, 69), rgb(255, 205, 0), rgb(214, 0, 15));
+   }
  }
 
  .header_top_bg_help {
@@ -351,6 +434,21 @@
    /* background-attachment: fixed; */
    min-height: 25vh;
    margin-top: 0%;
+   position: relative; /* Needed for pseudo-element border */
+
+   /* OPTION 1: Simple solid border */
+   border-bottom: 5px solid #ffffff; /* White border */
+   
+   /* OPTION 2: Gradient border using pseudo-element (recommended) */
+   &::after {
+     content: '';
+     position: absolute;
+     bottom: 0;
+     left: 0;
+     right: 0;
+     height: 25px; /* Border thickness */
+     background: linear-gradient(to right, rgb(0, 189, 69), rgb(255, 205, 0), rgb(214, 0, 15));
+   }
  }
 
 
@@ -473,7 +571,7 @@ transform: translateY(-50%); */
 
  h3 {
    font-size: 36px !important;
-   color: rgb(40, 64, 94) !important;
+   color: black !important;
  }
 
  .top_title_text {
