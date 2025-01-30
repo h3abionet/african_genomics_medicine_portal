@@ -2,6 +2,11 @@
  /* changes here will overide h3abionet.css */
 
  /* white circle as background of top  left logo */
+
+
+ body {
+  font-family: 'Montserrat', sans-serif;
+}
  .dot {
    height: 30px;
    width: 30px;
