@@ -45,6 +45,13 @@ Install the following packages (if you have not done so already):
 * `mkdir static_cdn # inside the project directory on the host machine`
 * `docker-compose build or docker-compose build`
 * `docker-compose up -d or docker-compose up -d`
+___ 
+Applying Migrations to the database
+* `docker-compose run --rm djangoapp sh -c "python manage.py makemigrations"`
+* `docker-compose run --rm djangoapp sh -c "python manage.py migrate"`
+___ 
+Quality control check (QC)
+* `docker-compose run --rm djangoapp sh -c "python manage.py find_duplicates"`
 
 ### Import script notes
 1. The import script exist in /scripts/load_data.py.
