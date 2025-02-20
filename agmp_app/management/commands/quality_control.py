@@ -124,4 +124,51 @@ class Command(BaseCommand):
         else:
             self.stdout.write(self.style.SUCCESS('All p-values are valid in VariantStudyagmp model.'))
 
-        self.stdout.write(self.style.SUCCESS('Quality control checks completed.'))
+        # Print summary statistics
+        self.stdout.write(self.style.SUCCESS('\nSummary Statistics:'))
+        
+        # Variants count by rs_id (excluding nulls and empty strings)
+        variant_count = Variantagmp.objects.exclude(rs_id__isnull=True).exclude(rs_id='').values_list('rs_id', flat=True).distinct().count()
+        self.stdout.write(f'* Number of unique values (variant by rs_id): {variant_count}')
+        
+        # Genes count by gene_id (excluding nulls and empty strings)
+        gene_count = Geneagmp.objects.exclude(gene_id__isnull=True).exclude(gene_id='').values_list('gene_id', flat=True).distinct().count()
+        self.stdout.write(f'* Number of unique values (gene by gene_id): {gene_count}')
+        
+        # Drugs count by drug_id (excluding nulls and empty strings)
+        drug_count = Drugagmp.objects.exclude(drug_id__isnull=True).exclude(drug_id='').values_list('drug_id', flat=True).distinct().count()
+        self.stdout.write(f'* Number of unique values (drug by drug_id): {drug_count}')
+        
+        # Phenotypes count by name (excluding nulls and empty strings)
+        phenotype_count = Phenotypeagmp.objects.exclude(name__isnull=True).exclude(name='').values_list('name', flat=True).distinct().count()
+        self.stdout.write(f'* Number of unique values (phenotype by name): {phenotype_count}')
+        
+        # Studies count by publication_id (excluding nulls and empty strings)
+        study_count = Studyagmp.objects.exclude(publication_id__isnull=True).exclude(publication_id='').values_list('publication_id', flat=True).distinct().count()
+        self.stdout.write(f'* Number of unique values (study by publication_id): {study_count}')
+        
+        # Countries count (excluding nulls and empty strings)
+        countries = set()
+        for field in ['country_participant', 'country_participant_01', 'country_participant_02',
+                     'country_participant_03', 'country_participant_04', 'country_participant_05',
+                     'country_participant_06', 'country_participant_07', 'country_participant_08',
+                     'country_participant_09', 'country_participant_010', 'country_participant_011']:
+            values = VariantStudyagmp.objects.exclude(**{f"{field}__isnull": True}).exclude(**{field: ""}).values_list(field, flat=True).distinct()
+            countries.update(values)
+        self.stdout.write(f'* Number of unique values (country): {len(countries)}')
+        
+        # Regions count (excluding nulls and empty strings)
+        region_count = VariantStudyagmp.objects.exclude(geographical_regions__isnull=True).exclude(geographical_regions='').values_list('geographical_regions', flat=True).distinct().count()
+        self.stdout.write(f'* Number of unique values (region): {region_count}')
+        
+        # Mixed population count (excluding nulls and empty strings)
+        mixed_pop_count = VariantStudyagmp.objects.exclude(mixed_population__isnull=True).exclude(mixed_population='').values_list('mixed_population', flat=True).distinct().count()
+        self.stdout.write(f'* Number of unique values (mixed population): {mixed_pop_count}')
+        
+        # Study types count (excluding nulls and empty strings)
+        study_type_count = Studyagmp.objects.exclude(study_type__isnull=True).exclude(study_type='').values_list('study_type', flat=True).distinct().count()
+        study_types = Studyagmp.objects.exclude(study_type__isnull=True).exclude(study_type='').values_list('study_type', flat=True).distinct()
+        self.stdout.write(f'* Number of unique values (study type): {study_type_count}')
+        self.stdout.write(f'  Study types: {", ".join(sorted(study_types))}')
+
+        self.stdout.write(self.style.SUCCESS('\nQuality control checks completed.'))
