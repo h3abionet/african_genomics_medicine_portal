@@ -1,9 +1,24 @@
 from django.core.management.base import BaseCommand
 from django.db.models import Count
 from agmp_app.models import Drugagmp, Geneagmp, Studyagmp, Phenotypeagmp, Variantagmp, VariantStudyagmp
+import re
 
 class Command(BaseCommand):
-    help = 'Find duplicates in the database, validate study types, and check for mixed populations'
+    help = 'Find duplicates in the database, validate study types, check for mixed populations, and validate p-values'
+
+    def is_valid_p_value(self, p_value):
+        if not p_value or p_value.strip() == '':
+            return False
+
+        # Remove spaces
+        p_value = p_value.strip()
+        
+        # Check for valid formats:
+        # 1. Plain number (e.g., 0.05, .05, 5e-8)
+        # 2. Number with < or > (e.g., <0.05, >0.001)
+        p_value_pattern = r'^([<>])?\s*(\d*\.?\d+([eE]-?\d+)?|\.?\d+([eE]-?\d+)?)$'
+        
+        return bool(re.match(p_value_pattern, p_value))
 
     def handle(self, *args, **kwargs):
         # Define the fields to check for duplicates for each model
@@ -24,7 +39,7 @@ class Command(BaseCommand):
             self.stdout.write(self.style.SUCCESS(f'Checking duplicates for {model_name}...'))
             model = globals()[model_name]
             duplicates = model.objects.values(*fields).annotate(count=Count('id')).filter(count__gt=1)
-
+            
             if duplicates.exists():
                 self.stdout.write(self.style.WARNING(f'Duplicates found in {model_name}:'))
                 for duplicate in duplicates:
@@ -32,9 +47,23 @@ class Command(BaseCommand):
                     # Fetch the actual duplicate records
                     duplicate_records = model.objects.filter(**{field: duplicate[field] for field in fields})
                     for record in duplicate_records:
-                        self.stdout.write(self.style.ERROR(f'  - {record}'))
+                        self.stdout.write(self.style.ERROR(f' - {record}'))
             else:
                 self.stdout.write(self.style.SUCCESS(f'No duplicates found in {model_name}.'))
+
+        # Check for phenotype names containing forward slashes
+        self.stdout.write(self.style.SUCCESS('Starting check for phenotype names containing forward slashes...'))
+        phenotypes_with_slashes = Phenotypeagmp.objects.filter(name__contains='/')
+        if phenotypes_with_slashes.exists():
+            self.stdout.write(self.style.WARNING('Found phenotype names containing forward slashes:'))
+            for phenotype in phenotypes_with_slashes:
+                self.stdout.write(self.style.ERROR(
+                    f' - Phenotype ID: {phenotype.id}, '
+                    f'Name: {phenotype.name}'
+                ))
+        else:
+            self.stdout.write(self.style.SUCCESS('No phenotype names containing forward slashes found.'))
+        self.stdout.write(self.style.SUCCESS('Completed check for phenotype names containing forward slashes.'))
 
         # Validate study types in Studyagmp model
         self.stdout.write(self.style.SUCCESS('Validating study types in Studyagmp model...'))
@@ -43,10 +72,9 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING(f'Invalid study types found in Studyagmp:'))
             for study in invalid_studies:
                 self.stdout.write(self.style.ERROR(
-                    f'  - Study ID: {study.id}, '
+                    f' - Study ID: {study.id}, '
                     f'Publication ID: {study.publication_id}, '
                     f'Publication Year: {study.publication_year}, '
-                    # f'Publication Title: {study.title}, '
                     f'Invalid Study Type: {study.study_type}'
                 ))
         else:
@@ -59,12 +87,41 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING(f'Mixed population studies found in VariantStudyagmp:'))
             for study in mixed_population_studies:
                 self.stdout.write(self.style.ERROR(
-                    f'  - Variant Study ID: {study.id}, '
+                    f' - Variant Study ID: {study.id}, '
                     f'Variant ID: {study.variantagmp.id if study.variantagmp else "N/A"}, '
                     f'Study ID: {study.studyagmp.id if study.studyagmp else "N/A"}, '
+                    f'Publication ID: {study.studyagmp.publication_id if study.studyagmp else "N/A"}, '
                     f'Mixed Population: {study.mixed_population}'
                 ))
         else:
             self.stdout.write(self.style.SUCCESS('No mixed population studies found in VariantStudyagmp model.'))
+
+        # Check for invalid p-values
+        self.stdout.write(self.style.SUCCESS('Checking for invalid p-values in VariantStudyagmp model...'))
+        variant_studies = VariantStudyagmp.objects.all()
+        invalid_p_values = []
+        
+        for study in variant_studies:
+            if study.p_value and not self.is_valid_p_value(study.p_value):
+                invalid_p_values.append({
+                    'id': study.id,
+                    'variant_id': study.variantagmp.id if study.variantagmp else "N/A",
+                    'study_id': study.studyagmp.id if study.studyagmp else "N/A",
+                    'publication_id': study.studyagmp.publication_id if study.studyagmp else "N/A",
+                    'p_value': study.p_value
+                })
+
+        if invalid_p_values:
+            self.stdout.write(self.style.WARNING(f'Invalid p-values found in VariantStudyagmp:'))
+            for invalid in invalid_p_values:
+                self.stdout.write(self.style.ERROR(
+                    f' - Variant Study ID: {invalid["id"]}, '
+                    f'Variant ID: {invalid["variant_id"]}, '
+                    f'Study ID: {invalid["study_id"]}, '
+                    f'Publication ID: {invalid["publication_id"]}, '
+                    f'Invalid p-value: {invalid["p_value"]}'
+                ))
+        else:
+            self.stdout.write(self.style.SUCCESS('All p-values are valid in VariantStudyagmp model.'))
 
         self.stdout.write(self.style.SUCCESS('Quality control checks completed.'))
