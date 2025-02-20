@@ -3,7 +3,7 @@ from django.db.models import Count
 from agmp_app.models import Drugagmp, Geneagmp, Studyagmp, Phenotypeagmp, Variantagmp, VariantStudyagmp
 
 class Command(BaseCommand):
-    help = 'Find duplicates in the database and validate study types'
+    help = 'Find duplicates in the database, validate study types, and check for mixed populations'
 
     def handle(self, *args, **kwargs):
         # Define the fields to check for duplicates for each model
@@ -51,5 +51,20 @@ class Command(BaseCommand):
                 ))
         else:
             self.stdout.write(self.style.SUCCESS('All study types are valid in Studyagmp model.'))
+
+        # Check for mixed populations in VariantStudyagmp model
+        self.stdout.write(self.style.SUCCESS('Checking for mixed populations in VariantStudyagmp model...'))
+        mixed_population_studies = VariantStudyagmp.objects.filter(mixed_population__in=['TRUE', 'FALSE'])
+        if mixed_population_studies.exists():
+            self.stdout.write(self.style.WARNING(f'Mixed population studies found in VariantStudyagmp:'))
+            for study in mixed_population_studies:
+                self.stdout.write(self.style.ERROR(
+                    f'  - Variant Study ID: {study.id}, '
+                    f'Variant ID: {study.variantagmp.id if study.variantagmp else "N/A"}, '
+                    f'Study ID: {study.studyagmp.id if study.studyagmp else "N/A"}, '
+                    f'Mixed Population: {study.mixed_population}'
+                ))
+        else:
+            self.stdout.write(self.style.SUCCESS('No mixed population studies found in VariantStudyagmp model.'))
 
         self.stdout.write(self.style.SUCCESS('Quality control checks completed.'))
