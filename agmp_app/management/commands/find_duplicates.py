@@ -3,7 +3,7 @@ from django.db.models import Count
 from agmp_app.models import Drugagmp, Geneagmp, Studyagmp, Phenotypeagmp, Variantagmp, VariantStudyagmp
 
 class Command(BaseCommand):
-    help = 'Find duplicates in the database based on specified fields'
+    help = 'Find duplicates in the database and validate study types'
 
     def handle(self, *args, **kwargs):
         # Define the fields to check for duplicates for each model
@@ -15,6 +15,9 @@ class Command(BaseCommand):
             'Variantagmp': ['rs_id', 'variant_type'],
             'VariantStudyagmp': ['variantagmp', 'studyagmp'],
         }
+
+        # Allowed study types
+        allowed_study_types = ['Case Report', 'Candidate Gene', 'GWAS', 'WES/WGS', 'Clinical Trial', 'Other']
 
         # Iterate through each model and check for duplicates
         for model_name, fields in models_to_check.items():
@@ -33,4 +36,20 @@ class Command(BaseCommand):
             else:
                 self.stdout.write(self.style.SUCCESS(f'No duplicates found in {model_name}.'))
 
-        self.stdout.write(self.style.SUCCESS('Duplicate check completed.'))
+        # Validate study types in Studyagmp model
+        self.stdout.write(self.style.SUCCESS('Validating study types in Studyagmp model...'))
+        invalid_studies = Studyagmp.objects.exclude(study_type__in=allowed_study_types)
+        if invalid_studies.exists():
+            self.stdout.write(self.style.WARNING(f'Invalid study types found in Studyagmp:'))
+            for study in invalid_studies:
+                self.stdout.write(self.style.ERROR(
+                    f'  - Study ID: {study.id}, '
+                    f'Publication ID: {study.publication_id}, '
+                    f'Publication Year: {study.publication_year}, '
+                    # f'Publication Title: {study.title}, '
+                    f'Invalid Study Type: {study.study_type}'
+                ))
+        else:
+            self.stdout.write(self.style.SUCCESS('All study types are valid in Studyagmp model.'))
+
+        self.stdout.write(self.style.SUCCESS('Quality control checks completed.'))
