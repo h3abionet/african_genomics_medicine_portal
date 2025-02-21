@@ -9,10 +9,14 @@ class Command(BaseCommand):
     def is_valid_p_value(self, p_value):
         if not p_value or p_value.strip() == '':
             return False
-
+            
         # Remove spaces
         p_value = p_value.strip()
         
+        # Return False if p-value is "NR"
+        if p_value.upper() == "NR":
+            return False
+            
         # Check for valid formats:
         # 1. Plain number (e.g., 0.05, .05, 5e-8)
         # 2. Number with < or > (e.g., <0.05, >0.001)
@@ -72,7 +76,6 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING(f'Invalid study types found in Studyagmp:'))
             for study in invalid_studies:
                 self.stdout.write(self.style.ERROR(
-                    f' - Study ID: {study.id}, '
                     f'Publication ID: {study.publication_id}, '
                     f'Publication Year: {study.publication_year}, '
                     f'Invalid Study Type: {study.study_type}'
@@ -87,42 +90,34 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING(f'Mixed population studies found in VariantStudyagmp:'))
             for study in mixed_population_studies:
                 self.stdout.write(self.style.ERROR(
-                    f' - Variant Study ID: {study.id}, '
-                    f'Variant ID: {study.variantagmp.id if study.variantagmp else "N/A"}, '
-                    f'Study ID: {study.studyagmp.id if study.studyagmp else "N/A"}, '
                     f'Publication ID: {study.studyagmp.publication_id if study.studyagmp else "N/A"}, '
                     f'Mixed Population: {study.mixed_population}'
                 ))
         else:
             self.stdout.write(self.style.SUCCESS('No mixed population studies found in VariantStudyagmp model.'))
 
-        # Check for invalid p-values
+        # Check for invalid p-values (excluding "NR" values)
         self.stdout.write(self.style.SUCCESS('Checking for invalid p-values in VariantStudyagmp model...'))
-        variant_studies = VariantStudyagmp.objects.all()
+        variant_studies = VariantStudyagmp.objects.exclude(p_value__iexact='NR').exclude(p_value__isnull=True).exclude(p_value='')
         invalid_p_values = []
         
         for study in variant_studies:
-            if study.p_value and not self.is_valid_p_value(study.p_value):
+            if not self.is_valid_p_value(study.p_value):
                 invalid_p_values.append({
-                    'id': study.id,
-                    'variant_id': study.variantagmp.id if study.variantagmp else "N/A",
                     'study_id': study.studyagmp.id if study.studyagmp else "N/A",
                     'publication_id': study.studyagmp.publication_id if study.studyagmp else "N/A",
                     'p_value': study.p_value
                 })
 
         if invalid_p_values:
-            self.stdout.write(self.style.WARNING(f'Invalid p-values found in VariantStudyagmp:'))
+            self.stdout.write(self.style.WARNING(f'Invalid p-values found in VariantStudyagmp (excluding "NR"):'))
             for invalid in invalid_p_values:
                 self.stdout.write(self.style.ERROR(
-                    f' - Variant Study ID: {invalid["id"]}, '
-                    f'Variant ID: {invalid["variant_id"]}, '
-                    f'Study ID: {invalid["study_id"]}, '
                     f'Publication ID: {invalid["publication_id"]}, '
                     f'Invalid p-value: {invalid["p_value"]}'
                 ))
         else:
-            self.stdout.write(self.style.SUCCESS('All p-values are valid in VariantStudyagmp model.'))
+            self.stdout.write(self.style.SUCCESS('All p-values are valid in VariantStudyagmp model (excluding "NR").'))
 
         # Print summary statistics
         self.stdout.write(self.style.SUCCESS('\nSummary Statistics:'))
@@ -136,11 +131,11 @@ class Command(BaseCommand):
         self.stdout.write(f'* Number of unique values (gene by gene_id): {gene_count}')
         
         # Drugs count by drug_id (excluding nulls and empty strings)
-        drug_count = Drugagmp.objects.exclude(drug_id__isnull=True).exclude(drug_id='').values_list('drug_id', flat=True).distinct().count()
+        drug_count = Drugagmp.objects.exclude(drug_id__isnull=True).exclude(drug_id='').exclude(drug_name__iexact="nan").values_list('drug_id', flat=True).distinct().count()
         self.stdout.write(f'* Number of unique values (drug by drug_id): {drug_count}')
         
         # Phenotypes count by name (excluding nulls and empty strings)
-        phenotype_count = Phenotypeagmp.objects.exclude(name__isnull=True).exclude(name='').values_list('name', flat=True).distinct().count()
+        phenotype_count = Phenotypeagmp.objects.exclude(name__isnull=True).exclude(name='').values('name').distinct().count()
         self.stdout.write(f'* Number of unique values (phenotype by name): {phenotype_count}')
         
         # Studies count by publication_id (excluding nulls and empty strings)

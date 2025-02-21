@@ -578,10 +578,13 @@ def summary(request):
     Main view for the summary page
     """
     # Basic counts
-    gene_count = Geneagmp.objects.count()
-    drug_count = Drugagmp.objects.exclude(drug_name__iexact="nan").count()
-    variant_count = Variantagmp.objects.count()
-    disease_count = Variantagmp.objects.exclude(source_db="PharmGKB").count()
+    unique_genes = Geneagmp.objects.values('gene_id').distinct()
+    gene_count = unique_genes.count()
+    drug_count = Drugagmp.objects.exclude(drug_name__iexact="nan").values('drug_id').distinct().count()
+    variant_count = Variantagmp.objects.values('rs_id').distinct().count()
+    disease_count = Variantagmp.objects.exclude(source_db="PharmGKB").values(
+    'phenotypeagmp__name'  # Using double underscore to access related model's field
+).distinct().count()
     publication_count = Studyagmp.objects.values('publication_id').distinct().count()
 
     # Optimized queries for graphs
