@@ -1,7 +1,7 @@
  /* this css file is for projects specific overides */
  /* changes here will overide h3abionet.css */
 
-
+ /* css for buttons in data tables */
  .button {
   background-color: transparent !important;
   color: black !important;
