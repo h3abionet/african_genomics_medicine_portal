@@ -1,12 +1,33 @@
  /* this css file is for projects specific overides */
  /* changes here will overide h3abionet.css */
 
- /* white circle as background of top  left logo */
 
-
- body {
-  font-family: 'Montserrat', sans-serif;
+ .button {
+  background-color: transparent !important;
+  color: black !important;
+  border: 2px solid rgb(255, 193, 7) !important;
+  transition: all 0.3s ease !important;
 }
+
+.button:hover {
+  background-color: rgb(255, 193, 7) !important;
+  color: white !important;
+}
+
+a {
+  color: rgb(255, 193, 7) !important;
+}
+
+a:hover {
+  color: rgb(255, 193, 7) !important;
+}
+
+a:active {
+  color: rgb(255, 193, 7) !important;
+}
+
+
+ /* white circle as background of top  left logo */
  .dot {
    height: 30px;
    width: 30px;
@@ -34,7 +55,7 @@
  }
 
  .text-bigblue a:hover {
-   color: #064579;
+   color: rgb(255, 193, 7);
  }
 
 

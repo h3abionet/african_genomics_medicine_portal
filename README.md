@@ -52,6 +52,8 @@ Applying Migrations to the database
 ___ 
 Quality control check (QC)
 * `docker-compose run --rm djangoapp sh -c "python manage.py find_duplicates"`
+Run ingestion script in docker (QC)
+* `docker-compose run --rm djangoapp sh -c "python manage.py ingest"`
 
 ### Import script notes
 1. The import script exist in /scripts/load_data.py.

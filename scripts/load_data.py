@@ -57,11 +57,11 @@ def run():
                               )
         vs.save()
 
-    no_of_genes = Geneagmp.objects.all().count()
-    no_of_drugs = Drugagmp.objects.all().count()
-    no_of_variants = Variantagmp.objects.all().count()
-    no_of_studies = Studyagmp.objects.all().count()
-    no_of_phenotypes = Phenotypeagmp.objects.all().count()
+    no_of_genes = Geneagmp.objects.values('gene_id').distinct().count()
+    no_of_drugs = Drugagmp.objects.values('drug_bank_id').distinct().count()
+    no_of_variants = Variantagmp.objects.values('rs_id').distinct().count()
+    no_of_studies = Studyagmp.objects.values('publication_id').distinct().count()
+    no_of_phenotypes = Phenotypeagmp.objects.values('name').distinct().count()
     no_of_variant_studies = VariantStudyagmp.objects.all().count()
 
     print("\n")
@@ -115,11 +115,11 @@ def run():
                                 )
         vs01.save()
 
-    new_no_of_genes = Geneagmp.objects.all().count()
-    # new_no_of_drugs = Drugagmp.objects.all().count()
-    new_no_of_variants = Variantagmp.objects.all().count()
-    new_no_of_studies = Studyagmp.objects.all().count()
-    new_no_of_phenotypes = Phenotypeagmp.objects.all().count()
+    new_no_of_genes = Geneagmp.objects.values('gene_id').distinct().count()
+    # new_no_of_drugs = Drugagmp.objects.values('drug_bank_id').distinct().count()
+    new_no_of_variants = Variantagmp.objects.values('rs_id').distinct().count()
+    new_no_of_studies = Studyagmp.objects.values('publication_id').distinct().count()
+    new_no_of_phenotypes = Phenotypeagmp.objects.values('name').distinct().count()
     new_no_of_variant_studies = VariantStudyagmp.objects.all().count()
 
     print("\n")
