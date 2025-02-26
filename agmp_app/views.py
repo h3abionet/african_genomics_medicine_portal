@@ -582,8 +582,7 @@ def summary(request):
     gene_count = unique_genes.count()
     drug_count = Drugagmp.objects.exclude(drug_name__iexact="nan").values('drug_id').distinct().count()
     variant_count = Variantagmp.objects.values('rs_id').distinct().count()
-    disease_count = Variantagmp.objects.exclude(source_db="PharmGKB").values(
-    'phenotypeagmp__name'  # Using double underscore to access related model's field
+    disease_count = Variantagmp.objects.values('phenotypeagmp__name'  # Using double underscore to access related model's field
 ).distinct().count()
     publication_count = Studyagmp.objects.values('publication_id').distinct().count()
 
