@@ -39,6 +39,10 @@ from django.conf import settings
 import geopandas as gpd
 from shapely.geometry import Point
 
+from django.contrib import messages
+from .forms import PhenotypeSubmissionForm
+from .models import PhenotypeSubmissionagmp
+
  #heatmap-colors
 COLORS = {
     "brick_red": "#8B4513",
@@ -47,6 +51,22 @@ COLORS = {
     "orange_yellow": "#FFB266",
     "light_yellow": "#FFFF99",
 } 
+def submit_phenotype(request):
+    if request.method == 'POST':
+        form = PhenotypeSubmissionForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            # Return a JSON response to indicate success
+            return JsonResponse({'status': 'success'})
+        else:
+            # Return a JSON response with errors if the form is not valid
+            return JsonResponse({'status': 'error', 'errors': form.errors})
+    else:
+        form = PhenotypeSubmissionForm()
+    
+    return render(request, 'submit_phenotype.html', {'form': form})
+
+
  #current search view
 def search_view(request):
 
@@ -630,7 +650,6 @@ def summary(request):
     }
 
     return render(request, 'summary.html', context)
-
 
 
 def resources(request):

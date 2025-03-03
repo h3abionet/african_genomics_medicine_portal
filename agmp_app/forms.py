@@ -1,4 +1,5 @@
 from django import forms
+from .models import PhenotypeSubmissionagmp
 
 
 
@@ -40,3 +41,9 @@ class ModelSearchForm(forms.Form):
     search_query = forms.CharField(max_length=100, required=False, label="Search")
 
 
+
+
+class PhenotypeSubmissionForm(forms.ModelForm):
+    class Meta:
+        model = PhenotypeSubmissionagmp
+        fields = ['orcid_id', 'pmid_id', 'phenotype_of_interest', 'upload_file']

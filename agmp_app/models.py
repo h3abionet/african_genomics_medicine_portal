@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.db import models
 
 
+
 #Drug ids
 def increment_drug_id():
     last_drug_id = Drugagmp.objects.all().order_by('id').last()
@@ -156,4 +157,16 @@ class VariantStudyagmp(models.Model):
     class Meta:
         verbose_name_plural = " Variant Studies"
 #====New Models=======#
+
+
+class PhenotypeSubmissionagmp(models.Model):
+    
+    orcid_id = models.CharField(max_length=500, null=True, blank=True)
+    pmid_id = models.CharField(max_length=500, null=True, blank=True)
+    phenotype_of_interest = models.CharField(max_length=500, null=True, blank=True)
+    upload_file = models.FileField(upload_to='uploads/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)  # Automatically set the timestamp when the record is created
+
+    class Meta:
+        verbose_name_plural = "Phenotype Submissions"
 

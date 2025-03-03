@@ -1,0 +1,142 @@
+{% extends "mainLayout.html" %}
+{% load static %}
+
+{% block banner %}
+    {% include 'partials/banner_phenotype_submission.html' %}
+{% endblock %}
+
+{% block content %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Phenotype Submission</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- Include Font Awesome for the spinner icon -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <style>
+            /* Custom CSS for the loading spinner */
+            .loading-spinner {
+                display: none; /* Hidden by default */
+                margin-left: 10px;
+            }
+            .loading-spinner i {
+                animation: spin 1s linear infinite;
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            /* Style the form container */
+            .form-container {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 5px;
+                display: flex;
+                flex-direction: column;
+                align-items: center; /* Center form fields horizontally */
+            }
+            /* Style form fields and labels */
+            .form-field {
+                width: 100%; /* Each field takes 80% of the container */
+                margin-bottom: 15px;
+            }
+            .form-field label {
+                display: block;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+            .form-field input[type="text"],
+            .form-field input[type="file"] {
+                width: 100%;
+                padding: 8px;
+                box-sizing: border-box;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+            /* Style the submit button */
+            #submit-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px; /* Space between text and spinner */
+                padding: 10px 20px;
+                background-color:  rgb(0, 83, 3);
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+            /* Disabled button style */
+            #submit-button:disabled {
+                opacity: 0.7;
+                cursor: not-allowed;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="form-container">
+            <form id="phenotype-form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <!-- Render form fields manually -->
+                <div class="form-field">
+                    <label for="{{ form.orcid_id.id_for_label }}">ORCID ID</label>
+                    {{ form.orcid_id }}
+                </div>
+                <div class="form-field">
+                    <label for="{{ form.pmid_id.id_for_label }}">PMID ID</label>
+                    {{ form.pmid_id }}
+                </div>
+                <div class="form-field">
+                    <label for="{{ form.phenotype_of_interest.id_for_label }}">Phenotype of Interest</label>
+                    {{ form.phenotype_of_interest }}
+                </div>
+                <div class="form-field">
+                    <label for="{{ form.upload_file.id_for_label }}">Upload File</label>
+                    {{ form.upload_file }}
+                </div>
+
+                <button type="submit" id="submit-button">
+                    <span id="submit-text">Submit</span>
+                    <span class="loading-spinner" id="loading-spinner">
+                        <i class="fas fa-spinner"></i> <!-- Font Awesome spinner icon -->
+                    </span>
+                </button>
+            </form>
+        </div>
+
+        <script>
+            $(document).ready(function() {
+                $('#phenotype-form').on('submit', function(e) {
+                    e.preventDefault();
+                    // Disable the submit button and show the spinner
+                    $('#submit-button').prop('disabled', true);
+                    $('#submit-text').text('Submitting...'); // Change button text
+                    $('#loading-spinner').show();
+                    
+                    $.ajax({
+                        url: '',
+                        type: 'POST',
+                        data: new FormData(this),
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                alert('Submission successful!');
+                                $('#phenotype-form')[0].reset(); // Reset the form
+                            } else {
+                                alert('Submission failed: ' + response.errors);
+                            }
+                        },
+                        complete: function() {
+                            // Re-enable the submit button and hide the spinner
+                            $('#submit-button').prop('disabled', false);
+                            $('#loading-spinner').hide();
+                            $('#submit-text').text('Submit'); // Reset button text
+                        }
+                    });
+                });
+            });
+        </script>
+    </body>
+{% endblock %}

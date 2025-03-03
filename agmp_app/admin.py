@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Variantagmp, Drugagmp, Geneagmp, VariantStudyagmp, Studyagmp, Phenotypeagmp
+from .models import Variantagmp, Drugagmp, Geneagmp, VariantStudyagmp, Studyagmp, Phenotypeagmp, PhenotypeSubmissionagmp
 
 class VariantagmpAdmin(admin.ModelAdmin):
     list_display = ['id','rs_id','source_db','id_in_source_db','variant_type','geneagmp',]
@@ -34,6 +34,11 @@ class PhenotypeagmpAdmin(admin.ModelAdmin):
     search_fields =['name']
     list_per_page = 500
 
+class PhenotypeSubmissionagmpAdmin(admin.ModelAdmin):
+    list_display = ['id','orcid_id','pmid_id','phenotype_of_interest','created_at']
+    search_fields =['orcid_id', 'pmdid_id']
+    list_per_page = 500
+
 ###### site.register ######
 admin.site.register(Drugagmp, DrugagmpAdmin)
 admin.site.register(Variantagmp, VariantagmpAdmin)
@@ -41,6 +46,7 @@ admin.site.register(Geneagmp, GeneagmpAdmin)
 admin.site.register(VariantStudyagmp, VariantStudyagmpAdmin)
 admin.site.register(Studyagmp, StudyagmpAdmin)
 admin.site.register(Phenotypeagmp, PhenotypeagmpAdmin)
+admin.site.register(PhenotypeSubmissionagmp, PhenotypeSubmissionagmpAdmin)
 
 admin.site.site_header = 'AGMP admin'
 admin.site.site_title = 'AGMP admin'
