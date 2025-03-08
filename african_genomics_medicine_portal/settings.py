@@ -34,7 +34,9 @@ ALLOWED_HOSTS = [
     'agmp.h3abionet.org',
     'dockerhost02.cbio.uct.ac.za',
 ]
-
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",
+]
 ADMIN_URL = "madiba/"
 
 # Application definition
@@ -42,6 +44,7 @@ ADMIN_URL = "madiba/"
 AGNOCOMPLETE_DATA_ATTRIBUTE = 'autocomplete'
 
 INSTALLED_APPS = [
+    'corsheaders',
     'bootstrap4',
     'crispy_forms',
     'agmp_app',
@@ -54,8 +57,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-
     'dal_select2',
+]
+
+
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:8080",
+    "http://localhost:8080","http://85.159.209.149:8080"
 ]
 
 SHELL_PLUS = "notebook"
@@ -63,12 +72,12 @@ SHELL_PLUS = "notebook"
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
+     'corsheaders.middleware.CorsMiddleware',
+     'django.middleware.common.CommonMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
@@ -149,6 +158,13 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn')
+
+# Media files (uploads)
+import os
+
+MEDIA_URL = "/uploads/"  # Single /uploads/, not /uploads/uploads/
+MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")  # No extra "uploads"
+
 
 # if not DEBUG:
 #     STATIC_ROOT = "/var/www/static/"

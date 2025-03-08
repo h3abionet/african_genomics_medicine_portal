@@ -1,6 +1,6 @@
 from django import forms
 from .models import PhenotypeSubmissionagmp
-
+from django.core.validators import RegexValidator
 
 
 class ModelSelectForm(forms.Form):
@@ -44,6 +44,19 @@ class ModelSearchForm(forms.Form):
 
 
 class PhenotypeSubmissionForm(forms.ModelForm):
+    orcid_id = forms.CharField(
+        max_length=500,
+        required=True,
+        validators=[
+            RegexValidator(
+                regex=r'^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$',
+                message='Invalid ORCID ID format. Expected format: XXXX-XXXX-XXXX-XXXX.',
+                flags=re.IGNORECASE,
+            )
+        ],
+        widget=forms.TextInput(attrs={'placeholder': 'XXXX-XXXX-XXXX-XXXX'}),
+    )
+
     class Meta:
         model = PhenotypeSubmissionagmp
         fields = ['orcid_id', 'pmid_id', 'phenotype_of_interest', 'upload_file']

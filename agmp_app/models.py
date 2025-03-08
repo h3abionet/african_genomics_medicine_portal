@@ -5,6 +5,8 @@ from django.urls import reverse
 
 #====New Models=======#
 from django.db import models
+from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
 
 
 
@@ -159,9 +161,25 @@ class VariantStudyagmp(models.Model):
 #====New Models=======#
 
 
+
+
+def validate_orcid_id(value):
+    """
+    Validates that the ORCID ID follows the correct format: XXXX-XXXX-XXXX-XXXX.
+    """
+    import re
+    orcid_pattern = re.compile(r'^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$', re.IGNORECASE)
+    if not orcid_pattern.match(value):
+        raise ValidationError('Invalid ORCID ID format. Expected format: XXXX-XXXX-XXXX-XXXX.')
+
 class PhenotypeSubmissionagmp(models.Model):
-    
-    orcid_id = models.CharField(max_length=500, null=True, blank=True)
+    orcid_id = models.CharField(
+        max_length=500,
+        null=False,
+        blank=False,
+        validators=[validate_orcid_id],  # Add the custom validator here
+        help_text="Enter your ORCID ID in the format XXXX-XXXX-XXXX-XXXX."
+    )
     pmid_id = models.CharField(max_length=500, null=True, blank=True)
     phenotype_of_interest = models.CharField(max_length=500, null=True, blank=True)
     upload_file = models.FileField(upload_to='uploads/', null=True, blank=True)

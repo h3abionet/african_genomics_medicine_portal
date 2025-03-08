@@ -71,29 +71,64 @@
                 opacity: 0.7;
                 cursor: not-allowed;
             }
+            /* Error message styling */
+            .errorlist {
+                color: red;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
         </style>
     </head>
     <body>
         <div class="form-container">
             <form id="phenotype-form" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
+                {% csrf_token %} <!-- CSRF token is included here -->
                 
                 <!-- Render form fields manually -->
                 <div class="form-field">
                     <label for="{{ form.orcid_id.id_for_label }}">ORCID ID</label>
                     {{ form.orcid_id }}
+                    {% if form.orcid_id.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.orcid_id.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 </div>
                 <div class="form-field">
                     <label for="{{ form.pmid_id.id_for_label }}">PMID ID</label>
                     {{ form.pmid_id }}
+                    {% if form.pmid_id.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.pmid_id.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 </div>
                 <div class="form-field">
                     <label for="{{ form.phenotype_of_interest.id_for_label }}">Phenotype of Interest</label>
                     {{ form.phenotype_of_interest }}
+                    {% if form.phenotype_of_interest.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.phenotype_of_interest.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 </div>
                 <div class="form-field">
                     <label for="{{ form.upload_file.id_for_label }}">Upload File</label>
                     {{ form.upload_file }}
+                    {% if form.upload_file.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.upload_file.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 </div>
 
                 <button type="submit" id="submit-button">
@@ -107,6 +142,25 @@
 
         <script>
             $(document).ready(function() {
+                // Function to get the CSRF token from the form
+                function getCookie(name) {
+                    let cookieValue = null;
+                    if (document.cookie && document.cookie !== '') {
+                        const cookies = document.cookie.split(';');
+                        for (let i = 0; i < cookies.length; i++) {
+                            const cookie = cookies[i].trim();
+                            // Check if the cookie name matches
+                            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                break;
+                            }
+                        }
+                    }
+                    return cookieValue;
+                }
+
+                const csrftoken = getCookie('csrftoken'); // Retrieve the CSRF token
+
                 $('#phenotype-form').on('submit', function(e) {
                     e.preventDefault();
                     // Disable the submit button and show the spinner
@@ -117,6 +171,9 @@
                     $.ajax({
                         url: '',
                         type: 'POST',
+                        headers: {
+                            'X-CSRFToken': csrftoken, // Include the CSRF token in the headers
+                        },
                         data: new FormData(this),
                         processData: false,
                         contentType: false,
@@ -125,7 +182,8 @@
                                 alert('Submission successful!');
                                 $('#phenotype-form')[0].reset(); // Reset the form
                             } else {
-                                alert('Submission failed: ' + response.errors);
+                                // Display form errors
+                                alert('Submission failed: ' + JSON.stringify(response.errors));
                             }
                         },
                         complete: function() {
