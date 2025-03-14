@@ -16,4 +16,6 @@ python-memcached
 graphviz
 pymemcache
 geopandas
+fuzzywuzzy 
+python-Levenshtein
 

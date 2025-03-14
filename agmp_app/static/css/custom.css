@@ -1,29 +1,60 @@
  /* this css file is for projects specific overides */
  /* changes here will overide h3abionet.css */
 
+
+
+ /* Make all navbar links white */
+.navbar-nav .nav-link,
+.navbar-brand {
+  color: white !important;
+  transition: color 0.3s ease;
+}
+
+/* Change link color on hover */
+.navbar-nav .nav-link:hover,
+.navbar-brand:hover {
+  color: rgb(255, 193, 7) !important;
+}
+
+/* Style for active/current page link */
+.navbar-nav .nav-item.active .nav-link,
+.navbar-nav .nav-link.active {
+  color: rgb(255, 193, 7) !important;
+}
+
+/* Override Bootstrap's default text-bigblue class */
+.text-bigblue {
+  color: white !important;
+}
+
+/* Make sure the Home link is also white */
+.navbar-brand i.fa-home {
+  color: white;
+}
+
  /* css for buttons in data tables */
  .button {
-  background-color: transparent !important;
-  color: black !important;
-  border: 2px solid rgb(255, 193, 7) !important;
+  background-color: rgb(0, 83, 3) !important;
+  color: white !important;
+  border: 2px solid rgb(0, 83, 3) !important;
   transition: all 0.3s ease !important;
 }
 
 .button:hover {
-  background-color: rgb(255, 193, 7) !important;
+  background-color: rgb(0, 83, 3) !important;
   color: white !important;
 }
 
 a {
-  color: rgb(255, 193, 7) !important;
+  color: rgb(0, 83, 3) !important;
 }
 
 a:hover {
-  color: rgb(255, 193, 7) !important;
+  color:rgb(0, 83, 3) !important;
 }
 
 a:active {
-  color: rgb(255, 193, 7) !important;
+  color: rgb(0, 83, 3) !important;
 }
 
 

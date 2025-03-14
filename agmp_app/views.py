@@ -39,6 +39,8 @@ from django.conf import settings
 import geopandas as gpd
 from shapely.geometry import Point
 
+from fuzzywuzzy import process
+
  #heatmap-colors
 COLORS = {
     "brick_red": "#8B4513",
@@ -49,34 +51,46 @@ COLORS = {
 } 
  #current search view
 def search_view(request):
-
     form = ModelSearchForm(request.GET)
     model_selection = ""
+    suggestion = None
 
     if form.is_valid():
         model_selection = form.cleaned_data['model_selection']
         search_query = form.cleaned_data['search_query']
 
-
-     
         if model_selection == 'variantagmp':
-            results = Variantagmp.objects.filter(rs_id__icontains=search_query).values('rs_id','geneagmp__gene_id','geneagmp__chromosome').distinct()
-      
+            results = Variantagmp.objects.filter(rs_id__icontains=search_query).values('rs_id', 'geneagmp__gene_id', 'geneagmp__chromosome').distinct()
+            if not results:
+                all_variants = Variantagmp.objects.values_list('rs_id', flat=True)
+                suggestion = process.extractOne(search_query, all_variants)
+
         elif model_selection == 'geneagmp':
-            results = Geneagmp.objects.filter(gene_id__icontains=search_query).values('gene_id','chromosome').distinct()
+            results = Geneagmp.objects.filter(gene_id__icontains=search_query).values('gene_id', 'chromosome').distinct()
+            if not results:
+                all_genes = Geneagmp.objects.values_list('gene_id', flat=True)
+                suggestion = process.extractOne(search_query, all_genes)
 
         elif model_selection == 'drugagmp':
-            #results = Drugagmp.objects.filter(drug_name__icontains=search_query).distinct() 
-            results = Drugagmp.objects.filter(drug_name__icontains=search_query).values('drug_name','drug_id','drug_bank_id','state','indication','iupac_name_seq').distinct()
+            results = Drugagmp.objects.filter(drug_name__icontains=search_query).values('drug_name', 'drug_id', 'drug_bank_id', 'state', 'indication', 'iupac_name_seq').distinct()
+            if not results:
+                all_drugs = Drugagmp.objects.values_list('drug_name', flat=True)
+                suggestion = process.extractOne(search_query, all_drugs)
 
-                  
         elif model_selection == 'disease':
             results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__icontains=search_query).values("phenotypeagmp__name").distinct()
+            if not results:
+                all_diseases = Variantagmp.objects.exclude(source_db="PharmGKB").values_list('phenotypeagmp__name', flat=True).distinct()
+                suggestion = process.extractOne(search_query, all_diseases)
     else:
         results = []
 
-
-    return render(request, 'search_list_template.html', {'form': form, 'results': results, 'model_selection': model_selection})
+    return render(request, 'search_list_template.html', {
+        'form': form,
+        'results': results,
+        'model_selection': model_selection,
+        'suggestion': suggestion
+    })
 
 def search_all(request):
     if request.method == 'POST':
