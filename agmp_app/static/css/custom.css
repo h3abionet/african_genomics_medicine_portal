@@ -1,7 +1,29 @@
  /* this css file is for projects specific overides */
  /* changes here will overide h3abionet.css */
 
+/* footer css */
+/* Make all links in the footer white */
+.footer-custom-row a {
+  color: #fff !important;
+  transition: color 0.3s ease;
+}
 
+/* Change link color on hover */
+.footer-custom-row a:hover {
+  color: rgb(255, 193, 7) !important;
+}
+
+/* Remove any inline styles for footer links */
+.footer-custom-row a[style] {
+  color: #fff !important;
+}
+
+.footer-custom-row a[style]:hover {
+  color: rgb(255, 193, 7) !important;
+}
+
+
+/* footer css */
 
  /* Make all navbar links white */
 .navbar-nav .nav-link,
