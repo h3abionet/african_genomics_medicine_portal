@@ -1,7 +1,15 @@
  /* this css file is for projects specific overides */
  /* changes here will overide h3abionet.css */
 
-/* footer css */
+/* data tables css */
+
+/* Change background color of DataTable pagination elements */
+
+.pagination .current {
+  background:  rgb(0, 83, 3) !important;
+}
+/* data tables css */
+
 /* Make all links in the footer white */
 .footer-custom-row a {
   color: #fff !important;
