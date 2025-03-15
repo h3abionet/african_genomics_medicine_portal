@@ -727,8 +727,14 @@ transform: translateY(-50%); */
 
 
  .navigation a {
-   color: white;
+   color: white !important;
  }
+
+ .navigation a:hover {
+  color: rgb(255, 193, 7) !important;
+}
+
+
 
  ul .no_style {
    list-style-type: none;
