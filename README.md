@@ -41,19 +41,20 @@ Install the following packages (if you have not done so already):
 ### Running the application in docker production
 
 * clone from Github 'git clone  https://github.com/h3abionet/african_genomics_medicine_portal.git'
-* `vim config.py #change debug from true to false on the host machine`
+* `vim .env  #add database credentials to the env file`
 * `mkdir static_cdn # inside the project directory on the host machine`
-* `docker-compose build or docker-compose build`
-* `docker-compose up -d or docker-compose up -d`
+* `docker-compose build`
+* `docker-compose up -d`
 ___ 
-Applying Migrations to the database
+Applying Migrations to the database if need be
 * `docker-compose run --rm djangoapp sh -c "python manage.py makemigrations"`
 * `docker-compose run --rm djangoapp sh -c "python manage.py migrate"`
+* `docker-compose run --rm djangoapp sh -c "python manage.py createsuper user"`
 ___ 
 Quality control check (QC)
-* `docker-compose run --rm djangoapp sh -c "python manage.py find_duplicates"`
+* `docker-compose run --rm djangoapp sh -c "python manage.py quality_control"`
 Run ingestion script in docker (QC)
-* `docker-compose run --rm djangoapp sh -c "python manage.py ingest"`
+* `docker-compose run --rm djangoapp sh -c "python manage.py load_data"`
 
 ### Import script notes
 1. The import script exist in /scripts/load_data.py.

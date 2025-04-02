@@ -38,7 +38,7 @@ import os
 from django.conf import settings
 import geopandas as gpd
 from shapely.geometry import Point
-
+from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 
  #heatmap-colors
@@ -592,13 +592,12 @@ def summary(request):
     Main view for the summary page
     """
     # Basic counts
-    unique_genes = Geneagmp.objects.values('gene_id').distinct()
+    unique_genes = Geneagmp.objects.exclude(gene_id__iexact='').exclude(gene_id__iexact="nan").values('gene_id').distinct()
     gene_count = unique_genes.count()
-    drug_count = Drugagmp.objects.exclude(drug_name__iexact="nan").values('drug_id').distinct().count()
-    variant_count = Variantagmp.objects.values('rs_id').distinct().count()
-    disease_count = Variantagmp.objects.values('phenotypeagmp__name'  # Using double underscore to access related model's field
-).distinct().count()
-    publication_count = Studyagmp.objects.values('publication_id').distinct().count()
+    drug_count = Drugagmp.objects.exclude(drug_bank_id__iexact='').exclude(drug_bank_id__iexact="nan").values('drug_bank_id').distinct().count()
+    variant_count = Variantagmp.objects.exclude(rs_id__iexact='').exclude(rs_id__iexact="nan").values('rs_id').distinct().count()
+    disease_count = Variantagmp.objects.values('phenotypeagmp__name').distinct().count()
+    publication_count = Studyagmp.objects.exclude(publication_id__iexact='').exclude(publication_id__iexact="nan").values('publication_id').distinct().count()
 
     # Optimized queries for graphs
     qs_drug = (
@@ -640,7 +639,7 @@ def summary(request):
         'qs_gene': qs_gene,
         'qs_variant': qs_variant,
         'qs_disease': qs_disease,
-        'study_types': ['All', 'GWAS', 'Association']
+        'study_types': ['All', 'GWAS', 'Case Report','Candidate Gene(s)','WES/WGS','Clinical Trial','Other']
     }
 
     return render(request, 'summary.html', context)

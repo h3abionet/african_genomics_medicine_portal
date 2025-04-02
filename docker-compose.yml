@@ -1,39 +1,74 @@
-# version: '3'
-
 services:
-    djangoapp:
-        image: agmp
-        container_name: agmp_django_instance
-        restart: unless-stopped
-        build: .
-        #command: python manage.py runserver 0.0.0.0:8000
-        #command: tail -f /dev/null
-        command: gunicorn african_genomics_medicine_portal.wsgi:application -w 2 -b :8000
-        volumes:
-            - static:/agmp/static_cdn
-        expose:
-            - 8000
-        networks:  # <-- here
-            - agmp_network
-    
-    nginx:
-        image: nginx:latest
-        container_name: agmp_nginx_instance
-        restart: unless-stopped
-        volumes:
-            - ./nginx/conf.d:/etc/nginx/conf.d
-            - static:/agmp/static_cdn
-        ports:
-            - 8080:80
-        depends_on:  # <-- wait for djangoapp to be "ready" before starting this service
-            - djangoapp
-        networks:  # <-- here
-            - agmp_network
+  postgres:
+    image: postgres:13
+    container_name: agmp_postgres_instance
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - agmp_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
-networks:  # <-- and here
+  djangoapp:
+    image: agmp
+    container_name: agmp_django_instance
+    restart: unless-stopped
+    build:
+      context: .
+      args:
+        - DB_HOST=postgres
+        - DB_PORT=5432
+        - DB_NAME=${DB_NAME}
+        - DB_USER=${DB_USER}
+        - DB_PASS=${DB_PASS}
+    #command: python manage.py runserver 0.0.0.0:8000
+    #command: tail -f /dev/null
+    command: bash -c "python manage.py collectstatic --noinput && python manage.py migrate && gunicorn african_genomics_medicine_portal.wsgi:application -w 2 -b :8000"
+    volumes:
+      - static:/agmp/static_cdn
+      - ./:/agmp
+    expose:
+      - 8000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - agmp_network
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+
+  nginx:
+    image: nginx:latest
+    container_name: agmp_nginx_instance
+    restart: unless-stopped
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - static:/agmp/static_cdn
+    ports:
+      - 8080:80
+    depends_on:
+      - djangoapp
+    networks:
+      - agmp_network
+
+networks:
   agmp_network:
     driver: bridge
 
 volumes:
-    static:
-    data:
+  static:
+  data:
+  postgres_data:

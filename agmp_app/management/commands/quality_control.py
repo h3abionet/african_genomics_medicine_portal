@@ -130,8 +130,8 @@ class Command(BaseCommand):
         gene_count = Geneagmp.objects.exclude(gene_id__isnull=True).exclude(gene_id='').values_list('gene_id', flat=True).distinct().count()
         self.stdout.write(f'* Number of unique values (gene by gene_id): {gene_count}')
         
-        # Drugs count by drug_id (excluding nulls and empty strings)
-        drug_count = Drugagmp.objects.exclude(drug_id__isnull=True).exclude(drug_id='').exclude(drug_name__iexact="nan").values_list('drug_id', flat=True).distinct().count()
+        # Drugs count by drug_bank_id (excluding nulls and empty strings)
+        drug_count = Drugagmp.objects.exclude(drug_bank_id__isnull=True).exclude(drug_bank_id='').exclude(drug_bank_id__iexact="nan").values_list('drug_bank_id', flat=True).distinct().count()
         self.stdout.write(f'* Number of unique values (drug by drug_id): {drug_count}')
         
         # Phenotypes count by name (excluding nulls and empty strings)
