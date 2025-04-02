@@ -11,12 +11,36 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from pathlib import Path
 
 # GDAL Configuration
-GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH', '/usr/lib/aarch64-linux-gnu/libgdal.so')
-GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH', '/usr/lib/aarch64-linux-gnu/libgeos_c.so')
+GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
+GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
 
+# If not set through environment variables, try common locations
+if not GDAL_LIBRARY_PATH:
+    possible_paths = [
+        '/usr/lib/libgdal.so',
+        '/usr/lib/aarch64-linux-gnu/libgdal.so',
+        '/usr/lib/x86_64-linux-gnu/libgdal.so',
+        # Add any other potential paths here
+    ]
+    for path in possible_paths:
+        if Path(path).exists():
+            GDAL_LIBRARY_PATH = path
+            break
 
+if not GEOS_LIBRARY_PATH:
+    possible_paths = [
+        '/usr/lib/libgeos_c.so',
+        '/usr/lib/aarch64-linux-gnu/libgeos_c.so',
+        '/usr/lib/x86_64-linux-gnu/libgeos_c.so',
+        # Add any other potential paths here
+    ]
+    for path in possible_paths:
+        if Path(path).exists():
+            GEOS_LIBRARY_PATH = path
+            break
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
