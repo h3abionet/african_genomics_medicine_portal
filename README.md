@@ -49,7 +49,7 @@ ___
 Applying Migrations to the database if need be
 * `docker-compose run --rm djangoapp sh -c "python manage.py makemigrations"`
 * `docker-compose run --rm djangoapp sh -c "python manage.py migrate"`
-* `docker-compose run --rm djangoapp sh -c "python manage.py createsuper user"`
+* `docker-compose run --rm djangoapp sh -c "python manage.py createsuperuser"`
 ___ 
 Quality control check (QC)
 * `docker-compose run --rm djangoapp sh -c "python manage.py quality_control"`

@@ -82,7 +82,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-
+    'corsheaders',
     'dal_select2',
 ]
 
@@ -93,10 +93,10 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
@@ -198,14 +198,8 @@ LEAFLET_CONFIG = {
                })]
 }
 
-
-# cache
-
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
-
-#     }
-# }
-
-
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8080',
+    'http://85.159.209.149:8080', 
+    'http://127.0.0.1:8080',    
+]

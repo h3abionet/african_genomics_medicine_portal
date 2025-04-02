@@ -646,8 +646,7 @@ def summary(request):
 
 
 
-def resources(request):
-    return render(request, 'resources.html')
+
 
 
 def outreach(request):

@@ -55,7 +55,6 @@ urlpatterns = [
 
     # call search query with optional parameters 
     path('summary/', views.summary, name='summary'),
-    path('resources/', views.resources, name='resources'),
     path('outreach/', views.outreach, name='outreach'),
     path('contact/', views.contact, name='contact'),
     path('databases/', views.databases, name='databases'),
