@@ -17,3 +17,5 @@ graphviz
 pymemcache
 geopandas
 django-cors-headers==4.7.0 
+django-recaptcha
+django-countries
