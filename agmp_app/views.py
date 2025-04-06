@@ -1,5 +1,5 @@
 from urllib.parse import DefragResult
-from django.shortcuts import render, HttpResponse, redirect
+from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from django.http import FileResponse
 
 from django.core import serializers
@@ -40,7 +40,7 @@ import geopandas as gpd
 from shapely.geometry import Point
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
-
+ 
  #heatmap-colors
 COLORS = {
     "brick_red": "#8B4513",
@@ -242,35 +242,51 @@ class VariantDiseaseAssocDetailView(DetailView):
     
 
   #################### DRUG searchs for Variant drug Associations ################################
-
+#01
 class VariantDrugAssociationDetailView(DetailView):
-    model = VariantStudyagmp
+    model = Variantagmp
     template_name = 'VariantDrugAssociation.html'
-    pk_url_kwarg = 'drug_id'
+    pk_url_kwarg = 'rs_id'
 
     def get_object(self):
-        drug_id = self.kwargs.get(self.pk_url_kwarg)
+        rs_id = self.kwargs.get(self.pk_url_kwarg)
+        # Get the variant object or return 404
+        return get_object_or_404(Variantagmp, rs_id=rs_id)
 
-        data00 = Drugagmp.objects.filter(drug_id=drug_id)
-        # print(data) # for testing purposes
-        return data00
-    
     def get_context_data(self, **kwargs):
         context = super(VariantDrugAssociationDetailView, self).get_context_data(**kwargs)
-        drug_id = self.kwargs.get(self.pk_url_kwarg)
-     
-        context['data'] = Drugagmp.objects.get(
-            drug_id=drug_id)
-        #content to display
-        variant = Drugagmp.objects.filter(drug_id=drug_id)
-
-       
-        context['object_list'] = VariantStudyagmp.objects.filter(
-            variantagmp__drugagmp__drug_id__iregex=r"\b{0}\b".format(str(drug_id)))
-        # .exclude(variantagmp__source_db="PharmGKB")
+        rs_id = self.kwargs.get(self.pk_url_kwarg)
         
-
-
+        # Get the variant object for display in the template
+        variant = Variantagmp.objects.filter(rs_id=rs_id).first()
+        
+        # Add variant info to context
+        context['rs_id_display'] = variant
+        
+        # Get gene information for this variant
+        if variant and variant.geneagmp:
+            context['gene_id_display'] = {
+                'geneagmp__gene_id': variant.geneagmp.gene_id
+            }
+            context['chromosome_display'] = {
+                'geneagmp__chromosome': variant.geneagmp.chromosome
+            }
+        
+        # Get all variant studies for this variant excluding DisgeneNET and GWAS Catalog
+        context['object_list'] = VariantStudyagmp.objects.filter(
+    variantagmp__rs_id__regex=r"(?i)(^|[^a-zA-Z0-9]){0}($|[^a-zA-Z0-9])".format(str(rs_id)),
+    variantagmp__source_db="PharmGKB"
+).exclude(
+    variantagmp__source_db="DisGeNET"
+).exclude(
+    variantagmp__source_db="GWAS Catalog"
+).select_related(
+    'variantagmp',
+    'studyagmp',
+    'variantagmp__drugagmp',
+    'variantagmp__geneagmp'
+)
+        
         return context
 
 
@@ -639,7 +655,7 @@ def summary(request):
         'qs_gene': qs_gene,
         'qs_variant': qs_variant,
         'qs_disease': qs_disease,
-        'study_types': ['All', 'GWAS', 'Case Report','Candidate Gene(s)','WES/WGS','Clinical Trial','Other']
+        'study_types': ['All', 'GWAS', 'Case Report','Candidate Gene','WES/WGS','Clinical Trial','Other']
     }
 
     return render(request, 'summary.html', context)

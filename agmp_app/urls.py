@@ -20,10 +20,7 @@ urlpatterns = [
          PhamacogeneDrugAssoc.as_view(),
          name='PhamacogeneDrugAssoc'),
 
-    path('VarDrugAssoc/<str:rs_id>/',
-         VarDrugAssocDetailView.as_view(),
-         name='Var_Drug_Assoc'),
-
+   path('variant-drug/<str:rs_id>/', VariantDrugAssociationDetailView.as_view(), name='variant_drug'),
     
     path('VariantDiseaseAssoc/<str:rs_id>/',
          VariantDiseaseAssocDetailView.as_view(),

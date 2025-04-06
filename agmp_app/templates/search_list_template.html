@@ -135,7 +135,7 @@
                     <b>Variant ID: </b>{{ result.rs_id }}<br>
                     <b>Gene:</b> {{ result.geneagmp__gene_id }}<br>
                     <b>Chromosome: </b>{{ result.geneagmp__chromosome }}<br>
-                    <a href="{% url 'Var_Drug_Assoc' result.rs_id %}">Variant-Drug Associations</a><br>
+                    <a href="{% url 'variant_drug' result.rs_id %}">Variant-Drug Associations</a><br>
                     <a href="{% url 'Variant_Disease_Assoc' result.rs_id %}">Variant-Phenotype Associations</a><br>
                     <hr>
                 {% empty %}
