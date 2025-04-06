@@ -56,6 +56,7 @@ RUN mkdir -p /agmp/migrations && chmod -R 775 /agmp/migrations
 RUN touch /agmp/db.sqlite3 && chmod 664 /agmp/db.sqlite3 && chown django_user:django_user /agmp/db.sqlite3
 
 # Run migrations and collect static files
+RUN python manage.py makemigrations
 RUN python manage.py migrate
 RUN python manage.py collectstatic --no-input
 

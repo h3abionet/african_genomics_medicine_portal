@@ -1,6 +1,6 @@
 {% extends "mainLayout.html" %}
 {% load static %}
-
+{% load crispy_forms_tags %}
 {% block banner %}
     {% include 'partials/banner_phenotype_submission.html' %}
 {% endblock %}
@@ -11,130 +11,167 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Phenotype Submission</title>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <!-- Include Font Awesome for the spinner icon -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-        <style>
-            /* Custom CSS for the loading spinner */
-            .loading-spinner {
-                display: none; /* Hidden by default */
-                margin-left: 10px;
-            }
-            .loading-spinner i {
-                animation: spin 1s linear infinite;
-            }
-            @keyframes spin {
-                0% { transform: rotate(0deg); }
-                100% { transform: rotate(360deg); }
-            }
-            /* Style the form container */
-            .form-container {
-                max-width: 800px;
-                margin: 0 auto;
-                padding: 5px;
-                display: flex;
-                flex-direction: column;
-                align-items: center; /* Center form fields horizontally */
-            }
-            /* Style form fields and labels */
-            .form-field {
-                width: 100%; /* Each field takes 80% of the container */
-                margin-bottom: 15px;
-            }
-            .form-field label {
-                display: block;
-                font-weight: bold;
-                margin-bottom: 5px;
-            }
-            .form-field input[type="text"],
-            .form-field input[type="file"] {
-                width: 100%;
-                padding: 8px;
-                box-sizing: border-box;
-                border: 1px solid #ccc;
-                border-radius: 4px;
-            }
-            /* Style the submit button */
-            #submit-button {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 8px; /* Space between text and spinner */
-                padding: 10px 20px;
-                background-color:  rgb(0, 83, 3);
-                color: white;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-            /* Disabled button style */
-            #submit-button:disabled {
-                opacity: 0.7;
-                cursor: not-allowed;
-            }
-            /* Error message styling */
-            .errorlist {
-                color: red;
-                margin: 0;
-                padding: 0;
-                list-style: none;
-            }
-        </style>
     </head>
+    <style>
+        .loading-spinner {
+            display: none;
+            margin-left: 10px;
+        }
+    
+        .loading-spinner i {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .form-field {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .form-field label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-field input[type="text"],
+        .form-field input[type="file"],
+        .form-field select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        #submit-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background-color: rgb(0, 83, 3);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #submit-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .errorlist {
+            color: red;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .country-select-flag {
+             display: none !important;
+        }
+    </style>
     <body>
         <div class="form-container">
-            <form id="phenotype-form" method="post" enctype="multipart/form-data">
-                {% csrf_token %} <!-- CSRF token is included here -->
+            <form id="phenotype-form" method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
                 
-                <!-- Render form fields manually -->
-                <div class="form-field">
-                    <label for="{{ form.orcid_id.id_for_label }}">ORCID ID</label>
-                    {{ form.orcid_id }}
+                <div>
+                    <label for="id_orcid_id">ORCID ID:</label>
+                    <input type="text" name="orcid_id" id="id_orcid_id" placeholder="XXXX-XXXX-XXXX-XXXX" value="{{ form.orcid_id.value|default:'' }}">
                     {% if form.orcid_id.errors %}
-                        <ul class="errorlist">
-                            {% for error in form.orcid_id.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
+                        <div style="color: red;">{{ form.orcid_id.errors.first }}</div>
                     {% endif %}
                 </div>
-                <div class="form-field">
-                    <label for="{{ form.pmid_id.id_for_label }}">PMID ID</label>
-                    {{ form.pmid_id }}
+
+                <div>
+                    <label for="id_pmid_id">PMID ID:</label>
+                    <input type="text" name="pmid_id" id="id_pmid_id" value="{{ form.pmid_id.value|default:'' }}">
                     {% if form.pmid_id.errors %}
-                        <ul class="errorlist">
-                            {% for error in form.pmid_id.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
+                        <div style="color: red;">{{ form.pmid_id.errors.first }}</div>
                     {% endif %}
                 </div>
-                <div class="form-field">
-                    <label for="{{ form.phenotype_of_interest.id_for_label }}">Phenotype of Interest</label>
-                    {{ form.phenotype_of_interest }}
+
+                <div>
+                    <label for="id_doi">DOI:</label>
+                    <input type="text" name="doi" id="id_doi" value="{{ form.doi.value|default:'' }}" placeholder="10.xxxxx/yyyyy">
+                    {% if form.doi.errors %}
+                        <div style="color: red;">{{ form.doi.errors.first }}</div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <label for="id_phenotype_of_interest">Phenotype of Interest:</label>
+                    <input type="text" name="phenotype_of_interest" id="id_phenotype_of_interest" value="{{ form.phenotype_of_interest.value|default:'' }}">
                     {% if form.phenotype_of_interest.errors %}
-                        <ul class="errorlist">
-                            {% for error in form.phenotype_of_interest.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
-                        </ul>
+                        <div style="color: red;">{{ form.phenotype_of_interest.errors.first }}</div>
                     {% endif %}
                 </div>
+
+               
+
                 <div class="form-field">
-                    <label for="{{ form.upload_file.id_for_label }}">Upload File</label>
-                    {{ form.upload_file }}
-                    {% if form.upload_file.errors %}
+                    <label for="{{ form.country.id_for_label }}">Country</label>
+                    {{ form.country }}
+                    {% if form.country.errors %}
                         <ul class="errorlist">
-                            {% for error in form.upload_file.errors %}
+                            {% for error in form.country.errors %}
                                 <li>{{ error }}</li>
                             {% endfor %}
                         </ul>
                     {% endif %}
                 </div>
 
+                <div>
+                    <label for="id_ethnicity">Ethnicity:</label>
+                    <select name="ethnicity" id="id_ethnicity">
+                        <option value="">Select Ethnicity</option>
+                        <option value="Caucasian">Caucasian</option>
+                        <option value="African American">African American</option>
+                        <option value="Hispanic">Hispanic</option>
+                        <option value="Asian">Asian</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="id_aa_participants">Does the study include African American participants?</label>
+                    <select name="aa_participants" id="id_aa_participants">
+                        <option value="">Select Option</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                        <option value="Not sure">Not sure</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="id_upload_file">Upload File:</label>
+                    <input type="file" name="upload_file" id="id_upload_file">
+                    {% if form.upload_file.errors %}
+                        <div style="color: red;">{{ form.upload_file.errors.first }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-field">
+                    <label for="{{ form.captcha.id_for_label }}">Captcha</label>
+                    {{ form.captcha }}
+                    {% if form.captcha.errors %}
+                        <ul class="errorlist">
+                            {% for error in form.captcha.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
                 <button type="submit" id="submit-button">
                     <span id="submit-text">Submit</span>
                     <span class="loading-spinner" id="loading-spinner">
-                        <i class="fas fa-spinner"></i> <!-- Font Awesome spinner icon -->
+                        <i class="fas fa-spinner"></i>
                     </span>
                 </button>
             </form>
@@ -142,59 +179,37 @@
 
         <script>
             $(document).ready(function() {
-                // Function to get the CSRF token from the form
-                function getCookie(name) {
-                    let cookieValue = null;
-                    if (document.cookie && document.cookie !== '') {
-                        const cookies = document.cookie.split(';');
-                        for (let i = 0; i < cookies.length; i++) {
-                            const cookie = cookies[i].trim();
-                            // Check if the cookie name matches
-                            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                break;
-                            }
-                        }
-                    }
-                    return cookieValue;
-                }
-
-                const csrftoken = getCookie('csrftoken'); // Retrieve the CSRF token
-
-                $('#phenotype-form').on('submit', function(e) {
-                    e.preventDefault();
-                    // Disable the submit button and show the spinner
-                    $('#submit-button').prop('disabled', true);
-                    $('#submit-text').text('Submitting...'); // Change button text
-                    $('#loading-spinner').show();
-                    
+                $('#phenotype-form').on('submit', function(event) {
+                    event.preventDefault(); // Prevent the default form submission
+        
                     $.ajax({
-                        url: '',
-                        type: 'POST',
-                        headers: {
-                            'X-CSRFToken': csrftoken, // Include the CSRF token in the headers
-                        },
+                        url: $(this).attr('action'),
+                        method: 'POST',
                         data: new FormData(this),
                         processData: false,
                         contentType: false,
                         success: function(response) {
                             if (response.status === 'success') {
                                 alert('Submission successful!');
-                                $('#phenotype-form')[0].reset(); // Reset the form
-                            } else {
-                                // Display form errors
-                                alert('Submission failed: ' + JSON.stringify(response.errors));
+                                // Optionally, you could redirect or clear the form
+                            } else if (response.status === 'error') {
+                                // Clear previous error messages
+                                $('.error-message').remove();
+        
+                                // Display errors under each corresponding field
+                                $.each(response.errors, function(field, messages) {
+                                    var fieldElement = $('#id_' + field);
+                                    fieldElement.after('<div class="error-message" style="color: red;">' + messages[0] + '</div>');
+                                });
                             }
                         },
-                        complete: function() {
-                            // Re-enable the submit button and hide the spinner
-                            $('#submit-button').prop('disabled', false);
-                            $('#loading-spinner').hide();
-                            $('#submit-text').text('Submit'); // Reset button text
+                        error: function() {
+                            alert('An error occurred while submitting the form. Please try again later.');
                         }
                     });
                 });
             });
         </script>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     </body>
 {% endblock %}

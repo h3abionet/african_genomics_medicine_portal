@@ -35,9 +35,10 @@ class PhenotypeagmpAdmin(admin.ModelAdmin):
     list_per_page = 500
 
 class PhenotypeSubmissionagmpAdmin(admin.ModelAdmin):
-    list_display = ['id','orcid_id','pmid_id','phenotype_of_interest','created_at']
-    search_fields =['orcid_id', 'pmdid_id']
+    list_display = ['id', 'orcid_id', 'pmid_id', 'doi', 'phenotype_of_interest', 'ethnicity', 'aa_participants','country','created_at']
+    search_fields = ['orcid_id', 'pmid_id', 'doi']
     list_per_page = 500
+    list_filter = ['created_at']
 
 ###### site.register ######
 admin.site.register(Drugagmp, DrugagmpAdmin)

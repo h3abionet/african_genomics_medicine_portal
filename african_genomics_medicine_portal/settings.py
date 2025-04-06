@@ -25,7 +25,8 @@ SECRET_KEY = config.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # as a failsafe if you don't have this flag in config switch on production
-DEBUG = config.DEBUG
+#DEBUG = config.DEBUG
+DEBUG = True
 
 ALLOWED_HOSTS = [
     '85.159.209.149','137.158.204.58',
@@ -58,6 +59,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'dal_select2',
+    'django_recaptcha',
+    'django_countries',
 ]
 
 
@@ -195,4 +198,5 @@ LEAFLET_CONFIG = {
 #     }
 # }
 
-
+RECAPTCHA_PUBLIC_KEY = '6LeEQp0qAAAAAF9NMqbbYk3SY50kc-7rti9l6AnA'
+RECAPTCHA_PRIVATE_KEY = '6LeEQp0qAAAAAFRYnKog4iQ4oERuLCz0TfEkvfIa'

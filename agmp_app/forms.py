@@ -1,6 +1,12 @@
 from django import forms
 from .models import PhenotypeSubmissionagmp
 from django.core.validators import RegexValidator
+import re
+from django_recaptcha.fields import ReCaptchaField
+from django_countries.fields import CountryField 
+from django_countries.widgets import CountrySelectWidget
+
+
 
 
 class ModelSelectForm(forms.Form):
@@ -44,19 +50,59 @@ class ModelSearchForm(forms.Form):
 
 
 class PhenotypeSubmissionForm(forms.ModelForm):
+    country = CountryField().formfield(widget=CountrySelectWidget())
+    captcha = ReCaptchaField()
     orcid_id = forms.CharField(
         max_length=500,
         required=True,
-        validators=[
-            RegexValidator(
-                regex=r'^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$',
-                message='Invalid ORCID ID format. Expected format: XXXX-XXXX-XXXX-XXXX.',
-                flags=re.IGNORECASE,
-            )
-        ],
+        validators=[RegexValidator(
+            regex=r'^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$',
+            message='Invalid ORCID ID format. Expected format: XXXX-XXXX-XXXX-XXXX.',
+            flags=re.IGNORECASE,
+        )],
         widget=forms.TextInput(attrs={'placeholder': 'XXXX-XXXX-XXXX-XXXX'}),
     )
+    
+    pmid_id = forms.CharField(
+        max_length=8,
+        required=True,
+        validators=[RegexValidator(
+            regex=r'^\d{8}$',
+            message='Invalid PMID ID format. Expected format: 8 digits.',
+        )],
+        widget=forms.TextInput(attrs={'placeholder': 'Enter PMID ID'}),
+    )
+    
+    doi = forms.CharField(
+        max_length=100,
+        required=True,
+        validators=[RegexValidator(
+            regex=r'^10\.\d{4,9}/[-._;()/:A-Z0-9]+$',
+            message='Invalid DOI format. Expected format: 10.xxxxx/yyyyy.',
+        )],
+        widget=forms.TextInput(attrs={'placeholder': 'Enter DOI'}),
+    )
+
+    ethnicity = forms.ChoiceField(
+        choices=[
+            ('', 'Select Ethnicity'),
+            ('Caucasian', 'Caucasian'),
+            ('African American', 'African American'),
+            ('Hispanic', 'Hispanic'),
+            ('Asian', 'Asian'),
+            ('Other', 'Other'),
+        ],
+        required=True
+    )
+    
+    AA_PARTICIPANTS_CHOICES = [
+        ('', 'Select Option'),
+        ('Yes', 'Yes'),
+        ('No', 'No'),
+        ('Not sure', 'Not sure'),
+    ]
+    aa_participants = forms.ChoiceField(choices=AA_PARTICIPANTS_CHOICES, required=True)
 
     class Meta:
         model = PhenotypeSubmissionagmp
-        fields = ['orcid_id', 'pmid_id', 'phenotype_of_interest', 'upload_file']
+        fields = ['orcid_id', 'pmid_id', 'doi', 'phenotype_of_interest', 'upload_file', 'country', 'ethnicity', 'aa_participants', 'captcha']

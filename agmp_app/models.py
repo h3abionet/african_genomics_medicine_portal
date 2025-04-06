@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.db import models
 from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
+from django_countries.fields import CountryField  # Ensure this import is included   
 
 
 
@@ -164,9 +165,6 @@ class VariantStudyagmp(models.Model):
 
 
 def validate_orcid_id(value):
-    """
-    Validates that the ORCID ID follows the correct format: XXXX-XXXX-XXXX-XXXX.
-    """
     import re
     orcid_pattern = re.compile(r'^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$', re.IGNORECASE)
     if not orcid_pattern.match(value):
@@ -177,14 +175,30 @@ class PhenotypeSubmissionagmp(models.Model):
         max_length=500,
         null=False,
         blank=False,
-        validators=[validate_orcid_id],  # Add the custom validator here
+        validators=[validate_orcid_id],
         help_text="Enter your ORCID ID in the format XXXX-XXXX-XXXX-XXXX."
     )
     pmid_id = models.CharField(max_length=500, null=True, blank=True)
     phenotype_of_interest = models.CharField(max_length=500, null=True, blank=True)
     upload_file = models.FileField(upload_to='uploads/', null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)  # Automatically set the timestamp when the record is created
+    doi = models.CharField(max_length=500, null=True, blank=True) 
+    ethnicity = models.CharField(max_length=500, null=True, blank=True)
+    
+    AA_PARTICIPANTS_CHOICES = [
+        ('Yes', 'Yes'),
+        ('No', 'No'),
+        ('Not sure', 'Not sure'),
+    ]
+    aa_participants = models.CharField(
+        max_length=10,
+        choices=AA_PARTICIPANTS_CHOICES,
+        default='Not sure', 
+        blank=True
+    )
+
+    country = CountryField(blank_label='(Select country)', null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name_plural = "Phenotype Submissions"
-
