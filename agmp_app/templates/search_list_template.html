@@ -136,7 +136,7 @@
                     <b>Gene:</b> {{ result.geneagmp__gene_id }}<br>
                     <b>Chromosome: </b>{{ result.geneagmp__chromosome }}<br>
                     <a href="{% url 'variant_drug' result.rs_id %}">Variant-Drug Associations</a><br>
-                    <a href="{% url 'Variant_Disease_Assoc' result.rs_id %}">Variant-Phenotype Associations</a><br>
+                    <a href="{% url 'variant_phenotype' result.rs_id %}">Variant-Phenotype Associations</a><br>
                     <hr>
                 {% empty %}
                     <p class="text-center">No results found.</p>
@@ -148,7 +148,7 @@
                 {% for result in results %}
                     <b>Gene: </b>{{ result.gene_id }}<br>
                     <b>Chromosome: </b>{{ result.chromosome }}<br>
-                    <a href="{% url 'PhamacogeneDrugAssoc' result.gene_id %}">Gene Associations</a><br><hr>
+                    <a href="{% url 'drug_phenotype_associations' result.gene_id %}">Gene Associations</a><br><hr>
                 {% empty %}
                     <p class="text-center">No results found.</p>
                     {% if suggestion %}
@@ -163,7 +163,7 @@
                             <b>Drug Name: </b>{{ first_item.drug_name }}<br>
                             <b>Drug Bank ID: </b><a href="https://go.drugbank.com/drugs/{{ first_item.drug_bank_id }}">{{ first_item.drug_bank_id }}</a><br>
                             <b>State: </b>{{ first_item.state }}<br>
-                            <a href="{% url 'VariantDrugAssociation' first_item.drug_id %}">Variant-Drug Associations</a><br>
+                            <a href="{% url 'variant_drug' first_item.drug_bank_id %}">Variant-Drug Associations</a><br>
                         </div>
                         <hr>
                     {% endwith %}

@@ -34,12 +34,14 @@ import logging
 from django.db.models import Subquery, OuterRef
 
 import os
+import re
 
 from django.conf import settings
 import geopandas as gpd
 from shapely.geometry import Point
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
+from django.http import Http404
  
  #heatmap-colors
 COLORS = {
@@ -137,6 +139,7 @@ class VariantStudyagmpListView(ListView):
  #################### Variant Drug Details ################################
   
  #################### PharmacoGene Associations exclude Gwas catalogue in the first queryset ################################
+#03 Drug associations and Phenotype Associations
 class PhamacogeneDrugAssoc(DetailView):
     model = VariantStudyagmp
     template_name = 'PhamacogeneDrugAssoc.html'
@@ -161,16 +164,21 @@ class PhamacogeneDrugAssoc(DetailView):
         
         context["data"] = Geneagmp.objects.filter(gene_id = gene_id).first()
        
-
-        #exclude multiple fields as an example
-        exclude_list = ['A', 'B', 'C']
-        
+       #include PharmGKB and Exclude Gwas Catalogue & DisGeNET
         context['object_list'] = VariantStudyagmp.objects.filter(
-            variantagmp__geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id))).exclude(variantagmp__source_db="DisGeNET").exclude(variantagmp__source_db="GWAS Catalog")
+    variantagmp__geneagmp__gene_id__iregex=r"(^|[^a-zA-Z0-9_]){0}([^a-zA-Z0-9_]|$)".format(
+        re.escape(str(gene_id)).replace('\\ ', '\\s+')
+    )
+).exclude(
+    variantagmp__source_db__in=["DisGeNET", "GWAS Catalog"])
         
 
         context['object_list_diseases'] = VariantStudyagmp.objects.filter(
-            variantagmp__geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id))).exclude(variantagmp__source_db="PharmGKB")
+    variantagmp__geneagmp__gene_id__iregex=r"(^|[^a-zA-Z0-9_]){0}([^a-zA-Z0-9_]|$)".format(re.escape(str(gene_id))),
+    variantagmp__source_db__in=["DisGeNet", "GWAS Catalog"]
+).exclude(
+    variantagmp__source_db="PharmGKB"
+)
         
         return context
 
@@ -210,7 +218,7 @@ class VarDrugAssocDetailView(DetailView):
         return context
 
  #################### Variant Disease Associations ################################
-
+# 02 
 class VariantDiseaseAssocDetailView(DetailView):
     model = VariantStudyagmp
     template_name = 'VariantDiseaseAssocDetail.html'
@@ -234,8 +242,9 @@ class VariantDiseaseAssocDetailView(DetailView):
         context['chromosome_display'] = Variantagmp.objects.values("geneagmp__chromosome").filter(rs_id=rs_id).first()
 
         context['object_list'] = VariantStudyagmp.objects.filter(
-            variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="PharmGKB")
-        
+    variantagmp__rs_id__iregex=r"(^|[^a-zA-Z0-9_]){0}([^a-zA-Z0-9_]|$)".format(re.escape(str(rs_id))),
+    variantagmp__source_db__iregex=r"^(DisGeNet|GWAS Catalog)$"
+).exclude(variantagmp__source_db="PharmGKB")
 
 
         return context
@@ -250,15 +259,40 @@ class VariantDrugAssociationDetailView(DetailView):
 
     def get_object(self):
         rs_id = self.kwargs.get(self.pk_url_kwarg)
-        # Get the variant object or return 404
-        return get_object_or_404(Variantagmp, rs_id=rs_id)
+        # If the ID starts with "DB", look up by drug ID instead
+        if rs_id and rs_id.startswith("DB"):
+            # Find a variant associated with this drug
+            drug = get_object_or_404(Drugagmp, drug_bank_id=rs_id)
+            variant = Variantagmp.objects.filter(drugagmp=drug).first()
+            if variant:
+                return variant
+            else:
+                raise Http404("No variant associated with this drug")
+        else:
+            # Original lookup by rs_id
+            return get_object_or_404(Variantagmp, rs_id=rs_id)
 
     def get_context_data(self, **kwargs):
         context = super(VariantDrugAssociationDetailView, self).get_context_data(**kwargs)
         rs_id = self.kwargs.get(self.pk_url_kwarg)
         
+        # If this is a drug ID, add drug data directly to context
+        if rs_id and rs_id.startswith("DB"):
+            drug = get_object_or_404(Drugagmp, drug_bank_id=rs_id)
+            context['data'] = drug
+            variant = Variantagmp.objects.filter(drugagmp=drug).first()
+            if variant:
+                rs_id = variant.rs_id
+            else:
+                rs_id = None
+        else:
+            # If it's a variant ID, get associated drug info
+            variant = self.object
+            if variant and hasattr(variant, 'drugagmp'):
+                context['data'] = variant.drugagmp
+        
         # Get the variant object for display in the template
-        variant = Variantagmp.objects.filter(rs_id=rs_id).first()
+        variant = self.object
         
         # Add variant info to context
         context['rs_id_display'] = variant
@@ -273,22 +307,37 @@ class VariantDrugAssociationDetailView(DetailView):
             }
         
         # Get all variant studies for this variant excluding DisgeneNET and GWAS Catalog
-        context['object_list'] = VariantStudyagmp.objects.filter(
-    variantagmp__rs_id__regex=r"(?i)(^|[^a-zA-Z0-9]){0}($|[^a-zA-Z0-9])".format(str(rs_id)),
-    variantagmp__source_db="PharmGKB"
-).exclude(
-    variantagmp__source_db="DisGeNET"
-).exclude(
-    variantagmp__source_db="GWAS Catalog"
-).select_related(
-    'variantagmp',
-    'studyagmp',
-    'variantagmp__drugagmp',
-    'variantagmp__geneagmp'
-)
+        if rs_id:
+            context['object_list'] = VariantStudyagmp.objects.filter(
+                variantagmp__rs_id__regex=r"(?i)(^|[^a-zA-Z0-9]){0}($|[^a-zA-Z0-9])".format(str(rs_id))
+            ).exclude(
+                variantagmp__source_db="DisGeNET"
+            ).exclude(
+                variantagmp__source_db="GWAS Catalog"
+            ).select_related(
+                'variantagmp',
+                'studyagmp',
+                'variantagmp__drugagmp',
+                'variantagmp__geneagmp'
+            )
+        elif 'data' in context:
+            # If no rs_id but we have a drug, get all studies for this drug
+            drug = context['data']
+            context['object_list'] =  VariantStudyagmp.objects.filter(
+                variantagmp__drugagmp=drug,
+                variantagmp__rs_id__regex=r"(?i)(^|[^a-zA-Z0-9])rs[0-9]+($|[^a-zA-Z0-9])"  # Regex to ensure valid rs IDs
+            ).exclude(
+                variantagmp__source_db="DisGeNET"
+            ).exclude(
+                variantagmp__source_db="GWAS Catalog"
+            ).select_related(
+                'variantagmp',
+                'studyagmp',
+                'variantagmp__drugagmp',
+                'variantagmp__geneagmp'
+            )
         
         return context
-
 
   #################### Variant Var Drug Associations ################################
 class VvarDrugAssocDetailView(DetailView):
@@ -325,6 +374,7 @@ class VvarDrugAssocDetailView(DetailView):
  #################### Search Diseases ################################
 
 # Display Phamacogenes and Disease associations
+#04
 class DiseaseVariantDetailView(DetailView):
     model = VariantStudyagmp
     template_name = 'DiseaseVariantDetailView.html'
@@ -348,7 +398,8 @@ class DiseaseVariantDetailView(DetailView):
        
        
         context['object_list1'] = VariantStudyagmp.objects.select_related().filter(
-            variantagmp__phenotypeagmp__name__iregex=r"\b{0}\b".format(str(phenotypeagmp__name))).exclude(variantagmp__source_db="PharmGKB")
+    variantagmp__phenotypeagmp__name__iregex=r"\\y{0}\\y".format(str(phenotypeagmp__name))
+).exclude(variantagmp__source_db="PharmGKB")
        
         context['object_list'] = VariantStudyagmp.objects.select_related().filter(
             variantagmp__phenotypeagmp__name__iexact=phenotypeagmp__name).exclude(variantagmp__source_db="PharmGKB")

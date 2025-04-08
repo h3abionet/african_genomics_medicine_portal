@@ -132,7 +132,7 @@ class Command(BaseCommand):
         
         # Drugs count by drug_bank_id (excluding nulls and empty strings)
         drug_count = Drugagmp.objects.exclude(drug_bank_id__isnull=True).exclude(drug_bank_id='').exclude(drug_bank_id__iexact="nan").values_list('drug_bank_id', flat=True).distinct().count()
-        self.stdout.write(f'* Number of unique values (drug by drug_id): {drug_count}')
+        self.stdout.write(f'* Number of unique values (drug by drug_bank_id): {drug_count}')
         
         # Phenotypes count by name (excluding nulls and empty strings)
         phenotype_count = Phenotypeagmp.objects.exclude(name__isnull=True).exclude(name='').values('name').distinct().count()
