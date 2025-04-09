@@ -9,61 +9,155 @@
 {% block content %}
 {% block js%}
 <style>
+/* General Styling Improvements */
+body {
+    font-family: 'Poppins', 'Helvetica Neue', sans-serif;
+    color: #2c3e50;
+}
+
+/* Improved Section Styling */
+.section {
+    margin-bottom: 50px;
+    padding: 30px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.section:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.section h3 {
+    margin-bottom: 25px;
+    color: #1e3a8a;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+.section h3:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(to right, rgb(0, 83, 3), rgb(0, 189, 69));
+    border-radius: 3px;
+}
+
+/* Enhanced Map Container */
 .map-container {
     background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
     margin-bottom: 30px;
     overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.map-container:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
 }
 
 .map-header {
-    background: #f8f9fa;
-    padding: 20px;
+    background: linear-gradient(to right, #f8f9fa, #e9ecef);
+    padding: 24px;
     border-bottom: 1px solid #dee2e6;
 }
 
 .map-title {
     margin: 0;
-    color: #333;
-    font-size: 1.5rem;
-    font-weight: 500;
+    color: #1e3a8a;
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
+/* Elegant Filter Controls */
 .filter-controls {
-    background: #fff;
-    padding: 15px 20px;
+    background: #f8f9fa;
+    padding: 20px 24px;
     border-bottom: 1px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.filter-controls h3 {
+    margin-bottom: 16px;
+    width: 100%;
+    color: #1e3a8a;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    position: relative;
+    min-width: 260px;
 }
 
 .filter-controls label {
     font-weight: 500;
-    color: #495057;
-    margin-right: 10px;
+    color: rgb(0, 83, 3);
+    margin-right: 12px;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
 }
 
+/* Enhanced Select Elements - Much more elegant */
 .filter-controls select {
-    width: 200px;
-    padding: 8px 12px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
+    width: 240px;
+    padding: 12px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
     background-color: white;
-    font-size: 14px;
-    color: #495057;
+    font-size: 15px;
+    color: #374151;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231e3a8a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
+.filter-controls select:hover {
+    border-color: #bfdbfe;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+.filter-controls select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+/* Map Content Styling */
 .map-content {
     height: 500px;
     position: relative;
 }
 
+/* Improved Loading Animation */
 .loading-overlay {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.92);
     display: none;
     justify-content: center;
     align-items: center;
@@ -71,10 +165,10 @@
 }
 
 .loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3498db;
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba(59, 130, 246, 0.2);
+    border-top: 4px solid #3b82f6;
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
@@ -84,9 +178,127 @@
     100% { transform: rotate(360deg); }
 }
 
+/* Enhanced Table Styling */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.table thead th {
+    background-color: rgb(0, 83, 3);
+    color: white;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    padding: 16px;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+.table tbody tr:hover {
+    background-color: #eef2ff;
+}
+
+.table td {
+    padding: 16px;
+    border-top: 1px solid #e5e7eb;
+    font-size: 0.95rem;
+}
+
+/* Enhanced Navigation */
+.navigation ul {
+    padding: 0;
+    list-style: none;
+}
+
+.navigation .no_style li {
+    margin-bottom: 8px; /* Reduced from 12px for more compact spacing */
+}
+
+.navigation .tag-link {
+    display: block;
+    padding: 7px 18px; /* Reduced the vertical padding from 14px to 7px (50% reduction) */
+    background: transparent;
+    color: rgb(0, 83, 3);
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: none;
+}
+
+.navigation .tag-link:hover {
+    background: white;
+    color: rgb(255, 193, 7);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.navigation .tag-link.active {
+    background: white;
+    color: rgb(255, 193, 7) !important; /* Added !important to ensure this color is applied */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 3.5px 18px; /* Reduced padding height by 50% for active state */
+}
+
+/* Enhanced Graph Tabs */
+.nav-tabs {
+    border-bottom: 2px solid #e5e7eb;
+    margin-bottom: 24px;
+}
+
+.nav-tabs .nav-item {
+    margin-bottom: -2px;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    color: #64748b;
+    font-weight: 500;
+    padding: 12px 20px;
+    border-radius: 0;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+    color: rgb(0, 189, 69);
+}
+
+.nav-tabs .nav-link.active {
+    color: rgb(0, 83, 3);
+    background-color: transparent;
+    border-bottom: 3px solid rgb(0, 83, 3);
+}
+
+/* Section Divider */
 .section-divider {
     margin: 40px 0;
-    border-top: 2px solid #dee2e6;
+    border: none;
+    height: 2px;
+    background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .filter-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-group {
+        width: 100%;
+    }
+    
+    .filter-controls select {
+        width: 100%;
+    }
 }
 </style>
 {% endblock %}
@@ -105,28 +317,28 @@
           label: 'No of Publications',
           data: [{% for i in qs_drug %}'{{i.frequency}}', {% endfor %}],
           backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(195, 79, 64, 5.2)',
-            'rgba(285, 159, 64, 5.2)',
-            'rgba(0, 128, 0, 3.2)',
-            'rgba(108, 122, 137, 0.2)',
+            'rgba(0, 189, 69, 0.7)',
+            'rgba(77, 193, 52, 0.7)',
+            'rgba(153, 196, 36, 0.7)',
+            'rgba(204, 199, 19, 0.7)',
+            'rgba(255, 205, 0, 0.7)',
+            'rgba(245, 164, 0, 0.7)',
+            'rgba(235, 123, 0, 0.7)',
+            'rgba(228, 82, 0, 0.7)',
+            'rgba(221, 41, 0, 0.7)',
+            'rgba(214, 0, 15, 0.7)',
           ],
           borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(195, 79, 64, 5.2)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(0, 128, 0, 3.2)',
-            'rgba(108, 122, 137, 0.2)',
+            'rgb(0, 189, 69)',
+            'rgb(77, 193, 52)',
+            'rgb(153, 196, 36)',
+            'rgb(204, 199, 19)',
+            'rgb(255, 205, 0)',
+            'rgb(245, 164, 0)',
+            'rgb(235, 123, 0)',
+            'rgb(228, 82, 0)',
+            'rgb(221, 41, 0)',
+            'rgb(214, 0, 15)',
           ],
           borderWidth: 1
         }]
@@ -134,7 +346,25 @@
       options: {
         scales: {
           y: {
-            beginAtZero: true
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              font: {
+                family: "'Poppins', 'Helvetica Neue', sans-serif",
+                size: 14
+              }
+            }
           }
         }
       }
@@ -152,28 +382,28 @@
           label: 'No of Publications',
           data: [{% for i in qs_gene %}'{{i.frequency | safe}}', {% endfor %}],
           backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(195, 79, 64, 5.2)',
-            'rgba(285, 159, 64, 5.2)',
-            'rgba(0, 128, 0, 3.2)',
-            'rgba(108, 122, 137, 0.2)',
+            'rgba(214, 0, 15, 0.7)',
+            'rgba(221, 41, 0, 0.7)',
+            'rgba(228, 82, 0, 0.7)',
+            'rgba(235, 123, 0, 0.7)',
+            'rgba(245, 164, 0, 0.7)',
+            'rgba(255, 205, 0, 0.7)',
+            'rgba(204, 199, 19, 0.7)',
+            'rgba(153, 196, 36, 0.7)',
+            'rgba(77, 193, 52, 0.7)',
+            'rgba(0, 189, 69, 0.7)',
           ],
           borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(195, 79, 64, 5.2)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(0, 128, 0, 3.2)',
-            'rgba(108, 122, 137, 0.2)',
+            'rgb(214, 0, 15)',
+            'rgb(221, 41, 0)',
+            'rgb(228, 82, 0)',
+            'rgb(235, 123, 0)',
+            'rgb(245, 164, 0)',
+            'rgb(255, 205, 0)',
+            'rgb(204, 199, 19)',
+            'rgb(153, 196, 36)',
+            'rgb(77, 193, 52)',
+            'rgb(0, 189, 69)',
           ],
           borderWidth: 1
         }]
@@ -181,7 +411,25 @@
       options: {
         scales: {
           y: {
-            beginAtZero: true
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              font: {
+                family: "'Poppins', 'Helvetica Neue', sans-serif",
+                size: 14
+              }
+            }
           }
         }
       }
@@ -199,28 +447,28 @@
           label: 'No of Publications',
           data: [{% for i in qs_variant %}'{{i.frequency|safe}}', {% endfor %}],
           backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(195, 79, 64, 5.2)',
-            'rgba(285, 159, 64, 5.2)',
-            'rgba(0, 128, 0, 3.2)',
-            'rgba(108, 122, 137, 0.2)',
+            'rgba(0, 189, 69, 0.7)',
+            'rgba(102, 194, 49, 0.7)',
+            'rgba(153, 196, 36, 0.7)',
+            'rgba(204, 199, 19, 0.7)',
+            'rgba(255, 205, 0, 0.7)',
+            'rgba(245, 164, 0, 0.7)',
+            'rgba(235, 123, 0, 0.7)',
+            'rgba(228, 82, 0, 0.7)',
+            'rgba(221, 41, 0, 0.7)',
+            'rgba(214, 0, 15, 0.7)',
           ],
           borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(195, 79, 64, 5.2)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(0, 128, 0, 3.2)',
-            'rgba(108, 122, 137, 0.2)',
+            'rgb(0, 189, 69)',
+            'rgb(102, 194, 49)',
+            'rgb(153, 196, 36)',
+            'rgb(204, 199, 19)',
+            'rgb(255, 205, 0)',
+            'rgb(245, 164, 0)',
+            'rgb(235, 123, 0)',
+            'rgb(228, 82, 0)',
+            'rgb(221, 41, 0)',
+            'rgb(214, 0, 15)',
           ],
           borderWidth: 1
         }]
@@ -228,7 +476,25 @@
       options: {
         scales: {
           y: {
-            beginAtZero: true
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              font: {
+                family: "'Poppins', 'Helvetica Neue', sans-serif",
+                size: 14
+              }
+            }
           }
         }
       }
@@ -246,28 +512,28 @@
           label: 'No of Publications',
           data: [{% for i in qs_disease %}'{{i.frequency|safe}}', {% endfor %}],
           backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(195, 79, 64, 5.2)',
-            'rgba(285, 159, 64, 5.2)',
-            'rgba(0, 128, 0, 3.2)',
-            'rgba(108, 122, 137, 0.2)',
+            'rgba(214, 0, 15, 0.7)',
+            'rgba(221, 41, 0, 0.7)',
+            'rgba(228, 82, 0, 0.7)',
+            'rgba(235, 123, 0, 0.7)',
+            'rgba(245, 164, 0, 0.7)',
+            'rgba(255, 205, 0, 0.7)',
+            'rgba(204, 199, 19, 0.7)',
+            'rgba(153, 196, 36, 0.7)',
+            'rgba(102, 194, 49, 0.7)',
+            'rgba(0, 189, 69, 0.7)',
           ],
           borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(195, 79, 64, 5.2)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(0, 128, 0, 3.2)',
-            'rgba(108, 122, 137, 0.2)',
+            'rgb(214, 0, 15)',
+            'rgb(221, 41, 0)',
+            'rgb(228, 82, 0)',
+            'rgb(235, 123, 0)',
+            'rgb(245, 164, 0)',
+            'rgb(255, 205, 0)',
+            'rgb(204, 199, 19)',
+            'rgb(153, 196, 36)',
+            'rgb(102, 194, 49)',
+            'rgb(0, 189, 69)',
           ],
           borderWidth: 1
         }]
@@ -275,7 +541,25 @@
       options: {
         scales: {
           y: {
-            beginAtZero: true
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              font: {
+                family: "'Poppins', 'Helvetica Neue', sans-serif",
+                size: 14
+              }
+            }
           }
         }
       }
@@ -285,6 +569,10 @@
 {% endblock %}
 {% endblock %}
 
+<!-- Google Fonts for improved typography -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
@@ -305,7 +593,7 @@
   <div class="col-md-9 section1">
     <!-- Data Overview Section -->
     <div id="section1" class="section">
-      <h3 class="text-center">Data Overview</h3>
+      <h5 class="text-center">Data Overview</5>
       <table class="table table-hover">
         <thead>
           <tr>
@@ -338,7 +626,7 @@
 
     <!-- Graphs Section -->
     <div id="section2" class="section">
-      <h3 class="text-center">Graphs</h3>
+      <h5 class="text-center">Graphs</h5>
       
       <ul id="clothing-nav" class="nav nav-tabs graph-custom-class" role="tablist">
         <li class="nav-item">
@@ -381,13 +669,12 @@
       </div>
     </div>
 
-
-    <!-- Map Section with Updated Filters -->
+    <!-- Distribution Map Section with Elegant Filters -->
     <div id="section3" class="section">
       <div class="map-container">
-        
         <div class="filter-controls">
-          <h3 class="text-center">Distribution Map</h3>
+          <h5 class="text-center">Distribution Map</h5>
+          <div class="filter-group">
             <label for="map1-filter">Filter by Study Type:</label>
             <select id="map1-filter" class="form-control">
                 <option value="All">All Studies</option>
@@ -397,6 +684,7 @@
                     {% endif %}
                 {% endfor %}
             </select>
+          </div>
         </div>
         
         <div id="map1-container" class="map-content">
@@ -405,15 +693,15 @@
             </div>
             <div class="map-display"></div>
         </div>
-    </div>
+      </div>
     </div>
 
-    <!-- Heatmap Section with Updated Filters -->
+    <!-- Heat Map Section with Elegant Filters -->
     <div id="section4" class="section">
       <div class="map-container">
-        
         <div class="filter-controls">
-          <h3 class="text-center">Heat Map</h3>
+          <h5 class="text-center">Heat Map</h5>
+          <div class="filter-group">
             <label for="map2-filter">Filter by Study Type:</label>
             <select id="map2-filter" class="form-control">
                 <option value="All">All Studies</option>
@@ -423,6 +711,7 @@
                     {% endif %}
                 {% endfor %}
             </select>
+          </div>
         </div>
         
         <div id="map2-container" class="map-content">
@@ -431,7 +720,7 @@
             </div>
             <div class="map-display"></div>
         </div>
-    </div>
+      </div>
     </div>
   </div>
 </div>
@@ -470,19 +759,59 @@ function updateMap(mapType, studyType) {
     });
 }
 
+// Add smooth scrolling to navigation links
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = document.querySelectorAll('.tag-link');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            window.scrollTo({
+                top: targetElement.offsetTop - 80,
+                behavior: 'smooth'
+            });
+        });
+    });
+});
+
 // Initialize maps when document is ready
 $(document).ready(function() {
     // Initial load of maps
     updateMap('marker', 'All');
     updateMap('heatmap', 'All');
     
-    // Event listeners for filters
+    // Event listeners for filters with animation
     $('#map1-filter').change(function() {
-        updateMap('marker', $(this).val());
+        showLoading('map1-container');
+        setTimeout(() => {
+            updateMap('marker', $(this).val());
+        }, 300); // Small delay for better UX
     });
     
     $('#map2-filter').change(function() {
-        updateMap('heatmap', $(this).val());
+        showLoading('map2-container');
+        setTimeout(() => {
+            updateMap('heatmap', $(this).val());
+        }, 300); // Small delay for better UX
+    });
+    
+    // Highlight active navigation based on scroll position
+    $(window).scroll(function() {
+        const scrollPosition = $(window).scrollTop();
+        
+        $('.section').each(function() {
+            const topDistance = $(this).offset().top - 100;
+            
+            if (scrollPosition >= topDistance) {
+                const id = $(this).attr('id');
+                $('.tag-link').removeClass('active');
+                $(`.tag-link[href="#${id}"]`).addClass('active');
+            }
+        });
     });
 });
 </script>

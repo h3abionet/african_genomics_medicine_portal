@@ -14,9 +14,87 @@
 
 {% block content %}
 
+<style>
+/* Matching side menu with the same style as in the main template */
+.navigation ul {
+    padding: 0;
+    list-style: none;
+}
 
+.navigation .no_style li {
+    margin-bottom: 8px; /* Reduced from 12px for more compact spacing */
+}
 
+.navigation .navigation__link {
+    display: block;
+    padding: 7px 18px; /* Reduced the vertical padding from 14px to 7px (50% reduction) */
+    background: transparent;
+    color: rgb(0, 83, 3);
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: none;
+}
 
+.navigation .navigation__link:hover {
+    background: white;
+    color: rgb(255, 193, 7);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.navigation .navigation__link.active {
+    background: white;
+    color: rgb(255, 193, 7) !important; /* Added !important to ensure this color is applied */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 3.5px 18px; /* Reduced padding height by 50% (from 7px to 3.5px) */
+}
+
+/* Matching section headers styling */
+.page-section h3 {
+    margin-bottom: 25px;
+    color: rgb(0, 83, 3);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+.page-section h3:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(to right, rgb(0, 83, 3), rgb(0, 189, 69));
+    border-radius: 3px;
+}
+
+/* Enhanced page section styling */
+.page-section {
+    margin-bottom: 50px;
+    padding: 30px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.page-section:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+/* Google Fonts for improved typography */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+body {
+    font-family: 'Poppins', 'Helvetica Neue', sans-serif;
+    color: #2c3e50;
+}
+</style>
 
 <div class="row">
 	<div class="col-md-3">
@@ -43,7 +121,7 @@
 
 
 		<div class="page-section" id="1">
-			<h3 class="text-center">Background</h3>
+			<h5 class="text-center">Background</h5>
 
 		
 
@@ -80,7 +158,7 @@
 
 		</div>
 		<div class="page-section" id="2">
-			<h3 class="text-center">Portal Objectives</h3>
+			<h5 class="text-center">Portal Objectives</h5>
 			<ul>
 				<li>Provide genotype-phenotype associations as they pertain to African populations.</li>
 				<li>Provide pharmacogenomics information as they pertain to African populations.</li>
@@ -94,7 +172,7 @@
 
 		</div>
 		<div class="page-section" id="3">
-			<h3 class="text-center">Contributors</h3>
+			<h5 class="text-center">Contributors</h5>
 			<p>
 				Development of the AGMP was driven by H3ABioNet's Databases and Resources Work Package, and led by the
 				members of
@@ -108,7 +186,7 @@
 
 
 		<div class="page-section" id="4">
-			<h3 class="text-center">Original Data Sources</h3>
+			<h5 class="text-center">Original Data Sources</h5>
 
 			<p>
 				Data provided in the AGMP was sourced from two existing online resources, PharmGKB and DisGeNET. These
@@ -124,7 +202,7 @@
 
 
 		<div class="page-section" id="5">
-			<h3 class="text-center">Version History</h3>
+			<h5 class="text-center">Version History</h5>
 			<ul>
 			<h5>AGMP v1.2: 2025/04/30</h5>
 			<li>Added Gwas Catalogue Dataset, Heat maps</li><br>
@@ -137,7 +215,7 @@
 
 		</div>
 		<div class="page-section" id="6">
-			<h3 class="text-center">Documentation</h3>
+			<h5 class="text-center">Documentation</h5>
 			<ul>
 				<li>Othman, H.; Zass, L.; da Rocha, J.E.B.; Radouani, F.; Samtal, C.; Benamri, I.; Kumuthini,
 					J.; Fakim, Y.J.; Hamdi, Y.; Mezzi, N.; et al, (<b>2022</b>) <a
@@ -153,14 +231,6 @@
 	</div>
 
 </div>
-
-
-
-
-
-
-
-
 
 {% endblock %}
 
@@ -186,13 +256,6 @@
 
 	$(window).scroll(function () {
 		var scrollDistance = $(window).scrollTop();
-
-		// Show/hide menu on scroll
-		//if (scrollDistance >= 850) {
-		//		$('nav').fadeIn("fast");
-		//} else {
-		//		$('nav').fadeOut("fast");
-		//}
 
 		// Assign active class to nav links while scolling
 		$('.page-section').each(function (i) {
