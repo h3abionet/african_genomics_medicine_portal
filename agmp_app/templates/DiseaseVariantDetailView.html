@@ -19,8 +19,6 @@
 <p><b>Phenotype : </b>{{data.phenotypeagmp__name}}</p>
 
 
-
-
 <p><h3>Variant-Phenotype Associations </h3></p>
 <div class="table-responsive-sm">
 <table id="example" class="table table-striped table-bordered">
@@ -53,7 +51,7 @@
           <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}">{{my_object.studyagmp.publication_id}}</a>
         </td>
         <td>{{my_object.variantagmp.variant_type }}</td>
-        <td>{{my_object.variantagmp.source_db }}</td>
+        <td>{{my_object.variantagmp.source_db }}<br>{{my_object.variantagmp.id_in_source_db}}</td>
         <!-- <td>{{my_object.studyagmp.study_type}}</td> -->
         <td>{{my_object.mixed_population }}</td>
       </tr>

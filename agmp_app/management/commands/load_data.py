@@ -58,7 +58,7 @@ class Command(BaseCommand):
             
             # Use command line arguments if provided, otherwise use default paths
             first_import_path = Path(options['first_file']) if options.get('first_file') else base_dir / 'import_csv' / 'first_import_job_run_error_fix.csv'
-            second_import_path = Path(options['second_file']) if options.get('second_file') else base_dir / 'import_csv' / 'second_import_job_run_sept_2024.xlsx'
+            second_import_path = Path(options['second_file']) if options.get('second_file') else base_dir / 'import_csv' / 'second_import_job_run_april_2025.xlsx'
             
             self.stdout.write(f"First import file path: {first_import_path}")
             self.stdout.write(f"Second import file path: {second_import_path}")
