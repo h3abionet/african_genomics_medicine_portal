@@ -1,0 +1,1726 @@
+Checking duplicates for Drugagmp...
+No duplicates found in Drugagmp.
+Checking duplicates for Geneagmp...
+No duplicates found in Geneagmp.
+Checking duplicates for Studyagmp...
+No duplicates found in Studyagmp.
+Checking duplicates for Phenotypeagmp...
+No duplicates found in Phenotypeagmp.
+Checking duplicates for Variantagmp...
+Duplicates found in Variantagmp:
+Duplicate fields: {'rs_id': 'rs121918641', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (166728)
+ - Variantagmp object (166729)
+ - Variantagmp object (166741)
+ - Variantagmp object (166742)
+Duplicate fields: {'rs_id': 'rs8050894', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167388)
+ - Variantagmp object (167389)
+Duplicate fields: {'rs_id': 'CYP2B6*6', 'variant_type': 'Star allele', 'count': 10}
+ - Variantagmp object (167560)
+ - Variantagmp object (167666)
+ - Variantagmp object (167672)
+ - Variantagmp object (167934)
+ - Variantagmp object (167935)
+ - Variantagmp object (168060)
+ - Variantagmp object (168163)
+ - Variantagmp object (168164)
+ - Variantagmp object (168165)
+ - Variantagmp object (168431)
+Duplicate fields: {'rs_id': 'rs3825942', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167374)
+ - Variantagmp object (167375)
+ - Variantagmp object (167612)
+Duplicate fields: {'rs_id': 'rs7979473', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167905)
+ - Variantagmp object (184026)
+Duplicate fields: {'rs_id': 'rs12255372', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167336)
+ - Variantagmp object (167921)
+ - Variantagmp object (168106)
+Duplicate fields: {'rs_id': 'rs1799983', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168101)
+ - Variantagmp object (174312)
+Duplicate fields: {'rs_id': 'rs763915472', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167906)
+ - Variantagmp object (168365)
+Duplicate fields: {'rs_id': 'rs7294', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167386)
+ - Variantagmp object (167387)
+ - Variantagmp object (167751)
+ - Variantagmp object (167752)
+Duplicate fields: {'rs_id': 'rs794729665', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167249)
+ - Variantagmp object (168250)
+ - Variantagmp object (168251)
+Duplicate fields: {'rs_id': 'rs121908033', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (166730)
+ - Variantagmp object (166761)
+ - Variantagmp object (166762)
+Duplicate fields: {'rs_id': 'rs854560', 'variant_type': 'SNV', 'count': 6}
+ - Variantagmp object (167702)
+ - Variantagmp object (167703)
+ - Variantagmp object (167770)
+ - Variantagmp object (168512)
+ - Variantagmp object (168513)
+ - Variantagmp object (168514)
+Duplicate fields: {'rs_id': 'rs121912931', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167285)
+ - Variantagmp object (167286)
+ - Variantagmp object (167287)
+Duplicate fields: {'rs_id': 'CYP2D6*4', 'variant_type': 'Star allele', 'count': 3}
+ - Variantagmp object (167076)
+ - Variantagmp object (167263)
+ - Variantagmp object (167346)
+Duplicate fields: {'rs_id': 'rs371956016', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167316)
+ - Variantagmp object (167317)
+Duplicate fields: {'rs_id': 'rs80357724', 'variant_type': 'SNV', 'count': 11}
+ - Variantagmp object (167399)
+ - Variantagmp object (167400)
+ - Variantagmp object (167644)
+ - Variantagmp object (167743)
+ - Variantagmp object (167744)
+ - Variantagmp object (167745)
+ - Variantagmp object (167832)
+ - Variantagmp object (167974)
+ - Variantagmp object (167975)
+ - Variantagmp object (167976)
+ - Variantagmp object (168407)
+Duplicate fields: {'rs_id': 'rs80359277', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167647)
+ - Variantagmp object (167648)
+ - Variantagmp object (168454)
+Duplicate fields: {'rs_id': 'CYP3A4*1', 'variant_type': 'Star allele', 'count': 3}
+ - Variantagmp object (168200)
+ - Variantagmp object (168358)
+ - Variantagmp object (168591)
+Duplicate fields: {'rs_id': 'rs62508698', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (166752)
+ - Variantagmp object (166753)
+ - Variantagmp object (166754)
+ - Variantagmp object (166755)
+Duplicate fields: {'rs_id': 'rs1805192', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167333)
+ - Variantagmp object (167404)
+Duplicate fields: {'rs_id': 'rs13266634', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167875)
+ - Variantagmp object (172419)
+Duplicate fields: {'rs_id': 'rs4986888', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167047)
+ - Variantagmp object (167048)
+ - Variantagmp object (167049)
+ - Variantagmp object (167050)
+Duplicate fields: {'rs_id': 'rs2032582', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168210)
+ - Variantagmp object (168211)
+ - Variantagmp object (168552)
+Duplicate fields: {'rs_id': 'rs2259816', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167903)
+ - Variantagmp object (175511)
+Duplicate fields: {'rs_id': 'rs121908028', 'variant_type': 'SNV', 'count': 6}
+ - Variantagmp object (166736)
+ - Variantagmp object (166747)
+ - Variantagmp object (166758)
+ - Variantagmp object (166759)
+ - Variantagmp object (166760)
+ - Variantagmp object (166769)
+Duplicate fields: {'rs_id': 'rs189159450', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166895)
+ - Variantagmp object (166896)
+Duplicate fields: {'rs_id': 'rs587781558', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167981)
+ - Variantagmp object (167982)
+Duplicate fields: {'rs_id': 'CYP2B6*22', 'variant_type': 'Star allele', 'count': 2}
+ - Variantagmp object (167928)
+ - Variantagmp object (167929)
+Duplicate fields: {'rs_id': 'rs7089580', 'variant_type': 'SNV', 'count': 5}
+ - Variantagmp object (167705)
+ - Variantagmp object (168241)
+ - Variantagmp object (168242)
+ - Variantagmp object (168243)
+ - Variantagmp object (168244)
+Duplicate fields: {'rs_id': 'rs60791294', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167462)
+ - Variantagmp object (167463)
+ - Variantagmp object (167464)
+ - Variantagmp object (167465)
+Duplicate fields: {'rs_id': 'rs1046089', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167436)
+ - Variantagmp object (168998)
+Duplicate fields: {'rs_id': 'rs398123044', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168061)
+ - Variantagmp object (168062)
+Duplicate fields: {'rs_id': 'rs62015197', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168269)
+ - Variantagmp object (180379)
+Duplicate fields: {'rs_id': 'rs62625011', 'variant_type': 'SNV', 'count': 9}
+ - Variantagmp object (166791)
+ - Variantagmp object (166792)
+ - Variantagmp object (166793)
+ - Variantagmp object (166794)
+ - Variantagmp object (166795)
+ - Variantagmp object (166796)
+ - Variantagmp object (166797)
+ - Variantagmp object (166798)
+ - Variantagmp object (166799)
+Duplicate fields: {'rs_id': 'rs2279343', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167839)
+ - Variantagmp object (168383)
+ - Variantagmp object (168544)
+Duplicate fields: {'rs_id': 'CYP2C9*8', 'variant_type': 'Star allele', 'count': 8}
+ - Variantagmp object (167208)
+ - Variantagmp object (167516)
+ - Variantagmp object (167739)
+ - Variantagmp object (167777)
+ - Variantagmp object (167778)
+ - Variantagmp object (168275)
+ - Variantagmp object (168499)
+ - Variantagmp object (168500)
+Duplicate fields: {'rs_id': 'rs2066844', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167228)
+ - Variantagmp object (175104)
+Duplicate fields: {'rs_id': 'rs80359688', 'variant_type': 'SNV', 'count': 6}
+ - Variantagmp object (167684)
+ - Variantagmp object (167685)
+ - Variantagmp object (167863)
+ - Variantagmp object (168083)
+ - Variantagmp object (168084)
+ - Variantagmp object (168418)
+Duplicate fields: {'rs_id': 'rs28399499', 'variant_type': 'SNV', 'count': 16}
+ - Variantagmp object (167268)
+ - Variantagmp object (167269)
+ - Variantagmp object (167511)
+ - Variantagmp object (167674)
+ - Variantagmp object (167675)
+ - Variantagmp object (167840)
+ - Variantagmp object (167841)
+ - Variantagmp object (168127)
+ - Variantagmp object (168253)
+ - Variantagmp object (168386)
+ - Variantagmp object (168442)
+ - Variantagmp object (168531)
+ - Variantagmp object (168532)
+ - Variantagmp object (168541)
+ - Variantagmp object (168545)
+ - Variantagmp object (168546)
+Duplicate fields: {'rs_id': 'rs1799990', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167150)
+ - Variantagmp object (167151)
+Duplicate fields: {'rs_id': 'rs568612627', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167017)
+ - Variantagmp object (167018)
+ - Variantagmp object (167019)
+Duplicate fields: {'rs_id': 'rs59885338', 'variant_type': 'SNV', 'count': 7}
+ - Variantagmp object (167037)
+ - Variantagmp object (167109)
+ - Variantagmp object (167168)
+ - Variantagmp object (167169)
+ - Variantagmp object (167170)
+ - Variantagmp object (167324)
+ - Variantagmp object (167325)
+Duplicate fields: {'rs_id': 'CYP3A5*6', 'variant_type': 'Star allele', 'count': 4}
+ - Variantagmp object (168368)
+ - Variantagmp object (168561)
+ - Variantagmp object (168567)
+ - Variantagmp object (168568)
+Duplicate fields: {'rs_id': 'rs1801282', 'variant_type': 'SNV', 'count': 6}
+ - Variantagmp object (167332)
+ - Variantagmp object (167365)
+ - Variantagmp object (167403)
+ - Variantagmp object (167877)
+ - Variantagmp object (168158)
+ - Variantagmp object (174336)
+Duplicate fields: {'rs_id': 'rs7769409', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167187)
+ - Variantagmp object (167188)
+Duplicate fields: {'rs_id': 'rs12248560', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167257)
+ - Variantagmp object (167258)
+Duplicate fields: {'rs_id': 'CYP2D6*2', 'variant_type': 'Star allele', 'count': 5}
+ - Variantagmp object (167042)
+ - Variantagmp object (167043)
+ - Variantagmp object (167259)
+ - Variantagmp object (167660)
+ - Variantagmp object (167999)
+Duplicate fields: {'rs_id': 'rs1128503', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167963)
+ - Variantagmp object (168551)
+Duplicate fields: {'rs_id': 'rs121918583', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166912)
+ - Variantagmp object (167424)
+Duplicate fields: {'rs_id': 'rs199422217', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167210)
+ - Variantagmp object (167211)
+Duplicate fields: {'rs_id': 'rs339097', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167600)
+ - Variantagmp object (167693)
+Duplicate fields: {'rs_id': 'rs121918326', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (166839)
+ - Variantagmp object (166840)
+ - Variantagmp object (166841)
+Duplicate fields: {'rs_id': 'rs587776640', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167000)
+ - Variantagmp object (167225)
+ - Variantagmp object (167226)
+ - Variantagmp object (167227)
+Duplicate fields: {'rs_id': 'rs2740574', 'variant_type': 'SNV', 'count': 9}
+ - Variantagmp object (167554)
+ - Variantagmp object (167555)
+ - Variantagmp object (167556)
+ - Variantagmp object (167811)
+ - Variantagmp object (167965)
+ - Variantagmp object (168384)
+ - Variantagmp object (168436)
+ - Variantagmp object (168529)
+ - Variantagmp object (168530)
+Duplicate fields: {'rs_id': 'rs28399433', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167510)
+ - Variantagmp object (168189)
+Duplicate fields: {'rs_id': 'rs565203731', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167397)
+ - Variantagmp object (168287)
+Duplicate fields: {'rs_id': 'rs879254554', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166982)
+ - Variantagmp object (167280)
+Duplicate fields: {'rs_id': 'CYP3A5*3A', 'variant_type': 'Star allele', 'count': 6}
+ - Variantagmp object (167961)
+ - Variantagmp object (168361)
+ - Variantagmp object (168367)
+ - Variantagmp object (168560)
+ - Variantagmp object (168565)
+ - Variantagmp object (168566)
+Duplicate fields: {'rs_id': 'rs377267777', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (168277)
+ - Variantagmp object (168278)
+ - Variantagmp object (168279)
+ - Variantagmp object (168280)
+Duplicate fields: {'rs_id': 'CYP2C19*17', 'variant_type': 'Star allele', 'count': 2}
+ - Variantagmp object (168206)
+ - Variantagmp object (168209)
+Duplicate fields: {'rs_id': 'rs1061170', 'variant_type': 'SNV', 'count': 5}
+ - Variantagmp object (167282)
+ - Variantagmp object (167283)
+ - Variantagmp object (167415)
+ - Variantagmp object (167978)
+ - Variantagmp object (167996)
+Duplicate fields: {'rs_id': 'rs7903146', 'variant_type': 'SNV', 'count': 11}
+ - Variantagmp object (167337)
+ - Variantagmp object (167338)
+ - Variantagmp object (167376)
+ - Variantagmp object (167450)
+ - Variantagmp object (167488)
+ - Variantagmp object (167880)
+ - Variantagmp object (167923)
+ - Variantagmp object (168097)
+ - Variantagmp object (168240)
+ - Variantagmp object (168520)
+ - Variantagmp object (183789)
+Duplicate fields: {'rs_id': 'rs72653772', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167474)
+ - Variantagmp object (167475)
+ - Variantagmp object (167476)
+ - Variantagmp object (167477)
+Duplicate fields: {'rs_id': 'CYP2A6*1A', 'variant_type': 'Star allele', 'count': 3}
+ - Variantagmp object (167234)
+ - Variantagmp object (167235)
+ - Variantagmp object (167308)
+Duplicate fields: {'rs_id': 'rs73885319', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167640)
+ - Variantagmp object (182424)
+Duplicate fields: {'rs_id': 'rs2981582', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167896)
+ - Variantagmp object (167897)
+ - Variantagmp object (167898)
+Duplicate fields: {'rs_id': 'rs5219', 'variant_type': 'SNV', 'count': 6}
+ - Variantagmp object (167487)
+ - Variantagmp object (167878)
+ - Variantagmp object (168150)
+ - Variantagmp object (168151)
+ - Variantagmp object (168207)
+ - Variantagmp object (179226)
+Duplicate fields: {'rs_id': 'CYP2D6*5', 'variant_type': 'Star allele', 'count': 3}
+ - Variantagmp object (167046)
+ - Variantagmp object (167348)
+ - Variantagmp object (168000)
+Duplicate fields: {'rs_id': 'rs28934586', 'variant_type': 'SNV', 'count': 7}
+ - Variantagmp object (166739)
+ - Variantagmp object (166740)
+ - Variantagmp object (166778)
+ - Variantagmp object (166822)
+ - Variantagmp object (166823)
+ - Variantagmp object (167238)
+ - Variantagmp object (167239)
+Duplicate fields: {'rs_id': 'rs2246709', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167550)
+ - Variantagmp object (167551)
+ - Variantagmp object (167552)
+ - Variantagmp object (167553)
+Duplicate fields: {'rs_id': 'rs55861249', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (166849)
+ - Variantagmp object (166850)
+ - Variantagmp object (167979)
+Duplicate fields: {'rs_id': 'rs573931674', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167254)
+ - Variantagmp object (167255)
+Duplicate fields: {'rs_id': 'rs4803419', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168256)
+ - Variantagmp object (168393)
+ - Variantagmp object (168517)
+Duplicate fields: {'rs_id': 'rs72653785', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167478)
+ - Variantagmp object (167479)
+ - Variantagmp object (167480)
+ - Variantagmp object (167481)
+Duplicate fields: {'rs_id': 'rs80359535', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167683)
+ - Variantagmp object (168082)
+Duplicate fields: {'rs_id': 'rs3218716', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167949)
+ - Variantagmp object (167950)
+ - Variantagmp object (167951)
+Duplicate fields: {'rs_id': 'rs4149056', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168414)
+ - Variantagmp object (168439)
+ - Variantagmp object (178238)
+Duplicate fields: {'rs_id': 'rs1801253', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167417)
+ - Variantagmp object (174333)
+Duplicate fields: {'rs_id': 'rs3745274', 'variant_type': 'SNV', 'count': 32}
+ - Variantagmp object (167363)
+ - Variantagmp object (167513)
+ - Variantagmp object (167514)
+ - Variantagmp object (167520)
+ - Variantagmp object (167676)
+ - Variantagmp object (167802)
+ - Variantagmp object (167813)
+ - Variantagmp object (167842)
+ - Variantagmp object (167843)
+ - Variantagmp object (167844)
+ - Variantagmp object (168128)
+ - Variantagmp object (168222)
+ - Variantagmp object (168254)
+ - Variantagmp object (168255)
+ - Variantagmp object (168281)
+ - Variantagmp object (168285)
+ - Variantagmp object (168318)
+ - Variantagmp object (168389)
+ - Variantagmp object (168390)
+ - Variantagmp object (168404)
+ - Variantagmp object (168405)
+ - Variantagmp object (168406)
+ - Variantagmp object (168443)
+ - Variantagmp object (168515)
+ - Variantagmp object (168516)
+ - Variantagmp object (168525)
+ - Variantagmp object (168533)
+ - Variantagmp object (168534)
+ - Variantagmp object (168542)
+ - Variantagmp object (168547)
+ - Variantagmp object (168548)
+ - Variantagmp object (168549)
+Duplicate fields: {'rs_id': 'rs738409', 'variant_type': 'SNV', 'count': 6}
+ - Variantagmp object (168130)
+ - Variantagmp object (168131)
+ - Variantagmp object (168132)
+ - Variantagmp object (168133)
+ - Variantagmp object (168134)
+ - Variantagmp object (182414)
+Duplicate fields: {'rs_id': 'rs121965021', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166965)
+ - Variantagmp object (167266)
+Duplicate fields: {'rs_id': 'rs6940729', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168334)
+ - Variantagmp object (181317)
+Duplicate fields: {'rs_id': 'rs387906563', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167110)
+ - Variantagmp object (167111)
+ - Variantagmp object (167865)
+ - Variantagmp object (167866)
+Duplicate fields: {'rs_id': 'rs121908483', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (166939)
+ - Variantagmp object (166940)
+ - Variantagmp object (166941)
+ - Variantagmp object (166942)
+Duplicate fields: {'rs_id': 'rs80338933', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167288)
+ - Variantagmp object (167289)
+ - Variantagmp object (167290)
+Duplicate fields: {'rs_id': 'rs80338950', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166877)
+ - Variantagmp object (167023)
+Duplicate fields: {'rs_id': 'rs483352908', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167658)
+ - Variantagmp object (167659)
+Duplicate fields: {'rs_id': 'rs6942726', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167609)
+ - Variantagmp object (167610)
+Duplicate fields: {'rs_id': 'CYP2C9*11', 'variant_type': 'Star allele', 'count': 12}
+ - Variantagmp object (167204)
+ - Variantagmp object (167379)
+ - Variantagmp object (167380)
+ - Variantagmp object (167534)
+ - Variantagmp object (167535)
+ - Variantagmp object (167731)
+ - Variantagmp object (167732)
+ - Variantagmp object (167772)
+ - Variantagmp object (167773)
+ - Variantagmp object (168291)
+ - Variantagmp object (168491)
+ - Variantagmp object (168492)
+Duplicate fields: {'rs_id': 'rs864309516', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167080)
+ - Variantagmp object (167216)
+Duplicate fields: {'rs_id': 'rs2057178', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167822)
+ - Variantagmp object (167823)
+Duplicate fields: {'rs_id': 'rs28365062', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167509)
+ - Variantagmp object (168188)
+Duplicate fields: {'rs_id': 'rs73208473', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168575)
+ - Variantagmp object (182270)
+Duplicate fields: {'rs_id': 'rs2108622', 'variant_type': 'SNV', 'count': 12}
+ - Variantagmp object (167571)
+ - Variantagmp object (167690)
+ - Variantagmp object (167851)
+ - Variantagmp object (167852)
+ - Variantagmp object (168296)
+ - Variantagmp object (168297)
+ - Variantagmp object (168298)
+ - Variantagmp object (168408)
+ - Variantagmp object (168409)
+ - Variantagmp object (168410)
+ - Variantagmp object (168467)
+ - Variantagmp object (168598)
+Duplicate fields: {'rs_id': 'rs28933385', 'variant_type': 'SNV', 'count': 22}
+ - Variantagmp object (166721)
+ - Variantagmp object (166731)
+ - Variantagmp object (166732)
+ - Variantagmp object (166738)
+ - Variantagmp object (166786)
+ - Variantagmp object (166787)
+ - Variantagmp object (166804)
+ - Variantagmp object (166805)
+ - Variantagmp object (166819)
+ - Variantagmp object (166820)
+ - Variantagmp object (166824)
+ - Variantagmp object (166825)
+ - Variantagmp object (166826)
+ - Variantagmp object (166866)
+ - Variantagmp object (166867)
+ - Variantagmp object (166868)
+ - Variantagmp object (166909)
+ - Variantagmp object (166983)
+ - Variantagmp object (166984)
+ - Variantagmp object (166985)
+ - Variantagmp object (168245)
+ - Variantagmp object (168403)
+Duplicate fields: {'rs_id': 'rs2306283', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168412)
+ - Variantagmp object (168435)
+Duplicate fields: {'rs_id': 'rs581111', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168020)
+ - Variantagmp object (168021)
+Duplicate fields: {'rs_id': 'rs610604', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168237)
+ - Variantagmp object (180169)
+Duplicate fields: {'rs_id': 'rs61752717', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167595)
+ - Variantagmp object (167706)
+Duplicate fields: {'rs_id': 'rs28942078', 'variant_type': 'SNV', 'count': 5}
+ - Variantagmp object (166737)
+ - Variantagmp object (166763)
+ - Variantagmp object (166764)
+ - Variantagmp object (166765)
+ - Variantagmp object (166783)
+Duplicate fields: {'rs_id': 'CYP2A6*20', 'variant_type': 'Star allele', 'count': 2}
+ - Variantagmp object (167236)
+ - Variantagmp object (167237)
+Duplicate fields: {'rs_id': 'rs3218713', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167947)
+ - Variantagmp object (167948)
+Duplicate fields: {'rs_id': 'rs414171', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167621)
+ - Variantagmp object (167622)
+Duplicate fields: {'rs_id': 'rs28371685', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167244)
+ - Variantagmp object (167572)
+Duplicate fields: {'rs_id': 'CYP2C9*10', 'variant_type': 'Star allele', 'count': 2}
+ - Variantagmp object (167532)
+ - Variantagmp object (167533)
+Duplicate fields: {'rs_id': 'rs28940579', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167525)
+ - Variantagmp object (168191)
+Duplicate fields: {'rs_id': 'rs1127354', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168523)
+ - Variantagmp object (168524)
+ - Variantagmp object (168526)
+Duplicate fields: {'rs_id': 'rs6475', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167180)
+ - Variantagmp object (167181)
+ - Variantagmp object (167428)
+Duplicate fields: {'rs_id': 'rs529520', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168018)
+ - Variantagmp object (168019)
+Duplicate fields: {'rs_id': 'rs137852621', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166779)
+ - Variantagmp object (166853)
+Duplicate fields: {'rs_id': 'rs678849', 'variant_type': 'SNV', 'count': 6}
+ - Variantagmp object (168022)
+ - Variantagmp object (168023)
+ - Variantagmp object (168024)
+ - Variantagmp object (168618)
+ - Variantagmp object (168619)
+ - Variantagmp object (168620)
+Duplicate fields: {'rs_id': 'rs4833095', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167617)
+ - Variantagmp object (167618)
+Duplicate fields: {'rs_id': 'rs12979860', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167787)
+ - Variantagmp object (167993)
+ - Variantagmp object (167994)
+Duplicate fields: {'rs_id': 'rs8051542', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167899)
+ - Variantagmp object (167900)
+Duplicate fields: {'rs_id': 'rs1800728', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167824)
+ - Variantagmp object (167825)
+ - Variantagmp object (168032)
+ - Variantagmp object (168033)
+Duplicate fields: {'rs_id': 'rs2960306', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167443)
+ - Variantagmp object (167444)
+ - Variantagmp object (167445)
+Duplicate fields: {'rs_id': 'rs121907957', 'variant_type': 'SNV', 'count': 7}
+ - Variantagmp object (166886)
+ - Variantagmp object (166887)
+ - Variantagmp object (166888)
+ - Variantagmp object (166889)
+ - Variantagmp object (166890)
+ - Variantagmp object (166891)
+ - Variantagmp object (166892)
+Duplicate fields: {'rs_id': 'rs104894075', 'variant_type': 'SNV', 'count': 7}
+ - Variantagmp object (167032)
+ - Variantagmp object (167033)
+ - Variantagmp object (167034)
+ - Variantagmp object (167141)
+ - Variantagmp object (167142)
+ - Variantagmp object (167143)
+ - Variantagmp object (167144)
+Duplicate fields: {'rs_id': 'rs74315360', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167291)
+ - Variantagmp object (167292)
+Duplicate fields: {'rs_id': 'rs9923231', 'variant_type': 'SNV', 'count': 15}
+ - Variantagmp object (167579)
+ - Variantagmp object (167580)
+ - Variantagmp object (167697)
+ - Variantagmp object (167698)
+ - Variantagmp object (167699)
+ - Variantagmp object (167853)
+ - Variantagmp object (167854)
+ - Variantagmp object (168299)
+ - Variantagmp object (168300)
+ - Variantagmp object (168301)
+ - Variantagmp object (168302)
+ - Variantagmp object (168502)
+ - Variantagmp object (168503)
+ - Variantagmp object (168504)
+ - Variantagmp object (168539)
+Duplicate fields: {'rs_id': 'rs121907960', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166719)
+ - Variantagmp object (166733)
+Duplicate fields: {'rs_id': 'rs12069113', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167911)
+ - Variantagmp object (167912)
+Duplicate fields: {'rs_id': 'CYP2B6*4', 'variant_type': 'Star allele', 'count': 2}
+ - Variantagmp object (167930)
+ - Variantagmp object (167931)
+Duplicate fields: {'rs_id': 'rs111033307', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (166948)
+ - Variantagmp object (166949)
+ - Variantagmp object (167587)
+ - Variantagmp object (167588)
+Duplicate fields: {'rs_id': 'CYP2C19*1', 'variant_type': 'Star allele', 'count': 2}
+ - Variantagmp object (168205)
+ - Variantagmp object (168208)
+Duplicate fields: {'rs_id': 'rs371675217', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166781)
+ - Variantagmp object (166856)
+Duplicate fields: {'rs_id': 'rs375624435', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168325)
+ - Variantagmp object (168326)
+Duplicate fields: {'rs_id': 'rs200790561', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168322)
+ - Variantagmp object (168323)
+Duplicate fields: {'rs_id': 'rs13181', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167714)
+ - Variantagmp object (167715)
+ - Variantagmp object (167716)
+ - Variantagmp object (168224)
+Duplicate fields: {'rs_id': 'rs45539432', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167410)
+ - Variantagmp object (167411)
+Duplicate fields: {'rs_id': 'rs767419411', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (166969)
+ - Variantagmp object (166970)
+ - Variantagmp object (166971)
+Duplicate fields: {'rs_id': 'rs397508988', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167681)
+ - Variantagmp object (168081)
+ - Variantagmp object (168416)
+Duplicate fields: {'rs_id': 'rs1799945', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (166916)
+ - Variantagmp object (166917)
+ - Variantagmp object (174308)
+Duplicate fields: {'rs_id': 'rs121908525', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167747)
+ - Variantagmp object (168094)
+ - Variantagmp object (168329)
+Duplicate fields: {'rs_id': 'rs758355520', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167396)
+ - Variantagmp object (167762)
+Duplicate fields: {'rs_id': 'rs75549581', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166906)
+ - Variantagmp object (167194)
+Duplicate fields: {'rs_id': 'rs267608260', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168181)
+ - Variantagmp object (168182)
+Duplicate fields: {'rs_id': 'rs587776601', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167005)
+ - Variantagmp object (167179)
+ - Variantagmp object (168100)
+Duplicate fields: {'rs_id': 'rs662', 'variant_type': 'SNV', 'count': 6}
+ - Variantagmp object (167700)
+ - Variantagmp object (167701)
+ - Variantagmp object (167769)
+ - Variantagmp object (168509)
+ - Variantagmp object (168510)
+ - Variantagmp object (168511)
+Duplicate fields: {'rs_id': 'rs28933693', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166780)
+ - Variantagmp object (166855)
+Duplicate fields: {'rs_id': 'rs36053993', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167868)
+ - Variantagmp object (167869)
+ - Variantagmp object (167870)
+Duplicate fields: {'rs_id': 'rs80356997', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167112)
+ - Variantagmp object (167113)
+Duplicate fields: {'rs_id': 'rs587776437', 'variant_type': 'SNV', 'count': 5}
+ - Variantagmp object (167624)
+ - Variantagmp object (167625)
+ - Variantagmp object (167626)
+ - Variantagmp object (167627)
+ - Variantagmp object (167628)
+Duplicate fields: {'rs_id': 'rs121908480', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (166931)
+ - Variantagmp object (166932)
+ - Variantagmp object (166933)
+ - Variantagmp object (166934)
+Duplicate fields: {'rs_id': 'rs786204433', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167986)
+ - Variantagmp object (167987)
+Duplicate fields: {'rs_id': 'rs11571658', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167013)
+ - Variantagmp object (167014)
+Duplicate fields: {'rs_id': 'rs762551', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168319)
+ - Variantagmp object (168395)
+Duplicate fields: {'rs_id': 'rs6139258', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168485)
+ - Variantagmp object (168486)
+ - Variantagmp object (180212)
+Duplicate fields: {'rs_id': 'rs7200749', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167749)
+ - Variantagmp object (167750)
+Duplicate fields: {'rs_id': 'rs760021635', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168346)
+ - Variantagmp object (168347)
+ - Variantagmp object (168348)
+Duplicate fields: {'rs_id': 'rs62508646', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166801)
+ - Variantagmp object (166802)
+Duplicate fields: {'rs_id': 'rs371482223', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166784)
+ - Variantagmp object (166785)
+Duplicate fields: {'rs_id': 'CYP2C9*1', 'variant_type': 'Star allele', 'count': 24}
+ - Variantagmp object (167200)
+ - Variantagmp object (167201)
+ - Variantagmp object (167202)
+ - Variantagmp object (167203)
+ - Variantagmp object (167319)
+ - Variantagmp object (167377)
+ - Variantagmp object (167378)
+ - Variantagmp object (167515)
+ - Variantagmp object (167530)
+ - Variantagmp object (167531)
+ - Variantagmp object (167729)
+ - Variantagmp object (167730)
+ - Variantagmp object (167771)
+ - Variantagmp object (167845)
+ - Variantagmp object (167846)
+ - Variantagmp object (167847)
+ - Variantagmp object (167848)
+ - Variantagmp object (168274)
+ - Variantagmp object (168288)
+ - Variantagmp object (168289)
+ - Variantagmp object (168290)
+ - Variantagmp object (168490)
+ - Variantagmp object (168593)
+ - Variantagmp object (168594)
+Duplicate fields: {'rs_id': 'rs121964990', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168010)
+ - Variantagmp object (168011)
+ - Variantagmp object (168012)
+Duplicate fields: {'rs_id': 'rs708567', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168145)
+ - Variantagmp object (168146)
+ - Variantagmp object (168147)
+Duplicate fields: {'rs_id': 'rs104894132', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166806)
+ - Variantagmp object (167599)
+Duplicate fields: {'rs_id': 'rs118203929', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167425)
+ - Variantagmp object (167426)
+Duplicate fields: {'rs_id': 'rs267606640', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167107)
+ - Variantagmp object (167946)
+Duplicate fields: {'rs_id': 'rs28939702', 'variant_type': 'SNV', 'count': 6}
+ - Variantagmp object (166986)
+ - Variantagmp object (166987)
+ - Variantagmp object (167458)
+ - Variantagmp object (167459)
+ - Variantagmp object (167460)
+ - Variantagmp object (167461)
+Duplicate fields: {'rs_id': 'rs111033558', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166913)
+ - Variantagmp object (166914)
+Duplicate fields: {'rs_id': 'rs121908479', 'variant_type': 'SNV', 'count': 5}
+ - Variantagmp object (166927)
+ - Variantagmp object (166928)
+ - Variantagmp object (166929)
+ - Variantagmp object (166930)
+ - Variantagmp object (166990)
+Duplicate fields: {'rs_id': 'rs387906301', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166774)
+ - Variantagmp object (166979)
+Duplicate fields: {'rs_id': 'rs28940269', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166845)
+ - Variantagmp object (167161)
+Duplicate fields: {'rs_id': 'rs281875215', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167909)
+ - Variantagmp object (168324)
+Duplicate fields: {'rs_id': 'rs2004640', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167413)
+ - Variantagmp object (174907)
+Duplicate fields: {'rs_id': 'rs1805096', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167602)
+ - Variantagmp object (167902)
+ - Variantagmp object (174349)
+Duplicate fields: {'rs_id': 'rs556450190', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168342)
+ - Variantagmp object (168343)
+ - Variantagmp object (168344)
+Duplicate fields: {'rs_id': 'rs111033690', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (166907)
+ - Variantagmp object (167084)
+ - Variantagmp object (167493)
+Duplicate fields: {'rs_id': 'CYP2C9*9', 'variant_type': 'Star allele', 'count': 3}
+ - Variantagmp object (167740)
+ - Variantagmp object (167779)
+ - Variantagmp object (167780)
+Duplicate fields: {'rs_id': 'rs76262710', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (166862)
+ - Variantagmp object (166863)
+ - Variantagmp object (166864)
+ - Variantagmp object (166865)
+Duplicate fields: {'rs_id': 'CYP2D6*17', 'variant_type': 'Star allele', 'count': 4}
+ - Variantagmp object (167041)
+ - Variantagmp object (167073)
+ - Variantagmp object (167345)
+ - Variantagmp object (167486)
+Duplicate fields: {'rs_id': 'rs6780995', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168142)
+ - Variantagmp object (168143)
+ - Variantagmp object (168144)
+Duplicate fields: {'rs_id': 'rs118204094', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (166991)
+ - Variantagmp object (166992)
+ - Variantagmp object (166993)
+ - Variantagmp object (166994)
+Duplicate fields: {'rs_id': 'rs72659351', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167311)
+ - Variantagmp object (167820)
+Duplicate fields: {'rs_id': 'rs3842', 'variant_type': 'SNV', 'count': 5}
+ - Variantagmp object (168166)
+ - Variantagmp object (168223)
+ - Variantagmp object (168432)
+ - Variantagmp object (168535)
+ - Variantagmp object (168536)
+Duplicate fields: {'rs_id': 'CYP3A5*7', 'variant_type': 'Star allele', 'count': 2}
+ - Variantagmp object (168369)
+ - Variantagmp object (168562)
+Duplicate fields: {'rs_id': 'rs4951074', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167887)
+ - Variantagmp object (179096)
+Duplicate fields: {'rs_id': 'CYP2A6*17', 'variant_type': 'Star allele', 'count': 2}
+ - Variantagmp object (167233)
+ - Variantagmp object (168425)
+Duplicate fields: {'rs_id': 'rs755709270', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167395)
+ - Variantagmp object (167761)
+Duplicate fields: {'rs_id': 'rs1799971', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168572)
+ - Variantagmp object (174311)
+Duplicate fields: {'rs_id': 'rs2231142', 'variant_type': 'SNV', 'count': 5}
+ - Variantagmp object (168186)
+ - Variantagmp object (168265)
+ - Variantagmp object (168266)
+ - Variantagmp object (168267)
+ - Variantagmp object (175388)
+Duplicate fields: {'rs_id': 'rs4402960', 'variant_type': 'SNV', 'count': 5}
+ - Variantagmp object (168170)
+ - Variantagmp object (168171)
+ - Variantagmp object (168172)
+ - Variantagmp object (168173)
+ - Variantagmp object (168193)
+Duplicate fields: {'rs_id': 'rs63749856', 'variant_type': 'SNV', 'count': 5}
+ - Variantagmp object (167098)
+ - Variantagmp object (167466)
+ - Variantagmp object (167467)
+ - Variantagmp object (167468)
+ - Variantagmp object (167469)
+Duplicate fields: {'rs_id': 'rs6439153', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168445)
+ - Variantagmp object (180645)
+Duplicate fields: {'rs_id': 'rs77375493', 'variant_type': 'SNV', 'count': 8}
+ - Variantagmp object (167561)
+ - Variantagmp object (168362)
+ - Variantagmp object (168363)
+ - Variantagmp object (168455)
+ - Variantagmp object (168456)
+ - Variantagmp object (168457)
+ - Variantagmp object (168458)
+ - Variantagmp object (183355)
+Duplicate fields: {'rs_id': 'rs3824662', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (168463)
+ - Variantagmp object (168464)
+ - Variantagmp object (168465)
+ - Variantagmp object (177954)
+Duplicate fields: {'rs_id': 'rs7800944', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167879)
+ - Variantagmp object (183534)
+Duplicate fields: {'rs_id': 'rs28931605', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167131)
+ - Variantagmp object (167132)
+ - Variantagmp object (167133)
+ - Variantagmp object (167134)
+Duplicate fields: {'rs_id': 'rs121918325', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (166836)
+ - Variantagmp object (166837)
+ - Variantagmp object (166838)
+Duplicate fields: {'rs_id': 'rs121917734', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166748)
+ - Variantagmp object (166782)
+Duplicate fields: {'rs_id': 'rs80357915', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167119)
+ - Variantagmp object (167120)
+Duplicate fields: {'rs_id': 'rs2237896', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167919)
+ - Variantagmp object (175430)
+Duplicate fields: {'rs_id': 'rs398122363', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (166901)
+ - Variantagmp object (168104)
+ - Variantagmp object (168273)
+Duplicate fields: {'rs_id': 'rs57077886', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166926)
+ - Variantagmp object (167167)
+Duplicate fields: {'rs_id': 'rs1045642', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167808)
+ - Variantagmp object (168450)
+ - Variantagmp object (168550)
+ - Variantagmp object (168569)
+Duplicate fields: {'rs_id': 'rs139361635', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166899)
+ - Variantagmp object (166900)
+Duplicate fields: {'rs_id': 'rs4889606', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168378)
+ - Variantagmp object (168501)
+ - Variantagmp object (178994)
+Duplicate fields: {'rs_id': 'rs2401027', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167605)
+ - Variantagmp object (167606)
+Duplicate fields: {'rs_id': 'rs202179988', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167663)
+ - Variantagmp object (167664)
+Duplicate fields: {'rs_id': 'rs149989682', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167367)
+ - Variantagmp object (167368)
+ - Variantagmp object (167369)
+Duplicate fields: {'rs_id': 'rs61495246', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166989)
+ - Variantagmp object (168284)
+Duplicate fields: {'rs_id': 'rs72474224', 'variant_type': 'SNV', 'count': 6}
+ - Variantagmp object (167189)
+ - Variantagmp object (167190)
+ - Variantagmp object (167191)
+ - Variantagmp object (168025)
+ - Variantagmp object (168026)
+ - Variantagmp object (168027)
+Duplicate fields: {'rs_id': 'rs7517847', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168521)
+ - Variantagmp object (168522)
+Duplicate fields: {'rs_id': 'rs2237892', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167918)
+ - Variantagmp object (175428)
+Duplicate fields: {'rs_id': 'rs1537415', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168271)
+ - Variantagmp object (168272)
+Duplicate fields: {'rs_id': 'rs1160985', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167901)
+ - Variantagmp object (170578)
+Duplicate fields: {'rs_id': 'rs267606689', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167427)
+ - Variantagmp object (167507)
+ - Variantagmp object (167508)
+Duplicate fields: {'rs_id': 'rs397515377', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168153)
+ - Variantagmp object (168303)
+Duplicate fields: {'rs_id': 'rs7856096', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168202)
+ - Variantagmp object (168203)
+ - Variantagmp object (168379)
+Duplicate fields: {'rs_id': 'rs587780078', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167723)
+ - Variantagmp object (167871)
+ - Variantagmp object (167872)
+ - Variantagmp object (167873)
+Duplicate fields: {'rs_id': 'rs4939827', 'variant_type': 'SNV', 'count': 6}
+ - Variantagmp object (168397)
+ - Variantagmp object (168398)
+ - Variantagmp object (168399)
+ - Variantagmp object (168400)
+ - Variantagmp object (168401)
+ - Variantagmp object (179079)
+Duplicate fields: {'rs_id': 'rs13281615', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167892)
+ - Variantagmp object (167893)
+ - Variantagmp object (167894)
+ - Variantagmp object (167895)
+Duplicate fields: {'rs_id': 'rs397516127', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167957)
+ - Variantagmp object (167958)
+Duplicate fields: {'rs_id': 'rs121918643', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166809)
+ - Variantagmp object (166810)
+Duplicate fields: {'rs_id': 'rs80357728', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167401)
+ - Variantagmp object (167402)
+ - Variantagmp object (167645)
+ - Variantagmp object (167646)
+Duplicate fields: {'rs_id': 'rs4988235', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167199)
+ - Variantagmp object (179163)
+Duplicate fields: {'rs_id': 'rs267608261', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168183)
+ - Variantagmp object (168184)
+Duplicate fields: {'rs_id': 'CYP2D6*36', 'variant_type': 'Star allele', 'count': 3}
+ - Variantagmp object (167260)
+ - Variantagmp object (167261)
+ - Variantagmp object (167262)
+Duplicate fields: {'rs_id': 'rs1800872', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (168067)
+ - Variantagmp object (168307)
+ - Variantagmp object (168308)
+ - Variantagmp object (168309)
+Duplicate fields: {'rs_id': 'rs121909763', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166911)
+ - Variantagmp object (167423)
+Duplicate fields: {'rs_id': 'rs7633054', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168446)
+ - Variantagmp object (183035)
+Duplicate fields: {'rs_id': 'rs61755320', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167270)
+ - Variantagmp object (167271)
+Duplicate fields: {'rs_id': 'rs770641163', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167983)
+ - Variantagmp object (167984)
+Duplicate fields: {'rs_id': 'rs2228001', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167720)
+ - Variantagmp object (167721)
+ - Variantagmp object (167722)
+ - Variantagmp object (168226)
+Duplicate fields: {'rs_id': 'CYP2C9*3', 'variant_type': 'Star allele', 'count': 10}
+ - Variantagmp object (167321)
+ - Variantagmp object (167322)
+ - Variantagmp object (167382)
+ - Variantagmp object (167538)
+ - Variantagmp object (167539)
+ - Variantagmp object (167850)
+ - Variantagmp object (168293)
+ - Variantagmp object (168495)
+ - Variantagmp object (168496)
+ - Variantagmp object (168596)
+Duplicate fields: {'rs_id': 'rs118192164', 'variant_type': 'SNV', 'count': 6}
+ - Variantagmp object (167065)
+ - Variantagmp object (167066)
+ - Variantagmp object (167067)
+ - Variantagmp object (167068)
+ - Variantagmp object (167069)
+ - Variantagmp object (167070)
+Duplicate fields: {'rs_id': 'rs28934595', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (166919)
+ - Variantagmp object (166920)
+ - Variantagmp object (166921)
+Duplicate fields: {'rs_id': 'rs1057910', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167566)
+ - Variantagmp object (167567)
+ - Variantagmp object (167686)
+ - Variantagmp object (167687)
+Duplicate fields: {'rs_id': 'rs3003172', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167607)
+ - Variantagmp object (167608)
+Duplicate fields: {'rs_id': 'rs63749819', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166751)
+ - Variantagmp object (167339)
+Duplicate fields: {'rs_id': 'rs769452432', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167010)
+ - Variantagmp object (167011)
+ - Variantagmp object (167012)
+Duplicate fields: {'rs_id': 'rs80357786', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167117)
+ - Variantagmp object (167118)
+Duplicate fields: {'rs_id': 'rs376103979', 'variant_type': 'SNV', 'count': 5}
+ - Variantagmp object (167563)
+ - Variantagmp object (167564)
+ - Variantagmp object (168074)
+ - Variantagmp object (168075)
+ - Variantagmp object (168076)
+Duplicate fields: {'rs_id': 'rs887829', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168313)
+ - Variantagmp object (168557)
+ - Variantagmp object (168558)
+Duplicate fields: {'rs_id': 'CYP2B6*1', 'variant_type': 'Star allele', 'count': 11}
+ - Variantagmp object (167557)
+ - Variantagmp object (167558)
+ - Variantagmp object (167665)
+ - Variantagmp object (167669)
+ - Variantagmp object (167670)
+ - Variantagmp object (167924)
+ - Variantagmp object (167925)
+ - Variantagmp object (168059)
+ - Variantagmp object (168161)
+ - Variantagmp object (168162)
+ - Variantagmp object (168430)
+Duplicate fields: {'rs_id': 'rs1057868', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168159)
+ - Variantagmp object (169135)
+Duplicate fields: {'rs_id': 'rs81002849', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167834)
+ - Variantagmp object (167835)
+Duplicate fields: {'rs_id': 'rs104894398', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (166870)
+ - Variantagmp object (167016)
+ - Variantagmp object (167836)
+Duplicate fields: {'rs_id': 'rs41525747', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167303)
+ - Variantagmp object (167304)
+Duplicate fields: {'rs_id': 'rs1801133', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167753)
+ - Variantagmp object (168518)
+Duplicate fields: {'rs_id': 'rs900431442', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (166972)
+ - Variantagmp object (166973)
+ - Variantagmp object (166974)
+Duplicate fields: {'rs_id': 'rs1426654', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168556)
+ - Variantagmp object (172857)
+Duplicate fields: {'rs_id': 'rs80357701', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167741)
+ - Variantagmp object (167742)
+ - Variantagmp object (167973)
+Duplicate fields: {'rs_id': 'rs121917843', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167219)
+ - Variantagmp object (167220)
+ - Variantagmp object (167221)
+Duplicate fields: {'rs_id': 'rs63750414', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167470)
+ - Variantagmp object (167471)
+ - Variantagmp object (167472)
+ - Variantagmp object (167473)
+Duplicate fields: {'rs_id': 'rs7755898', 'variant_type': 'SNV', 'count': 7}
+ - Variantagmp object (167184)
+ - Variantagmp object (167185)
+ - Variantagmp object (167186)
+ - Variantagmp object (167429)
+ - Variantagmp object (167430)
+ - Variantagmp object (167431)
+ - Variantagmp object (167728)
+Duplicate fields: {'rs_id': 'rs1050828', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167529)
+ - Variantagmp object (168195)
+ - Variantagmp object (169072)
+Duplicate fields: {'rs_id': 'rs779018464', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (168028)
+ - Variantagmp object (168029)
+ - Variantagmp object (168030)
+ - Variantagmp object (168031)
+Duplicate fields: {'rs_id': 'rs505151', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168589)
+ - Variantagmp object (168590)
+ - Variantagmp object (179194)
+Duplicate fields: {'rs_id': 'rs28939084', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167026)
+ - Variantagmp object (167027)
+Duplicate fields: {'rs_id': 'rs3184504', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167914)
+ - Variantagmp object (167915)
+Duplicate fields: {'rs_id': 'rs767004810', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168316)
+ - Variantagmp object (168317)
+Duplicate fields: {'rs_id': 'rs375952052', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168230)
+ - Variantagmp object (168231)
+Duplicate fields: {'rs_id': 'rs28942084', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166724)
+ - Variantagmp object (166725)
+Duplicate fields: {'rs_id': 'rs17655', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167717)
+ - Variantagmp object (167718)
+ - Variantagmp object (167719)
+ - Variantagmp object (168225)
+Duplicate fields: {'rs_id': 'CYP2C9*6', 'variant_type': 'Star allele', 'count': 10}
+ - Variantagmp object (167198)
+ - Variantagmp object (167206)
+ - Variantagmp object (167207)
+ - Variantagmp object (167384)
+ - Variantagmp object (167542)
+ - Variantagmp object (167543)
+ - Variantagmp object (167737)
+ - Variantagmp object (167738)
+ - Variantagmp object (167776)
+ - Variantagmp object (168295)
+Duplicate fields: {'rs_id': 'rs121908150', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167059)
+ - Variantagmp object (167060)
+Duplicate fields: {'rs_id': 'rs4680', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168574)
+ - Variantagmp object (178649)
+Duplicate fields: {'rs_id': 'rs121907952', 'variant_type': 'SNV', 'count': 7}
+ - Variantagmp object (166879)
+ - Variantagmp object (166880)
+ - Variantagmp object (166881)
+ - Variantagmp object (166882)
+ - Variantagmp object (166883)
+ - Variantagmp object (166884)
+ - Variantagmp object (166885)
+Duplicate fields: {'rs_id': 'CYP2B6*18', 'variant_type': 'Star allele', 'count': 3}
+ - Variantagmp object (167671)
+ - Variantagmp object (167926)
+ - Variantagmp object (167927)
+Duplicate fields: {'rs_id': 'CYP2D6*40', 'variant_type': 'Star allele', 'count': 3}
+ - Variantagmp object (167077)
+ - Variantagmp object (167148)
+ - Variantagmp object (167347)
+Duplicate fields: {'rs_id': 'rs864321622', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168372)
+ - Variantagmp object (168373)
+Duplicate fields: {'rs_id': 'rs121918324', 'variant_type': 'SNV', 'count': 11}
+ - Variantagmp object (166829)
+ - Variantagmp object (166830)
+ - Variantagmp object (166831)
+ - Variantagmp object (166833)
+ - Variantagmp object (166834)
+ - Variantagmp object (166835)
+ - Variantagmp object (166915)
+ - Variantagmp object (166966)
+ - Variantagmp object (166967)
+ - Variantagmp object (166968)
+ - Variantagmp object (167784)
+Duplicate fields: {'rs_id': 'rs1024323', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167439)
+ - Variantagmp object (167440)
+Duplicate fields: {'rs_id': 'rs7726475', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167712)
+ - Variantagmp object (167713)
+Duplicate fields: {'rs_id': 'rs1042522', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168283)
+ - Variantagmp object (168959)
+Duplicate fields: {'rs_id': 'rs80356936', 'variant_type': 'SNV', 'count': 5}
+ - Variantagmp object (167407)
+ - Variantagmp object (167408)
+ - Variantagmp object (167793)
+ - Variantagmp object (167794)
+ - Variantagmp object (167867)
+Duplicate fields: {'rs_id': 'rs121918168', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166960)
+ - Variantagmp object (166961)
+Duplicate fields: {'rs_id': 'rs5333', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168622)
+ - Variantagmp object (179247)
+Duplicate fields: {'rs_id': 'rs80338939', 'variant_type': 'SNV', 'count': 8}
+ - Variantagmp object (166871)
+ - Variantagmp object (166872)
+ - Variantagmp object (166873)
+ - Variantagmp object (166874)
+ - Variantagmp object (166875)
+ - Variantagmp object (166876)
+ - Variantagmp object (167491)
+ - Variantagmp object (167492)
+Duplicate fields: {'rs_id': 'CYP2C9*2', 'variant_type': 'Star allele', 'count': 11}
+ - Variantagmp object (167320)
+ - Variantagmp object (167381)
+ - Variantagmp object (167536)
+ - Variantagmp object (167537)
+ - Variantagmp object (167733)
+ - Variantagmp object (167734)
+ - Variantagmp object (167849)
+ - Variantagmp object (168292)
+ - Variantagmp object (168493)
+ - Variantagmp object (168494)
+ - Variantagmp object (168595)
+Duplicate fields: {'rs_id': 'rs28371686', 'variant_type': 'SNV', 'count': 6}
+ - Variantagmp object (167245)
+ - Variantagmp object (167573)
+ - Variantagmp object (167574)
+ - Variantagmp object (167691)
+ - Variantagmp object (167692)
+ - Variantagmp object (168537)
+Duplicate fields: {'rs_id': 'CYP2C9*5', 'variant_type': 'Star allele', 'count': 11}
+ - Variantagmp object (167205)
+ - Variantagmp object (167383)
+ - Variantagmp object (167540)
+ - Variantagmp object (167541)
+ - Variantagmp object (167735)
+ - Variantagmp object (167736)
+ - Variantagmp object (167774)
+ - Variantagmp object (167775)
+ - Variantagmp object (168294)
+ - Variantagmp object (168497)
+ - Variantagmp object (168498)
+Duplicate fields: {'rs_id': 'rs2234918', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168016)
+ - Variantagmp object (168017)
+Duplicate fields: {'rs_id': 'rs28936700', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167085)
+ - Variantagmp object (167086)
+Duplicate fields: {'rs_id': 'rs80358928', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167121)
+ - Variantagmp object (167122)
+Duplicate fields: {'rs_id': 'rs28937888', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166905)
+ - Variantagmp object (167004)
+Duplicate fields: {'rs_id': 'rs80357888', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167682)
+ - Variantagmp object (168156)
+ - Variantagmp object (168157)
+Duplicate fields: {'rs_id': 'rs28940268', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166844)
+ - Variantagmp object (167160)
+Duplicate fields: {'rs_id': 'rs786200944', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168064)
+ - Variantagmp object (168065)
+Duplicate fields: {'rs_id': 'rs67561842', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167100)
+ - Variantagmp object (167101)
+Duplicate fields: {'rs_id': 'rs387907252', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167805)
+ - Variantagmp object (167806)
+ - Variantagmp object (167807)
+Duplicate fields: {'rs_id': 'rs606231410', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168257)
+ - Variantagmp object (168258)
+Duplicate fields: {'rs_id': 'rs143570936', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166854)
+ - Variantagmp object (168420)
+Duplicate fields: {'rs_id': 'rs1799853', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167569)
+ - Variantagmp object (167570)
+ - Variantagmp object (167688)
+ - Variantagmp object (167689)
+Duplicate fields: {'rs_id': 'rs1523130', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167809)
+ - Variantagmp object (168411)
+Duplicate fields: {'rs_id': 'rs1800014', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167152)
+ - Variantagmp object (167153)
+Duplicate fields: {'rs_id': 'rs5928', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166980)
+ - Variantagmp object (166981)
+Duplicate fields: {'rs_id': 'rs1411478', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168001)
+ - Variantagmp object (168002)
+Duplicate fields: {'rs_id': 'rs17233141', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (166996)
+ - Variantagmp object (166997)
+ - Variantagmp object (166998)
+Duplicate fields: {'rs_id': 'rs80359180', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167796)
+ - Variantagmp object (167797)
+Duplicate fields: {'rs_id': 'rs1219648', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167890)
+ - Variantagmp object (167891)
+Duplicate fields: {'rs_id': 'rs1800562', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (166918)
+ - Variantagmp object (167128)
+ - Variantagmp object (174321)
+Duplicate fields: {'rs_id': 'rs4506565', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167922)
+ - Variantagmp object (168107)
+ - Variantagmp object (178463)
+Duplicate fields: {'rs_id': 'rs757679761', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166757)
+ - Variantagmp object (166767)
+Duplicate fields: {'rs_id': 'rs61750900', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168507)
+ - Variantagmp object (168508)
+ - Variantagmp object (180276)
+Duplicate fields: {'rs_id': 'CYP3A5*1A', 'variant_type': 'Star allele', 'count': 5}
+ - Variantagmp object (167960)
+ - Variantagmp object (168360)
+ - Variantagmp object (168559)
+ - Variantagmp object (168563)
+ - Variantagmp object (168564)
+Duplicate fields: {'rs_id': 'rs72547529', 'variant_type': 'SNV', 'count': 10}
+ - Variantagmp object (167222)
+ - Variantagmp object (167223)
+ - Variantagmp object (167224)
+ - Variantagmp object (167517)
+ - Variantagmp object (167518)
+ - Variantagmp object (167519)
+ - Variantagmp object (167634)
+ - Variantagmp object (167635)
+ - Variantagmp object (167636)
+ - Variantagmp object (168331)
+Duplicate fields: {'rs_id': 'rs137943601', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166975)
+ - Variantagmp object (166976)
+Duplicate fields: {'rs_id': 'rs28937903', 'variant_type': 'SNV', 'count': 7}
+ - Variantagmp object (167173)
+ - Variantagmp object (167174)
+ - Variantagmp object (167175)
+ - Variantagmp object (167405)
+ - Variantagmp object (167406)
+ - Variantagmp object (168003)
+ - Variantagmp object (168004)
+Duplicate fields: {'rs_id': 'rs121908482', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (166935)
+ - Variantagmp object (166936)
+ - Variantagmp object (166937)
+ - Variantagmp object (166938)
+Duplicate fields: {'rs_id': 'rs104894099', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167137)
+ - Variantagmp object (167138)
+ - Variantagmp object (167139)
+ - Variantagmp object (167140)
+Duplicate fields: {'rs_id': 'rs201573863', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166977)
+ - Variantagmp object (166978)
+Duplicate fields: {'rs_id': 'rs62646861', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167826)
+ - Variantagmp object (168038)
+Duplicate fields: {'rs_id': 'rs72552285', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167394)
+ - Variantagmp object (167760)
+Duplicate fields: {'rs_id': 'CYP2D6*6', 'variant_type': 'Star allele', 'count': 2}
+ - Variantagmp object (167079)
+ - Variantagmp object (167349)
+Duplicate fields: {'rs_id': 'CYP2D6*29', 'variant_type': 'Star allele', 'count': 3}
+ - Variantagmp object (167044)
+ - Variantagmp object (167045)
+ - Variantagmp object (167074)
+Duplicate fields: {'rs_id': 'rs871606', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167916)
+ - Variantagmp object (167917)
+Duplicate fields: {'rs_id': 'rs5010528', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168482)
+ - Variantagmp object (168483)
+ - Variantagmp object (168484)
+Duplicate fields: {'rs_id': 'rs397509050', 'variant_type': 'SNV', 'count': 5}
+ - Variantagmp object (167829)
+ - Variantagmp object (167830)
+ - Variantagmp object (167831)
+ - Variantagmp object (167970)
+ - Variantagmp object (168282)
+Duplicate fields: {'rs_id': 'rs10011796', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168262)
+ - Variantagmp object (168263)
+Duplicate fields: {'rs_id': 'rs7555340', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168270)
+ - Variantagmp object (182806)
+Duplicate fields: {'rs_id': 'rs104894517', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167172)
+ - Variantagmp object (167192)
+ - Variantagmp object (167193)
+Duplicate fields: {'rs_id': 'rs387906914', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167782)
+ - Variantagmp object (167783)
+Duplicate fields: {'rs_id': 'CYP3A4*1B', 'variant_type': 'Star allele', 'count': 2}
+ - Variantagmp object (168359)
+ - Variantagmp object (168592)
+Duplicate fields: {'rs_id': 'rs76992529', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168487)
+ - Variantagmp object (168488)
+ - Variantagmp object (168489)
+Duplicate fields: {'rs_id': 'rs754532049', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167504)
+ - Variantagmp object (167565)
+ - Variantagmp object (167613)
+Duplicate fields: {'rs_id': 'rs33915217', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166734)
+ - Variantagmp object (166766)
+Duplicate fields: {'rs_id': 'rs121913684', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166893)
+ - Variantagmp object (166894)
+Duplicate fields: {'rs_id': 'CYP2D6*1', 'variant_type': 'Star allele', 'count': 10}
+ - Variantagmp object (167038)
+ - Variantagmp object (167039)
+ - Variantagmp object (167040)
+ - Variantagmp object (167071)
+ - Variantagmp object (167072)
+ - Variantagmp object (167340)
+ - Variantagmp object (167341)
+ - Variantagmp object (167342)
+ - Variantagmp object (167343)
+ - Variantagmp object (167344)
+Duplicate fields: {'rs_id': 'rs483352896', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167656)
+ - Variantagmp object (167657)
+Duplicate fields: {'rs_id': 'rs79389353', 'variant_type': 'SNV', 'count': 5}
+ - Variantagmp object (166943)
+ - Variantagmp object (166944)
+ - Variantagmp object (166945)
+ - Variantagmp object (166946)
+ - Variantagmp object (183902)
+Duplicate fields: {'rs_id': 'rs120074118', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166807)
+ - Variantagmp object (166808)
+Duplicate fields: {'rs_id': 'rs137852999', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167024)
+ - Variantagmp object (167025)
+Duplicate fields: {'rs_id': 'rs33930165', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167977)
+ - Variantagmp object (176997)
+Duplicate fields: {'rs_id': 'rs1801058', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167441)
+ - Variantagmp object (167442)
+Duplicate fields: {'rs_id': 'rs747724352', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168353)
+ - Variantagmp object (168354)
+ - Variantagmp object (168355)
+Duplicate fields: {'rs_id': 'rs9332131', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167247)
+ - Variantagmp object (167578)
+ - Variantagmp object (168538)
+Duplicate fields: {'rs_id': 'rs4646437', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168212)
+ - Variantagmp object (168213)
+ - Variantagmp object (168578)
+Duplicate fields: {'rs_id': 'rs334', 'variant_type': 'SNV', 'count': 13}
+ - Variantagmp object (166722)
+ - Variantagmp object (166723)
+ - Variantagmp object (167362)
+ - Variantagmp object (167501)
+ - Variantagmp object (167629)
+ - Variantagmp object (167862)
+ - Variantagmp object (167885)
+ - Variantagmp object (168138)
+ - Variantagmp object (168139)
+ - Variantagmp object (168140)
+ - Variantagmp object (168141)
+ - Variantagmp object (168585)
+ - Variantagmp object (176988)
+Duplicate fields: {'rs_id': 'rs2856597', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (167454)
+ - Variantagmp object (167455)
+ - Variantagmp object (167456)
+ - Variantagmp object (167457)
+Duplicate fields: {'rs_id': 'rs689', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168217)
+ - Variantagmp object (168218)
+Duplicate fields: {'rs_id': 'rs7748513', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167904)
+ - Variantagmp object (183385)
+Duplicate fields: {'rs_id': 'rs121908320', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167178)
+ - Variantagmp object (168099)
+Duplicate fields: {'rs_id': 'rs11209026', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (168219)
+ - Variantagmp object (168235)
+ - Variantagmp object (168260)
+ - Variantagmp object (168261)
+Duplicate fields: {'rs_id': 'rs759736443', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167182)
+ - Variantagmp object (167183)
+Duplicate fields: {'rs_id': 'rs4646450', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168579)
+ - Variantagmp object (178601)
+Duplicate fields: {'rs_id': 'rs587781245', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168227)
+ - Variantagmp object (168228)
+Duplicate fields: {'rs_id': 'rs80357569', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167971)
+ - Variantagmp object (167972)
+Duplicate fields: {'rs_id': 'rs4986790', 'variant_type': 'SNV', 'count': 9}
+ - Variantagmp object (167217)
+ - Variantagmp object (167218)
+ - Variantagmp object (167276)
+ - Variantagmp object (167350)
+ - Variantagmp object (167351)
+ - Variantagmp object (168086)
+ - Variantagmp object (168087)
+ - Variantagmp object (168088)
+ - Variantagmp object (168089)
+Duplicate fields: {'rs_id': 'rs1048661', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167372)
+ - Variantagmp object (167373)
+ - Variantagmp object (167611)
+Duplicate fields: {'rs_id': 'rs72551351', 'variant_type': 'SNV', 'count': 17}
+ - Variantagmp object (167051)
+ - Variantagmp object (167052)
+ - Variantagmp object (167053)
+ - Variantagmp object (167054)
+ - Variantagmp object (167055)
+ - Variantagmp object (167056)
+ - Variantagmp object (167057)
+ - Variantagmp object (167058)
+ - Variantagmp object (167087)
+ - Variantagmp object (167088)
+ - Variantagmp object (167089)
+ - Variantagmp object (167090)
+ - Variantagmp object (167091)
+ - Variantagmp object (167092)
+ - Variantagmp object (167093)
+ - Variantagmp object (167094)
+ - Variantagmp object (167095)
+Duplicate fields: {'rs_id': 'rs80357727', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167358)
+ - Variantagmp object (168238)
+ - Variantagmp object (168239)
+Duplicate fields: {'rs_id': 'rs1800871', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168304)
+ - Variantagmp object (168305)
+ - Variantagmp object (168306)
+Duplicate fields: {'rs_id': 'rs121434508', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167451)
+ - Variantagmp object (167882)
+Duplicate fields: {'rs_id': 'rs35303484', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168221)
+ - Variantagmp object (168387)
+Duplicate fields: {'rs_id': 'CYP2B6*5', 'variant_type': 'Star allele', 'count': 2}
+ - Variantagmp object (167932)
+ - Variantagmp object (167933)
+Duplicate fields: {'rs_id': 'rs855791', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168108)
+ - Variantagmp object (168376)
+ - Variantagmp object (184414)
+Duplicate fields: {'rs_id': 'CYP2D6*4xN', 'variant_type': 'Star allele', 'count': 3}
+ - Variantagmp object (167078)
+ - Variantagmp object (167264)
+ - Variantagmp object (167330)
+Duplicate fields: {'rs_id': 'rs2472677', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167810)
+ - Variantagmp object (168413)
+Duplicate fields: {'rs_id': 'rs34637584', 'variant_type': 'SNV', 'count': 6}
+ - Variantagmp object (167248)
+ - Variantagmp object (167300)
+ - Variantagmp object (167485)
+ - Variantagmp object (167766)
+ - Variantagmp object (167801)
+ - Variantagmp object (168232)
+Duplicate fields: {'rs_id': 'rs2266782', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (168160)
+ - Variantagmp object (168505)
+ - Variantagmp object (168506)
+Duplicate fields: {'rs_id': 'rs5491', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (166903)
+ - Variantagmp object (168015)
+Duplicate fields: {'rs_id': 'rs4986791', 'variant_type': 'SNV', 'count': 4}
+ - Variantagmp object (168090)
+ - Variantagmp object (168091)
+ - Variantagmp object (168092)
+ - Variantagmp object (168093)
+Duplicate fields: {'rs_id': 'rs7900194', 'variant_type': 'SNV', 'count': 5}
+ - Variantagmp object (167246)
+ - Variantagmp object (167576)
+ - Variantagmp object (167577)
+ - Variantagmp object (167695)
+ - Variantagmp object (167696)
+Duplicate fields: {'rs_id': 'rs2476601', 'variant_type': 'SNV', 'count': 5}
+ - Variantagmp object (167482)
+ - Variantagmp object (167586)
+ - Variantagmp object (168214)
+ - Variantagmp object (168215)
+ - Variantagmp object (168216)
+Duplicate fields: {'rs_id': 'rs80359473', 'variant_type': 'SNV', 'count': 3}
+ - Variantagmp object (167293)
+ - Variantagmp object (167294)
+ - Variantagmp object (167295)
+Duplicate fields: {'rs_id': 'rs80338948', 'variant_type': 'SNV', 'count': 5}
+ - Variantagmp object (166897)
+ - Variantagmp object (167020)
+ - Variantagmp object (167021)
+ - Variantagmp object (167022)
+ - Variantagmp object (167232)
+Duplicate fields: {'rs_id': 'rs193922109', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167392)
+ - Variantagmp object (167756)
+Duplicate fields: {'rs_id': 'rs775910328', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167619)
+ - Variantagmp object (167620)
+Duplicate fields: {'rs_id': 'rs104894401', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (168072)
+ - Variantagmp object (168073)
+Duplicate fields: {'rs_id': 'rs55851803', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167790)
+ - Variantagmp object (167791)
+Duplicate fields: {'rs_id': 'rs2239785', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167641)
+ - Variantagmp object (175446)
+Duplicate fields: {'rs_id': 'rs121908116', 'variant_type': 'SNV', 'count': 2}
+ - Variantagmp object (167326)
+ - Variantagmp object (167327)
+Duplicate fields: {'rs_id': 'rs7756992', 'variant_type': 'SNV', 'count': 7}
+ - Variantagmp object (168174)
+ - Variantagmp object (168175)
+ - Variantagmp object (168176)
+ - Variantagmp object (168177)
+ - Variantagmp object (168178)
+ - Variantagmp object (168194)
+ - Variantagmp object (183402)
+Checking duplicates for VariantStudyagmp...
+No duplicates found in VariantStudyagmp.
+Starting check for phenotype names containing forward slashes...
+No phenotype names containing forward slashes found.
+Completed check for phenotype names containing forward slashes.
+Validating study types in Studyagmp model...
+All study types are valid in Studyagmp model.
+Checking for mixed populations in VariantStudyagmp model...
+No mixed population studies found in VariantStudyagmp model.
+Checking for invalid p-values in VariantStudyagmp model...
+Invalid p-values found in VariantStudyagmp (excluding "NR"):
+Publication ID: 12152006, Invalid p-value: 0.0001 - 0.3
+Publication ID: 12152006, Invalid p-value: 0.0001 - 0.3
+Publication ID: 12152006, Invalid p-value: 0.0001 - 0.3
+Publication ID: 12152006, Invalid p-value: 0.0001 - 0.3
+Publication ID: 12152006, Invalid p-value: 0.0001 - 0.3
+Publication ID: 12152006, Invalid p-value: 0.0001 - 0.3
+Publication ID: 12152006, Invalid p-value: 0.0001 - 0.3
+Publication ID: 12152006, Invalid p-value: 0.0001 - 0.3
+Publication ID: 19369910, Invalid p-value: 0.005 - 0.049
+Publication ID: 19369910, Invalid p-value: 0.007 - 0.080
+
+Summary Statistics:
+* Number of unique values (variant by rs_id): 17470
+* Number of unique values (gene by gene_id): 6270
+* Number of unique values (drug by drug_bank_id): 48
+* Number of unique values (phenotype by name): 1579
+* Number of unique values (study by publication_id): 1194
+* Number of unique values (country): 83
+* Number of unique values (region): 27
+* Number of unique values (mixed population): 2
+* Number of unique values (study type): 6
+  Study types: Candidate Gene, Case Report, Clinical Trial, GWAS, Other, WES/WGS
+
+Quality control checks completed.

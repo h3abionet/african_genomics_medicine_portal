@@ -51,7 +51,15 @@
           <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}">{{my_object.studyagmp.publication_id}}</a>
         </td>
         <td>{{my_object.variantagmp.variant_type }}</td>
-        <td>{{my_object.variantagmp.source_db }}<br>{{my_object.variantagmp.id_in_source_db}}</td>
+        <td>
+            {% if my_object.variantagmp.source_db == "GWAS Catalog" %}
+            <a href="https://www.ebi.ac.uk/gwas/studies/{{my_object.variantagmp.id_in_source_db}}" target="_blank">{{my_object.variantagmp.source_db }}</a>
+          {% elif my_object.variantagmp.source_db == "PharmGKB" %}
+            <a href="https://www.pharmgkb.org/variant/{{my_object.variantagmp.id_in_source_db}}" target="_blank">{{my_object.variantagmp.source_db }}</a>
+          {% else %}
+            {{my_object.variantagmp.source_db }}
+          {% endif %}
+        </td>
         <!-- <td>{{my_object.studyagmp.study_type}}</td> -->
         <td>{{my_object.mixed_population }}</td>
       </tr>
