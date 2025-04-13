@@ -268,7 +268,9 @@ class VariantDrugAssociationDetailView(DetailView):
             if variant:
                 return variant
             else:
-                raise Http404("No variant associated with this drug")
+                # Still return something even if no variant is found
+                # This allows the view to continue and show drug info
+                return Variantagmp(drugagmp=drug)
         else:
             # For non-DB IDs - Always get the first matching variant when multiple exist
             try:
@@ -289,6 +291,20 @@ class VariantDrugAssociationDetailView(DetailView):
         if rs_id and rs_id.startswith("DB"):
             drug = get_object_or_404(Drugagmp, drug_bank_id=rs_id)
             context['data'] = drug
+            
+            # Get all variant studies related to this drug
+            variant_studies = VariantStudyagmp.objects.filter(
+                variantagmp__drugagmp=drug
+            ).select_related(
+                'variantagmp',
+                'studyagmp',
+                'variantagmp__drugagmp',
+                'variantagmp__geneagmp'
+            )
+            
+            context['object_list'] = variant_studies
+            
+            # If we need an rs_id for other parts of the template, get it from the first variant
             variant = Variantagmp.objects.filter(drugagmp=drug).first()
             if variant:
                 rs_id = variant.rs_id
@@ -299,6 +315,16 @@ class VariantDrugAssociationDetailView(DetailView):
             variant = self.object
             if variant and hasattr(variant, 'drugagmp') and variant.drugagmp:
                 context['data'] = variant.drugagmp
+                
+                # Get all variant studies for this variant
+                context['object_list'] = VariantStudyagmp.objects.filter(
+                    variantagmp__rs_id=variant.rs_id
+                ).select_related(
+                    'variantagmp',
+                    'studyagmp',
+                    'variantagmp__drugagmp',
+                    'variantagmp__geneagmp'
+                )
         
         # Get the variant object for display in the template
         variant = self.object
@@ -314,37 +340,6 @@ class VariantDrugAssociationDetailView(DetailView):
             context['chromosome_display'] = {
                 'geneagmp__chromosome': variant.geneagmp.chromosome
             }
-        
-        # Get all variant studies for this variant excluding DisgeneNET and GWAS Catalog
-        if rs_id:
-            context['object_list'] = VariantStudyagmp.objects.filter(
-                variantagmp__rs_id__regex=r"(?i)(^|[^a-zA-Z0-9]){0}($|[^a-zA-Z0-9])".format(str(rs_id))
-            ).exclude(
-                variantagmp__source_db="DisGeNET"
-            ).exclude(
-                variantagmp__source_db="GWAS Catalog"
-            ).select_related(
-                'variantagmp',
-                'studyagmp',
-                'variantagmp__drugagmp',
-                'variantagmp__geneagmp'
-            )
-        elif 'data' in context:
-            # If no rs_id but we have a drug, get all studies for this drug
-            drug = context['data']
-            context['object_list'] = VariantStudyagmp.objects.filter(
-                variantagmp__drugagmp=drug,
-                variantagmp__rs_id__regex=r"(?i)(^|[^a-zA-Z0-9])rs[0-9]+($|[^a-zA-Z0-9])"  # Regex to ensure valid rs IDs
-            ).exclude(
-                variantagmp__source_db="DisGeNET"
-            ).exclude(
-                variantagmp__source_db="GWAS Catalog"
-            ).select_related(
-                'variantagmp',
-                'studyagmp',
-                'variantagmp__drugagmp',
-                'variantagmp__geneagmp'
-            )
         
         return context
 
