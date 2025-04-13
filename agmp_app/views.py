@@ -256,9 +256,10 @@ class VariantDrugAssociationDetailView(DetailView):
     model = Variantagmp
     template_name = 'VariantDrugAssociation.html'
     pk_url_kwarg = 'rs_id'
-
+    
     def get_object(self):
         rs_id = self.kwargs.get(self.pk_url_kwarg)
+        
         # If the ID starts with "DB", look up by drug ID instead
         if rs_id and rs_id.startswith("DB"):
             # Find a variant associated with this drug
@@ -269,9 +270,17 @@ class VariantDrugAssociationDetailView(DetailView):
             else:
                 raise Http404("No variant associated with this drug")
         else:
-            # Original lookup by rs_id
-            return get_object_or_404(Variantagmp, rs_id=rs_id)
-
+            # For non-DB IDs - Always get the first matching variant when multiple exist
+            try:
+                # First try with a direct filter and first()
+                variants = Variantagmp.objects.filter(rs_id=rs_id)
+                if variants.exists():
+                    return variants.first()  # Return the first match
+                else:
+                    raise Http404(f"No variant found with rs_id: {rs_id}")
+            except Variantagmp.DoesNotExist:
+                raise Http404(f"No variant found with rs_id: {rs_id}")
+    
     def get_context_data(self, **kwargs):
         context = super(VariantDrugAssociationDetailView, self).get_context_data(**kwargs)
         rs_id = self.kwargs.get(self.pk_url_kwarg)
@@ -288,7 +297,7 @@ class VariantDrugAssociationDetailView(DetailView):
         else:
             # If it's a variant ID, get associated drug info
             variant = self.object
-            if variant and hasattr(variant, 'drugagmp'):
+            if variant and hasattr(variant, 'drugagmp') and variant.drugagmp:
                 context['data'] = variant.drugagmp
         
         # Get the variant object for display in the template
@@ -298,7 +307,7 @@ class VariantDrugAssociationDetailView(DetailView):
         context['rs_id_display'] = variant
         
         # Get gene information for this variant
-        if variant and variant.geneagmp:
+        if variant and hasattr(variant, 'geneagmp') and variant.geneagmp:
             context['gene_id_display'] = {
                 'geneagmp__gene_id': variant.geneagmp.gene_id
             }
@@ -323,7 +332,7 @@ class VariantDrugAssociationDetailView(DetailView):
         elif 'data' in context:
             # If no rs_id but we have a drug, get all studies for this drug
             drug = context['data']
-            context['object_list'] =  VariantStudyagmp.objects.filter(
+            context['object_list'] = VariantStudyagmp.objects.filter(
                 variantagmp__drugagmp=drug,
                 variantagmp__rs_id__regex=r"(?i)(^|[^a-zA-Z0-9])rs[0-9]+($|[^a-zA-Z0-9])"  # Regex to ensure valid rs IDs
             ).exclude(
