@@ -55,7 +55,7 @@
             {% if my_object.variantagmp.source_db == "GWAS Catalog" %}
             <a href="https://www.ebi.ac.uk/gwas/studies/{{my_object.variantagmp.id_in_source_db}}" target="_blank">{{my_object.variantagmp.source_db }}</a>
           {% elif my_object.variantagmp.source_db == "PharmGKB" %}
-            <a href="https://www.pharmgkb.org/variant/{{my_object.variantagmp.id_in_source_db}}" target="_blank">{{my_object.variantagmp.source_db }}</a>
+            <a href="https://www.pharmgkb.org/variantAnnotation/{{my_object.variantagmp.id_in_source_db}}" target="_blank">{{my_object.variantagmp.source_db }}</a>
           {% else %}
             {{my_object.variantagmp.source_db }}
           {% endif %}
