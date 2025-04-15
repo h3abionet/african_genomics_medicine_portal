@@ -121,7 +121,7 @@
 
 <script>
 $(document).ready(function() {
-    function initializeTable(tableId, columnSelectId) {
+    function initializeTable(tableId) {
         var table = $(tableId).DataTable({
             dom: 'lBfrtip',
             buttons: [
@@ -157,35 +157,18 @@ $(document).ready(function() {
                 },
                 'colvis'
             ],
-            columnDefs: [{
-                targets: '_all',
-                visible: true
-            }],
-            initComplete: function() {
-                // Hide study_type and ethnicity columns by default (last 2 columns)
-                var api = this.api();
-                api.columns([11, 12]).visible(false); // For example01
-                api.columns([10, 11]).visible(false); // For example02 (different column count)
-            }
-        });
-
-        // Create checkboxes for column selection
-        table.columns().every(function(index) {
-            var column = this;
-            var checked = column.visible() ? 'checked' : '';
-            var checkbox = $('<label><input type="checkbox" ' + checked + '>' + $(column.header()).text() + '</label>');
-            
-            checkbox.find('input').on('click', function() {
-                var isChecked = this.checked;
-                column.visible(isChecked);
-            });
-
-            $(columnSelectId).append(checkbox);
+            columnDefs: [
+                // Set Study Type and Ethnicity columns to be hidden by default
+                { 
+                    targets: tableId === '#example01' ? [11, 12] : [10, 11], 
+                    visible: false 
+                }
+            ]
         });
     }
 
-    initializeTable('#example01', '#columnSelect1');
-    initializeTable('#example02', '#columnSelect2');
+    initializeTable('#example01');
+    initializeTable('#example02');
 });
 </script>
 
