@@ -53,7 +53,7 @@ SECRET_KEY = "config.SECRET_KEY"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # as a failsafe if you don't have this flag in config switch on production
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     '85.159.209.149','137.158.204.58',
