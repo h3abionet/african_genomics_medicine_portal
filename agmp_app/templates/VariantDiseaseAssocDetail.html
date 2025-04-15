@@ -1,15 +1,10 @@
- {% extends 'mainLayout.html' %} 
- {% load static %}
- <title>Data Table Example</title>
-
+{% extends 'mainLayout.html' %} 
+{% load static %}
 
 {% block title %} Variant Phenotype Associations {% endblock %}
 
-
 {% block banner %}
-
 {% include 'partials/banner_results.html' %}
-
 {% endblock %}
 
 {% block content %}
@@ -25,8 +20,7 @@
 
 <p><h3>Variant-Phenotype Associations</h3></p>
 
-
-  <div class="table-responsive-sm">
+<div class="table-responsive-sm">
     <table id="example" class="table table-striped table-bordered">
       <thead>
           <tr>
@@ -40,7 +34,8 @@
               <th>Variant Type</th>
               <th>Source DB</th>
               <th>Mixed Population</th>
-              <!-- <th>Study Type</th> -->
+              <th>Study Type</th>
+              <th>Ethnicity</th>
           </tr>
       </thead>
       <tbody>
@@ -49,13 +44,12 @@
               <td>{{my_object.variantagmp.rs_id}}</td>
               <td><a href="/PhamacogeneDrugAssoc/{{my_object.variantagmp.geneagmp.gene_id }}"> {{my_object.variantagmp.geneagmp.gene_id }}</a>
               <td>{{my_object.variantagmp.phenotypeagmp.name}}
-                <td>{{my_object.p_value}}</td>
-                <td>{{my_object.geographical_regions}}</td>
-                <td>{{my_object.country_participant}}</td>
-              <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}">{{my_object.studyagmp.publication_id}}</a>
-            </td>
-            <td>{{my_object.variantagmp.variant_type }}</td>
-            <td>
+              <td>{{my_object.p_value}}</td>
+              <td>{{my_object.geographical_regions}}</td>
+              <td>{{my_object.country_participant}}</td>
+              <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}">{{my_object.studyagmp.publication_id}}</a></td>
+              <td>{{my_object.variantagmp.variant_type }}</td>
+              <td>
                 {% if my_object.variantagmp.source_db == "GWAS Catalog" %}
                 <a href="https://www.ebi.ac.uk/gwas/studies/{{my_object.variantagmp.id_in_source_db}}" target="_blank">{{my_object.variantagmp.source_db }}</a>
               {% elif my_object.variantagmp.source_db == "PharmGKB" %}
@@ -63,29 +57,17 @@
               {% else %}
                 {{my_object.variantagmp.source_db }}
               {% endif %}    
-            </td>
-            <!-- <td>{{my_object.studyagmp.study_type}}</td> -->
-            <td>{{my_object.mixed_population }}</td>
+              </td>
+              <td>{{my_object.mixed_population }}</td>
+              <td>{{my_object.studyagmp.study_type}}</td>
+              <td>{{my_object.ethnicity}}</td>
           </tr>
-
-
           {% empty %}
-      
-
           {% endfor %}  
-          <!-- ... more rows ... -->
       </tbody>
     </table>
-    
-    
- 
-    
-
 </div>
 
-
-
-<!-- Include required CSS and JS files -->
 <script>
 $(document).ready(function() {
  function initializeTable(tableId, columnSelectId) {
@@ -131,12 +113,12 @@ $(document).ready(function() {
             }
         ],
         initComplete: function(settings, json) {
-            // Hide the last 3 columns
+            // Hide the last 4 columns (study_type, ethnicity, and any others you want hidden by default)
             var api = this.api();
             var columnsCount = api.columns().nodes().length;
-            for (var i = 1; i <= 3; i++) {
-                api.column(columnsCount - i).visible(false);
-            }
+            api.column(columnsCount - 1).visible(false); // Ethnicity
+            api.column(columnsCount - 2).visible(false); // Study Type
+            api.column(columnsCount - 3).visible(false); // Mixed Population
         }
     });
 
@@ -154,12 +136,7 @@ $(document).ready(function() {
     });
  }
  initializeTable('#example', '#columnSelect1');
- // initializeTable('#example3', '#columnSelect2');
 });
-
 </script>
-
-
-
 
 {% endblock %}
