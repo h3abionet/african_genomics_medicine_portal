@@ -55,7 +55,7 @@
           </td>
           <td>{{my_object.mixed_population }}</td>
           <td>{{my_object.studyagmp.study_type}}</td>
-          <td>{{my_object.ethnicity}}</td>
+          <td>{% if my_object.ethnicity == "Nan" or my_object.ethnicity == "nan" or my_object.ethnicity == "NaN" %}NR{% else %}{{my_object.ethnicity}}{% endif %}</td>
       </tr>
       {% empty %}
       {% endfor %}  

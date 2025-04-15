@@ -45,7 +45,7 @@
           <td>{{my_object.geographical_regions}}</td>
           <td>{{my_object.country_participant}}</td>
           <td>{{my_object.studyagmp.study_type}}</td>
-          <td>{{my_object.ethnicity}}</td>
+          <td>{% if my_object.ethnicity == "Nan" or my_object.ethnicity == "nan" or my_object.ethnicity == "NaN" %}NR{% else %}{{my_object.ethnicity}}{% endif %}</td>
       </tr>
       {% empty %}
       {% endfor %}  
@@ -78,7 +78,7 @@
               <td>{{my_object.geographical_regions}}</td>
               <td>{{my_object.country_participant}}</td>
               <td>{{my_object.studyagmp.study_type}}</td>
-              <td>{{my_object.ethnicity}}</td>
+              <td>{% if my_object.ethnicity == "Nan" or my_object.ethnicity == "nan" or my_object.ethnicity == "NaN" %}NR{% else %}{{my_object.ethnicity}}{% endif %}</td>
           </tr>
           {% empty %}
           {% endfor %}  

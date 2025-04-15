@@ -39,7 +39,7 @@
  {% for my_object in object_list %}
       <tr>
           <td>{{my_object.variantagmp.rs_id }}</td>
-          <td><a href="/PhamacogeneDrugAssoc/{{my_object.variantagmp.geneagmp.gene_id }}"> {{my_object.variantagmp.geneagmp.gene_id }}</a></td>
+          <td><a href="/drug-phenotype-associations/{{my_object.variantagmp.geneagmp.gene_id }}"> {{my_object.variantagmp.geneagmp.gene_id }}</a></td>
           <td><a href="https://www.drugbank.ca/drugs/{{ my_object.variantagmp.drugagmp.drug_bank_id }}">{{my_object.variantagmp.drugagmp.drug_name}}</a></td>
           <td>{{my_object.p_value}}</td>
           <td>{{my_object.geographical_regions}}</td>
@@ -57,7 +57,7 @@
           </td>
           <td>{{my_object.mixed_population }}</td>
           <td>{{my_object.studyagmp.study_type}}</td>
-          <td>{{my_object.ethnicity}}</td>
+          <td>{% if my_object.ethnicity == "Nan" or my_object.ethnicity == "nan" or my_object.ethnicity == "NaN" %}NR{% else %}{{my_object.ethnicity}}{% endif %}</td>
       </tr>
       {% empty %}
       {% endfor %}  
