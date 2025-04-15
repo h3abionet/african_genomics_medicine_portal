@@ -45,20 +45,22 @@ Install the following packages (if you have not done so already):
 * `mkdir static_cdn # inside the project directory on the host machine`
 * `docker-compose build`
 * `docker-compose up -d`
+Run ingestion script in docker 
+* `docker-compose run --rm djangoapp sh -c "python manage.py load_data"`
+Quality control check (QC)
+* `docker-compose run --rm djangoapp sh -c "python manage.py quality_control"`
+
 ___ 
 Applying Migrations to the database if need be
 * `docker-compose run --rm djangoapp sh -c "python manage.py makemigrations"`
 * `docker-compose run --rm djangoapp sh -c "python manage.py migrate"`
 * `docker-compose run --rm djangoapp sh -c "python manage.py createsuperuser"`
-___ 
-Quality control check (QC)
-* `docker-compose run --rm djangoapp sh -c "python manage.py quality_control"`
-Run ingestion script in docker (QC)
-* `docker-compose run --rm djangoapp sh -c "python manage.py load_data"`
+
+
 
 ### Import script notes
-1. The import script exist in /scripts/load_data.py.
-2. To run the import script # python3 manage.py runscript load_data
+1. The import script exist in agmp_app/management/commands/load_data.py.
+2. To run the import script # python3 manage.py load_data
 3. The script imports
                 <br>1.<b>first_import_job_run.csv <b> file 
                <br> 2. the second script imports a <b>second_import_job_run.xlsx</b> file
