@@ -61,7 +61,7 @@ ALLOWED_HOSTS = [
     '85.159.209.149','137.158.204.60',
     'localhost',
     '127.0.0.1',
-    'https://agmp.afrigen-d.org/',
+    'https://agmp.afrigen-d.org/', 'https://agmp.h3abionet.org/', 'http://agmp.afrigen-d.org/', 'http://agmp.h3abionet.org/',
     'dockerhost02.cbio.uct.ac.za',
 ]
 
