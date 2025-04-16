@@ -1,3 +1,5 @@
+version: '3'
+
 services:
   postgres:
     image: postgres:13
@@ -70,5 +72,4 @@ networks:
 
 volumes:
   static:
-  data:
   postgres_data:

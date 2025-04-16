@@ -41,6 +41,7 @@ Install the following packages (if you have not done so already):
 ### Running the application in docker production
 
 * clone from Github 'git clone  https://github.com/h3abionet/african_genomics_medicine_portal.git'
+* `git checkout deployed_v2_1 #switch to the correct branch`
 * `vim .env  #add database credentials to the env file`
 * `mkdir static_cdn # inside the project directory on the host machine`
 * `docker-compose build`
