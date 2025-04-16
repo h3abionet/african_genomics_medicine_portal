@@ -58,10 +58,10 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    '85.159.209.149','137.158.204.58',
+    '85.159.209.149','137.158.204.60',
     'localhost',
     '127.0.0.1',
-    'agmp.h3abionet.org',
+    'https://agmp.afrigen-d.org/',
     'dockerhost02.cbio.uct.ac.za',
 ]
 
@@ -203,5 +203,5 @@ LEAFLET_CONFIG = {
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8080',
     'http://85.159.209.149:8080', 
-    'http://127.0.0.1:8080',    
+    'http://127.0.0.1:8080',  'https://agmp.afrigen-d.org/' ,
 ]
