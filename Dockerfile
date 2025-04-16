@@ -29,6 +29,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     g++ \
     python3-dev \
+    vim \
     python3-gdal \
     && rm -rf /var/lib/apt/lists/*
 
