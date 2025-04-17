@@ -324,7 +324,9 @@ class VariantDrugAssociationDetailView(DetailView):
                     'studyagmp',
                     'variantagmp__drugagmp',
                     'variantagmp__geneagmp'
-                )
+                ).exclude(
+    variantagmp__source_db__in=["DisGeNET", "GWAS Catalog"]
+)
         
         # Get the variant object for display in the template
         variant = self.object
