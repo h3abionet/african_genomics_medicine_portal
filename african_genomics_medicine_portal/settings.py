@@ -204,5 +204,6 @@ LEAFLET_CONFIG = {
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8080',
     'http://85.159.209.149:8080', 
-    'http://127.0.0.1:8080',  'https://agmp.afrigen-d.org/' ,
+    'http://127.0.0.1:8080',  'https://agmp.afrigen-d.org/' ,'http://agmp.afrigen-d.org/' ,'https://agmp.h3abionet.org',
+    'https://dockerhost02.cbio.uct.ac.za',
 ]

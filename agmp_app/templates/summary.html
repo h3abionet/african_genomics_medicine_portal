@@ -78,70 +78,173 @@ body {
     letter-spacing: 0.5px;
 }
 
-/* Elegant Filter Controls */
+/* Sexy Filter Controls with Enhanced Dropdowns */
 .filter-controls {
-    background: #f8f9fa;
-    padding: 20px 24px;
-    border-bottom: 1px solid #dee2e6;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 16px;
+    background: linear-gradient(to right, rgb(0, 189, 69), rgb(255, 205, 0), rgb(214, 0, 15));
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    position: relative;
+    overflow: visible;
+    z-index: 1;
 }
 
-.filter-controls h3 {
-    margin-bottom: 16px;
+.filter-controls::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    color: #1e3a8a;
+    height: 100%;
+    background: rgba(255,255,255,0.1);
+    z-index: -1;
+}
+
+.filter-controls h5 {
+    color: white !important;
     font-weight: 600;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .filter-group {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     position: relative;
-    min-width: 260px;
+    z-index: 2;
+    width: 100%;
 }
 
 .filter-controls label {
     font-weight: 500;
-    color: rgb(0, 83, 3);
-    margin-right: 12px;
-    font-size: 0.95rem;
-    letter-spacing: 0.3px;
+    color: white;
+    margin-right: 15px;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    min-width: 120px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    flex-shrink: 0;
 }
 
-/* Enhanced Select Elements - Much more elegant */
-.filter-controls select {
-    width: 240px;
-    padding: 12px 16px;
-    border: 2px solid #e5e7eb;
+/* Custom Select Dropdown Styles */
+.custom-select-container {
+    position: relative;
+    flex: 1;
+    min-width: 250px;
+    width: 100%;
+    max-width: 100%;
+    cursor: pointer;
+}
+
+.custom-select-trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    background-color: rgba(255,255,255,0.9);
     border-radius: 8px;
-    background-color: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     font-size: 15px;
-    color: #374151;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231e3a8a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 16px;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    color: #333;
 }
 
-.filter-controls select:hover {
-    border-color: #bfdbfe;
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+.custom-select-trigger:hover {
+    background-color: white;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
 }
 
-.filter-controls select:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+.dropdown-arrow {
+    margin-left: 10px;
+    transition: transform 0.3s ease;
+}
+
+.custom-select-container.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.custom-select-options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    margin-top: 5px;
+    padding: 5px 0;
+}
+
+.custom-select-option {
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.custom-select-option:hover {
+    background-color: #f8f9fa;
+    color: rgb(0, 83, 3);
+}
+
+.custom-select-option.selected {
+    background-color: #eef2ff;
+    color: rgb(0, 83, 3);
+}
+
+.custom-select-option .fa-check {
+    color: rgb(0, 83, 3);
+    font-size: 12px;
+}
+
+/* Scrollbar styling */
+.custom-select-options::-webkit-scrollbar {
+    width: 8px;
+}
+
+.custom-select-options::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 0 8px 8px 0;
+}
+
+.custom-select-options::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.custom-select-options::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Floating particles effect */
+.particle {
+    position: absolute;
+    background: rgba(255,255,255,0.6);
+    border-radius: 50%;
+    z-index: -1;
+    animation: float 15s infinite linear;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-1000px) rotate(720deg);
+        opacity: 0;
+    }
 }
 
 /* Map Content Styling */
@@ -162,6 +265,7 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    border-radius: 0 0 12px 12px;
 }
 
 .loading-spinner {
@@ -219,12 +323,12 @@ body {
 }
 
 .navigation .no_style li {
-    margin-bottom: 8px; /* Reduced from 12px for more compact spacing */
+    margin-bottom: 8px;
 }
 
 .navigation .tag-link {
     display: block;
-    padding: 7px 18px; /* Reduced the vertical padding from 14px to 7px (50% reduction) */
+    padding: 7px 18px;
     background: transparent;
     color: rgb(0, 83, 3);
     text-decoration: none;
@@ -243,9 +347,9 @@ body {
 
 .navigation .tag-link.active {
     background: white;
-    color: rgb(255, 193, 7) !important; /* Added !important to ensure this color is applied */
+    color: rgb(255, 193, 7) !important;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 3.5px 18px; /* Reduced padding height by 50% for active state */
+    padding: 3.5px 18px;
 }
 
 /* Enhanced Graph Tabs */
@@ -286,18 +390,42 @@ body {
 }
 
 /* Responsive adjustments */
+@media (max-width: 992px) {
+    .filter-controls select {
+        min-width: 200px;
+    }
+}
+
 @media (max-width: 768px) {
     .filter-controls {
+        padding: 20px 15px;
+    }
+    
+    .filter-group {
         flex-direction: column;
         align-items: stretch;
     }
     
-    .filter-group {
-        width: 100%;
+    .filter-controls label {
+        margin-bottom: 10px;
+        margin-right: 0;
+        min-width: auto;
     }
     
     .filter-controls select {
+        min-width: 100%;
         width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .filter-controls {
+        padding: 15px;
+    }
+    
+    .filter-controls select {
+        font-size: 14px;
+        padding: 12px 15px;
     }
 }
 </style>
@@ -575,6 +703,8 @@ body {
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<!-- Add Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 <div class="row left-side-links">
   <div class="col-md-3">
@@ -593,7 +723,7 @@ body {
   <div class="col-md-9 section1">
     <!-- Data Overview Section -->
     <div id="section1" class="section">
-      <h5 class="text-center">Data Overview</5>
+      <h5 class="text-center">Data Overview</h5>
       <table class="table table-hover">
         <thead>
           <tr>
@@ -601,23 +731,23 @@ body {
             <th class="text-center" scope="col">Total Number</th>
           </tr>
         </thead>
-        <tr>
+        <tr class="text-center">
           <td>GENES</td>
           <td>{{ gene_count | default:'0' }}</td>
         </tr>
-        <tr>
+        <tr class="text-center">
           <td>DRUGS</td>
           <td>{{ drug_count | default:'0' }}</td>
         </tr>
-        <tr>
+        <tr class="text-center">
           <td>PHENOTYPES </td>
           <td>{{ disease_count | default:'0' }}</td>
         </tr>
-        <tr>
+        <tr class="text-center">
           <td>VARIANTS</td>
           <td>{{ variant_count | default:'0' }}</td>
         </tr>
-        <tr>
+        <tr class="text-center">
           <td>UNIQUE STUDIES</td>
           <td>{{ publication_count | default:'0' }}</td>
         </tr>
@@ -669,13 +799,13 @@ body {
       </div>
     </div>
 
-    <!-- Distribution Map Section with Elegant Filters -->
+    <!-- Distribution Map Section with Enhanced Filters -->
     <div id="section3" class="section">
       <div class="map-container">
-        <div class="filter-controls">
-          <h5 class="text-center">Distribution Map</h5>
+        <div class="filter-controls" id="map1-filter-container">
+          <h5><i class="fas fa-filter"></i> Filter Studies</h5>
           <div class="filter-group">
-            <label for="map1-filter">Filter by Study Type:</label>
+            <label for="map1-filter"><i class="fas fa-vial"></i> Study Type:</label>
             <select id="map1-filter" class="form-control">
                 <option value="All">All Studies</option>
                 {% for type in study_types %}
@@ -687,6 +817,7 @@ body {
           </div>
         </div>
         
+        <h5 class="text-center">Distribution Map</h5>
         <div id="map1-container" class="map-content">
             <div class="loading-overlay">
                 <div class="loading-spinner"></div>
@@ -696,13 +827,13 @@ body {
       </div>
     </div>
 
-    <!-- Heat Map Section with Elegant Filters -->
+    <!-- Heat Map Section with Enhanced Filters -->
     <div id="section4" class="section">
       <div class="map-container">
-        <div class="filter-controls">
-          <h5 class="text-center">Heat Map</h5>
+        <div class="filter-controls" id="map2-filter-container">
+          <h5><i class="fas fa-filter"></i> Filter Studies</h5>
           <div class="filter-group">
-            <label for="map2-filter">Filter by Study Type:</label>
+            <label for="map2-filter"><i class="fas fa-vial"></i> Study Type:</label>
             <select id="map2-filter" class="form-control">
                 <option value="All">All Studies</option>
                 {% for type in study_types %}
@@ -714,6 +845,7 @@ body {
           </div>
         </div>
         
+        <h5 class="text-center">Heat Map</h5>
         <div id="map2-container" class="map-content">
             <div class="loading-overlay">
                 <div class="loading-spinner"></div>
@@ -728,6 +860,32 @@ body {
 <!-- JavaScript -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+// Create floating particles effect
+function createParticles(containerId) {
+    const container = document.getElementById(containerId);
+    const particleCount = 15;
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random size between 2px and 6px
+        const size = Math.random() * 4 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        // Random position
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        
+        // Random animation duration
+        particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        
+        container.appendChild(particle);
+    }
+}
+
 function showLoading(mapId) {
     $(`#${mapId} .loading-overlay`).css('display', 'flex');
 }
@@ -759,8 +917,85 @@ function updateMap(mapType, studyType) {
     });
 }
 
-// Add smooth scrolling to navigation links
-document.addEventListener('DOMContentLoaded', function() {
+// Enhanced Select Dropdowns with jQuery
+$(document).ready(function() {
+    // Function to enhance select dropdowns
+    function enhanceSelectDropdowns() {
+        $('.filter-controls select').each(function() {
+            const $select = $(this);
+            
+            // Create a custom container
+            const $customSelect = $('<div class="custom-select-container"></div>');
+            
+            // Create the visible part of the dropdown
+            const $customSelectTrigger = $('<div class="custom-select-trigger"></div>');
+            $customSelectTrigger.html(`
+                <span class="selected-value">${$select.find('option:selected').text()}</span>
+                <span class="dropdown-arrow"><i class="fas fa-chevron-down"></i></span>
+            `);
+            
+            // Create the dropdown options
+            const $customOptions = $('<ul class="custom-select-options"></ul>');
+            
+            // Add each option to the dropdown
+            $select.find('option').each(function() {
+                const $option = $(this);
+                const $customOption = $(`
+                    <li class="custom-select-option" data-value="${$option.val()}">
+                        ${$option.text()}
+                        ${$option.is(':selected') ? '<i class="fas fa-check"></i>' : ''}
+                    </li>
+                `);
+                
+                $customOptions.append($customOption);
+            });
+            
+            // Put it all together
+            $customSelect.append($customSelectTrigger).append($customOptions);
+            
+            // Insert the custom dropdown after the original select and hide the original
+            $select.after($customSelect).hide();
+            
+            // Handle click on trigger
+            $customSelectTrigger.on('click', function(e) {
+                e.stopPropagation();
+                $('.custom-select-options').not($customOptions).hide();
+                $customOptions.toggle();
+                $customSelect.toggleClass('open');
+            });
+            
+            // Handle option selection
+            $customOptions.find('li').on('click', function() {
+                const value = $(this).data('value');
+                const text = $(this).text().trim();
+                
+                // Update the original select
+                $select.val(value).trigger('change');
+                
+                // Update the display
+                $customSelectTrigger.find('.selected-value').text(text);
+                $customOptions.hide();
+                $customSelect.removeClass('open');
+                
+                // Update checkmarks
+                $customOptions.find('li').removeClass('selected');
+                $(this).addClass('selected');
+                $customOptions.find('.fa-check').remove();
+                $(this).append('<i class="fas fa-check"></i>');
+            });
+        });
+        
+        // Close dropdowns when clicking outside
+        $(document).on('click', function() {
+            $('.custom-select-options').hide();
+            $('.custom-select-container').removeClass('open');
+        });
+    }
+    
+    // Call the function to enhance dropdowns
+    enhanceSelectDropdowns();
+    
+    // Add smooth scrolling to navigation links
     const navLinks = document.querySelectorAll('.tag-link');
     
     navLinks.forEach(link => {
@@ -776,10 +1011,11 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
-});
-
-// Initialize maps when document is ready
-$(document).ready(function() {
+    
+    // Create particle effects
+    createParticles('map1-filter-container');
+    createParticles('map2-filter-container');
+    
     // Initial load of maps
     updateMap('marker', 'All');
     updateMap('heatmap', 'All');
