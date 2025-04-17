@@ -1,6 +1,6 @@
- {% extends 'mainLayout.html' %} 
+{% extends 'mainLayout.html' %} 
 
- {% load static %}
+{% load static %}
 
 {% block title %} Variant Drug Associations {% endblock %}
 
@@ -34,7 +34,8 @@
           <th>Variant Type</th>
           <th>Source DB</th>
           <th>Mixed population</th>
-          <!-- <th>Study Type</th> -->
+          <th>Study Type</th>
+          <th>Ethnicity</th>
       </tr>
   </thead>
   <tbody>
@@ -60,8 +61,9 @@
             {{my_object.variantagmp.source_db }}
           {% endif %}
         </td>
-        <!-- <td>{{my_object.studyagmp.study_type}}</td> -->
         <td>{{my_object.mixed_population }}</td>
+        <td>{{my_object.studyagmp.study_type}}</td>
+        <td>{{my_object.ethnicity}}</td>
       </tr>
 
       {% empty %}
@@ -79,10 +81,6 @@
 <!-- Include required CSS and JS files -->
 
 <script type="text/javascript">
-
-
-
-
 $(document).ready(function() {
  function initializeTable(tableId, columnSelectId) {
     var table = $(tableId).DataTable({
@@ -129,8 +127,8 @@ $(document).ready(function() {
     // Get the total number of columns
     var columnCount = table.columns().nodes().length;
 
-    // Hide last three columns by default
-    for (var i = 1; i <= 3; i++) {
+    // Hide last five columns by default (mixed population, study type, ethnicity)
+    for (var i = 1; i <= 5; i++) {
         table.column(columnCount - i).visible(false);
     }
 
@@ -153,10 +151,6 @@ $(document).ready(function() {
  initializeTable('#example', '#columnSelect1');
  // initializeTable('#example3', '#columnSelect2');
 });
- 
-
-
-
 </script>
 
 {% endblock %}
