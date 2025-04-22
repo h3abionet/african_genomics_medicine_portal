@@ -21,7 +21,7 @@ ENV DB_USER=${DB_USER}
 ENV DB_PASS=${DB_PASS}
 
 # Install PostgreSQL client, GDAL, and other dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y graphviz\
     postgresql-client \
     netcat-openbsd \
     gdal-bin \
