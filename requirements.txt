@@ -23,3 +23,4 @@ psycopg2-binary
 psycopg[binary]
 python-Levenshtein
 fuzzywuzzy==0.18.0 
+pydotplus
