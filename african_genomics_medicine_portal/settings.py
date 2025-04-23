@@ -66,7 +66,6 @@ ALLOWED_HOSTS = [
 ]
 
 ADMIN_URL = "madiba/"
-
 # Application definition
 
 AGNOCOMPLETE_DATA_ATTRIBUTE = 'autocomplete'
@@ -181,14 +180,6 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn')
 
-# if not DEBUG:
-#     STATIC_ROOT = "/var/www/static/"
-
-# print(BASE_DIR)
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'static')
-#     # "/home/devil/Documents/Tools/Database/staticfiles"
-# ]
 
 RESULTS_PER_PAGE = 50
 
@@ -200,13 +191,12 @@ LEAFLET_CONFIG = {
                })]
 }
 
+# Get CSRF_TRUSTED_ORIGINS from .env, split by comma, and filter out empty strings
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:8080',
-    'http://85.159.209.149:8080', 
-    'http://127.0.0.1:8080',  
-    'https://agmp.afrigen-d.org',  # Removed trailing slash
-    'http://agmp.afrigen-d.org',   # Removed trailing slash
-    'https://agmp.h3abionet.org',
-    'https://dockerhost02.cbio.uct.ac.za',
+    origin.strip() for origin in 
+    os.getenv(
+        'CSRF_TRUSTED_ORIGINS', 
+        'http://localhost:8080,http://127.0.0.1:8080'
+    ).split(',') 
+    if origin.strip()
 ]
-
