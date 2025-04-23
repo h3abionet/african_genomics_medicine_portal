@@ -56,15 +56,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 # as a failsafe if you don't have this flag in config switch on production
 DEBUG = False
-
-ALLOWED_HOSTS = [
-    '85.159.209.149','137.158.204.60',
-    'localhost',
-    '127.0.0.1',
-    'agmp.afrigen-d.org', 
-    'agmp.h3abionet.org',
-    'dockerhost02.cbio.uct.ac.za',
-]
+allowed_hosts_str = os.environ.get('ALLOWED_HOSTS', '')
 
 ADMIN_URL = "madiba/"
 
@@ -201,12 +193,6 @@ LEAFLET_CONFIG = {
                })]
 }
 
-CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:8080',
-    'http://85.159.209.149:8080', 
-    'http://127.0.0.1:8080',  
-    'https://agmp.afrigen-d.org',  # Removed trailing slash
-    'http://agmp.afrigen-d.org',   # Removed trailing slash
-    'https://agmp.h3abionet.org',
-    'https://dockerhost02.cbio.uct.ac.za',
-]
+
+
+csrf_trusted_origins_str = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
