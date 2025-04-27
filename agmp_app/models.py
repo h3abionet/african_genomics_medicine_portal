@@ -77,7 +77,10 @@ class Variantagmp(models.Model):
     related_name="drugs", 
     null=True, 
     blank=True
+    
 )
+    clin_phen_data = models.ManyToManyField('ClinPhenData', blank=True)
+    database_clinical_sig = models.ManyToManyField('DataBaseClinicalSig', blank=True)
     #drugagmp = models.ForeignKey(Drugagmp, on_delete=models.CASCADE, related_name="drugs", default="DRUG",null=True, blank=True)
     source_db = models.CharField(max_length=1500, null=True, blank=True)
     studyagmp = models.ForeignKey(Studyagmp, on_delete=models.CASCADE, related_name="studys",null=True, blank=True)
@@ -152,8 +155,37 @@ class VariantStudyagmp(models.Model):
     notes = models.TextField(max_length=500, null=True, blank=True)
     p_value = models.CharField(max_length=500, null=True, blank=True)
 
+    #####adding many to many relation to ClinPehnData#####
+    
+
 
     class Meta:
         verbose_name_plural = " Variant Studies"
 #====New Models=======#
 
+class ClinPhenData(models.Model):
+    phenotype_id = models.AutoField(primary_key=True)
+    disease_class = models.CharField(max_length=45)
+    hpo_class = models.CharField(max_length=45)
+    who_class = models.CharField(max_length=45)
+    curated_data = models.CharField(max_length=45)
+    comorbidities = models.CharField(max_length=45)
+    symptoms = models.CharField(max_length=45)
+    
+    class Meta:
+        verbose_name_plural = "Clinical Phenotype Data"
+
+    def __str__(self):
+        return f"{self.disease_class} - {self.hpo_class}"
+
+class DataBaseClinicalSig(models.Model):
+    id = models.AutoField(primary_key=True)
+    clin_sign = models.CharField(max_length=45)
+    database_link = models.CharField(max_length=45)
+    func_pred_toolname = models.CharField(max_length=45)
+    
+    class Meta:
+        verbose_name_plural = "Database Clinical Significances"
+
+    def __str__(self):
+        return f"{self.clin_sign} - {self.database_link}"

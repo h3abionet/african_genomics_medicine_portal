@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Variantagmp, Drugagmp, Geneagmp, VariantStudyagmp, Studyagmp, Phenotypeagmp
+from .models import Variantagmp, Drugagmp, Geneagmp, VariantStudyagmp, Studyagmp, Phenotypeagmp, ClinPhenData, DataBaseClinicalSig
 
 class VariantagmpAdmin(admin.ModelAdmin):
     list_display = ['id','rs_id','source_db','id_in_source_db','variant_type','geneagmp',]
@@ -33,6 +33,16 @@ class PhenotypeagmpAdmin(admin.ModelAdmin):
     list_display = ['id','name']
     search_fields =['name']
     list_per_page = 500
+###Gen2phen new models ####
+class ClinPhenDataAdmin(admin.ModelAdmin):
+    list_display = ['phenotype_id', 'disease_class', 'hpo_class', 'who_class', 'curated_data', 'comorbidities', 'symptoms']
+    search_fields = ['disease_class', 'hpo_class', 'who_class', 'curated_data', 'comorbidities', 'symptoms']
+    list_per_page = 500
+
+class DataBaseClinicalSigAdmin(admin.ModelAdmin):
+    list_display = ['id', 'clin_sign', 'database_link', 'func_pred_toolname']
+    search_fields = ['clin_sign', 'database_link', 'func_pred_toolname']
+    list_per_page = 500
 
 ###### site.register ######
 admin.site.register(Drugagmp, DrugagmpAdmin)
@@ -41,7 +51,9 @@ admin.site.register(Geneagmp, GeneagmpAdmin)
 admin.site.register(VariantStudyagmp, VariantStudyagmpAdmin)
 admin.site.register(Studyagmp, StudyagmpAdmin)
 admin.site.register(Phenotypeagmp, PhenotypeagmpAdmin)
-
+### new site register for gen2phen###
+admin.site.register(ClinPhenData, ClinPhenDataAdmin)
+admin.site.register(DataBaseClinicalSig, DataBaseClinicalSigAdmin)
 admin.site.site_header = 'AGMP admin'
 admin.site.site_title = 'AGMP admin'
 admin.site.index_title = 'AGMP admin home'
