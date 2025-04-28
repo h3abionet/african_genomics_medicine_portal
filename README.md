@@ -77,8 +77,8 @@ Applying Migrations to the database if need be
 
 ### Generating and ERD Diagram
 
-* Generates ERD for the specified agmp_app only: <br> `python3 manage.py graph_models agmp_app -g -o agmp_app_erd.png` 
-* Generates ERD for all apps in the project, including the authentication model:<br> `python3 manage.py graph_models -a -g -o project_erd.png` 
+* "Generates ERD for the specified agmp_app only: <br> ` docker-compose run --rm djangoapp sh -c "python manage.py graph_models agmp_app -g -o agmp_gen2phen_app_erd.png"`"
+* "Generates ERD for all apps in the project, including the authentication model:<br> `python3 manage.py graph_models -a -g -o project_erd.png`"
 
 ### Fix the issue with git large files
 * run the below within the terminal of your repository for a csv large file: <br> git lfs migrate import --include="*.csv"
