@@ -97,3 +97,4 @@ Learning Resources for Beginers
 2. Udemy & other online resources i.e if available
 - William Vincent - William Vincent. (2022). Retrieved 27 August 2022, from [https://wsvincent.com/](https://wsvincent.com/)
 - Docker and Kubernetes: The Complete Guide. (2022). Retrieved 27 August 2022, from [UDEMY](https://www.udemy.com/course/docker-and-kubernetes-the-complete-guide/?LSNPUBID=JVFxdTr9V80&ranEAID=JVFxdTr9V80&ranMID=39197&ranSiteID=JVFxdTr9V80-FPVFIipzqssQR0YfZDpoHA&utm_medium=udemyads&utm_source=aff-campaign)
+[![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8B%20%20%E2%97%8B%20%20%E2%97%8B%20%20%E2%97%8B-red)](https://fair-software.eu)
