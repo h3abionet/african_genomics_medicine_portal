@@ -21,7 +21,16 @@ ENV DB_USER=${DB_USER}
 ENV DB_PASS=${DB_PASS}
 
 # Install PostgreSQL client, GDAL, and other dependencies
-RUN apt-get update && apt-get install -y graphviz\
+# Added proper package management and fixed syntax issues
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    software-properties-common \
+    gnupg \
+    apt-transport-https \
+    ca-certificates \
+    && apt-get update && \
+    apt-get install -y --no-install-recommends \
+    graphviz \
     postgresql-client \
     netcat-openbsd \
     gdal-bin \
@@ -31,6 +40,7 @@ RUN apt-get update && apt-get install -y graphviz\
     python3-dev \
     vim \
     python3-gdal \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Find and explicitly verify GDAL library paths
@@ -50,20 +60,20 @@ RUN ldconfig && \
     chmod +x /etc/profile.d/gdal.sh && \
     . /etc/profile.d/gdal.sh
 
-# Create symbolic links to ensure libraries are found
-RUN mkdir -p /usr/lib/aarch64-linux-gnu/ && \
+# Create symbolic links to ensure libraries are found - using architecture-independent path
+RUN mkdir -p /usr/lib/ && \
     GDAL_PATH=$(ldconfig -p | grep libgdal | awk '{print $4}' | head -1) && \
     if [ -n "$GDAL_PATH" ]; then \
-        ln -sf $GDAL_PATH /usr/lib/aarch64-linux-gnu/libgdal.so; \
+        ln -sf $GDAL_PATH /usr/lib/libgdal.so; \
     fi && \
     GEOS_PATH=$(ldconfig -p | grep libgeos_c | awk '{print $4}' | head -1) && \
     if [ -n "$GEOS_PATH" ]; then \
-        ln -sf $GEOS_PATH /usr/lib/aarch64-linux-gnu/libgeos_c.so; \
+        ln -sf $GEOS_PATH /usr/lib/libgeos_c.so; \
     fi
 
-# Set GDAL environment variables
-ENV GDAL_LIBRARY_PATH=/usr/lib/aarch64-linux-gnu/libgdal.so
-ENV GEOS_LIBRARY_PATH=/usr/lib/aarch64-linux-gnu/libgeos_c.so
+# Set GDAL environment variables with architecture-independent paths
+ENV GDAL_LIBRARY_PATH=/usr/lib/libgdal.so
+ENV GEOS_LIBRARY_PATH=/usr/lib/libgeos_c.so
 
 # Install Python dependencies
 COPY requirements.txt .
@@ -77,8 +87,8 @@ RUN echo '#!/bin/bash\n\
 set -e\n\
 \n\
 until PGPASSWORD=$DB_PASS psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -c "\q"; do\n\
-  >&2 echo "PostgreSQL is unavailable - sleeping"\n\
-  sleep 1\n\
+>&2 echo "PostgreSQL is unavailable - sleeping"\n\
+sleep 1\n\
 done\n\
 \n\
 >&2 echo "PostgreSQL is up - executing command"\n\
@@ -89,8 +99,8 @@ RUN useradd -ms /bin/bash django_user
 
 # Create static directory with proper permissions
 RUN mkdir -p /agmp/static_cdn && chown -R django_user:django_user /agmp/static_cdn
-
 RUN chown -R django_user:django_user /agmp
+
 USER django_user
 
 # Wait for PostgreSQL to be available before running command
