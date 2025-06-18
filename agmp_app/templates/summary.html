@@ -6,8 +6,13 @@
 {% include 'partials/banner_summary.html' %}
 {% endblock %}
 
-{% block content %}
-{% block js%}
+{% block css %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
 <style>
 /* General Styling Improvements */
 body {
@@ -29,7 +34,7 @@ body {
     box-shadow: 0 8px 24px rgba(0,0,0,0.12);
 }
 
-.section h3 {
+.section h3, .section h5 {
     margin-bottom: 25px;
     color: #1e3a8a;
     font-weight: 600;
@@ -416,6 +421,14 @@ body {
         min-width: 100%;
         width: 100%;
     }
+    
+    .map-content {
+        height: 400px; /* Smaller height on mobile */
+    }
+    
+    canvas {
+        height: 250px !important; /* Smaller charts on mobile */
+    }
 }
 
 @media (max-width: 576px) {
@@ -427,294 +440,33 @@ body {
         font-size: 14px;
         padding: 12px 15px;
     }
+    
+    .section {
+        padding: 20px 15px;
+    }
+    
+    .map-content {
+        height: 350px; /* Even smaller height for very small devices */
+    }
 }
 </style>
 {% endblock %}
 
-{%block css%}
-{% block scripts %}
-<script>
-  ///graph1
-  $(document).ready(function () {
-    const ctx = document.getElementById('myChart01').getContext('2d');
-    const myChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: [{% for i in qs_drug %}'{{i.drug_name}}', {% endfor %}],
-        datasets: [{
-          label: 'No of Publications',
-          data: [{% for i in qs_drug %}'{{i.frequency}}', {% endfor %}],
-          backgroundColor: [
-            'rgba(0, 189, 69, 0.7)',
-            'rgba(77, 193, 52, 0.7)',
-            'rgba(153, 196, 36, 0.7)',
-            'rgba(204, 199, 19, 0.7)',
-            'rgba(255, 205, 0, 0.7)',
-            'rgba(245, 164, 0, 0.7)',
-            'rgba(235, 123, 0, 0.7)',
-            'rgba(228, 82, 0, 0.7)',
-            'rgba(221, 41, 0, 0.7)',
-            'rgba(214, 0, 15, 0.7)',
-          ],
-          borderColor: [
-            'rgb(0, 189, 69)',
-            'rgb(77, 193, 52)',
-            'rgb(153, 196, 36)',
-            'rgb(204, 199, 19)',
-            'rgb(255, 205, 0)',
-            'rgb(245, 164, 0)',
-            'rgb(235, 123, 0)',
-            'rgb(228, 82, 0)',
-            'rgb(221, 41, 0)',
-            'rgb(214, 0, 15)',
-          ],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-            grid: {
-              color: 'rgba(0, 0, 0, 0.05)'
-            }
-          },
-          x: {
-            grid: {
-              display: false
-            }
-          }
-        },
-        plugins: {
-          legend: {
-            labels: {
-              font: {
-                family: "'Poppins', 'Helvetica Neue', sans-serif",
-                size: 14
-              }
-            }
-          }
-        }
-      }
-    });
-  });
-
-  ///graph2
-  $(document).ready(function () {
-    const ctx = document.getElementById('myChart02').getContext('2d');
-    const myChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: [{% for i in qs_gene %}'{{i.gene_id | safe}}',{% endfor %}],
-        datasets: [{
-          label: 'No of Publications',
-          data: [{% for i in qs_gene %}'{{i.frequency | safe}}', {% endfor %}],
-          backgroundColor: [
-            'rgba(214, 0, 15, 0.7)',
-            'rgba(221, 41, 0, 0.7)',
-            'rgba(228, 82, 0, 0.7)',
-            'rgba(235, 123, 0, 0.7)',
-            'rgba(245, 164, 0, 0.7)',
-            'rgba(255, 205, 0, 0.7)',
-            'rgba(204, 199, 19, 0.7)',
-            'rgba(153, 196, 36, 0.7)',
-            'rgba(77, 193, 52, 0.7)',
-            'rgba(0, 189, 69, 0.7)',
-          ],
-          borderColor: [
-            'rgb(214, 0, 15)',
-            'rgb(221, 41, 0)',
-            'rgb(228, 82, 0)',
-            'rgb(235, 123, 0)',
-            'rgb(245, 164, 0)',
-            'rgb(255, 205, 0)',
-            'rgb(204, 199, 19)',
-            'rgb(153, 196, 36)',
-            'rgb(77, 193, 52)',
-            'rgb(0, 189, 69)',
-          ],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-            grid: {
-              color: 'rgba(0, 0, 0, 0.05)'
-            }
-          },
-          x: {
-            grid: {
-              display: false
-            }
-          }
-        },
-        plugins: {
-          legend: {
-            labels: {
-              font: {
-                family: "'Poppins', 'Helvetica Neue', sans-serif",
-                size: 14
-              }
-            }
-          }
-        }
-      }
-    });
-  });
-
-  ///graph3
-  $(document).ready(function () {
-    const ctx = document.getElementById('myChart03').getContext('2d');
-    const myChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: [{% for i in qs_variant %}'{{i.rs_id|safe}}',{% endfor %}],
-        datasets: [{
-          label: 'No of Publications',
-          data: [{% for i in qs_variant %}'{{i.frequency|safe}}', {% endfor %}],
-          backgroundColor: [
-            'rgba(0, 189, 69, 0.7)',
-            'rgba(102, 194, 49, 0.7)',
-            'rgba(153, 196, 36, 0.7)',
-            'rgba(204, 199, 19, 0.7)',
-            'rgba(255, 205, 0, 0.7)',
-            'rgba(245, 164, 0, 0.7)',
-            'rgba(235, 123, 0, 0.7)',
-            'rgba(228, 82, 0, 0.7)',
-            'rgba(221, 41, 0, 0.7)',
-            'rgba(214, 0, 15, 0.7)',
-          ],
-          borderColor: [
-            'rgb(0, 189, 69)',
-            'rgb(102, 194, 49)',
-            'rgb(153, 196, 36)',
-            'rgb(204, 199, 19)',
-            'rgb(255, 205, 0)',
-            'rgb(245, 164, 0)',
-            'rgb(235, 123, 0)',
-            'rgb(228, 82, 0)',
-            'rgb(221, 41, 0)',
-            'rgb(214, 0, 15)',
-          ],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-            grid: {
-              color: 'rgba(0, 0, 0, 0.05)'
-            }
-          },
-          x: {
-            grid: {
-              display: false
-            }
-          }
-        },
-        plugins: {
-          legend: {
-            labels: {
-              font: {
-                family: "'Poppins', 'Helvetica Neue', sans-serif",
-                size: 14
-              }
-            }
-          }
-        }
-      }
-    });
-  });
-
-  ///graph4
-  $(document).ready(function () {
-    const ctx = document.getElementById('myChart04').getContext('2d');
-    const myChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: [{% for i in qs_disease %}'{{i.name| safe}}',{% endfor %}],
-        datasets: [{
-          label: 'No of Publications',
-          data: [{% for i in qs_disease %}'{{i.frequency|safe}}', {% endfor %}],
-          backgroundColor: [
-            'rgba(214, 0, 15, 0.7)',
-            'rgba(221, 41, 0, 0.7)',
-            'rgba(228, 82, 0, 0.7)',
-            'rgba(235, 123, 0, 0.7)',
-            'rgba(245, 164, 0, 0.7)',
-            'rgba(255, 205, 0, 0.7)',
-            'rgba(204, 199, 19, 0.7)',
-            'rgba(153, 196, 36, 0.7)',
-            'rgba(102, 194, 49, 0.7)',
-            'rgba(0, 189, 69, 0.7)',
-          ],
-          borderColor: [
-            'rgb(214, 0, 15)',
-            'rgb(221, 41, 0)',
-            'rgb(228, 82, 0)',
-            'rgb(235, 123, 0)',
-            'rgb(245, 164, 0)',
-            'rgb(255, 205, 0)',
-            'rgb(204, 199, 19)',
-            'rgb(153, 196, 36)',
-            'rgb(102, 194, 49)',
-            'rgb(0, 189, 69)',
-          ],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-            grid: {
-              color: 'rgba(0, 0, 0, 0.05)'
-            }
-          },
-          x: {
-            grid: {
-              display: false
-            }
-          }
-        },
-        plugins: {
-          legend: {
-            labels: {
-              font: {
-                family: "'Poppins', 'Helvetica Neue', sans-serif",
-                size: 14
-              }
-            }
-          }
-        }
-      }
-    });
-  });
-</script>
-{% endblock %}
-{% endblock %}
-
-<!-- Google Fonts for improved typography -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+{% block content %}
+<!-- Scripts at the top for proper initialization -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-<!-- Add Font Awesome for icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
 
 <div class="row left-side-links">
   <div class="col-md-3">
-    <nav class="navigation" id="mainNav">
+    <nav class="navigation" id="mainNav" aria-label="Main Navigation">
       <ul>
         <div class="no_style">
-          <li><a class="tag-link" href="#section1">Data Overview</a></li>
-          <li><a class="tag-link" href="#section2">Graphs</a></li>
-          <li><a class="tag-link" href="#section3">Distribution Map</a></li>
-          <li><a class="tag-link" href="#section4">Heat Map</a></li>
+          <li><a class="tag-link" href="#section1" aria-label="Navigate to Data Overview">Data Overview</a></li>
+          <li><a class="tag-link" href="#section2" aria-label="Navigate to Graphs">Graphs</a></li>
+          <li><a class="tag-link" href="#section3" aria-label="Navigate to Distribution Map">Distribution Map</a></li>
+          <li><a class="tag-link" href="#section4" aria-label="Navigate to Heat Map">Heat Map</a></li>
         </div>
       </ul>
     </nav>
@@ -724,33 +476,35 @@ body {
     <!-- Data Overview Section -->
     <div id="section1" class="section">
       <h5 class="text-center">Data Overview</h5>
-      <table class="table table-hover">
+      <table class="table table-hover" aria-label="Data Overview Table">
         <thead>
           <tr>
             <th class="text-center" scope="col">Category</th>
             <th class="text-center" scope="col">Total Number</th>
           </tr>
         </thead>
-        <tr class="text-center">
-          <td>GENES</td>
-          <td>{{ gene_count | default:'0' }}</td>
-        </tr>
-        <tr class="text-center">
-          <td>DRUGS</td>
-          <td>{{ drug_count | default:'0' }}</td>
-        </tr>
-        <tr class="text-center">
-          <td>PHENOTYPES </td>
-          <td>{{ disease_count | default:'0' }}</td>
-        </tr>
-        <tr class="text-center">
-          <td>VARIANTS</td>
-          <td>{{ variant_count | default:'0' }}</td>
-        </tr>
-        <tr class="text-center">
-          <td>UNIQUE STUDIES</td>
-          <td>{{ publication_count | default:'0' }}</td>
-        </tr>
+        <tbody>
+          <tr class="text-center">
+            <td>GENES</td>
+            <td>{{ gene_count | default:'0' }}</td>
+          </tr>
+          <tr class="text-center">
+            <td>DRUGS</td>
+            <td>{{ drug_count | default:'0' }}</td>
+          </tr>
+          <tr class="text-center">
+            <td>PHENOTYPES </td>
+            <td>{{ disease_count | default:'0' }}</td>
+          </tr>
+          <tr class="text-center">
+            <td>VARIANTS</td>
+            <td>{{ variant_count | default:'0' }}</td>
+          </tr>
+          <tr class="text-center">
+            <td>UNIQUE STUDIES</td>
+            <td>{{ publication_count | default:'0' }}</td>
+          </tr>
+        </tbody>
       </table>
     </div>
 
@@ -758,55 +512,55 @@ body {
     <div id="section2" class="section">
       <h5 class="text-center">Graphs</h5>
       
-      <ul id="clothing-nav" class="nav nav-tabs graph-custom-class" role="tablist">
+      <ul id="clothing-nav" class="nav nav-tabs graph-custom-class" role="tablist" aria-label="Graph categories">
         <li class="nav-item">
           <a class="nav-link active" href="#drug-graph" id="home-tab" role="tab"
-            data-toggle="tab" aria-controls="home" aria-expanded="true">Top Ten Drugs</a>
+            data-toggle="tab" aria-controls="drug-graph" aria-selected="true">Top Ten Drugs</a>
         </li>
         
         <li class="nav-item">
-          <a class="nav-link" href="#gene-graph" role="tab" id="hats-tab"
-            data-toggle="tab" aria-controls="hats">Top Ten Genes</a>
+          <a class="nav-link" href="#gene-graph" role="tab" id="gene-tab"
+            data-toggle="tab" aria-controls="gene-graph" aria-selected="false">Top Ten Genes</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="#variant-graph" role="tab" id="hats-tab01"
-            data-toggle="tab" aria-controls="hats">Top Ten Variants</a>
+          <a class="nav-link" href="#variant-graph" role="tab" id="variant-tab"
+            data-toggle="tab" aria-controls="variant-graph" aria-selected="false">Top Ten Variants</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="#disease" role="tab" id="hats-tab02"
-            data-toggle="tab" aria-controls="hats">Top Ten Phenotypes</a>
+          <a class="nav-link" href="#disease" role="tab" id="disease-tab"
+            data-toggle="tab" aria-controls="disease" aria-selected="false">Top Ten Phenotypes</a>
         </li>
       </ul>
 
       <div id="clothing-nav-content" class="tab-content">
         <div role="tabpanel" class="tab-pane fade show active" id="drug-graph" aria-labelledby="home-tab">
-          <canvas id="myChart01" width="200" height="100"></canvas>
+          <canvas id="myChart01" width="200" height="100" aria-label="Top ten drugs chart"></canvas>
         </div>
         
-        <div role="tabpanel" class="tab-pane fade" id="gene-graph" aria-labelledby="hats-tab">
-          <canvas id="myChart02" width="200" height="100"></canvas>
+        <div role="tabpanel" class="tab-pane fade" id="gene-graph" aria-labelledby="gene-tab">
+          <canvas id="myChart02" width="200" height="100" aria-label="Top ten genes chart"></canvas>
         </div>
         
-        <div role="tabpanel" class="tab-pane fade" id="variant-graph" aria-labelledby="hats-tab01">
-          <canvas id="myChart03" width="200" height="100"></canvas>
+        <div role="tabpanel" class="tab-pane fade" id="variant-graph" aria-labelledby="variant-tab">
+          <canvas id="myChart03" width="200" height="100" aria-label="Top ten variants chart"></canvas>
         </div>
 
-        <div role="tabpanel" class="tab-pane fade" id="disease" aria-labelledby="hats-tab02">
-          <canvas id="myChart04" width="300" height="100"></canvas>
+        <div role="tabpanel" class="tab-pane fade" id="disease" aria-labelledby="disease-tab">
+          <canvas id="myChart04" width="300" height="100" aria-label="Top ten phenotypes chart"></canvas>
         </div>
       </div>
     </div>
 
     <!-- Distribution Map Section with Enhanced Filters -->
-    <div id="section3" class="section">
+    <div id="section3" class="section" data-map-type="marker">
       <div class="map-container">
         <div class="filter-controls" id="map1-filter-container">
-          <h5><i class="fas fa-filter"></i> Filter Studies</h5>
+          <h5><i class="fas fa-filter" aria-hidden="true"></i> Filter Studies</h5>
           <div class="filter-group">
-            <label for="map1-filter"><i class="fas fa-vial"></i> Study Type:</label>
-            <select id="map1-filter" class="form-control">
+            <label for="map1-filter"><i class="fas fa-vial" aria-hidden="true"></i> Study Type:</label>
+            <select id="map1-filter" class="form-control" aria-label="Filter distribution map by study type">
                 <option value="All">All Studies</option>
                 {% for type in study_types %}
                     {% if type != 'All' %}
@@ -819,7 +573,7 @@ body {
         
         <h5 class="text-center">Distribution Map</h5>
         <div id="map1-container" class="map-content">
-            <div class="loading-overlay">
+            <div class="loading-overlay" aria-label="Loading map data">
                 <div class="loading-spinner"></div>
             </div>
             <div class="map-display"></div>
@@ -828,13 +582,13 @@ body {
     </div>
 
     <!-- Heat Map Section with Enhanced Filters -->
-    <div id="section4" class="section">
+    <div id="section4" class="section" data-map-type="heatmap">
       <div class="map-container">
         <div class="filter-controls" id="map2-filter-container">
-          <h5><i class="fas fa-filter"></i> Filter Studies</h5>
+          <h5><i class="fas fa-filter" aria-hidden="true"></i> Filter Studies</h5>
           <div class="filter-group">
-            <label for="map2-filter"><i class="fas fa-vial"></i> Study Type:</label>
-            <select id="map2-filter" class="form-control">
+            <label for="map2-filter"><i class="fas fa-vial" aria-hidden="true"></i> Study Type:</label>
+            <select id="map2-filter" class="form-control" aria-label="Filter heat map by study type">
                 <option value="All">All Studies</option>
                 {% for type in study_types %}
                     {% if type != 'All' %}
@@ -847,7 +601,7 @@ body {
         
         <h5 class="text-center">Heat Map</h5>
         <div id="map2-container" class="map-content">
-            <div class="loading-overlay">
+            <div class="loading-overlay" aria-label="Loading map data">
                 <div class="loading-spinner"></div>
             </div>
             <div class="map-display"></div>
@@ -858,198 +612,523 @@ body {
 </div>
 
 <!-- JavaScript -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-// Create floating particles effect
-function createParticles(containerId) {
-    const container = document.getElementById(containerId);
-    const particleCount = 15;
-    
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.classList.add('particle');
-        
-        // Random size between 2px and 6px
-        const size = Math.random() * 4 + 2;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        
-        // Random position
-        particle.style.left = `${Math.random() * 100}%`;
-        particle.style.top = `${Math.random() * 100}%`;
-        
-        // Random animation duration
-        particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
-        particle.style.animationDelay = `${Math.random() * 5}s`;
-        
-        container.appendChild(particle);
+// Chart scripts
+$(document).ready(function () {
+  // Top Ten Drugs chart
+  const ctx1 = document.getElementById('myChart01').getContext('2d');
+  const myChart1 = new Chart(ctx1, {
+    type: 'bar',
+    data: {
+      labels: [{% for i in qs_drug %}'{{i.drug_name}}', {% endfor %}],
+      datasets: [{
+        label: 'No of Publications',
+        data: [{% for i in qs_drug %}'{{i.frequency}}', {% endfor %}],
+        backgroundColor: [
+          'rgba(0, 189, 69, 0.7)',
+          'rgba(77, 193, 52, 0.7)',
+          'rgba(153, 196, 36, 0.7)',
+          'rgba(204, 199, 19, 0.7)',
+          'rgba(255, 205, 0, 0.7)',
+          'rgba(245, 164, 0, 0.7)',
+          'rgba(235, 123, 0, 0.7)',
+          'rgba(228, 82, 0, 0.7)',
+          'rgba(221, 41, 0, 0.7)',
+          'rgba(214, 0, 15, 0.7)',
+        ],
+        borderColor: [
+          'rgb(0, 189, 69)',
+          'rgb(77, 193, 52)',
+          'rgb(153, 196, 36)',
+          'rgb(204, 199, 19)',
+          'rgb(255, 205, 0)',
+          'rgb(245, 164, 0)',
+          'rgb(235, 123, 0)',
+          'rgb(228, 82, 0)',
+          'rgb(221, 41, 0)',
+          'rgb(214, 0, 15)',
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          labels: {
+            font: {
+              family: "'Poppins', 'Helvetica Neue', sans-serif",
+              size: 14
+            }
+          }
+        }
+      }
     }
-}
+  });
 
-function showLoading(mapId) {
-    $(`#${mapId} .loading-overlay`).css('display', 'flex');
-}
+  // Top Ten Genes chart
+  const ctx2 = document.getElementById('myChart02').getContext('2d');
+  const myChart2 = new Chart(ctx2, {
+    type: 'bar',
+    data: {
+      labels: [{% for i in qs_gene %}'{{i.gene_id | safe}}',{% endfor %}],
+      datasets: [{
+        label: 'No of Publications',
+        data: [{% for i in qs_gene %}'{{i.frequency | safe}}', {% endfor %}],
+        backgroundColor: [
+          'rgba(214, 0, 15, 0.7)',
+          'rgba(221, 41, 0, 0.7)',
+          'rgba(228, 82, 0, 0.7)',
+          'rgba(235, 123, 0, 0.7)',
+          'rgba(245, 164, 0, 0.7)',
+          'rgba(255, 205, 0, 0.7)',
+          'rgba(204, 199, 19, 0.7)',
+          'rgba(153, 196, 36, 0.7)',
+          'rgba(77, 193, 52, 0.7)',
+          'rgba(0, 189, 69, 0.7)',
+        ],
+        borderColor: [
+          'rgb(214, 0, 15)',
+          'rgb(221, 41, 0)',
+          'rgb(228, 82, 0)',
+          'rgb(235, 123, 0)',
+          'rgb(245, 164, 0)',
+          'rgb(255, 205, 0)',
+          'rgb(204, 199, 19)',
+          'rgb(153, 196, 36)',
+          'rgb(77, 193, 52)',
+          'rgb(0, 189, 69)',
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          labels: {
+            font: {
+              family: "'Poppins', 'Helvetica Neue', sans-serif",
+              size: 14
+            }
+          }
+        }
+      }
+    }
+  });
 
-function hideLoading(mapId) {
-    $(`#${mapId} .loading-overlay`).css('display', 'none');
-}
+  // Top Ten Variants chart
+  const ctx3 = document.getElementById('myChart03').getContext('2d');
+  const myChart3 = new Chart(ctx3, {
+    type: 'bar',
+    data: {
+      labels: [{% for i in qs_variant %}'{{i.rs_id|safe}}',{% endfor %}],
+      datasets: [{
+        label: 'No of Publications',
+        data: [{% for i in qs_variant %}'{{i.frequency|safe}}', {% endfor %}],
+        backgroundColor: [
+          'rgba(0, 189, 69, 0.7)',
+          'rgba(102, 194, 49, 0.7)',
+          'rgba(153, 196, 36, 0.7)',
+          'rgba(204, 199, 19, 0.7)',
+          'rgba(255, 205, 0, 0.7)',
+          'rgba(245, 164, 0, 0.7)',
+          'rgba(235, 123, 0, 0.7)',
+          'rgba(228, 82, 0, 0.7)',
+          'rgba(221, 41, 0, 0.7)',
+          'rgba(214, 0, 15, 0.7)',
+        ],
+        borderColor: [
+          'rgb(0, 189, 69)',
+          'rgb(102, 194, 49)',
+          'rgb(153, 196, 36)',
+          'rgb(204, 199, 19)',
+          'rgb(255, 205, 0)',
+          'rgb(245, 164, 0)',
+          'rgb(235, 123, 0)',
+          'rgb(228, 82, 0)',
+          'rgb(221, 41, 0)',
+          'rgb(214, 0, 15)',
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          labels: {
+            font: {
+              family: "'Poppins', 'Helvetica Neue', sans-serif",
+              size: 14
+            }
+          }
+        }
+      }
+    }
+  });
 
-function updateMap(mapType, studyType) {
+  // Top Ten Phenotypes chart
+  const ctx4 = document.getElementById('myChart04').getContext('2d');
+  const myChart4 = new Chart(ctx4, {
+    type: 'bar',
+    data: {
+      labels: [{% for i in qs_disease %}'{{i.name| safe}}',{% endfor %}],
+      datasets: [{
+        label: 'No of Publications',
+        data: [{% for i in qs_disease %}'{{i.frequency|safe}}', {% endfor %}],
+        backgroundColor: [
+          'rgba(214, 0, 15, 0.7)',
+          'rgba(221, 41, 0, 0.7)',
+          'rgba(228, 82, 0, 0.7)',
+          'rgba(235, 123, 0, 0.7)',
+          'rgba(245, 164, 0, 0.7)',
+          'rgba(255, 205, 0, 0.7)',
+          'rgba(204, 199, 19, 0.7)',
+          'rgba(153, 196, 36, 0.7)',
+          'rgba(102, 194, 49, 0.7)',
+          'rgba(0, 189, 69, 0.7)',
+        ],
+        borderColor: [
+          'rgb(214, 0, 15)',
+          'rgb(221, 41, 0)',
+          'rgb(228, 82, 0)',
+          'rgb(235, 123, 0)',
+          'rgb(245, 164, 0)',
+          'rgb(255, 205, 0)',
+          'rgb(204, 199, 19)',
+          'rgb(153, 196, 36)',
+          'rgb(102, 194, 49)',
+          'rgb(0, 189, 69)',
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          labels: {
+            font: {
+              family: "'Poppins', 'Helvetica Neue', sans-serif",
+              size: 14
+            }
+          }
+        }
+      }
+    }
+  });
+});
+
+// Main functions for maps and UI
+$(document).ready(function() {
+  // Create floating particles (with limited number for better performance)
+  function createParticles(containerId, count = 10) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    for (let i = 0; i < count; i++) {
+      const particle = document.createElement('div');
+      particle.classList.add('particle');
+      
+      // Random size between 2px and 5px
+      const size = Math.random() * 3 + 2;
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      
+      // Random position
+      particle.style.left = `${Math.random() * 100}%`;
+      particle.style.top = `${Math.random() * 100}%`;
+      
+      // Random animation duration
+      particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+      particle.style.animationDelay = `${Math.random() * 5}s`;
+      
+      container.appendChild(particle);
+    }
+  }
+
+  // Loading animation handlers
+  function showLoading(containerId) {
+    $(`#${containerId} .loading-overlay`).css('display', 'flex');
+  }
+
+  function hideLoading(containerId) {
+    $(`#${containerId} .loading-overlay`).css('display', 'none');
+  }
+
+  // Function to update a map
+  function updateMap(mapType, studyType) {
     const containerId = mapType === 'marker' ? 'map1-container' : 'map2-container';
     showLoading(containerId);
     
     $.ajax({
-        url: `/get-map-data/${mapType}/`,
-        method: 'GET',
-        data: { study_type: studyType },
-        success: function(response) {
-            $(`#${containerId} .map-display`).html(response.map_html);
-        },
-        error: function(xhr, status, error) {
-            $(`#${containerId} .map-display`).html(
-                '<div class="alert alert-danger m-3">Error loading map. Please try again.</div>'
-            );
-            console.error('Error updating map:', error);
-        },
-        complete: function() {
-            hideLoading(containerId);
-        }
+      url: `/get-map-data/${mapType}/`,
+      method: 'GET',
+      data: { study_type: studyType },
+      success: function(response) {
+        $(`#${containerId} .map-display`).html(response.map_html);
+      },
+      error: function(xhr, status, error) {
+        $(`#${containerId} .map-display`).html(
+          '<div class="alert alert-danger m-3" role="alert">Error loading map. Please try again.</div>'
+        );
+        console.error('Error updating map:', error);
+      },
+      complete: function() {
+        hideLoading(containerId);
+      }
     });
-}
+  }
 
-// Enhanced Select Dropdowns with jQuery
-$(document).ready(function() {
-    // Function to enhance select dropdowns
-    function enhanceSelectDropdowns() {
-        $('.filter-controls select').each(function() {
-            const $select = $(this);
-            
-            // Create a custom container
-            const $customSelect = $('<div class="custom-select-container"></div>');
-            
-            // Create the visible part of the dropdown
-            const $customSelectTrigger = $('<div class="custom-select-trigger"></div>');
-            $customSelectTrigger.html(`
-                <span class="selected-value">${$select.find('option:selected').text()}</span>
-                <span class="dropdown-arrow"><i class="fas fa-chevron-down"></i></span>
-            `);
-            
-            // Create the dropdown options
-            const $customOptions = $('<ul class="custom-select-options"></ul>');
-            
-            // Add each option to the dropdown
-            $select.find('option').each(function() {
-                const $option = $(this);
-                const $customOption = $(`
-                    <li class="custom-select-option" data-value="${$option.val()}">
-                        ${$option.text()}
-                        ${$option.is(':selected') ? '<i class="fas fa-check"></i>' : ''}
-                    </li>
-                `);
-                
-                $customOptions.append($customOption);
-            });
-            
-            // Put it all together
-            $customSelect.append($customSelectTrigger).append($customOptions);
-            
-            // Insert the custom dropdown after the original select and hide the original
-            $select.after($customSelect).hide();
-            
-            // Handle click on trigger
-            $customSelectTrigger.on('click', function(e) {
-                e.stopPropagation();
-                $('.custom-select-options').not($customOptions).hide();
-                $customOptions.toggle();
-                $customSelect.toggleClass('open');
-            });
-            
-            // Handle option selection
-            $customOptions.find('li').on('click', function() {
-                const value = $(this).data('value');
-                const text = $(this).text().trim();
-                
-                // Update the original select
-                $select.val(value).trigger('change');
-                
-                // Update the display
-                $customSelectTrigger.find('.selected-value').text(text);
-                $customOptions.hide();
-                $customSelect.removeClass('open');
-                
-                // Update checkmarks
-                $customOptions.find('li').removeClass('selected');
-                $(this).addClass('selected');
-                $customOptions.find('.fa-check').remove();
-                $(this).append('<i class="fas fa-check"></i>');
-            });
-        });
+  // Enhanced Select Dropdowns
+  function enhanceSelectDropdowns() {
+    $('.filter-controls select').each(function() {
+      const $select = $(this);
+      const $customSelect = $('<div class="custom-select-container"></div>');
+      const $customSelectTrigger = $('<div class="custom-select-trigger" role="button" aria-haspopup="listbox" tabindex="0"></div>');
+      
+      $customSelectTrigger.html(`
+        <span class="selected-value">${$select.find('option:selected').text()}</span>
+        <span class="dropdown-arrow"><i class="fas fa-chevron-down" aria-hidden="true"></i></span>
+      `);
+      
+      const $customOptions = $('<ul class="custom-select-options" role="listbox"></ul>');
+      
+      $select.find('option').each(function(index) {
+        const $option = $(this);
+        const $customOption = $(`
+          <li class="custom-select-option" role="option" data-value="${$option.val()}" tabindex="-1" aria-selected="${$option.is(':selected')}">
+            ${$option.text()}
+            ${$option.is(':selected') ? '<i class="fas fa-check" aria-hidden="true"></i>' : ''}
+          </li>
+        `);
         
-        // Close dropdowns when clicking outside
-        $(document).on('click', function() {
-            $('.custom-select-options').hide();
-            $('.custom-select-container').removeClass('open');
-        });
-    }
-    
-    // Call the function to enhance dropdowns
-    enhanceSelectDropdowns();
-    
-    // Add smooth scrolling to navigation links
-    const navLinks = document.querySelectorAll('.tag-link');
-    
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-            
-            window.scrollTo({
-                top: targetElement.offsetTop - 80,
-                behavior: 'smooth'
-            });
-        });
-    });
-    
-    // Create particle effects
-    createParticles('map1-filter-container');
-    createParticles('map2-filter-container');
-    
-    // Initial load of maps
-    updateMap('marker', 'All');
-    updateMap('heatmap', 'All');
-    
-    // Event listeners for filters with animation
-    $('#map1-filter').change(function() {
-        showLoading('map1-container');
-        setTimeout(() => {
-            updateMap('marker', $(this).val());
-        }, 300); // Small delay for better UX
-    });
-    
-    $('#map2-filter').change(function() {
-        showLoading('map2-container');
-        setTimeout(() => {
-            updateMap('heatmap', $(this).val());
-        }, 300); // Small delay for better UX
-    });
-    
-    // Highlight active navigation based on scroll position
-    $(window).scroll(function() {
-        const scrollPosition = $(window).scrollTop();
+        $customOptions.append($customOption);
+      });
+      
+      $customSelect.append($customSelectTrigger).append($customOptions);
+      $select.after($customSelect).hide();
+      
+      // Handle click on trigger
+      $customSelectTrigger.on('click keypress', function(e) {
+        if (e.type === 'keypress' && e.which !== 13 && e.which !== 32) return;
+        e.preventDefault();
+        e.stopPropagation();
         
-        $('.section').each(function() {
-            const topDistance = $(this).offset().top - 100;
-            
-            if (scrollPosition >= topDistance) {
-                const id = $(this).attr('id');
-                $('.tag-link').removeClass('active');
-                $(`.tag-link[href="#${id}"]`).addClass('active');
-            }
-        });
+        $('.custom-select-options').not($customOptions).hide();
+        $('.custom-select-container').not($customSelect).removeClass('open');
+        
+        $customOptions.toggle();
+        $customSelect.toggleClass('open');
+        
+        if ($customSelect.hasClass('open')) {
+          $customOptions.find('[role="option"]').first().focus();
+        }
+      });
+      
+      // Keyboard navigation for options
+      $customOptions.on('keydown', '[role="option"]', function(e) {
+        const $this = $(this);
+        
+        if (e.which === 13 || e.which === 32) { // Enter or Space
+          e.preventDefault();
+          $this.click();
+        } else if (e.which === 38) { // Up arrow
+          e.preventDefault();
+          const $prev = $this.prev('[role="option"]');
+          if ($prev.length) $prev.focus();
+        } else if (e.which === 40) { // Down arrow
+          e.preventDefault();
+          const $next = $this.next('[role="option"]');
+          if ($next.length) $next.focus();
+        } else if (e.which === 27) { // Escape
+          e.preventDefault();
+          $customOptions.hide();
+          $customSelect.removeClass('open');
+          $customSelectTrigger.focus();
+        }
+      });
+      
+      // Handle option selection
+      $customOptions.find('[role="option"]').on('click keypress', function(e) {
+        if (e.type === 'keypress' && e.which !== 13 && e.which !== 32) return;
+        e.preventDefault();
+        
+        const $this = $(this);
+        const value = $this.data('value');
+        const text = $this.text().trim();
+        
+        // Update the original select
+        $select.val(value).trigger('change');
+        
+        // Update the display
+        $customSelectTrigger.find('.selected-value').text(text);
+        $customOptions.hide();
+        $customSelect.removeClass('open');
+        $customSelectTrigger.focus();
+        
+        // Update ARIA attributes and visual indicators
+        $customOptions.find('[role="option"]').attr('aria-selected', 'false').removeClass('selected');
+        $customOptions.find('.fa-check').remove();
+        $this.attr('aria-selected', 'true').addClass('selected');
+        $this.append('<i class="fas fa-check" aria-hidden="true"></i>');
+      });
     });
+    
+    // Close dropdowns when clicking outside
+    $(document).on('click', function(e) {
+      if (!$(e.target).closest('.custom-select-container').length) {
+        $('.custom-select-options').hide();
+        $('.custom-select-container').removeClass('open');
+      }
+    });
+  }
+  
+  // Initialize enhanced dropdowns
+  enhanceSelectDropdowns();
+  
+  // Add smooth scrolling to navigation links
+  $('.tag-link').on('click', function(e) {
+    e.preventDefault();
+    
+    const targetId = $(this).attr('href');
+    const offset = $(targetId).offset().top - 80;
+    
+    $('html, body').animate({
+      scrollTop: offset
+    }, 600, 'swing');
+  });
+  
+  // Create particle effects (with fewer particles for better performance)
+  createParticles('map1-filter-container', 8);
+  createParticles('map2-filter-container', 8);
+  
+  // Lazy load maps when they come into view
+  function lazyLoadMaps() {
+    $('.section[data-map-type]').each(function() {
+      const $section = $(this);
+      const mapType = $section.data('map-type');
+      
+      if (!$section.data('loaded') && isElementInViewport($section)) {
+        updateMap(mapType, 'All');
+        $section.data('loaded', true);
+      }
+    });
+  }
+  
+  function isElementInViewport($el) {
+    const rect = $el[0].getBoundingClientRect();
+    return (
+      rect.top <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.bottom >= 0
+    );
+  }
+  
+  // Initialize lazy loading
+  lazyLoadMaps();
+  $(window).on('scroll resize', lazyLoadMaps);
+  
+  // Event listeners for filters with animation
+  $('#map1-filter').change(function() {
+    showLoading('map1-container');
+    setTimeout(() => {
+      updateMap('marker', $(this).val());
+    }, 300);
+  });
+  
+  $('#map2-filter').change(function() {
+    showLoading('map2-container');
+    setTimeout(() => {
+      updateMap('heatmap', $(this).val());
+    }, 300);
+  });
+  
+  // Highlight active navigation based on scroll position
+  $(window).scroll(function() {
+    const scrollPosition = $(window).scrollTop();
+    
+    $('.section').each(function() {
+      const topDistance = $(this).offset().top - 100;
+      
+      if (scrollPosition >= topDistance) {
+        const id = $(this).attr('id');
+        $('.tag-link').removeClass('active');
+        $(`.tag-link[href="#${id}"]`).addClass('active');
+      }
+    });
+  });
+  
+  // Tab navigation functionality
+  $('.nav-link').click(function(e) {
+    e.preventDefault();
+    
+    const targetId = $(this).attr('href');
+    
+    // Update tab state
+    $('.nav-link').removeClass('active').attr('aria-selected', 'false');
+    $(this).addClass('active').attr('aria-selected', 'true');
+    
+    // Update content state
+    $('.tab-pane').removeClass('show active');
+    $(targetId).addClass('show active');
+  });
 });
 </script>
-
 {% endblock %}
