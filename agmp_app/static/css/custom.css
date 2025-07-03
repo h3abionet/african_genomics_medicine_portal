@@ -1,12 +1,92 @@
  /* this css file is for projects specific overides */
  /* changes here will overide h3abionet.css */
 
- /* white circle as background of top  left logo */
+/* data tables css */
 
+/* Change background color of DataTable pagination elements */
 
- body {
-  font-family: 'Montserrat', sans-serif;
+.pagination .current {
+  background:  rgb(0, 83, 3) !important;
 }
+/* data tables css */
+
+/* Make all links in the footer white */
+.footer-custom-row a {
+  color: #fff !important;
+  transition: color 0.3s ease;
+}
+
+/* Change link color on hover */
+.footer-custom-row a:hover {
+  color: rgb(255, 193, 7) !important;
+}
+
+/* Remove any inline styles for footer links */
+.footer-custom-row a[style] {
+  color: #fff !important;
+}
+
+
+
+
+/* footer css */
+
+ /* Make all navbar links white */
+.navbar-nav .nav-link,
+.navbar-brand {
+  color: white !important;
+  transition: color 0.3s ease;
+}
+
+/* Change link color on hover */
+.navbar-nav .nav-link:hover,
+.navbar-brand:hover {
+  color: rgb(255, 193, 7) !important;
+}
+
+/* Style for active/current page link */
+.navbar-nav .nav-item.active .nav-link,
+.navbar-nav .nav-link.active {
+  color: rgb(255, 193, 7) !important;
+}
+
+/* Override Bootstrap's default text-bigblue class */
+.text-bigblue {
+  color: white !important;
+}
+
+/* Make sure the Home link is also white */
+.navbar-brand i.fa-home {
+  color: white;
+}
+
+ /* css for buttons in data tables */
+ .button {
+  background-color: rgb(0, 83, 3) !important;
+  color: white !important;
+  border: 2px solid rgb(0, 83, 3) !important;
+  transition: all 0.3s ease !important;
+}
+
+.button:hover {
+  background-color: rgb(0, 83, 3) !important;
+  color: white !important;
+}
+
+a {
+  color: rgb(0, 83, 3) !important;
+}
+
+a:hover {
+  color:rgb(0, 83, 3) !important;
+}
+
+a:active {
+  color: rgb(0, 83, 3) !important;
+}
+
+
+ /* white circle as background of top  left logo */
  .dot {
    height: 30px;
    width: 30px;
@@ -34,7 +114,7 @@
  }
 
  .text-bigblue a:hover {
-   color: #064579;
+   color: rgb(255, 193, 7);
  }
 
 
@@ -647,8 +727,14 @@ transform: translateY(-50%); */
 
 
  .navigation a {
-   color: white;
+   color: white !important;
  }
+
+ .navigation a:hover {
+  color: rgb(255, 193, 7) !important;
+}
+
+
 
  ul .no_style {
    list-style-type: none;
@@ -746,7 +832,7 @@ width: 100% !important;
 
 /* Summary page css  6 Feb 2024 */
 .graph-custom-class .nav-link {
-  color: #0056b3 !important; /* Red font color for links */
+  color: rgb(0, 83, 3) !important; /* Red font color for links */
 }
 /* Summary page css  6 Feb 2024 */
 

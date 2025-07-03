@@ -16,18 +16,17 @@ urlpatterns = [
     path('drug-detail/<int:pk>/', DrugagmpDetailView.as_view(), name='drug-detail'),
     path('variant-drug-list/<int:pk>/',VariantStudyagmpListView.as_view(), name='variant-drug-list'),
      ##### New URLS for data tables ######
-    path('PhamacogeneDrugAssoc/<str:gene_id>/',
+#03 Drug associations and Phenotype Associations
+    path('drug-phenotype-associations/<str:gene_id>/',
          PhamacogeneDrugAssoc.as_view(),
-         name='PhamacogeneDrugAssoc'),
+         name='drug_phenotype_associations'),
+#01 Variant-Drug Associations
+   path('variant-drug/<str:rs_id>/', VariantDrugAssociationDetailView.as_view(), name='variant_drug'),
 
-    path('VarDrugAssoc/<str:rs_id>/',
-         VarDrugAssocDetailView.as_view(),
-         name='Var_Drug_Assoc'),
-
-    
-    path('VariantDiseaseAssoc/<str:rs_id>/',
+#02 Variant-Phenotype Associations
+    path('variant-phenotype/<str:rs_id>/',
          VariantDiseaseAssocDetailView.as_view(),
-         name='Variant_Disease_Assoc'),
+         name='variant_phenotype'),
 
 
     path('VvarDrugAssoc/<str:rs_id>/',
@@ -42,11 +41,11 @@ urlpatterns = [
          PharmacoDrugDetailView.as_view(),
          name='Pharmaco_Drug_Detail'),
 
-    path('VariantDrugAssociation/<str:drug_id>/',
-         VariantDrugAssociationDetailView.as_view(),
-         name='VariantDrugAssociation'),
+#     path('VariantDrugAssociation/<str:drug_id>/',
+#          VariantDrugAssociationDetailView.as_view(),
+#          name='VariantDrugAssociation'),
 
-     
+     #04
     path('DiseaseVariant/<str:phenotypeagmp__name>/',
          DiseaseVariantDetailView.as_view(),
          name='DiseaseVariant'),
@@ -55,7 +54,6 @@ urlpatterns = [
 
     # call search query with optional parameters 
     path('summary/', views.summary, name='summary'),
-    path('resources/', views.resources, name='resources'),
     path('outreach/', views.outreach, name='outreach'),
     path('contact/', views.contact, name='contact'),
     path('databases/', views.databases, name='databases'),

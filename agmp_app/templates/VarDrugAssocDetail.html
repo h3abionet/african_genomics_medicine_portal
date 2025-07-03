@@ -1,30 +1,19 @@
- {% extends 'mainLayout.html' %} 
- {% load static %}
-
-
+{% extends 'mainLayout.html' %} 
+{% load static %}
 
 {% block title %} Variant Drug Associations {% endblock %}
 
-
 {% block banner %}
-
 {% include 'partials/banner_results.html' %}
-
 {% endblock %}
 
 {% block content %}
 <!-- Initialize DataTables -->
-
-
 <h3>{{rs_id_display.rs_id}} </h3><hr>
 
 <p><b>Variant ID</b>: {{rs_id_display.rs_id}}</p>
-
-
- <p><b>Gene: </b> <a href="/PhamacogeneDrugAssoc/{{gene_id_display.geneagmp__gene_id}}" >{{gene_id_display.geneagmp__gene_id}}</a></p> 
-
- <p><b>Chromosome</b>: {{chromosome_display.geneagmp__chromosome}}</p> 
-
+<p><b>Gene: </b> <a href="/drug-phenotype-associations/{{gene_id_display.geneagmp__gene_id}}">{{gene_id_display.geneagmp__gene_id}}</a></p> 
+<p><b>Chromosome</b>: {{chromosome_display.geneagmp__chromosome}}</p> 
 
 <p><h3>Variant-Drug Associations</h3></p>
 
@@ -35,54 +24,49 @@
           <th>Variant</th>
           <th>Gene</th>
           <th>Drug</th>
-          <th>Significance</th>
+          <th>P-value</th>
           <th>Region</th>
           <th>Country</th>
           <th>Study</th>
           <th>Variant Type</th>
           <th>Source DB</th>
           <th>Mixed Population</th>
-          <!-- <th>Study Type</th> -->
+          <th>Study Type</th>
+          <th>Ethnicity</th>
       </tr>
   </thead>
   <tbody>
  {% for my_object in object_list %}
       <tr>
           <td>{{my_object.variantagmp.rs_id }}</td>
-          <td>
-            <a href="/PhamacogeneDrugAssoc/{{my_object.variantagmp.geneagmp.gene_id }}"> {{my_object.variantagmp.geneagmp.gene_id }}</a>
-            <td>
-              <a href="https://www.drugbank.ca/drugs/{{ my_object.variantagmp.drugagmp.drug_bank_id }}">{{my_object.variantagmp.drugagmp.drug_name}}
-          <td>{{my_object.p_value}}
-        </td>
-        <td>{{my_object.geographical_regions}}</td>
+          <td><a href="/drug-phenotype-associations/{{my_object.variantagmp.geneagmp.gene_id }}"> {{my_object.variantagmp.geneagmp.gene_id }}</a></td>
+          <td><a href="https://www.drugbank.ca/drugs/{{ my_object.variantagmp.drugagmp.drug_bank_id }}">{{my_object.variantagmp.drugagmp.drug_name}}</a></td>
+          <td>{{my_object.p_value}}</td>
+          <td>{{my_object.geographical_regions}}</td>
           <td>{{my_object.country_participant}}</td>
           <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}">{{my_object.studyagmp.publication_id}}</a></td>
           <td>{{my_object.variantagmp.variant_type }}</td>
-          <td>{{my_object.variantagmp.source_db }}</td>
-          <!-- <td>{{my_object.studyagmp.study_type}}</td> -->
+          <td>
+            {% if my_object.variantagmp.source_db == "GWAS Catalog" %}
+            <a href="https://www.ebi.ac.uk/gwas/studies/{{my_object.variantagmp.id_in_source_db}}" target="_blank">{{my_object.variantagmp.source_db }}</a>
+          {% elif my_object.variantagmp.source_db == "PharmGKB" %}
+            <a href="https://www.pharmgkb.org/variantAnnotation/{{my_object.variantagmp.id_in_source_db}}" target="_blank">{{my_object.variantagmp.source_db }}</a>
+          {% else %}
+            {{my_object.variantagmp.source_db }}
+          {% endif %}
+          </td>
           <td>{{my_object.mixed_population }}</td>
+          <td>{{my_object.studyagmp.study_type}}</td>
+          <td>{% if my_object.ethnicity == "Nan" or my_object.ethnicity == "nan" or my_object.ethnicity == "NaN" %}NR{% else %}{{my_object.ethnicity}}{% endif %}</td>
       </tr>
-
       {% empty %}
-
       {% endfor %}  
-      <!-- ... more rows ... -->
   </tbody>
 </table>
-
-
 </div>
 
-
-<!-- Include required CSS and JS files -->
-
- 
-
-
-
 <script>
-    $(document).ready(function() {
+$(document).ready(function() {
  function initializeTable(tableId, columnSelectId) {
     var table = $(tableId).DataTable({
         dom: 'lBfrtip',
@@ -122,14 +106,12 @@
         columnDefs: [{
             targets: '_all',
             visible: true
-        }]
+        }],
+        initComplete: function() {
+            // Hide study_type and ethnicity columns by default
+            this.api().columns([10, 11]).visible(false);
+        }
     });
-
-    // Hide the last 3 columns
-    var columnsCount = table.columns().nodes().length;
-    for (var i = 1; i <= 3; i++) {
-        table.column(columnsCount - i).visible(false);
-    }
 
     // Create checkboxes for column selection
     table.columns().every(function(index) {
@@ -147,9 +129,7 @@
  }
 
  initializeTable('#example', '#columnSelect1');
- // initializeTable('#example3', '#columnSelect2');
 });
 </script>
-
 
 {% endblock %}

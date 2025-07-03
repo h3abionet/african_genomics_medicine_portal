@@ -1,18 +1,11 @@
- {% extends 'mainLayout.html' %} 
- {% load static %}
+{% extends 'mainLayout.html' %} 
+{% load static %}
 
 {% block title %} Variant Drug Associations {% endblock %}
 
 
-{% block banner %}
-
-{% include 'partials/banner_results.html' %}
-
-{% endblock %}
-
 {% block content %}
 <!-- Initialize DataTables -->
-
 <h3>{{data.drug_name}} </h3><hr>
 
 <p><b>Drug:</b> {{data.drug_name}}</p>
@@ -27,53 +20,50 @@
   <thead>
       <tr>
           <th>Variant</th>
-          <th>Gene </th>
+          <th>Gene</th>
           <th>Drug</th>
-          <th>Significance</th>
+          <th>P-value</th>
           <th>Region</th>
           <th>Country</th>
           <th>Study</th>
           <th>Variant Type</th>
           <th>Source DB</th>
           <th>Mixed Population</th>
-          <!-- <th>Study Type</th> -->
+          <th>Study Type</th>
+          <th>Ethnicity</th>
       </tr>
   </thead>
   <tbody>
  {% for my_object in object_list %}
       <tr>
           <td>{{my_object.variantagmp.rs_id }}</td>
-          <td><a href="/PhamacogeneDrugAssoc/{{my_object.variantagmp.geneagmp.gene_id }}"> {{my_object.variantagmp.geneagmp.gene_id }}</a>
-            <td>{{my_object.variantagmp.drugagmp.drug_name}}
-          <td>{{my_object.p_value}}
-        </td>
-        <td>{{my_object.geographical_regions}}
-        </td>
+          <td><a href="/drug-phenotype-associations/{{my_object.variantagmp.geneagmp.gene_id }}"> {{my_object.variantagmp.geneagmp.gene_id }}</a>
+          <td>{{my_object.variantagmp.drugagmp.drug_name}}
+          <td>{{my_object.p_value}}</td>
+          <td>{{my_object.geographical_regions}}</td>
           <td>{{my_object.country_participant}}</td>
           <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}">{{my_object.studyagmp.publication_id}}</a></td>
           <td>{{my_object.variantagmp.variant_type }}</td>
-          <td>{{my_object.variantagmp.source_db }}</td>
+          <td>
+            {% if my_object.variantagmp.source_db == "GWAS Catalog" %}
+            <a href="https://www.ebi.ac.uk/gwas/studies/{{my_object.variantagmp.id_in_source_db}}" target="_blank">{{my_object.variantagmp.source_db }}</a>
+          {% elif my_object.variantagmp.source_db == "PharmGKB" %}
+            <a href="https://www.pharmgkb.org/variantAnnotation/{{my_object.variantagmp.id_in_source_db}}" target="_blank">{{my_object.variantagmp.source_db }}</a>
+          {% else %}
+            {{my_object.variantagmp.source_db }}
+          {% endif %}
+          </td>
           <td>{{my_object.mixed_population }}</td>
-          <!-- <td>{{my_object.studyagmp.study_type}}</td> -->
-        </tr>
-
+          <td>{{my_object.studyagmp.study_type}}</td>
+          <td>{% if my_object.ethnicity == "Nan" or my_object.ethnicity == "nan" or my_object.ethnicity == "NaN" %}NR{% else %}{{my_object.ethnicity}}{% endif %}</td>
+      </tr>
       {% empty %}
-
-
       {% endfor %}  
-      <!-- ... more rows ... -->
   </tbody>
 </table>
-
 </div>
 
-
-
-<!-- Include required CSS and JS files -->
-
-
 <script type="text/javascript">
-
 $(document).ready(function() {
  function initializeTable(tableId, columnSelectId) {
     var table = $(tableId).DataTable({
@@ -117,11 +107,11 @@ $(document).ready(function() {
         }]
     });
 
-    // Hide last three columns by default
+    // Hide last three columns by default (study_type, ethnicity, and mixed_population)
     var columnCount = table.columns().nodes().length;
-    table.columns(columnCount - 3).visible(false);
-    table.columns(columnCount - 2).visible(false);
-    table.columns(columnCount - 1).visible(false);
+    table.columns(columnCount - 3).visible(false); // study_type
+    table.columns(columnCount - 2).visible(false); // ethnicity
+    table.columns(columnCount - 1).visible(false); // mixed_population
 
     // Create checkboxes for column selection
     table.columns().every(function(index) {
@@ -140,7 +130,6 @@ $(document).ready(function() {
  }
 
  initializeTable('#example', '#columnSelect1');
- // initializeTable('#example3', '#columnSelect2');
 });
 </script>
 

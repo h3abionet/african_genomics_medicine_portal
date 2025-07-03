@@ -11,8 +11,38 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-import config
+from pathlib import Path
+from dotenv import load_dotenv
 
+load_dotenv()
+# GDAL Configuration
+GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
+GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
+
+# If not set through environment variables, try common locations
+if not GDAL_LIBRARY_PATH:
+    possible_paths = [
+        '/usr/lib/libgdal.so',
+        '/usr/lib/aarch64-linux-gnu/libgdal.so',
+        '/usr/lib/x86_64-linux-gnu/libgdal.so',
+        # Add any other potential paths here
+    ]
+    for path in possible_paths:
+        if Path(path).exists():
+            GDAL_LIBRARY_PATH = path
+            break
+
+if not GEOS_LIBRARY_PATH:
+    possible_paths = [
+        '/usr/lib/libgeos_c.so',
+        '/usr/lib/aarch64-linux-gnu/libgeos_c.so',
+        '/usr/lib/x86_64-linux-gnu/libgeos_c.so',
+        # Add any other potential paths here
+    ]
+    for path in possible_paths:
+        if Path(path).exists():
+            GEOS_LIBRARY_PATH = path
+            break
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -21,22 +51,21 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config.SECRET_KEY
 
+
+
+SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 # as a failsafe if you don't have this flag in config switch on production
-DEBUG = config.DEBUG
+DEBUG = False
 
 ALLOWED_HOSTS = [
-    '85.159.209.149','137.158.204.58',
-    'localhost',
-    '127.0.0.1',
-    'agmp.h3abionet.org',
-    'dockerhost02.cbio.uct.ac.za',
+    host.strip() for host in 
+    os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') 
+    if host.strip()
 ]
 
 ADMIN_URL = "madiba/"
-
 # Application definition
 
 AGNOCOMPLETE_DATA_ATTRIBUTE = 'autocomplete'
@@ -54,7 +83,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-
+    'corsheaders',
     'dal_select2',
 ]
 
@@ -65,10 +94,10 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
@@ -98,13 +127,14 @@ WSGI_APPLICATION = 'african_genomics_medicine_portal.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASS'),
     }
 }
-
-# new Django 3.2
-# https://dev.to/weplayinternet/upgrading-to-django-3-2-and-fixing-defaultautofield-warnings-518n
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
@@ -150,14 +180,6 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn')
 
-# if not DEBUG:
-#     STATIC_ROOT = "/var/www/static/"
-
-# print(BASE_DIR)
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, 'static')
-#     # "/home/devil/Documents/Tools/Database/staticfiles"
-# ]
 
 RESULTS_PER_PAGE = 50
 
@@ -169,14 +191,12 @@ LEAFLET_CONFIG = {
                })]
 }
 
-
-# cache
-
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
-
-#     }
-# }
-
-
+# Get CSRF_TRUSTED_ORIGINS from .env, split by comma, and filter out empty strings
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip() for origin in 
+    os.getenv(
+        'CSRF_TRUSTED_ORIGINS', 
+        'http://localhost:8080,http://127.0.0.1:8080'
+    ).split(',') 
+    if origin.strip()
+]

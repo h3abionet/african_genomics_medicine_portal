@@ -2,7 +2,7 @@ body {
     background-color: #e1e8f0;
     color: #333333;
     /*font-size: 14px;*/
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+
     display: flex;
     min-height: 100vh;
     flex-direction: column;

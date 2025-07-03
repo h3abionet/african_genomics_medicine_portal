@@ -9,72 +9,270 @@
 {% block content %}
 {% block js%}
 <style>
+/* General Styling Improvements */
+body {
+    font-family: 'Poppins', 'Helvetica Neue', sans-serif;
+    color: #2c3e50;
+}
+
+/* Improved Section Styling */
+.section {
+    margin-bottom: 50px;
+    padding: 30px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+}
+
+.section:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.section h3 {
+    margin-bottom: 25px;
+    color: #1e3a8a;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+
+.section h3:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(to right, rgb(0, 83, 3), rgb(0, 189, 69));
+    border-radius: 3px;
+}
+
+/* Enhanced Map Container */
 .map-container {
     background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
     margin-bottom: 30px;
     overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.map-container:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
 }
 
 .map-header {
-    background: #f8f9fa;
-    padding: 20px;
+    background: linear-gradient(to right, #f8f9fa, #e9ecef);
+    padding: 24px;
     border-bottom: 1px solid #dee2e6;
 }
 
 .map-title {
     margin: 0;
-    color: #333;
-    font-size: 1.5rem;
-    font-weight: 500;
+    color: #1e3a8a;
+    font-size: 1.6rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
+/* Sexy Filter Controls with Enhanced Dropdowns */
 .filter-controls {
-    background: #fff;
-    padding: 15px 20px;
-    border-bottom: 1px solid #dee2e6;
+    background: linear-gradient(to right, rgb(0, 189, 69), rgb(255, 205, 0), rgb(214, 0, 15));
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    position: relative;
+    overflow: visible;
+    z-index: 1;
+}
+
+.filter-controls::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255,255,255,0.1);
+    z-index: -1;
+}
+
+.filter-controls h5 {
+    color: white !important;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+    width: 100%;
 }
 
 .filter-controls label {
     font-weight: 500;
-    color: #495057;
-    margin-right: 10px;
+    color: white;
+    margin-right: 15px;
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+    min-width: 120px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    flex-shrink: 0;
 }
 
-.filter-controls select {
-    width: 200px;
-    padding: 8px 12px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
+/* Custom Select Dropdown Styles */
+.custom-select-container {
+    position: relative;
+    flex: 1;
+    min-width: 250px;
+    width: 100%;
+    max-width: 100%;
+    cursor: pointer;
+}
+
+.custom-select-trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    background-color: rgba(255,255,255,0.9);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    font-size: 15px;
+    color: #333;
+}
+
+.custom-select-trigger:hover {
     background-color: white;
-    font-size: 14px;
-    color: #495057;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
 }
 
+.dropdown-arrow {
+    margin-left: 10px;
+    transition: transform 0.3s ease;
+}
+
+.custom-select-container.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.custom-select-options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    margin-top: 5px;
+    padding: 5px 0;
+}
+
+.custom-select-option {
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.custom-select-option:hover {
+    background-color: #f8f9fa;
+    color: rgb(0, 83, 3);
+}
+
+.custom-select-option.selected {
+    background-color: #eef2ff;
+    color: rgb(0, 83, 3);
+}
+
+.custom-select-option .fa-check {
+    color: rgb(0, 83, 3);
+    font-size: 12px;
+}
+
+/* Scrollbar styling */
+.custom-select-options::-webkit-scrollbar {
+    width: 8px;
+}
+
+.custom-select-options::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 0 8px 8px 0;
+}
+
+.custom-select-options::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.custom-select-options::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Floating particles effect */
+.particle {
+    position: absolute;
+    background: rgba(255,255,255,0.6);
+    border-radius: 50%;
+    z-index: -1;
+    animation: float 15s infinite linear;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-1000px) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+/* Map Content Styling */
 .map-content {
     height: 500px;
     position: relative;
 }
 
+/* Improved Loading Animation */
 .loading-overlay {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.92);
     display: none;
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    border-radius: 0 0 12px 12px;
 }
 
 .loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3498db;
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba(59, 130, 246, 0.2);
+    border-top: 4px solid #3b82f6;
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
@@ -84,9 +282,151 @@
     100% { transform: rotate(360deg); }
 }
 
+/* Enhanced Table Styling */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.table thead th {
+    background-color: rgb(0, 83, 3);
+    color: white;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    padding: 16px;
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+.table tbody tr:hover {
+    background-color: #eef2ff;
+}
+
+.table td {
+    padding: 16px;
+    border-top: 1px solid #e5e7eb;
+    font-size: 0.95rem;
+}
+
+/* Enhanced Navigation */
+.navigation ul {
+    padding: 0;
+    list-style: none;
+}
+
+.navigation .no_style li {
+    margin-bottom: 8px;
+}
+
+.navigation .tag-link {
+    display: block;
+    padding: 7px 18px;
+    background: transparent;
+    color: rgb(0, 83, 3);
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: none;
+}
+
+.navigation .tag-link:hover {
+    background: white;
+    color: rgb(255, 193, 7);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.navigation .tag-link.active {
+    background: white;
+    color: rgb(255, 193, 7) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 3.5px 18px;
+}
+
+/* Enhanced Graph Tabs */
+.nav-tabs {
+    border-bottom: 2px solid #e5e7eb;
+    margin-bottom: 24px;
+}
+
+.nav-tabs .nav-item {
+    margin-bottom: -2px;
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    color: #64748b;
+    font-weight: 500;
+    padding: 12px 20px;
+    border-radius: 0;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+    color: rgb(0, 189, 69);
+}
+
+.nav-tabs .nav-link.active {
+    color: rgb(0, 83, 3);
+    background-color: transparent;
+    border-bottom: 3px solid rgb(0, 83, 3);
+}
+
+/* Section Divider */
 .section-divider {
     margin: 40px 0;
-    border-top: 2px solid #dee2e6;
+    border: none;
+    height: 2px;
+    background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .filter-controls select {
+        min-width: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .filter-controls {
+        padding: 20px 15px;
+    }
+    
+    .filter-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-controls label {
+        margin-bottom: 10px;
+        margin-right: 0;
+        min-width: auto;
+    }
+    
+    .filter-controls select {
+        min-width: 100%;
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .filter-controls {
+        padding: 15px;
+    }
+    
+    .filter-controls select {
+        font-size: 14px;
+        padding: 12px 15px;
+    }
 }
 </style>
 {% endblock %}
@@ -105,28 +445,28 @@
           label: 'No of Publications',
           data: [{% for i in qs_drug %}'{{i.frequency}}', {% endfor %}],
           backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(195, 79, 64, 5.2)',
-            'rgba(285, 159, 64, 5.2)',
-            'rgba(0, 128, 0, 3.2)',
-            'rgba(108, 122, 137, 0.2)',
+            'rgba(0, 189, 69, 0.7)',
+            'rgba(77, 193, 52, 0.7)',
+            'rgba(153, 196, 36, 0.7)',
+            'rgba(204, 199, 19, 0.7)',
+            'rgba(255, 205, 0, 0.7)',
+            'rgba(245, 164, 0, 0.7)',
+            'rgba(235, 123, 0, 0.7)',
+            'rgba(228, 82, 0, 0.7)',
+            'rgba(221, 41, 0, 0.7)',
+            'rgba(214, 0, 15, 0.7)',
           ],
           borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(195, 79, 64, 5.2)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(0, 128, 0, 3.2)',
-            'rgba(108, 122, 137, 0.2)',
+            'rgb(0, 189, 69)',
+            'rgb(77, 193, 52)',
+            'rgb(153, 196, 36)',
+            'rgb(204, 199, 19)',
+            'rgb(255, 205, 0)',
+            'rgb(245, 164, 0)',
+            'rgb(235, 123, 0)',
+            'rgb(228, 82, 0)',
+            'rgb(221, 41, 0)',
+            'rgb(214, 0, 15)',
           ],
           borderWidth: 1
         }]
@@ -134,7 +474,25 @@
       options: {
         scales: {
           y: {
-            beginAtZero: true
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              font: {
+                family: "'Poppins', 'Helvetica Neue', sans-serif",
+                size: 14
+              }
+            }
           }
         }
       }
@@ -152,28 +510,28 @@
           label: 'No of Publications',
           data: [{% for i in qs_gene %}'{{i.frequency | safe}}', {% endfor %}],
           backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(195, 79, 64, 5.2)',
-            'rgba(285, 159, 64, 5.2)',
-            'rgba(0, 128, 0, 3.2)',
-            'rgba(108, 122, 137, 0.2)',
+            'rgba(214, 0, 15, 0.7)',
+            'rgba(221, 41, 0, 0.7)',
+            'rgba(228, 82, 0, 0.7)',
+            'rgba(235, 123, 0, 0.7)',
+            'rgba(245, 164, 0, 0.7)',
+            'rgba(255, 205, 0, 0.7)',
+            'rgba(204, 199, 19, 0.7)',
+            'rgba(153, 196, 36, 0.7)',
+            'rgba(77, 193, 52, 0.7)',
+            'rgba(0, 189, 69, 0.7)',
           ],
           borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(195, 79, 64, 5.2)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(0, 128, 0, 3.2)',
-            'rgba(108, 122, 137, 0.2)',
+            'rgb(214, 0, 15)',
+            'rgb(221, 41, 0)',
+            'rgb(228, 82, 0)',
+            'rgb(235, 123, 0)',
+            'rgb(245, 164, 0)',
+            'rgb(255, 205, 0)',
+            'rgb(204, 199, 19)',
+            'rgb(153, 196, 36)',
+            'rgb(77, 193, 52)',
+            'rgb(0, 189, 69)',
           ],
           borderWidth: 1
         }]
@@ -181,7 +539,25 @@
       options: {
         scales: {
           y: {
-            beginAtZero: true
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              font: {
+                family: "'Poppins', 'Helvetica Neue', sans-serif",
+                size: 14
+              }
+            }
           }
         }
       }
@@ -199,28 +575,28 @@
           label: 'No of Publications',
           data: [{% for i in qs_variant %}'{{i.frequency|safe}}', {% endfor %}],
           backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(195, 79, 64, 5.2)',
-            'rgba(285, 159, 64, 5.2)',
-            'rgba(0, 128, 0, 3.2)',
-            'rgba(108, 122, 137, 0.2)',
+            'rgba(0, 189, 69, 0.7)',
+            'rgba(102, 194, 49, 0.7)',
+            'rgba(153, 196, 36, 0.7)',
+            'rgba(204, 199, 19, 0.7)',
+            'rgba(255, 205, 0, 0.7)',
+            'rgba(245, 164, 0, 0.7)',
+            'rgba(235, 123, 0, 0.7)',
+            'rgba(228, 82, 0, 0.7)',
+            'rgba(221, 41, 0, 0.7)',
+            'rgba(214, 0, 15, 0.7)',
           ],
           borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(195, 79, 64, 5.2)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(0, 128, 0, 3.2)',
-            'rgba(108, 122, 137, 0.2)',
+            'rgb(0, 189, 69)',
+            'rgb(102, 194, 49)',
+            'rgb(153, 196, 36)',
+            'rgb(204, 199, 19)',
+            'rgb(255, 205, 0)',
+            'rgb(245, 164, 0)',
+            'rgb(235, 123, 0)',
+            'rgb(228, 82, 0)',
+            'rgb(221, 41, 0)',
+            'rgb(214, 0, 15)',
           ],
           borderWidth: 1
         }]
@@ -228,7 +604,25 @@
       options: {
         scales: {
           y: {
-            beginAtZero: true
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              font: {
+                family: "'Poppins', 'Helvetica Neue', sans-serif",
+                size: 14
+              }
+            }
           }
         }
       }
@@ -246,28 +640,28 @@
           label: 'No of Publications',
           data: [{% for i in qs_disease %}'{{i.frequency|safe}}', {% endfor %}],
           backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(195, 79, 64, 5.2)',
-            'rgba(285, 159, 64, 5.2)',
-            'rgba(0, 128, 0, 3.2)',
-            'rgba(108, 122, 137, 0.2)',
+            'rgba(214, 0, 15, 0.7)',
+            'rgba(221, 41, 0, 0.7)',
+            'rgba(228, 82, 0, 0.7)',
+            'rgba(235, 123, 0, 0.7)',
+            'rgba(245, 164, 0, 0.7)',
+            'rgba(255, 205, 0, 0.7)',
+            'rgba(204, 199, 19, 0.7)',
+            'rgba(153, 196, 36, 0.7)',
+            'rgba(102, 194, 49, 0.7)',
+            'rgba(0, 189, 69, 0.7)',
           ],
           borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(195, 79, 64, 5.2)',
-            'rgba(255, 159, 64, 1)',
-            'rgba(0, 128, 0, 3.2)',
-            'rgba(108, 122, 137, 0.2)',
+            'rgb(214, 0, 15)',
+            'rgb(221, 41, 0)',
+            'rgb(228, 82, 0)',
+            'rgb(235, 123, 0)',
+            'rgb(245, 164, 0)',
+            'rgb(255, 205, 0)',
+            'rgb(204, 199, 19)',
+            'rgb(153, 196, 36)',
+            'rgb(102, 194, 49)',
+            'rgb(0, 189, 69)',
           ],
           borderWidth: 1
         }]
@@ -275,7 +669,25 @@
       options: {
         scales: {
           y: {
-            beginAtZero: true
+            beginAtZero: true,
+            grid: {
+              color: 'rgba(0, 0, 0, 0.05)'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              font: {
+                family: "'Poppins', 'Helvetica Neue', sans-serif",
+                size: 14
+              }
+            }
           }
         }
       }
@@ -285,10 +697,16 @@
 {% endblock %}
 {% endblock %}
 
+<!-- Google Fonts for improved typography -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<!-- Add Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-<div class="row">
+<div class="row left-side-links">
   <div class="col-md-3">
     <nav class="navigation" id="mainNav">
       <ul>
@@ -305,31 +723,31 @@
   <div class="col-md-9 section1">
     <!-- Data Overview Section -->
     <div id="section1" class="section">
-      <h3 class="text-center">Data Overview</h3>
+      <h5 class="text-center">Data Overview</h5>
       <table class="table table-hover">
         <thead>
           <tr>
-            <th scope="col">Category</th>
-            <th scope="col">Total Number</th>
+            <th class="text-center" scope="col">Category</th>
+            <th class="text-center" scope="col">Total Number</th>
           </tr>
         </thead>
-        <tr>
+        <tr class="text-center">
           <td>GENES</td>
           <td>{{ gene_count | default:'0' }}</td>
         </tr>
-        <tr>
+        <tr class="text-center">
           <td>DRUGS</td>
           <td>{{ drug_count | default:'0' }}</td>
         </tr>
-        <tr>
+        <tr class="text-center">
           <td>PHENOTYPES </td>
           <td>{{ disease_count | default:'0' }}</td>
         </tr>
-        <tr>
+        <tr class="text-center">
           <td>VARIANTS</td>
           <td>{{ variant_count | default:'0' }}</td>
         </tr>
-        <tr>
+        <tr class="text-center">
           <td>UNIQUE STUDIES</td>
           <td>{{ publication_count | default:'0' }}</td>
         </tr>
@@ -338,7 +756,7 @@
 
     <!-- Graphs Section -->
     <div id="section2" class="section">
-      <h3 class="text-center">Graphs</h3>
+      <h5 class="text-center">Graphs</h5>
       
       <ul id="clothing-nav" class="nav nav-tabs graph-custom-class" role="tablist">
         <li class="nav-item">
@@ -381,14 +799,13 @@
       </div>
     </div>
 
-
-    <!-- Map Section with Updated Filters -->
+    <!-- Distribution Map Section with Enhanced Filters -->
     <div id="section3" class="section">
       <div class="map-container">
-        
-        <div class="filter-controls">
-          <h3 class="text-center">Distribution Map</h3>
-            <label for="map1-filter">Filter by Study Type:</label>
+        <div class="filter-controls" id="map1-filter-container">
+          <h5><i class="fas fa-filter"></i> Filter Studies</h5>
+          <div class="filter-group">
+            <label for="map1-filter"><i class="fas fa-vial"></i> Study Type:</label>
             <select id="map1-filter" class="form-control">
                 <option value="All">All Studies</option>
                 {% for type in study_types %}
@@ -397,24 +814,26 @@
                     {% endif %}
                 {% endfor %}
             </select>
+          </div>
         </div>
         
+        <h5 class="text-center">Distribution Map</h5>
         <div id="map1-container" class="map-content">
             <div class="loading-overlay">
                 <div class="loading-spinner"></div>
             </div>
             <div class="map-display"></div>
         </div>
-    </div>
+      </div>
     </div>
 
-    <!-- Heatmap Section with Updated Filters -->
+    <!-- Heat Map Section with Enhanced Filters -->
     <div id="section4" class="section">
       <div class="map-container">
-        
-        <div class="filter-controls">
-          <h3 class="text-center">Heat Map</h3>
-            <label for="map2-filter">Filter by Study Type:</label>
+        <div class="filter-controls" id="map2-filter-container">
+          <h5><i class="fas fa-filter"></i> Filter Studies</h5>
+          <div class="filter-group">
+            <label for="map2-filter"><i class="fas fa-vial"></i> Study Type:</label>
             <select id="map2-filter" class="form-control">
                 <option value="All">All Studies</option>
                 {% for type in study_types %}
@@ -423,15 +842,17 @@
                     {% endif %}
                 {% endfor %}
             </select>
+          </div>
         </div>
         
+        <h5 class="text-center">Heat Map</h5>
         <div id="map2-container" class="map-content">
             <div class="loading-overlay">
                 <div class="loading-spinner"></div>
             </div>
             <div class="map-display"></div>
         </div>
-    </div>
+      </div>
     </div>
   </div>
 </div>
@@ -439,6 +860,32 @@
 <!-- JavaScript -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+// Create floating particles effect
+function createParticles(containerId) {
+    const container = document.getElementById(containerId);
+    const particleCount = 15;
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random size between 2px and 6px
+        const size = Math.random() * 4 + 2;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        // Random position
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        
+        // Random animation duration
+        particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        
+        container.appendChild(particle);
+    }
+}
+
 function showLoading(mapId) {
     $(`#${mapId} .loading-overlay`).css('display', 'flex');
 }
@@ -470,19 +917,137 @@ function updateMap(mapType, studyType) {
     });
 }
 
-// Initialize maps when document is ready
+// Enhanced Select Dropdowns with jQuery
 $(document).ready(function() {
+    // Function to enhance select dropdowns
+    function enhanceSelectDropdowns() {
+        $('.filter-controls select').each(function() {
+            const $select = $(this);
+            
+            // Create a custom container
+            const $customSelect = $('<div class="custom-select-container"></div>');
+            
+            // Create the visible part of the dropdown
+            const $customSelectTrigger = $('<div class="custom-select-trigger"></div>');
+            $customSelectTrigger.html(`
+                <span class="selected-value">${$select.find('option:selected').text()}</span>
+                <span class="dropdown-arrow"><i class="fas fa-chevron-down"></i></span>
+            `);
+            
+            // Create the dropdown options
+            const $customOptions = $('<ul class="custom-select-options"></ul>');
+            
+            // Add each option to the dropdown
+            $select.find('option').each(function() {
+                const $option = $(this);
+                const $customOption = $(`
+                    <li class="custom-select-option" data-value="${$option.val()}">
+                        ${$option.text()}
+                        ${$option.is(':selected') ? '<i class="fas fa-check"></i>' : ''}
+                    </li>
+                `);
+                
+                $customOptions.append($customOption);
+            });
+            
+            // Put it all together
+            $customSelect.append($customSelectTrigger).append($customOptions);
+            
+            // Insert the custom dropdown after the original select and hide the original
+            $select.after($customSelect).hide();
+            
+            // Handle click on trigger
+            $customSelectTrigger.on('click', function(e) {
+                e.stopPropagation();
+                $('.custom-select-options').not($customOptions).hide();
+                $customOptions.toggle();
+                $customSelect.toggleClass('open');
+            });
+            
+            // Handle option selection
+            $customOptions.find('li').on('click', function() {
+                const value = $(this).data('value');
+                const text = $(this).text().trim();
+                
+                // Update the original select
+                $select.val(value).trigger('change');
+                
+                // Update the display
+                $customSelectTrigger.find('.selected-value').text(text);
+                $customOptions.hide();
+                $customSelect.removeClass('open');
+                
+                // Update checkmarks
+                $customOptions.find('li').removeClass('selected');
+                $(this).addClass('selected');
+                $customOptions.find('.fa-check').remove();
+                $(this).append('<i class="fas fa-check"></i>');
+            });
+        });
+        
+        // Close dropdowns when clicking outside
+        $(document).on('click', function() {
+            $('.custom-select-options').hide();
+            $('.custom-select-container').removeClass('open');
+        });
+    }
+    
+    // Call the function to enhance dropdowns
+    enhanceSelectDropdowns();
+    
+    // Add smooth scrolling to navigation links
+    const navLinks = document.querySelectorAll('.tag-link');
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            window.scrollTo({
+                top: targetElement.offsetTop - 80,
+                behavior: 'smooth'
+            });
+        });
+    });
+    
+    // Create particle effects
+    createParticles('map1-filter-container');
+    createParticles('map2-filter-container');
+    
     // Initial load of maps
     updateMap('marker', 'All');
     updateMap('heatmap', 'All');
     
-    // Event listeners for filters
+    // Event listeners for filters with animation
     $('#map1-filter').change(function() {
-        updateMap('marker', $(this).val());
+        showLoading('map1-container');
+        setTimeout(() => {
+            updateMap('marker', $(this).val());
+        }, 300); // Small delay for better UX
     });
     
     $('#map2-filter').change(function() {
-        updateMap('heatmap', $(this).val());
+        showLoading('map2-container');
+        setTimeout(() => {
+            updateMap('heatmap', $(this).val());
+        }, 300); // Small delay for better UX
+    });
+    
+    // Highlight active navigation based on scroll position
+    $(window).scroll(function() {
+        const scrollPosition = $(window).scrollTop();
+        
+        $('.section').each(function() {
+            const topDistance = $(this).offset().top - 100;
+            
+            if (scrollPosition >= topDistance) {
+                const id = $(this).attr('id');
+                $('.tag-link').removeClass('active');
+                $(`.tag-link[href="#${id}"]`).addClass('active');
+            }
+        });
     });
 });
 </script>

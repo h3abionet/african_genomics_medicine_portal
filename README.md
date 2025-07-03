@@ -41,21 +41,27 @@ Install the following packages (if you have not done so already):
 ### Running the application in docker production
 
 * clone from Github 'git clone  https://github.com/h3abionet/african_genomics_medicine_portal.git'
-* `vim config.py #change debug from true to false on the host machine`
+* `git checkout deployed_v2_1 #switch to the correct branch`
+* `vim .env  #add database credentials to the env file`
 * `mkdir static_cdn # inside the project directory on the host machine`
-* `docker-compose build or docker-compose build`
-* `docker-compose up -d or docker-compose up -d`
+* `docker-compose build`
+* `docker-compose up -d`
+Run ingestion script in docker 
+* `docker-compose run --rm djangoapp sh -c "python manage.py load_data"`
+Quality control check (QC)
+* `docker-compose run --rm djangoapp sh -c "python manage.py quality_control"`
+
 ___ 
-Applying Migrations to the database
+Applying Migrations to the database if need be
 * `docker-compose run --rm djangoapp sh -c "python manage.py makemigrations"`
 * `docker-compose run --rm djangoapp sh -c "python manage.py migrate"`
-___ 
-Quality control check (QC)
-* `docker-compose run --rm djangoapp sh -c "python manage.py find_duplicates"`
+* `docker-compose run --rm djangoapp sh -c "python manage.py createsuperuser"`
+
+
 
 ### Import script notes
-1. The import script exist in /scripts/load_data.py.
-2. To run the import script # python3 manage.py runscript load_data
+1. The import script exist in agmp_app/management/commands/load_data.py.
+2. To run the import script # python3 manage.py load_data
 3. The script imports
                 <br>1.<b>first_import_job_run.csv <b> file 
                <br> 2. the second script imports a <b>second_import_job_run.xlsx</b> file
@@ -71,8 +77,8 @@ Quality control check (QC)
 
 ### Generating and ERD Diagram
 
-* Generates ERD for the specified agmp_app only: <br> `python3 manage.py graph_models agmp_app -g -o agmp_app_erd.png` 
-* Generates ERD for all apps in the project, including the authentication model:<br> `python3 manage.py graph_models -a -g -o project_erd.png` 
+* "Generates ERD for the specified agmp_app only: <br> ` docker-compose run --rm djangoapp sh -c "python manage.py graph_models agmp_app -g -o agmp_gen2phen_app_erd.png"`"
+* "Generates ERD for all apps in the project, including the authentication model:<br> `python3 manage.py graph_models -a -g -o project_erd.png`"
 
 ### Fix the issue with git large files
 * run the below within the terminal of your repository for a csv large file: <br> git lfs migrate import --include="*.csv"

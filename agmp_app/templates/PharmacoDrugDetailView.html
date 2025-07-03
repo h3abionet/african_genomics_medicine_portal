@@ -1,12 +1,10 @@
- {% extends 'mainLayout.html' %} 
- {% load static %}
+{% extends 'mainLayout.html' %} 
+{% load static %}
 
 {% block title %} Variant Drug Associations {% endblock %}
 
 {% block banner %}
-
 {% include 'partials/banner_results.html' %}
-
 {% endblock %}
 
 {% block content %}
@@ -28,32 +26,29 @@
           <th>rs ID</th>
           <th>Drug</th>
           <th>Description</th>
-          <th>p_value</th>
+          <th>P-value</th>
           <th>Study</th>
           <th>Region</th>
           <th>Countries</th>
+          <th>Study Type</th>
+          <th>Ethnicity</th>
       </tr>
   </thead>
   <tbody>
      {% for my_object in object_list %}
       <tr>
           <td>{{my_object.variantagmp.rs_id}}</td>
-          <td><a href="https://go.drugbank.com/drugs/{{my_object.variantagmp.drugagmp.drug_bank_id}}">{{my_object.variantagmp.drugagmp.drug_name}}</a>
-          </td>
+          <td><a href="https://go.drugbank.com/drugs/{{my_object.variantagmp.drugagmp.drug_bank_id}}">{{my_object.variantagmp.drugagmp.drug_name}}</a></td>
           <td>{{my_object.variantagmp.phenotypeagmp.name}}</td>
           <td>{{my_object.p_value}}</td>
-          <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}" >{{my_object.studyagmp.publication_id}}</a></td>
+          <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}">{{my_object.studyagmp.publication_id}}</a></td>
           <td>{{my_object.geographical_regions}}</td>
           <td>{{my_object.country_participant}}</td>
-          
+          <td>{{my_object.studyagmp.study_type}}</td>
+          <td>{% if my_object.ethnicity == "Nan" or my_object.ethnicity == "nan" or my_object.ethnicity == "NaN" %}NR{% else %}{{my_object.ethnicity}}{% endif %}</td>
       </tr>
       {% empty %}
-
       {% endfor %}  
-      <!-- ... more rows ... -->
-     
-
-
   </tbody>
 </table>
 </div>
@@ -69,44 +64,29 @@
               <th>Study</th>
               <th>Regions</th>
               <th>Country of Participants</th>
+              <th>Study Type</th>
+              <th>Ethnicity</th>
           </tr>
       </thead>
       <tbody>
          {% for my_object in object_list_diseases %}
           <tr>
-              <td>{{my_object.variantagmp.rs_id}}
-            
-              </td>
-              <td>{{my_object.variantagmp.phenotypeagmp.name }}</td>
-              <td>{{my_object.p_value}}
-              </td>
+              <td>{{my_object.variantagmp.rs_id}}</td>
+              <td>{{my_object.variantagmp.phenotypeagmp.name}}</td>
+              <td>{{my_object.p_value}}</td>
               <td><a href="https://pubmed.ncbi.nlm.nih.gov/{{my_object.studyagmp.publication_id}}">{{my_object.studyagmp.publication_id}}</a></td>
               <td>{{my_object.geographical_regions}}</td>
               <td>{{my_object.country_participant}}</td>
-           
-             
-              
+              <td>{{my_object.studyagmp.study_type}}</td>
+              <td>{% if my_object.ethnicity == "Nan" or my_object.ethnicity == "nan" or my_object.ethnicity == "NaN" %}NR{% else %}{{my_object.ethnicity}}{% endif %}</td>
           </tr>
-
           {% empty %}
-
           {% endfor %}  
-       
-         
-    
-    
-    
       </tbody>
     </table>
 </div>
   
-<!-- Include required CSS and JS files -->
-
-
-
 <script type="text/javascript">
-
-
 $(document).ready(function() {
     function initializeTable(tableId, columnSelectId) {
         var table = $(tableId).DataTable({
@@ -146,8 +126,12 @@ $(document).ready(function() {
             ],
             columnDefs: [{
                 targets: '_all',
-                visible: true // Display all columns by default
-            }]
+                visible: true
+            }],
+            initComplete: function() {
+                // Hide study_type and ethnicity columns by default (last 2 columns)
+                this.api().columns([7, 8]).visible(false);
+            }
         });
 
         // Create checkboxes for column selection
@@ -156,7 +140,6 @@ $(document).ready(function() {
             var checked = column.visible() ? 'checked' : '';
             var checkbox = $('<label><input type="checkbox" ' + checked + '>' + $(column.header()).text() + '</label>');
 
-            // Handle checkbox click event
             checkbox.find('input').on('click', function() {
                 var isChecked = this.checked;
                 column.visible(isChecked);
@@ -169,9 +152,6 @@ $(document).ready(function() {
     initializeTable('#example', '#columnSelect1');
     initializeTable('#example3', '#columnSelect2');
 });
-
- 
-
 </script>
 
 {% endblock %}
