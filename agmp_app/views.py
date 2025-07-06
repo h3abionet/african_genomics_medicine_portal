@@ -618,154 +618,76 @@ def about(request):
     return render(request, 'about.html')
 
 def get_map_data(request, map_type):
-    """
-    AJAX endpoint for getting map data based on study type filter
-    """
+    """Simplified map data endpoint with guaranteed timeout handling"""
     study_type = request.GET.get('study_type', 'All')
     
     try:
-        def get_filtered_studies(study_type):
-            studies = VariantStudyagmp.objects.all()
-            if study_type and study_type != 'All':
-                studies = studies.filter(studyagmp__study_type=study_type)
-            return studies
-
-        def get_location_data(lat_field, lon_field, queryset):
-            return queryset.exclude(
-                Q(**{f'{lon_field}__isnull': True}) | Q(**{f'{lon_field}__exact': ''}) |
-                Q(**{f'{lat_field}__isnull': True}) | Q(**{f'{lat_field}__exact': ''})
-            ).values('studyagmp__publication_id', lat_field, lon_field).annotate(
-                latitude=F(lat_field),
-                longitude=F(lon_field)
-            ).values('latitude', 'longitude')
-
-        location_fields = [
-            ('latitude_01', 'longitude_01'), ('latitude_02', 'longitude_02'),
-            ('latitude_03', 'longitude_03'), ('latitude_04', 'longitude_04'),
-            ('latitude_05', 'longitude_05'), ('latitude_06', 'longitude_06'),
-            ('latitude_07', 'longitude_07'), ('latitude_08', 'longitude_08'),
-            ('latitude_09', 'longitude_09'), ('latitude_10', 'longitude_10'),
-            ('latitude_11', 'longitude_11')
-        ]
-
-        # Get filtered studies and locations
-        filtered_studies = get_filtered_studies(study_type)
-        locations = [get_location_data(lat, lon, filtered_studies) for lat, lon in location_fields]
-        flattened_locations = [item for sublist in locations for item in sublist]
-
-        # Process coordinates
-        count_per_coordinates = defaultdict(int)
-        for record in flattened_locations:
-            coordinates = (record["latitude"], record["longitude"])
-            count_per_coordinates[coordinates] += 1
-
+        # 1. Get only the data we absolutely need
+        studies = VariantStudyagmp.objects.select_related('studyagmp')
+        if study_type != 'All':
+            studies = studies.filter(studyagmp__study_type=study_type)
+        
+        # 2. Load countries data just once
+        countries = gpd.read_file(os.path.join(settings.BASE_DIR, 'agmp_app/static/maps/countries.geo.json'))
+        
+        # 3. Track publications per country
+        country_counts = defaultdict(int)
+        
+        # 4. Process only valid coordinates (main set only - no _01, _02 etc.)
+        valid_studies = studies.exclude(
+            Q(latitude__isnull=True) | Q(latitude='') |
+            Q(longitude__isnull=True) | Q(longitude='')
+        ).values('studyagmp__publication_id', 'latitude', 'longitude')
+        
+        for study in valid_studies:
+            try:
+                point = Point(float(study['longitude']), float(study['latitude']))
+                # Find which country contains this point
+                for _, country in countries.iterrows():
+                    if country.geometry.contains(point):
+                        country_counts[country['name']] += 1
+                        break
+            except (ValueError, TypeError):
+                continue
+        
+        # 5. Create the appropriate map
         if map_type == 'marker':
-            # Create marker map
-            m = folium.Map(location=[-4.0335, 21.7501], zoom_start=3)
-            for coordinates, value in count_per_coordinates.items():
-                try:
-                    clean_latitude = float(coordinates[0])
-                    clean_longitude = float(coordinates[1])
-                    popup_text = f"Publications: {value}"
-                    popup = folium.Popup(popup_text, parse_html=True)
-                    folium.Marker([clean_latitude, clean_longitude], popup=popup).add_to(m)
-                except ValueError:
-                    logging.warning(f"Skipping invalid coordinates: {coordinates}")
-
-            return JsonResponse({'map_html': m._repr_html_()})
-
+            m = folium.Map(location=[0, 0], zoom_start=2)
+            for _, country in countries.iterrows():
+                count = country_counts.get(country['name'], 0)
+                if count > 0:
+                    folium.Marker(
+                        [country.geometry.centroid.y, country.geometry.centroid.x],
+                        popup=f"{country['name']}: {count} studies"
+                    ).add_to(m)
+        
         elif map_type == 'heatmap':
-            # Create choropleth map
-            m2 = folium.Map(location=[1.2921, 36.8219], zoom_start=3)
-            geojson_path = os.path.join(settings.BASE_DIR, 'agmp_app/static/maps/countries.geo.json')
-            gdf = gpd.read_file(geojson_path)
-
-            publications_per_country = defaultdict(int)
-            for (lat, lon), value in count_per_coordinates.items():
-                try:
-                    point = Point(float(lon), float(lat))
-                    for _, row in gdf.iterrows():
-                        if row['geometry'].contains(point):
-                            publications_per_country[row['name']] += value
-                            break
-                except (ValueError, TypeError):
-                    logging.warning(f"Invalid coordinates: lat={lat}, lon={lon}")
-                    continue
-
-            def get_color(value):
-                if value > 1000:
-                    return "#8B0000" 
-                elif value > 100:
-                    return "#CD5C5C"
-                elif value > 50:
-                    return "#DAA520"
-                elif value > 10:
-                    return "#F0E68C"
-                else:
-                    return "#FFFFE0"
-
-            for _, row in gdf.iterrows():
-                country_name = row['name']
-                publication_count = publications_per_country[country_name]
-                color = get_color(publication_count)
-                
-                tooltip_text = f"{country_name}: {publication_count:,} publications"
-                
+            m = folium.Map(location=[0, 0], zoom_start=2)
+            for _, country in countries.iterrows():
+                count = country_counts.get(country['name'], 0)
+                color = (
+                    "#8B0000" if count > 100 else
+                    "#CD5C5C" if count > 50 else
+                    "#DAA520" if count > 10 else
+                    "#F0E68C" if count > 1 else
+                    "#FFFFE0"
+                )
                 folium.GeoJson(
-                    row['geometry'],
-                    style_function=lambda feature, color=color: {
-                        "fillColor": color,
-                        "color": "black",
-                        "weight": 1,
-                        "fillOpacity": 0.7,
+                    country.geometry,
+                    style_function=lambda _, c=color: {
+                        'fillColor': c,
+                        'color': 'black',
+                        'weight': 1,
+                        'fillOpacity': 0.7
                     },
-                    tooltip=folium.Tooltip(
-                        tooltip_text,
-                        style="""
-                            background-color: white;
-                            color: black;
-                            font-family: arial;
-                            font-size: 12px;
-                            padding: 10px;
-                            border-radius: 3px;
-                            box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
-                        """
-                    )
-                ).add_to(m2)
-
-            # Add legends
-            custom_legend_html = '''
-             <div style="position: fixed; bottom: 50px; left: 50px; width: 200px; height: 200px; 
-             background-color: white; border:2px solid grey; z-index:9999; font-size:14px;
-             border-radius: 5px; box-shadow: 3px 3px 3px rgba(0,0,0,0.2);">
-             &nbsp; <b>Publications</b> <br>
-             &nbsp; > 1000 &nbsp; <i style="background: #8B0000; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
-             &nbsp; 100 - 1000 &nbsp; <i style="background: #CD5C5C; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
-             &nbsp; 50 - 100 &nbsp; <i style="background: #DAA520; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
-             &nbsp; 10 - 50 &nbsp; <i style="background:  #F0E68C; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
-             &nbsp; 0 - 10 &nbsp; <i style="background: #FFFFE0; width:20px; height:20px; float:right; margin-top:3px;"></i><br>
-             </div>
-             '''
-            m2.get_root().html.add_child(folium.Element(custom_legend_html))
-
-            gradient_legend_html = '''
-            <div style="position: fixed; top: 50px; right: 50px; width: 200px; height: 20px; 
-            background: linear-gradient(to right, #FFFFE0, #F0E68C, #DAA520, #CD5C5C, #8B0000);
-            border: 2px solid grey; z-index: 9999; font-size: 12px;
-            text-align: center; color: black; border-radius: 5px;
-            box-shadow: 3px 3px 3px rgba(0,0,0,0.2);">
-                <span style="float: left; padding-left: 5px;">0</span>
-                <span style="float: right; padding-right: 5px;">>1000</span>
-                <div style="clear: both;"></div>
-                <b>Publications by Country</b>
-            </div>
-            '''
-            m2.get_root().html.add_child(folium.Element(gradient_legend_html))
-
-            return JsonResponse({'map_html': m2._repr_html_()})
+                    tooltip=f"{country['name']}: {count} studies"
+                ).add_to(m)
+        
+        return JsonResponse({'map_html': m._repr_html_()})
+    
     except Exception as e:
-        logger.error(f"Error generating map data: {str(e)}")
-        return JsonResponse({'error': 'An error occurred while generating map data'}, status=500)
+        logger.error(f"Map generation error: {str(e)}")
+        return JsonResponse({'error': 'Could not generate map'}, status=500)
 
 def summary(request):
     """
@@ -860,3 +782,216 @@ def home(request):
 
 def test_data_table(request):
     return render(request, 'test_data_table.html')
+
+from django.http import JsonResponse
+from collections import defaultdict
+import reverse_geocoder as rg
+
+# Local cache for lat/lon lookups
+coord_cache = {}
+
+def is_valid_coord(lat, lon):
+    """
+    Checks whether lat/lon are valid values (not blank, not NaN).
+    """
+    try:
+        return (
+            lat is not None
+            and lon is not None
+            and lat != ""
+            and lon != ""
+            and str(lat).lower() != "nan"
+            and str(lon).lower() != "nan"
+        )
+    except Exception:
+        return False
+
+def reverse_geocode(lat, lon):
+    """
+    Reverse-geocode lat/lon to country code.
+    Caches results for efficiency.
+    """
+    key = (round(float(lat), 4), round(float(lon), 4))
+    if key in coord_cache:
+        return coord_cache[key]
+    
+    result = rg.search(key, mode=1)[0]
+    country_code = result["cc"]
+    coord_cache[key] = country_code
+    return country_code
+
+def studies_per_country(request):
+    """
+    Returns JSON of unique publication_ids per country.
+    """
+
+    from .models import VariantStudyagmp
+
+    variant_studies = VariantStudyagmp.objects.all()
+
+    # Mapping: country → set of publication_ids
+    country_to_publication_ids = defaultdict(set)
+
+    for vs in variant_studies:
+        for i in range(12):
+            country_field = "country_participant" if i == 0 else f"country_participant_{i:02}"
+            lat_field = "latitude" if i == 0 else f"latitude_{i:02}"
+            lon_field = "longitude" if i == 0 else f"longitude_{i:02}"
+
+            country_name = getattr(vs, country_field, None)
+            lat = getattr(vs, lat_field, None)
+            lon = getattr(vs, lon_field, None)
+
+            # Determine country
+            if country_name:
+                country = country_name.strip()
+            elif is_valid_coord(lat, lon):
+                try:
+                    country = reverse_geocode(lat, lon)
+                except Exception:
+                    continue
+            else:
+                continue
+
+            # Ensure study exists and has a publication_id
+            if (
+                vs.studyagmp
+                and vs.studyagmp.publication_id
+                and vs.studyagmp.publication_id.strip() != ""
+            ):
+                pub_id = vs.studyagmp.publication_id.strip()
+                country_to_publication_ids[country].add(pub_id)
+
+    # Prepare final result: count unique publication_ids per country
+    result = {
+        country: len(publication_ids)
+        for country, publication_ids in country_to_publication_ids.items()
+    }
+
+    return JsonResponse(result)
+
+from django.shortcuts import render
+from collections import defaultdict
+import reverse_geocoder as rg
+
+coord_cache = {}
+
+def is_valid_coord(lat, lon):
+    """
+    Checks whether lat/lon are valid values (not blank, not NaN).
+    """
+    try:
+        return (
+            lat is not None
+            and lon is not None
+            and lat != ""
+            and lon != ""
+            and str(lat).lower() != "nan"
+            and str(lon).lower() != "nan"
+        )
+    except Exception:
+        return False
+
+def reverse_geocode(lat, lon):
+    """
+    Reverse-geocode lat/lon to country code.
+    Caches results for efficiency.
+    """
+    key = (round(float(lat), 4), round(float(lon), 4))
+    if key in coord_cache:
+        return coord_cache[key]
+    
+    result = rg.search(key, mode=1)[0]
+    country_code = result["cc"]
+    coord_cache[key] = country_code
+    return country_code
+
+def studies_per_country_view(request):
+    """
+    Renders HTML page showing unique publication_ids per country.
+    """
+    from .models import VariantStudyagmp
+    from collections import defaultdict
+    
+    variant_studies = VariantStudyagmp.objects.select_related('studyagmp').all()
+    
+    # Country → set of publication_ids
+    country_to_pub_ids = defaultdict(set)
+    country_coords = defaultdict(lambda: {"latitudes": set(), "longitudes": set()})
+    
+    # Debug counters
+    total_variant_studies = variant_studies.count()
+    valid_publication_ids = 0
+    
+    for vs in variant_studies:
+        for i in range(12):
+            country_field = "country_participant" if i == 0 else f"country_participant_{i:02d}"
+            lat_field = "latitude" if i == 0 else f"latitude_{i:02d}"
+            lon_field = "longitude" if i == 0 else f"longitude_{i:02d}"
+            
+            country_name = getattr(vs, country_field, None)
+            lat = getattr(vs, lat_field, None)
+            lon = getattr(vs, lon_field, None)
+            
+            # Determine country
+            if country_name:
+                country = country_name.strip()
+            elif is_valid_coord(lat, lon):
+                try:
+                    country = reverse_geocode(lat, lon)
+                except Exception:
+                    continue
+            else:
+                continue
+            
+            # Only if publication_id exists and is valid
+            if (
+                vs.studyagmp
+                and vs.studyagmp.publication_id
+                and vs.studyagmp.publication_id.strip() != ""
+            ):
+                pub_id = vs.studyagmp.publication_id.strip()
+                country_to_pub_ids[country].add(pub_id)
+                valid_publication_ids += 1
+                
+                # Save lat/lon for that country
+                if is_valid_coord(lat, lon):
+                    country_coords[country]["latitudes"].add(str(lat))
+                    country_coords[country]["longitudes"].add(str(lon))
+    
+    # Format for template
+    country_data = []
+    total_unique_studies = 0
+    
+    for country, pub_ids in country_to_pub_ids.items():
+        count = len(pub_ids)  # This is the count of UNIQUE publication_ids
+        total_unique_studies += count
+        
+        latitudes = sorted(country_coords[country]["latitudes"])
+        longitudes = sorted(country_coords[country]["longitudes"])
+        
+        country_data.append({
+            "country": country,
+            "count": count,  # Unique publication_id count per country
+            "publication_ids": list(pub_ids),  # Optional: actual publication IDs
+            "latitudes": latitudes,
+            "longitudes": longitudes
+        })
+    
+    # Debug info (you can remove this in production)
+    print(f"Total VariantStudyagmp records: {total_variant_studies}")
+    print(f"Records with valid publication_ids: {valid_publication_ids}")
+    print(f"Total unique publication_ids across all countries: {total_unique_studies}")
+    print(f"Countries with studies: {len(country_data)}")
+    
+    context = {
+        "country_data": sorted(country_data, key=lambda x: x["country"]),
+        "total_studies": total_unique_studies,
+        "debug_info": {
+            "total_variant_studies": total_variant_studies,
+            "valid_publication_ids": valid_publication_ids,
+            "unique_countries": len(country_data)
+        }
+    }
+    
+    return render(request, "studies_per_country.html", context)

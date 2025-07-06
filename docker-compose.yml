@@ -35,7 +35,7 @@ services:
         - DB_PASS=${DB_PASS}
     #command: python manage.py runserver 0.0.0.0:8000
     #command: tail -f /dev/null
-    command: bash -c "python manage.py collectstatic --noinput && python manage.py migrate && gunicorn african_genomics_medicine_portal.wsgi:application -w 2 -b :8000"
+    command: bash -c "python manage.py collectstatic --noinput && python manage.py migrate && gunicorn --timeout 300 --workers 4 african_genomics_medicine_portal.wsgi:application -w 2 -b :8000"
     volumes:
       - static:/agmp/static_cdn
       - ./:/agmp

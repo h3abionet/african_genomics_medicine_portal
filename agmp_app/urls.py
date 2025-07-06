@@ -64,4 +64,14 @@ urlpatterns = [
     path('tutorial/', views.tutorial, name='tutorial'),
     path('help', views.help, name='help'),
     path('agnocomplete/', include('agnocomplete.urls')),
+
+
+    path(
+        "studies-per-country-view/",
+        views.studies_per_country_view,
+        name="studies-per-country",
+    ), 
+    path("studies-per-country/", views.studies_per_country, name="studies-per-country"),
 ]
+
+
