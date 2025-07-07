@@ -24,68 +24,116 @@
 {% endblock %}
 {% block content %}
 
-<h1>Study Coordinates</h1>
-<h1>Study Coordinates (Sets 01-11)</h1>
-{% for study in studies %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Study Participant Countries</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .study-container {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .study-header {
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        .variant-study {
+            background: white;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #343a40;
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr.empty-row {
+            color: #6c757d;
+            background-color: #f8f9fa;
+        }
+        .no-data {
+            color: #6c757d;
+            font-style: italic;
+        }
+        .set-number {
+            font-weight: bold;
+            color: #495057;
+        }
+    </style>
+</head>
+<body>
+    <h1>Study Participant Countries (Sets 01-11)</h1>
+    
+    {% for study in studies %}
     <div class="study-container">
-        <h2>Study: {{ study.study.title }} (ID: {{ study.study.id }})</h2>
-        <div class="publication-info">
-            <p>Publication ID: {{ study.study.publication_id }}</p>
-            <p>Year: {{ study.study.publication_year }}</p>
+        <div class="study-header">
+            <h2>{{ study.study.title }}</h2>
+            <p><strong>Publication ID:</strong> {{ study.study.publication_id }}</p>
+            <p><strong>Study Type:</strong> {{ study.study.study_type }}</p>
         </div>
         
-        <table class="coordinates-table">
-            <thead>
-                <tr>
-                    <th>Set #</th>
-                    <th>Country Field</th>
-                    <th>Country</th>
-                    <th>Latitude</th>
-                    <th>Longitude</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for coord in study.coordinates %}
-                <tr>
-                    <td>{{ coord.set_number|stringformat:"02d" }}</td>
-                    <td>{{ coord.country_field }}</td>
-                    <td>{{ coord.country|default:"N/A" }}</td>
-                    <td>{{ coord.latitude }}</td>
-                    <td>{{ coord.longitude }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        {% for variant in study.variant_studies %}
+        <div class="variant-study">
+            <h3>Variant Study ID: {{ variant.variant_study.id }}</h3>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Set</th>
+                        <th>Field Name</th>
+                        <th>Country</th>
+                        <th>Latitude</th>
+                        <th>Longitude</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for set in variant.country_data %}
+                    <tr class="{% if not set.has_data %}empty-row{% endif %}">
+                        <td class="set-number">{{ set.set_number|stringformat:"02d" }}</td>
+                        <td>{{ set.field_name }}</td>
+                        <td>{{ set.country|default:"<span class='no-data'>N/A</span>" }}</td>
+                        <td>{{ set.latitude|default:"<span class='no-data'>-</span>" }}</td>
+                        <td>{{ set.longitude|default:"<span class='no-data'>-</span>" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endfor %}
     </div>
-{% empty %}
-    <p>No studies with coordinates found in sets 01-11.</p>
-{% endfor %}
-
-<style>
-    .coordinates-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 15px;
-    }
-    .coordinates-table th, .coordinates-table td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: left;
-    }
-    .coordinates-table th {
-        background-color: #f2f2f2;
-    }
-    .study-container {
-        margin-bottom: 30px;
-        padding: 15px;
-        background-color: #f9f9f9;
-        border-radius: 5px;
-    }
-    .publication-info {
-        margin-bottom: 10px;
-        font-size: 0.9em;
-        color: #555;
-    }
-</style>
+    {% empty %}
+    <div class="no-studies">
+        <p>No studies found with country participant data.</p>
+    </div>
+    {% endfor %}
+</body>
+</html>
 
 {% endblock %}

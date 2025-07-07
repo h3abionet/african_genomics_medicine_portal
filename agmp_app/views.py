@@ -997,36 +997,52 @@ def studies_per_country_view(request):
     return render(request, "studies_per_country.html", context)
 
 
-def display_study_coordinates(request):
-    studies_with_coords = []
+
+
+def display_study_countries(request):
+    studies_with_data = []
     
-    for study in Studyagmp.objects.all():
-        variant_studies = VariantStudyagmp.objects.filter(studyagmp=study)
+    for study in Studyagmp.objects.all().prefetch_related('variantstudyagmp_set'):
+        variant_studies = study.variantstudyagmp_set.all()
         
-        coordinates = []
+        study_data = {
+            'study': study,
+            'variant_studies': []
+        }
+        
         for vs in variant_studies:
-            # Only check numbered coordinate fields (from _01 to _11)
+            country_data = []
+            
+            # Check all country_participant fields from 01 to 11
             for i in range(1, 12):
-                # Handle the field naming pattern (01-09 with leading zero, 10-11 without)
+                # Handle field naming (01-09 with leading zero, 10-11 without)
                 suffix = f'_{i:02d}' if i < 10 else f'_{i}'
                 
-                lat = getattr(vs, f'latitude{suffix}', None)
-                lng = getattr(vs, f'longitude{suffix}', None)
-                country = getattr(vs, f'country_participant{suffix}', None)
+                country_field = f'country_participant{suffix}'
+                lat_field = f'latitude{suffix}'
+                lng_field = f'longitude{suffix}'
                 
-                if lat and lng:
-                    coordinates.append({
-                        'set_number': i,
-                        'country_field': f'country_participant{suffix}',
-                        'country': country,
-                        'latitude': lat,
-                        'longitude': lng,
-                    })
-        
-        if coordinates:
-            studies_with_coords.append({
-                'study': study,
-                'coordinates': coordinates
+                country_data.append({
+                    'set_number': i,
+                    'field_name': country_field,
+                    'country': getattr(vs, country_field, None),
+                    'latitude': getattr(vs, lat_field, None),
+                    'longitude': getattr(vs, lng_field, None),
+                    'has_data': any([
+                        getattr(vs, country_field, None),
+                        getattr(vs, lat_field, None),
+                        getattr(vs, lng_field, None)
+                    ])
+                })
+            
+            study_data['variant_studies'].append({
+                'variant_study': vs,
+                'country_data': country_data
             })
+        
+        studies_with_data.append(study_data)
     
-    return render(request, 'study_coordinates.html', {'studies': studies_with_coords})
+    return render(request, 'study_coordinates.html', {
+        'studies': studies_with_data,
+        'sets_range': range(1, 12)  # For template iteration
+    })

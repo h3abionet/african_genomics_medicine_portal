@@ -71,7 +71,7 @@ urlpatterns = [
 
         path(
         "display_study_coordinates/",
-        views.display_study_coordinates,
+        views.display_study_countries,
         name="display_study_coordinates",
     ), 
     path("studies-per-country/", views.studies_per_country, name="studies-per-country"),
