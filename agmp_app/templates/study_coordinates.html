@@ -25,20 +25,67 @@
 {% block content %}
 
 <h1>Study Coordinates</h1>
+<h1>Study Coordinates (Sets 01-11)</h1>
 {% for study in studies %}
-    <h2>Study: {{ study.study.title }} (PUBMEDID: {{ study.study.publication_id }})</h2>
-    <ul>
-    {% for coord in study.coordinates %}
-        <li>
-            Coordinate Set {{ coord.index }}: 
-            <!-- Country: {{ coord.country|default:"N/A" }}, -->
-            Latitude: {{ coord.latitude }},
-            Longitude: {{ coord.longitude }}
-        </li>
-    {% endfor %}
-    </ul>
+    <div class="study-container">
+        <h2>Study: {{ study.study.title }} (ID: {{ study.study.id }})</h2>
+        <div class="publication-info">
+            <p>Publication ID: {{ study.study.publication_id }}</p>
+            <p>Year: {{ study.study.publication_year }}</p>
+        </div>
+        
+        <table class="coordinates-table">
+            <thead>
+                <tr>
+                    <th>Set #</th>
+                    <th>Country Field</th>
+                    <th>Country</th>
+                    <th>Latitude</th>
+                    <th>Longitude</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for coord in study.coordinates %}
+                <tr>
+                    <td>{{ coord.set_number|stringformat:"02d" }}</td>
+                    <td>{{ coord.country_field }}</td>
+                    <td>{{ coord.country|default:"N/A" }}</td>
+                    <td>{{ coord.latitude }}</td>
+                    <td>{{ coord.longitude }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% empty %}
-    <p>No studies with coordinates found.</p>
+    <p>No studies with coordinates found in sets 01-11.</p>
 {% endfor %}
+
+<style>
+    .coordinates-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    .coordinates-table th, .coordinates-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    .coordinates-table th {
+        background-color: #f2f2f2;
+    }
+    .study-container {
+        margin-bottom: 30px;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+    }
+    .publication-info {
+        margin-bottom: 10px;
+        font-size: 0.9em;
+        color: #555;
+    }
+</style>
 
 {% endblock %}

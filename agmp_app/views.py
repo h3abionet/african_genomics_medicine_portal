@@ -1005,40 +1005,23 @@ def display_study_coordinates(request):
         
         coordinates = []
         for vs in variant_studies:
-            # Base fields (no number)
-            if vs.latitude and vs.longitude:
-                coordinates.append({
-                    'country': vs.country_participant,
-                    'latitude': vs.latitude,
-                    'longitude': vs.longitude,
-                    'index': 0
-                })
-            
-            # Numbered fields
+            # Only check numbered coordinate fields (from _01 to _11)
             for i in range(1, 12):
-                # Handle different numbering patterns in your model
-                suffix_options = [
-                    f'_{i:02d}',  # _01, _02, etc.
-                    f'_{i}',       # _1, _2, etc.
-                    f'_{i:03d}'    # _001, _002, etc. (though your model doesn't seem to use this)
-                ]
+                # Handle the field naming pattern (01-09 with leading zero, 10-11 without)
+                suffix = f'_{i:02d}' if i < 10 else f'_{i}'
                 
-                for suffix in suffix_options:
-                    try:
-                        lat = getattr(vs, f'latitude{suffix}')
-                        lng = getattr(vs, f'longitude{suffix}')
-                        country = getattr(vs, f'country_participant{suffix}')
-                        
-                        if lat and lng:
-                            coordinates.append({
-                                'country': country,
-                                'latitude': lat,
-                                'longitude': lng,
-                                'index': i
-                            })
-                            break  # Found the right suffix, move to next i
-                    except AttributeError:
-                        continue
+                lat = getattr(vs, f'latitude{suffix}', None)
+                lng = getattr(vs, f'longitude{suffix}', None)
+                country = getattr(vs, f'country_participant{suffix}', None)
+                
+                if lat and lng:
+                    coordinates.append({
+                        'set_number': i,
+                        'country_field': f'country_participant{suffix}',
+                        'country': country,
+                        'latitude': lat,
+                        'longitude': lng,
+                    })
         
         if coordinates:
             studies_with_coords.append({
