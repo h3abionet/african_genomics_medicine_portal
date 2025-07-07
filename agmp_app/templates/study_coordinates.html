@@ -1,0 +1,44 @@
+{% extends 'mainLayout.html' %}
+{% load static %}
+{% block title %}Summary{% endblock %}
+
+{% block banner %}
+{% include 'partials/banner_summary.html' %}
+{% endblock %}
+
+{% block css %}
+
+<style>
+    table {
+        border-collapse: collapse;
+        width: 80%;
+        margin: 20px auto;
+    }
+    th, td {
+        border: 1px solid #999;
+        padding: 8px;
+        text-align: center;
+    }
+</style>
+
+{% endblock %}
+{% block content %}
+
+<h1>Study Coordinates</h1>
+{% for study in studies %}
+    <h2>Study: {{ study.study.title }} (PUBMEDID: {{ study.study.publication_id }})</h2>
+    <ul>
+    {% for coord in study.coordinates %}
+        <li>
+            Coordinate Set {{ coord.index }}: 
+            <!-- Country: {{ coord.country|default:"N/A" }}, -->
+            Latitude: {{ coord.latitude }},
+            Longitude: {{ coord.longitude }}
+        </li>
+    {% endfor %}
+    </ul>
+{% empty %}
+    <p>No studies with coordinates found.</p>
+{% endfor %}
+
+{% endblock %}

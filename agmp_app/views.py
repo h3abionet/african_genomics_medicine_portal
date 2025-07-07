@@ -995,3 +995,55 @@ def studies_per_country_view(request):
     }
     
     return render(request, "studies_per_country.html", context)
+
+
+def display_study_coordinates(request):
+    studies_with_coords = []
+    
+    for study in Studyagmp.objects.all():
+        variant_studies = VariantStudyagmp.objects.filter(studyagmp=study)
+        
+        coordinates = []
+        for vs in variant_studies:
+            # Base fields (no number)
+            if vs.latitude and vs.longitude:
+                coordinates.append({
+                    'country': vs.country_participant,
+                    'latitude': vs.latitude,
+                    'longitude': vs.longitude,
+                    'index': 0
+                })
+            
+            # Numbered fields
+            for i in range(1, 12):
+                # Handle different numbering patterns in your model
+                suffix_options = [
+                    f'_{i:02d}',  # _01, _02, etc.
+                    f'_{i}',       # _1, _2, etc.
+                    f'_{i:03d}'    # _001, _002, etc. (though your model doesn't seem to use this)
+                ]
+                
+                for suffix in suffix_options:
+                    try:
+                        lat = getattr(vs, f'latitude{suffix}')
+                        lng = getattr(vs, f'longitude{suffix}')
+                        country = getattr(vs, f'country_participant{suffix}')
+                        
+                        if lat and lng:
+                            coordinates.append({
+                                'country': country,
+                                'latitude': lat,
+                                'longitude': lng,
+                                'index': i
+                            })
+                            break  # Found the right suffix, move to next i
+                    except AttributeError:
+                        continue
+        
+        if coordinates:
+            studies_with_coords.append({
+                'study': study,
+                'coordinates': coordinates
+            })
+    
+    return render(request, 'study_coordinates.html', {'studies': studies_with_coords})

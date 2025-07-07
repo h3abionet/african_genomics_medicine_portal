@@ -64,12 +64,15 @@ urlpatterns = [
     path('tutorial/', views.tutorial, name='tutorial'),
     path('help', views.help, name='help'),
     path('agnocomplete/', include('agnocomplete.urls')),
-
-
-    path(
-        "studies-per-country-view/",
+    path("studies-per-country-view/",
         views.studies_per_country_view,
         name="studies-per-country",
+    ), 
+
+        path(
+        "display_study_coordinates/",
+        views.display_study_coordinates,
+        name="display_study_coordinates",
     ), 
     path("studies-per-country/", views.studies_per_country, name="studies-per-country"),
 ]
