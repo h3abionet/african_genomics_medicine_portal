@@ -1046,3 +1046,60 @@ def display_study_countries(request):
         'studies': studies_with_data,
         'sets_range': range(1, 12)  # For template iteration
     })
+
+
+
+
+def publication_coordinates(request):
+    # Step 1 - get all relevant rows
+    variant_studies = VariantStudyagmp.objects.select_related(
+        "studyagmp"
+    ).exclude(studyagmp__publication_id__isnull=True).exclude(studyagmp__publication_id__exact="")
+
+    # Step 2 - prepare a dictionary keyed by publication_id
+    publications_dict = {}
+
+    for vs in variant_studies:
+        publication_id = vs.studyagmp.publication_id
+
+        # Initialize dictionary entry if not already there
+        if publication_id not in publications_dict:
+            publications_dict[publication_id] = []
+
+        # Collect all 11 lat/long pairs
+        coords = []
+        for i in range(1, 12):
+            lat_attr = f"latitude_{i:02d}" if i > 1 else "latitude"
+            lon_attr = f"longitude_{i:02d}" if i > 1 else "longitude"
+
+            lat_value = getattr(vs, lat_attr, "") or ""
+            lon_value = getattr(vs, lon_attr, "") or ""
+
+            coords.extend([lat_value, lon_value])
+
+        publications_dict[publication_id].append(coords)
+
+    # Step 3 - prepare data for the template
+    table_data = []
+    for pub_id, coord_lists in publications_dict.items():
+        # Merge coordinates if multiple rows exist for same publication_id
+        merged_coords = [""] * 22
+
+        for coords in coord_lists:
+            for idx, value in enumerate(coords):
+                if value and not merged_coords[idx]:
+                    merged_coords[idx] = value
+
+        table_data.append({
+            "publication_id": pub_id,
+            "coords": merged_coords
+        })
+
+    context = {
+        "table_data": table_data,
+        "total_count": len(publications_dict),
+        "coordinate_indexes": [f"{i:02d}" for i in range(1, 12)],
+    }
+
+    return render(request, "publication_coordinates.html", context)
+

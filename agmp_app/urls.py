@@ -2,7 +2,7 @@ from django.urls import path, re_path, include
 # from django.conf.urls import url
 
 from . import views
-from .views import (DrugagmpDetailView, PhamacogeneDrugAssoc, VariantStudyagmpListView,VarDrugAssocDetailView,VvarDrugAssocDetailView,DiseaseVariantDetailView,VarDisAssocDetailView, PharmacoDrugDetailView,VariantDiseaseAssocDetailView,VariantDrugAssociationDetailView,search_view, test_data_table)
+from .views import (DrugagmpDetailView, PhamacogeneDrugAssoc, VariantStudyagmpListView,VarDrugAssocDetailView,VvarDrugAssocDetailView,DiseaseVariantDetailView,VarDisAssocDetailView, PharmacoDrugDetailView,VariantDiseaseAssocDetailView,VariantDrugAssociationDetailView,search_view, test_data_table, publication_coordinates)
 
 urlpatterns = [
 
@@ -75,6 +75,7 @@ urlpatterns = [
         name="display_study_coordinates",
     ), 
     path("studies-per-country/", views.studies_per_country, name="studies-per-country"),
+    path("publication-coordinates/", publication_coordinates, name="publication_coordinates"),
 ]
 
 
