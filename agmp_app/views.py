@@ -1058,50 +1058,52 @@ def publication_coordinates(request):
     
     # Step 2 - prepare a dictionary keyed by publication_id
     publications_dict = {}
+    
     for vs in variant_studies:
         publication_id = vs.studyagmp.publication_id
+        
         # Initialize dictionary entry if not already there
         if publication_id not in publications_dict:
-            publications_dict[publication_id] = []
+            publications_dict[publication_id] = [""] * 33  # 11 triplets = 33 values
         
-        # Collect all 11 lat/long pairs (01 through 11)
-        coords = []
+        # Collect all 11 country/lat/long triplets
         for i in range(1, 12):
-            if i == 10:
-                lat_attr = "latitude_10"  # Special case for 10
-                lon_attr = "longitude_10"
-            elif i == 11:
-                lat_attr = "latitude_11"  # Special case for 11
-                lon_attr = "longitude_11"
-            else:
-                lat_attr = f"latitude_{i:02d}"  # 01, 02, 03, etc.
-                lon_attr = f"longitude_{i:02d}"
+            # Consistent attribute naming - remove special cases unless you're sure they're needed
+            country_attr = f"country_participant_{i:02d}"
+            lat_attr = f"latitude_{i:02d}"
+            lon_attr = f"longitude_{i:02d}"
             
-            lat_value = getattr(vs, lat_attr, "") or ""
-            lon_value = getattr(vs, lon_attr, "") or ""
-            coords.extend([lat_value, lon_value])
-        
-        publications_dict[publication_id].append(coords)
+            # Get values with proper fallback handling
+            country_value = getattr(vs, country_attr, None) or ""
+            lat_value = getattr(vs, lat_attr, None) or ""
+            lon_value = getattr(vs, lon_attr, None) or ""
+            
+            # Calculate the correct index for this triplet
+            base_index = (i - 1) * 3  # Location 1 starts at index 0, Location 2 at index 3, etc.
+            
+            # Only update if we have a value and the current slot is empty
+            if country_value and not publications_dict[publication_id][base_index]:
+                publications_dict[publication_id][base_index] = country_value
+            if lat_value and not publications_dict[publication_id][base_index + 1]:
+                publications_dict[publication_id][base_index + 1] = lat_value
+            if lon_value and not publications_dict[publication_id][base_index + 2]:
+                publications_dict[publication_id][base_index + 2] = lon_value
     
     # Step 3 - prepare data for the template
     table_data = []
-    for pub_id, coord_lists in publications_dict.items():
-        # Merge coordinates if multiple rows exist for same publication_id
-        merged_coords = [""] * 22  # 11 pairs = 22 coordinates
-        for coords in coord_lists:
-            for idx, value in enumerate(coords):
-                if value and not merged_coords[idx]:
-                    merged_coords[idx] = value
-        
+    for pub_id, locations in publications_dict.items():
         table_data.append({
             "publication_id": pub_id,
-            "coords": merged_coords
+            "locations": locations
         })
+    
+    # Sort by publication_id for consistent display
+    table_data.sort(key=lambda x: x["publication_id"])
     
     context = {
         "table_data": table_data,
         "total_count": len(publications_dict),
-        "coordinate_indexes": [f"{i:02d}" if i < 10 else str(i) for i in range(1, 12)],
+        "location_indexes": [f"{i:02d}" for i in range(1, 12)],
     }
     
     return render(request, "publication_coordinates.html", context)
