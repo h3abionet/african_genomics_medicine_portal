@@ -1,55 +1,50 @@
 {% extends 'mainLayout.html' %}
 {% load static %}
 {% block title %}Summary{% endblock %}
-
 {% block banner %}
 {% include 'partials/banner_summary.html' %}
 {% endblock %}
-
 {% block css %}
 <style>
-    .table-responsive {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    table {
-        border-collapse: collapse;
-        width: 100%;
-        font-size: 14px;
-        min-width: 1500px; /* Prevents columns from collapsing too much */
-    }
-
-    th, td {
-        border: 1px solid #999;
-        padding: 5px;
-        text-align: center;
-        white-space: nowrap; /* Keeps data in one line */
-    }
-
-    th {
-        background-color: #f2f2f2;
-    }
-
-    tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 14px;
+    min-width: 2000px; /* Increased width for 11 coordinate pairs */
+}
+th, td {
+    border: 1px solid #999;
+    padding: 5px;
+    text-align: center;
+    white-space: nowrap; /* Keeps data in one line */
+}
+th {
+    background-color: #f2f2f2;
+}
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+.coord-header {
+    background-color: #e6f3ff !important;
+}
 </style>
 {% endblock %}
-
 {% block content %}
 <h1>Publications with Coordinates</h1>
 <p>Total unique publications: <strong>{{ total_count }}</strong></p>
-
 <div class="table-responsive">
     <table>
         <thead>
             <tr>
                 <th>Publication ID</th>
                 {% for i in coordinate_indexes %}
-                    <th>Latitude {{ i }}</th>
-                    <th>Longitude {{ i }}</th>
+                <th class="coord-header">Latitude {{ i }}</th>
+                <th class="coord-header">Longitude {{ i }}</th>
                 {% endfor %}
             </tr>
         </thead>
@@ -58,7 +53,7 @@
             <tr>
                 <td>{{ row.publication_id }}</td>
                 {% for coord in row.coords %}
-                    <td>{{ coord }}</td>
+                <td>{{ coord }}</td>
                 {% endfor %}
             </tr>
             {% empty %}

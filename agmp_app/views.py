@@ -1055,51 +1055,53 @@ def publication_coordinates(request):
     variant_studies = VariantStudyagmp.objects.select_related(
         "studyagmp"
     ).exclude(studyagmp__publication_id__isnull=True).exclude(studyagmp__publication_id__exact="")
-
+    
     # Step 2 - prepare a dictionary keyed by publication_id
     publications_dict = {}
-
     for vs in variant_studies:
         publication_id = vs.studyagmp.publication_id
-
         # Initialize dictionary entry if not already there
         if publication_id not in publications_dict:
             publications_dict[publication_id] = []
-
-        # Collect all 11 lat/long pairs
+        
+        # Collect all 11 lat/long pairs (01 through 11)
         coords = []
         for i in range(1, 12):
-            lat_attr = f"latitude_{i:02d}" if i > 1 else "latitude"
-            lon_attr = f"longitude_{i:02d}" if i > 1 else "longitude"
-
+            if i == 10:
+                lat_attr = "latitude_10"  # Special case for 10
+                lon_attr = "longitude_10"
+            elif i == 11:
+                lat_attr = "latitude_11"  # Special case for 11
+                lon_attr = "longitude_11"
+            else:
+                lat_attr = f"latitude_{i:02d}"  # 01, 02, 03, etc.
+                lon_attr = f"longitude_{i:02d}"
+            
             lat_value = getattr(vs, lat_attr, "") or ""
             lon_value = getattr(vs, lon_attr, "") or ""
-
             coords.extend([lat_value, lon_value])
-
+        
         publications_dict[publication_id].append(coords)
-
+    
     # Step 3 - prepare data for the template
     table_data = []
     for pub_id, coord_lists in publications_dict.items():
         # Merge coordinates if multiple rows exist for same publication_id
-        merged_coords = [""] * 22
-
+        merged_coords = [""] * 22  # 11 pairs = 22 coordinates
         for coords in coord_lists:
             for idx, value in enumerate(coords):
                 if value and not merged_coords[idx]:
                     merged_coords[idx] = value
-
+        
         table_data.append({
             "publication_id": pub_id,
             "coords": merged_coords
         })
-
+    
     context = {
         "table_data": table_data,
         "total_count": len(publications_dict),
-        "coordinate_indexes": [f"{i:02d}" for i in range(1, 12)],
+        "coordinate_indexes": [f"{i:02d}" if i < 10 else str(i) for i in range(1, 12)],
     }
-
+    
     return render(request, "publication_coordinates.html", context)
-
