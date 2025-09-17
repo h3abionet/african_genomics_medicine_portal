@@ -62,7 +62,7 @@ Applying Migrations to the database if need be
 ### Import script notes
 1. The import script exist in agmp_app/management/commands/load_data.py.
 2. To run the import script # python3 manage.py load_data
-3. The script imports
+3. The script imports:
                 <br>1.<b>first_import_job_run.csv <b> file 
                <br> 2. the second script imports a <b>second_import_job_run.xlsx</b> file
 4. The import script selects the column name instead of the column number.
