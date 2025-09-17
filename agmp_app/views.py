@@ -624,8 +624,9 @@ def get_map_data(request, map_type):
     study_type = request.GET.get('study_type', 'All')
     
     try:
+        
         def get_filtered_studies(study_type):
-            studies = VariantStudyagmp.objects.all()
+            studies = VariantStudyagmp.objects.select_related('studyagmp').distinct('studyagmp__publication_id')
             if study_type and study_type != 'All':
                 studies = studies.filter(studyagmp__study_type=study_type)
             return studies
