@@ -2,7 +2,7 @@ from django.urls import path, re_path, include
 # from django.conf.urls import url
 
 from . import views
-from .views import (DrugagmpDetailView, PhamacogeneDrugAssoc, VariantStudyagmpListView,VarDrugAssocDetailView,VvarDrugAssocDetailView,DiseaseVariantDetailView,VarDisAssocDetailView, PharmacoDrugDetailView,VariantDiseaseAssocDetailView,VariantDrugAssociationDetailView,search_view, test_data_table, publication_coordinates)
+from .views import (DrugagmpDetailView, PhamacogeneDrugAssoc, VariantStudyagmpListView,VarDrugAssocDetailView,VvarDrugAssocDetailView,DiseaseVariantDetailView,VarDisAssocDetailView, PharmacoDrugDetailView,VariantDiseaseAssocDetailView,VariantDrugAssociationDetailView,search_view, test_data_table)
 
 urlpatterns = [
 
@@ -64,18 +64,7 @@ urlpatterns = [
     path('tutorial/', views.tutorial, name='tutorial'),
     path('help', views.help, name='help'),
     path('agnocomplete/', include('agnocomplete.urls')),
-    path("studies-per-country-view/",
-        views.studies_per_country_view,
-        name="studies-per-country",
-    ), 
 
-        path(
-        "display_study_coordinates/",
-        views.display_study_countries,
-        name="display_study_coordinates",
-    ), 
-    path("studies-per-country/", views.studies_per_country, name="studies-per-country"),
-    path("publication-coordinates/", publication_coordinates, name="publication_coordinates"),
 ]
 
 
