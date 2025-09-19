@@ -1,0 +1,61 @@
+{% extends 'mainLayout.html' %}
+{% load static %}
+{% block title %}Summary{% endblock %}
+
+{% block banner %}
+{% include 'partials/banner_summary.html' %}
+{% endblock %}
+
+{% block css %}
+
+<style>
+    table {
+        border-collapse: collapse;
+        width: 80%;
+        margin: 20px auto;
+    }
+    th, td {
+        border: 1px solid #999;
+        padding: 8px;
+        text-align: center;
+    }
+</style>
+
+{% endblock %}
+
+{% block content %}
+</head>
+<body>
+<h1 style="text-align: center;">Number of Studies per Country</h1>
+
+<h2 style="text-align: center;">
+    Total Studies: {{ total_studies }}
+</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Country</th>
+            <th>Number of Studies</th>
+            <th>Latitudes</th>
+            <th>Longitudes</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in country_data %}
+            <tr>
+                <td>{{ item.country }}</td>
+                <td>{{ item.count }}</td>
+                <td>{{ item.latitudes|join:", " }}</td>
+                <td>{{ item.longitudes|join:", " }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="4">No data available.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</body>
+
+{% endblock %}
