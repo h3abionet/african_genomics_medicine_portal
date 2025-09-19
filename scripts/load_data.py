@@ -74,66 +74,135 @@ def run():
     print("\n")
     print("############ First JOB ENDED ################")
 
-    # Import data from the second Excel file
-    df_excel = pd.read_excel('import_csv/second_import_job_run_sept_2024.xlsx')
+# Import data from the second Excel file
+df_excel = pd.read_excel('import_csv/second_import_job_run_april_2025.xlsx')
 
-    # replaces NS, ns and nan with NR
-    def normalize_p_value(value):
-        if pd.isna(value) or value in ['NS', 'ns','nan']:
-            return 'NR'
-        return value
+# replaces NS, ns and nan with NR
+def normalize_p_value(value):
+    if pd.isna(value) or value in ['NS', 'ns', 'nan']:
+        return 'NR'
+    return value
 
-    # removed the drug_bank_id=row['ID Drug bank'], in drug second import job run
-    for index, row in df_excel.iterrows():
-        print(row)
-        p01, created = Phenotypeagmp.objects.get_or_create(name=row['phenotype'])
-        s01, created = Studyagmp.objects.get_or_create(data_ac=row['data_ac'], publication_id=row['PUBMEDID'], publication_year=row['publication_year'], study_type=row['study_type'], title=row['title'])
-        g01, created = Geneagmp.objects.get_or_create(gene_name=row['gene_name'], gene_id=row['curated_gene_symbol'], chromosome=row['chromosome'], uniprot_ac=row['uniprot'], function=row['function'])
-        v01 = Variantagmp(studyagmp=s01, phenotypeagmp=p01, geneagmp=g01, variant_type=row['variant_type'], source_db=row['source'], id_in_source_db=row['id_in_source'], rs_id=row['id'])
-        v01.save()
-        
-        normalized_p_value = normalize_p_value(row['p-value'])
+# Updated import loop with correct column mappings
+for index, row in df_excel.iterrows():
+    print(row)
+    
+    # Create Phenotype (Disease)
+    p01, created = Phenotypeagmp.objects.get_or_create(
+        name=row['phenotype']
+    )
+    
+    # Create Study
+    s01, created = Studyagmp.objects.get_or_create(
+        data_ac=row['data_ac'],
+        publication_id=row['PUBMEDID'],
+        publication_type=row['publication_type'],
+        publication_year=row['publication_year'],
+        study_type=row['study_type'],
+        title=row['title']
+    )
+    
+    # Create Gene
+    g01, created = Geneagmp.objects.get_or_create(
+        gene_id=row['curated_gene_symbol'],
+        chromosome=row['chromosome'],
+        function=row['function'],
+        gene_name=row['gene_name'],
+        uniprot_ac=row['uniprot']
+    )
+    
+    # Create Drug (if drug data exists)
+    d01 = None
+    if pd.notna(row['ID Drug bank']) and row['ID Drug bank']:
+        d01, created = Drugagmp.objects.get_or_create(
+            drug_bank_id=row['ID Drug bank'],
+            defaults={
+                'drug_name': row['drug_name'],
+                'indication': row['Indication'],
+                'iupac_name_seq': row['IUPAC_name'],
+                'state': row['state']
+            }
+        )
+    
+    # Create Variant
+    v01 = Variantagmp(
+        studyagmp=s01,
+        phenotypeagmp=p01,
+        geneagmp=g01,
+        drugagmp=d01,  # Will be None if no drug data
+        variant_type=row['variant_type'],
+        source_db=row['source'],
+        id_in_source_db=row['id_in_source'],
+        rs_id=row['id']
+    )
+    v01.save()
+    
+    # Normalize p-value
+    normalized_p_value = normalize_p_value(row['p-value'])
+    
+    # Create VariantStudy with all country participant data
+    vs01 = VariantStudyagmp(
+        studyagmp=s01,
+        variantagmp=v01,
+        country_participant=row['origin_of_participants'],
+        ethnicity=row['Ethnicity'],
+        mixed_population=row['mixed_population'],
+        geographical_regions=row['geographical_region'],
+        notes=row['Notes'],
+        p_value=normalized_p_value,
+        # Country participants 01-011 with their coordinates
+        country_participant_01=row['country_participant_01'],
+        latitude_01=row['latitude_01'],
+        longitude_01=row['longitude_01'],
+        country_participant_02=row['country_participant_02'],
+        latitude_02=row['latitude_02'],
+        longitude_02=row['longitude_02'],
+        country_participant_03=row['country_participant_03'],
+        latitude_03=row['latitude_03'],
+        longitude_03=row['longitude_03'],
+        country_participant_04=row['country_participant_04'],
+        latitude_04=row['latitude_04'],
+        longitude_04=row['longitude_04'],
+        country_participant_05=row['country_participant_05'],
+        latitude_05=row['latitude_05'],
+        longitude_05=row['longitude_05'],
+        country_participant_06=row['country_participant_06'],
+        latitude_06=row['latitude_06'],
+        longitude_06=row['longitude_06'],
+        country_participant_07=row['country_participant_07'],
+        latitude_07=row['latitude_07'],
+        longitude_07=row['longitude_07'],
+        country_participant_08=row['country_participant_08'],
+        latitude_08=row['latitude_08'],
+        longitude_08=row['longitude_08'],
+        country_participant_09=row['country_participant_09'],
+        latitude_09=row['latitude_09'],
+        longitude_09=row['longitude_09'],
+        country_participant_010=row['country_participant_010'],
+        latitude_10=row['latitude_10'],
+        longitude_10=row['longitude_10'],
+        country_participant_011=row['country_participant_011'],
+        latitude_11=row['latitude_11'],
+        longitude_11=row['longitude_11']
+    )
+    vs01.save()
 
-        vs01 = VariantStudyagmp(studyagmp=s01, variantagmp=v01,
-                                latitude_01=row['latitude_01'], longitude_01=row['longitude_01'],
-                                latitude_02=row['latitude_02'], longitude_02=row['longitude_02'],
-                                latitude_03=row['latitude_03'], longitude_03=row['longitude_03'],
-                                latitude_04=row['latitude_04'], longitude_04=row['longitude_04'],
-                                latitude_05=row['latitude_05'], longitude_05=row['longitude_05'],
-                                latitude_06=row['latitude_06'], longitude_06=row['longitude_06'],
-                                latitude_07=row['latitude_07'], longitude_07=row['longitude_07'],
-                                latitude_08=row['latitude_08'], longitude_08=row['longitude_08'],
-                                latitude_09=row['latitude_09'], longitude_09=row['longitude_09'],
-                                latitude_10=row['latitude_10'], longitude_10=row['longitude_10'],
-                                latitude_11=row['latitude_11'], longitude_11=row['longitude_11'],
-                                # p_value=row['p-value'],
-                                p_value=normalized_p_value,
-                                ethnicity=row['Ethnicity'],
-                                mixed_population=row['mixed_population'],
-                                geographical_regions=row['geographical_region'],
-                                country_participant=row['origin_of_participants'],
-                                )
-        vs01.save()
+# Print statistics
+new_no_of_genes = Geneagmp.objects.values('gene_id').distinct().count()
+new_no_of_drugs = Drugagmp.objects.values('drug_bank_id').distinct().count()
+new_no_of_variants = Variantagmp.objects.values('rs_id').distinct().count()
+new_no_of_studies = Studyagmp.objects.values('publication_id').distinct().count()
+new_no_of_phenotypes = Phenotypeagmp.objects.values('name').distinct().count()
+new_no_of_variant_studies = VariantStudyagmp.objects.all().count()
 
-    new_no_of_genes = Geneagmp.objects.values('gene_id').distinct().count()
-    # new_no_of_drugs = Drugagmp.objects.values('drug_bank_id').distinct().count()
-    new_no_of_variants = Variantagmp.objects.values('rs_id').distinct().count()
-    new_no_of_studies = Studyagmp.objects.values('publication_id').distinct().count()
-    new_no_of_phenotypes = Phenotypeagmp.objects.values('name').distinct().count()
-    new_no_of_variant_studies = VariantStudyagmp.objects.all().count()
-
-    print("\n")
-    print(f"{new_no_of_phenotypes}: TOTAL PHENOTYPES IMPORTED")
-    print(f"{new_no_of_studies}: TOTAL Studies IMPORTED")
-    print(f"{new_no_of_genes}: TOTAL Genes IMPORTED") 
-    # print(f"{new_no_of_drugs}: TOTAL DRUGS IMPORTED") 
-    print(f"{new_no_of_variant_studies}: TOTAL VARIANT STUDIES IMPORTED") 
-    print(f"{new_no_of_variants}: TOTAL VARIANTS IMPORTED \n")
-    print("############ SECOND JOB ENDED & GWAS Catalogue IMPORT COMPLETE ################")
-
-
-
-
+print("\n")
+print(f"{new_no_of_phenotypes}: TOTAL PHENOTYPES IMPORTED")
+print(f"{new_no_of_studies}: TOTAL Studies IMPORTED")
+print(f"{new_no_of_genes}: TOTAL Genes IMPORTED")
+print(f"{new_no_of_drugs}: TOTAL DRUGS IMPORTED")
+print(f"{new_no_of_variant_studies}: TOTAL VARIANT STUDIES IMPORTED")
+print(f"{new_no_of_variants}: TOTAL VARIANTS IMPORTED \n")
+print("############ SECOND JOB ENDED & GWAS Catalogue IMPORT COMPLETE ################")
 
 
 

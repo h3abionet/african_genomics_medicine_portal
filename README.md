@@ -33,6 +33,7 @@ Install the following packages (if you have not done so already):
 ### Running the application in development
 
 * clone from Github `git clone https://github.com/h3abionet/african_genomics_medicine_portal.git`
+* check out into correct production branch `git checkout deployed_v2_1`
 * `python manage.py makemigrations agmp_app`
 * `python manage.py migrate`
 * `python manage.py runserver`
@@ -41,7 +42,7 @@ Install the following packages (if you have not done so already):
 ### Running the application in docker production
 
 * clone from Github 'git clone  https://github.com/h3abionet/african_genomics_medicine_portal.git'
-* `git checkout deployed_v2_1 #switch to the correct branch`
+* `git checkout deployed_v2_1 #switch to the correct production branch`
 * `vim .env  #add database credentials to the env file`
 * `mkdir static_cdn # inside the project directory on the host machine`
 * `docker-compose build`
@@ -62,7 +63,7 @@ Applying Migrations to the database if need be
 ### Import script notes
 1. The import script exist in agmp_app/management/commands/load_data.py.
 2. To run the import script # python3 manage.py load_data
-3. The script imports
+3. The script imports:
                 <br>1.<b>first_import_job_run.csv <b> file 
                <br> 2. the second script imports a <b>second_import_job_run.xlsx</b> file
 4. The import script selects the column name instead of the column number.

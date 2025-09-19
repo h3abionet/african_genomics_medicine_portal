@@ -624,8 +624,9 @@ def get_map_data(request, map_type):
     study_type = request.GET.get('study_type', 'All')
     
     try:
+        
         def get_filtered_studies(study_type):
-            studies = VariantStudyagmp.objects.all()
+            studies = VariantStudyagmp.objects.select_related('studyagmp').distinct('studyagmp__publication_id')
             if study_type and study_type != 'All':
                 studies = studies.filter(studyagmp__study_type=study_type)
             return studies
@@ -766,67 +767,66 @@ def get_map_data(request, map_type):
     except Exception as e:
         logger.error(f"Error generating map data: {str(e)}")
         return JsonResponse({'error': 'An error occurred while generating map data'}, status=500)
+    
 
 def summary(request):
     """
     Main view for the summary page
     """
-    try:
-        # Basic counts
-        unique_genes = Geneagmp.objects.exclude(gene_id__iexact='').exclude(gene_id__iexact="nan").values('gene_id').distinct()
-        gene_count = unique_genes.count()
-        drug_count = Drugagmp.objects.exclude(drug_bank_id__iexact='').exclude(drug_bank_id__iexact="nan").values('drug_bank_id').distinct().count()
-        variant_count = Variantagmp.objects.exclude(rs_id__iexact='').exclude(rs_id__iexact="nan").values('rs_id').distinct().count()
-        disease_count = Variantagmp.objects.values('phenotypeagmp__name').distinct().count()
-        publication_count = Studyagmp.objects.exclude(publication_id__iexact='').exclude(publication_id__iexact="nan").values('publication_id').distinct().count()
+    # Basic counts
+    unique_genes = Geneagmp.objects.exclude(gene_id__iexact='').exclude(gene_id__iexact="nan").values('gene_id').distinct()
+    gene_count = unique_genes.count()
+    drug_count = Drugagmp.objects.exclude(drug_bank_id__iexact='').exclude(drug_bank_id__iexact="nan").values('drug_bank_id').distinct().count()
+    variant_count = Variantagmp.objects.exclude(rs_id__iexact='').exclude(rs_id__iexact="nan").values('rs_id').distinct().count()
+    disease_count = Variantagmp.objects.values('phenotypeagmp__name').distinct().count()
+    publication_count = Studyagmp.objects.exclude(publication_id__iexact='').exclude(publication_id__iexact="nan").values('publication_id').distinct().count()
+    
+    # Optimized queries for graphs
+    qs_drug = (
+        Drugagmp.objects.exclude(drug_name="nan")
+        .values('drug_name')
+        .annotate(frequency=Count('drugs'))
+        .order_by('-frequency')[:10]
+    )
+    
+    qs_gene = (
+        Geneagmp.objects.exclude(gene_name="nan")
+        .values('gene_id')
+        .annotate(frequency=Count('variantagmp__studyagmp'))
+        .order_by('-frequency')[:10]
+    )
+    
+    qs_variant = (
+        Variantagmp.objects.exclude(rs_id="nan")
+        .values('rs_id')
+        .annotate(frequency=Count('studyagmp'))
+        .order_by('-frequency')[:10]
+    )
+    
+    qs_disease = (
+        Phenotypeagmp.objects.exclude(variantagmp__source_db="PharmGKB")
+        .exclude(variantagmp__source_db="nan")
+        .values('name')
+        .annotate(frequency=Count('variantagmp'))
+        .order_by('-frequency')[:10]
+    )
+    
+    context = {
+        'gene_count': gene_count,
+        'publication_count': publication_count,
+        'drug_count': drug_count,
+        'variant_count': variant_count,
+        'disease_count': disease_count,
+        'qs_drug': qs_drug,
+        'qs_gene': qs_gene,
+        'qs_variant': qs_variant,
+        'qs_disease': qs_disease,
+        'study_types': ['All', 'GWAS', 'Case Report','Candidate Gene','WES/WGS','Clinical Trial','Other']
+    }
+    
+    return render(request, 'summary.html', context)
 
-        # Optimized queries for graphs
-        qs_drug = (
-            Drugagmp.objects.exclude(drug_name="nan")
-            .values('drug_name')
-            .annotate(frequency=Count('drugs'))
-            .order_by('-frequency')[:10]
-        )
 
-        qs_gene = (
-            Geneagmp.objects.exclude(gene_name="nan")
-            .values('gene_id')
-            .annotate(frequency=Count('variantagmp__studyagmp'))
-            .order_by('-frequency')[:10]
-        )
-
-        qs_variant = (
-            Variantagmp.objects.exclude(rs_id="nan")
-            .values('rs_id')
-            .annotate(frequency=Count('studyagmp'))
-            .order_by('-frequency')[:10]
-        )
-
-        qs_disease = (
-            Phenotypeagmp.objects.exclude(variantagmp__source_db="PharmGKB")
-            .exclude(variantagmp__source_db="nan")
-            .values('name')
-            .annotate(frequency=Count('variantagmp'))
-            .order_by('-frequency')[:10]
-        )
-
-        context = {
-            'gene_count': gene_count,
-            'publication_count': publication_count,
-            'drug_count': drug_count,
-            'variant_count': variant_count,
-            'disease_count': disease_count,
-            'qs_drug': qs_drug,
-            'qs_gene': qs_gene,
-            'qs_variant': qs_variant,
-            'qs_disease': qs_disease,
-            'study_types': ['All', 'GWAS', 'Case Report','Candidate Gene','WES/WGS','Clinical Trial','Other']
-        }
-
-        return render(request, 'summary.html', context)
-    except Exception as e:
-        logger.error(f"Error in summary view: {str(e)}")
-        return render(request, 'error.html', {'error': 'An error occurred while loading the summary page'})
 
 def outreach(request):
     return render(request, 'outreach.html')
@@ -860,3 +860,133 @@ def home(request):
 
 def test_data_table(request):
     return render(request, 'test_data_table.html')
+
+from django.http import JsonResponse
+from collections import defaultdict
+import reverse_geocoder as rg
+
+# Local cache for lat/lon lookups
+coord_cache = {}
+
+def is_valid_coord(lat, lon):
+    """
+    Checks whether lat/lon are valid values (not blank, not NaN).
+    """
+    try:
+        return (
+            lat is not None
+            and lon is not None
+            and lat != ""
+            and lon != ""
+            and str(lat).lower() != "nan"
+            and str(lon).lower() != "nan"
+        )
+    except Exception:
+        return False
+
+def reverse_geocode(lat, lon):
+    """
+    Reverse-geocode lat/lon to country code.
+    Caches results for efficiency.
+    """
+    key = (round(float(lat), 4), round(float(lon), 4))
+    if key in coord_cache:
+        return coord_cache[key]
+    
+    result = rg.search(key, mode=1)[0]
+    country_code = result["cc"]
+    coord_cache[key] = country_code
+    return country_code
+
+def studies_per_country(request):
+    """
+    Returns JSON of unique publication_ids per country.
+    """
+
+    from .models import VariantStudyagmp
+
+    variant_studies = VariantStudyagmp.objects.all()
+
+    # Mapping: country → set of publication_ids
+    country_to_publication_ids = defaultdict(set)
+
+    for vs in variant_studies:
+        for i in range(12):
+            country_field = "country_participant" if i == 0 else f"country_participant_{i:02}"
+            lat_field = "latitude" if i == 0 else f"latitude_{i:02}"
+            lon_field = "longitude" if i == 0 else f"longitude_{i:02}"
+
+            country_name = getattr(vs, country_field, None)
+            lat = getattr(vs, lat_field, None)
+            lon = getattr(vs, lon_field, None)
+
+            # Determine country
+            if country_name:
+                country = country_name.strip()
+            elif is_valid_coord(lat, lon):
+                try:
+                    country = reverse_geocode(lat, lon)
+                except Exception:
+                    continue
+            else:
+                continue
+
+            # Ensure study exists and has a publication_id
+            if (
+                vs.studyagmp
+                and vs.studyagmp.publication_id
+                and vs.studyagmp.publication_id.strip() != ""
+            ):
+                pub_id = vs.studyagmp.publication_id.strip()
+                country_to_publication_ids[country].add(pub_id)
+
+    # Prepare final result: count unique publication_ids per country
+    result = {
+        country: len(publication_ids)
+        for country, publication_ids in country_to_publication_ids.items()
+    }
+
+    return JsonResponse(result)
+
+from django.shortcuts import render
+from collections import defaultdict
+import reverse_geocoder as rg
+
+coord_cache = {}
+
+def is_valid_coord(lat, lon):
+    """
+    Checks whether lat/lon are valid values (not blank, not NaN).
+    """
+    try:
+        return (
+            lat is not None
+            and lon is not None
+            and lat != ""
+            and lon != ""
+            and str(lat).lower() != "nan"
+            and str(lon).lower() != "nan"
+        )
+    except Exception:
+        return False
+
+def reverse_geocode(lat, lon):
+    """
+    Reverse-geocode lat/lon to country code.
+    Caches results for efficiency.
+    """
+    key = (round(float(lat), 4), round(float(lon), 4))
+    if key in coord_cache:
+        return coord_cache[key]
+    
+    result = rg.search(key, mode=1)[0]
+    country_code = result["cc"]
+    coord_cache[key] = country_code
+    return country_code
+
+
+
+
+
+
+
