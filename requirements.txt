@@ -1,4 +1,4 @@
-django==4.2.20
+django==4.2.24
 django-agnocomplete # old version ==0.14.0
 django-bootstrap4
 django-crispy-forms
