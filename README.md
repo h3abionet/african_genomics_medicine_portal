@@ -71,6 +71,10 @@ Applying Migrations to the database if need be
 ### Other project files
 1. Other project files not limitted to ERD's, data wrangling scripts, csv files are located <a href="https://drive.google.com/drive/u/0/folders/17vzyy3QGL466uH5uxAXDXiCySe3rZD36" target="_blank">here</a>
 
+2. Recent csv files are located <a href="https://drive.google.com/drive/folders/1QO1YDZQV2mj7_mwrUWxg9HZ3xKahNzqL" target="_blank">here</a>
+
+
+
 <!-- # Screen shots of tabular presentation of PharmaGKb data -->
 <!-- ![](images/drug.png?raw=true)
 ![](images/snp.png?raw=true)
