@@ -181,6 +181,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn')
 
 
+
 RESULTS_PER_PAGE = 50
 
 LEAFLET_CONFIG = {

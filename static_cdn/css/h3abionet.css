@@ -1,0 +1,22 @@
+html,
+body {
+  height: 100%;
+}
+
+body {
+ 
+
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  margin-top: 40px;
+  flex: 1 0 auto;
+}
+
+.text-blue {
+  color: #fff !important;
+  font-weight: 500;
+  font-size: inherit;
+}
