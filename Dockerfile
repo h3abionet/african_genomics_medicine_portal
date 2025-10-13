@@ -1,5 +1,4 @@
-FROM python:3.13-slim
-
+FROM python:3.12-slim
 WORKDIR /agmp
 
 # Set environment variables
@@ -20,26 +19,36 @@ ENV DB_NAME=${DB_NAME}
 ENV DB_USER=${DB_USER}
 ENV DB_PASS=${DB_PASS}
 
-# Install PostgreSQL client, GDAL, and other dependencies
-# Added proper package management and fixed syntax issues
+# Install basic dependencies first
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-    software-properties-common \
     gnupg \
-    apt-transport-https \
     ca-certificates \
-    && apt-get update && \
+    curl \
+    && apt-get clean
+
+# Install core system packages
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    build-essential \
+    g++ \
+    python3-dev \
+    && apt-get clean
+
+# Install application-specific packages
+RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     graphviz \
     postgresql-client \
     netcat-openbsd \
+    vim \
+    && apt-get clean
+
+# Install GDAL packages separately (often problematic)
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
     gdal-bin \
     libgdal-dev \
-    build-essential \
-    g++ \
-    python3-dev \
-    vim \
-    python3-gdal \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -79,6 +88,9 @@ ENV GEOS_LIBRARY_PATH=/usr/lib/libgeos_c.so
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Install GDAL Python bindings via pip for better compatibility
+RUN pip install GDAL==$(gdal-config --version) --no-cache-dir
+
 # Copy project
 COPY . .
 
@@ -86,9 +98,9 @@ COPY . .
 RUN echo '#!/bin/bash\n\
 set -e\n\
 \n\
-until PGPASSWORD=$DB_PASS psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -c "\q"; do\n\
->&2 echo "PostgreSQL is unavailable - sleeping"\n\
-sleep 1\n\
+until PGPASSWORD=$DB_PASS psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -c "\\q"; do\n\
+    >&2 echo "PostgreSQL is unavailable - sleeping"\n\
+    sleep 1\n\
 done\n\
 \n\
 >&2 echo "PostgreSQL is up - executing command"\n\
