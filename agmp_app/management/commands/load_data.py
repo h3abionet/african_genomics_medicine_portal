@@ -34,9 +34,15 @@ class Command(BaseCommand):
             help='Path to the first CSV file',
         )
         parser.add_argument(
-            '--second-file',
+            '--second-files-dir',
             type=str,
-            help='Path to the second Excel file',
+            help='Directory containing the second import Excel files',
+        )
+        parser.add_argument(
+            '--second-file-pattern',
+            type=str,
+            default='second_import_job_run_part_2_*.xlsx',
+            help='Pattern to match second import files (default: second_import_job_run_part_2_*.xlsx)',
         )
 
     def handle(self, *args, **options):
@@ -58,37 +64,47 @@ class Command(BaseCommand):
             
             # Use command line arguments if provided, otherwise use default paths
             first_import_path = Path(options['first_file']) if options.get('first_file') else base_dir / 'import_csv' / 'first_import_job_run.csv'
-            second_import_path = Path(options['second_file']) if options.get('second_file') else base_dir / 'import_csv' / 'second_import_job_run_april_2025.xlsx'
+            second_files_dir = Path(options['second_files_dir']) if options.get('second_files_dir') else base_dir / 'import_csv'
+            second_file_pattern = options.get('second_file_pattern', 'second_import_job_run_part_2_*.xlsx')
             
             self.stdout.write(f"First import file path: {first_import_path}")
-            self.stdout.write(f"Second import file path: {second_import_path}")
+            self.stdout.write(f"Second import files directory: {second_files_dir}")
+            self.stdout.write(f"Second import file pattern: {second_file_pattern}")
             
-            # Check if files exist
+            # Check if first file exists
             if not first_import_path.exists():
                 self.stdout.write(self.style.ERROR(f"First import file not found: {first_import_path}"))
                 return
             
-            if not second_import_path.exists():
-                self.stdout.write(self.style.ERROR(f"Second import file not found: {second_import_path}"))
+            # Find all second import files matching the pattern
+            second_import_files = sorted(second_files_dir.glob(second_file_pattern))
+            
+            if not second_import_files:
+                self.stdout.write(self.style.ERROR(f"No second import files found matching pattern: {second_file_pattern}"))
+                self.stdout.write(f"Searched in directory: {second_files_dir}")
                 return
+            
+            self.stdout.write(self.style.SUCCESS(f"Found {len(second_import_files)} second import files:"))
+            for file in second_import_files:
+                self.stdout.write(f"  - {file.name}")
             
             with transaction.atomic():
                 # Delete all existing data if not skipped
                 if not options['skip_delete']:
                     self.stdout.write("Deleting existing data...")
+                    VariantStudyagmp.objects.all().delete()
                     Variantagmp.objects.all().delete()
                     Drugagmp.objects.all().delete()
                     Geneagmp.objects.all().delete()
                     Studyagmp.objects.all().delete()
                     Phenotypeagmp.objects.all().delete()
-                    VariantStudyagmp.objects.all().delete()
                     self.stdout.write(self.style.SUCCESS("All existing data deleted."))
                 
                 # Process first import file
                 self.process_first_import(first_import_path)
                 
-                # Process second import file
-                self.process_second_import(second_import_path)
+                # Process all second import files
+                self.process_second_imports(second_import_files)
                 
                 # Print final statistics
                 self.print_statistics()
@@ -107,7 +123,9 @@ class Command(BaseCommand):
 
     def process_first_import(self, file_path):
         """Process the first CSV import file"""
-        self.stdout.write("Starting first import job...")
+        self.stdout.write("\n" + "="*80)
+        self.stdout.write(self.style.SUCCESS("STARTING FIRST IMPORT JOB"))
+        self.stdout.write("="*80)
         
         try:
             # Import the first file
@@ -171,15 +189,15 @@ class Command(BaseCommand):
                     vs.save()
                     
                     count += 1
-                    if count % 100 == 0:
+                    if count % 1000 == 0:
                         self.stdout.write(f"Processed {count} rows in first import")
                         
                 except Exception as e:
                     self.stdout.write(self.style.WARNING(f"Error processing row {index} in first import: {str(e)}"))
-                    self.stdout.write(self.style.WARNING(f"Row data: {row}"))
                     continue
             
-            self.stdout.write(self.style.SUCCESS("First import job completed successfully"))
+            self.stdout.write(self.style.SUCCESS(f"✓ First import completed: {count} records processed"))
+            self.stdout.write("="*80 + "\n")
             
         except Exception as e:
             self.stdout.write(self.style.ERROR(f"Error during first import job: {str(e)}"))
@@ -187,14 +205,48 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR(traceback.format_exc()))
             raise
 
-    def process_second_import(self, file_path):
-        """Process the second Excel import file"""
-        self.stdout.write("Starting second import job...")
+    def process_second_imports(self, file_paths):
+        """Process multiple second Excel import files"""
+        self.stdout.write("\n" + "="*80)
+        self.stdout.write(self.style.SUCCESS("STARTING SECOND IMPORT JOB - MULTIPLE FILES"))
+        self.stdout.write("="*80)
         
+        total_files = len(file_paths)
+        total_records = 0
+        
+        for file_index, file_path in enumerate(file_paths, 1):
+            self.stdout.write(f"\n{'─'*80}")
+            self.stdout.write(self.style.SUCCESS(f"Processing file {file_index} of {total_files}: {file_path.name}"))
+            self.stdout.write(f"{'─'*80}")
+            
+            try:
+                records_processed = self.process_single_second_import(file_path, file_index, total_files)
+                total_records += records_processed
+                
+                # Print completion message for this file
+                self.stdout.write(self.style.SUCCESS(f"✓ File {file_index}/{total_files} completed: {records_processed} records"))
+                self.stdout.write(self.style.SUCCESS(f"✓ Total records processed so far: {total_records}"))
+                
+            except Exception as e:
+                self.stdout.write(self.style.ERROR(f"✗ Error processing file {file_index}/{total_files}: {file_path.name}"))
+                self.stdout.write(self.style.ERROR(f"Error: {str(e)}"))
+                import traceback
+                self.stdout.write(self.style.ERROR(traceback.format_exc()))
+                # Continue with next file instead of stopping
+                continue
+        
+        self.stdout.write("\n" + "="*80)
+        self.stdout.write(self.style.SUCCESS(f"SECOND IMPORT JOB COMPLETED"))
+        self.stdout.write(self.style.SUCCESS(f"Files processed: {total_files}"))
+        self.stdout.write(self.style.SUCCESS(f"Total records: {total_records}"))
+        self.stdout.write("="*80 + "\n")
+
+    def process_single_second_import(self, file_path, file_number, total_files):
+        """Process a single second Excel import file"""
         try:
-            # Import data from the second Excel file
+            # Import data from the Excel file
             df_excel = pd.read_excel(file_path)
-            self.stdout.write(self.style.SUCCESS(f"Loaded {len(df_excel)} rows from second import file"))
+            self.stdout.write(f"Loaded {len(df_excel)} rows from {file_path.name}")
             
             count = 0
             for index, row in df_excel.iterrows():
@@ -291,7 +343,7 @@ class Command(BaseCommand):
                         latitude_30=row.get('latitude_30', None), longitude_30=row.get('longitude_30', None),
                         country_participant_30=row.get('country_30', None),
                         p_value=normalized_p_value,
-                        ethnicity=row['Ethnicity'],
+                        # ethnicity=row['Ethnicity'],
                         mixed_population=row['mixed_population'],
                         geographical_regions=row['geographical_region'],
                         country_participant=row['origin_of_participants'],
@@ -299,24 +351,25 @@ class Command(BaseCommand):
                     vs01.save()
                     
                     count += 1
-                    if count % 100 == 0:
-                        self.stdout.write(f"Processed {count} rows in second import")
+                    if count % 1000 == 0:
+                        self.stdout.write(f"  Progress: {count}/{len(df_excel)} rows")
                         
                 except Exception as e:
-                    self.stdout.write(self.style.WARNING(f"Error processing row {index} in second import: {str(e)}"))
-                    self.stdout.write(self.style.WARNING(f"Row data: {row}"))
+                    self.stdout.write(self.style.WARNING(f"  Error processing row {index}: {str(e)}"))
                     continue
             
-            self.stdout.write(self.style.SUCCESS("Second import job completed successfully"))
+            return count
             
         except Exception as e:
-            self.stdout.write(self.style.ERROR(f"Error during second import job: {str(e)}"))
-            import traceback
-            self.stdout.write(self.style.ERROR(traceback.format_exc()))
+            self.stdout.write(self.style.ERROR(f"Error reading file {file_path.name}: {str(e)}"))
             raise
 
     def print_statistics(self):
         """Print final statistics about imported data"""
+        self.stdout.write("\n" + "="*80)
+        self.stdout.write(self.style.SUCCESS("FINAL IMPORT STATISTICS"))
+        self.stdout.write("="*80)
+        
         no_of_genes = Geneagmp.objects.values('gene_id').distinct().count()
         no_of_drugs = Drugagmp.objects.values('drug_bank_id').distinct().count()
         no_of_variants = Variantagmp.objects.values('rs_id').distinct().count()
@@ -324,15 +377,12 @@ class Command(BaseCommand):
         no_of_phenotypes = Phenotypeagmp.objects.values('name').distinct().count()
         no_of_variant_studies = VariantStudyagmp.objects.all().count()
 
-        self.stdout.write("\n")
-        self.stdout.write(self.style.SUCCESS(f"{no_of_phenotypes}: TOTAL PHENOTYPES IMPORTED"))
-        self.stdout.write(self.style.SUCCESS(f"{no_of_studies}: TOTAL Studies IMPORTED"))
-        self.stdout.write(self.style.SUCCESS(f"{no_of_genes}: TOTAL Genes IMPORTED"))
-        self.stdout.write(self.style.SUCCESS(f"{no_of_drugs}: TOTAL DRUGS IMPORTED"))
-        self.stdout.write(self.style.SUCCESS(f"{no_of_variant_studies}: TOTAL VARIANT STUDIES IMPORTED"))
-        self.stdout.write(self.style.SUCCESS(f"{no_of_variants}: TOTAL VARIANTS IMPORTED"))
-        self.stdout.write(self.style.SUCCESS("\n############ GWAS Catalogue IMPORT COMPLETE ################"))
-
-
-
-
+        self.stdout.write(self.style.SUCCESS(f"Phenotypes:        {no_of_phenotypes:,}"))
+        self.stdout.write(self.style.SUCCESS(f"Studies:           {no_of_studies:,}"))
+        self.stdout.write(self.style.SUCCESS(f"Genes:             {no_of_genes:,}"))
+        self.stdout.write(self.style.SUCCESS(f"Drugs:             {no_of_drugs:,}"))
+        self.stdout.write(self.style.SUCCESS(f"Variants:          {no_of_variants:,}"))
+        self.stdout.write(self.style.SUCCESS(f"Variant Studies:   {no_of_variant_studies:,}"))
+        self.stdout.write("="*80)
+        self.stdout.write(self.style.SUCCESS("✓ GWAS CATALOGUE IMPORT COMPLETE"))
+        self.stdout.write("="*80 + "\n")
