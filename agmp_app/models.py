@@ -146,6 +146,84 @@ class VariantStudyagmp(models.Model):
     country_participant_011 = models.CharField(max_length=500, null=True, blank=True)
     latitude_11 = models.CharField(max_length=500, null=True, blank=True)
     longitude_11 = models.CharField(max_length=500, null=True, blank=True)
+
+    country_participant_012 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_12 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_12 = models.CharField(max_length=500, null=True, blank=True)
+
+    country_participant_013 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_13 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_13 = models.CharField(max_length=500, null=True, blank=True)
+
+    country_participant_014 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_14 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_14 = models.CharField(max_length=500, null=True, blank=True)
+
+    country_participant_015 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_15 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_15 = models.CharField(max_length=500, null=True, blank=True)
+
+    country_participant_016 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_16 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_16 = models.CharField(max_length=500, null=True, blank=True)
+
+    country_participant_017 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_17 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_17 = models.CharField(max_length=500, null=True, blank=True)
+
+    country_participant_018 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_18 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_18 = models.CharField(max_length=500, null=True, blank=True)
+
+    country_participant_019 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_19 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_19 = models.CharField(max_length=500, null=True, blank=True)
+
+    country_participant_20 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_20 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_20 = models.CharField(max_length=500, null=True, blank=True)
+
+    country_participant_21 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_21 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_21 = models.CharField(max_length=500, null=True, blank=True)
+
+    country_participant_22 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_22 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_22 = models.CharField(max_length=500, null=True, blank=True)
+
+    country_participant_23 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_23 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_23 = models.CharField(max_length=500, null=True, blank=True)
+
+    country_participant_24 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_24 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_24 = models.CharField(max_length=500, null=True, blank=True)
+
+    country_participant_25 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_25 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_25 = models.CharField(max_length=500, null=True, blank=True)
+
+    country_participant_26 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_26 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_26 = models.CharField(max_length=500, null=True, blank=True)
+
+    country_participant_27 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_27 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_27 = models.CharField(max_length=500, null=True, blank=True)
+
+    country_participant_28 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_28 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_28 = models.CharField(max_length=500, null=True, blank=True)
+
+    country_participant_29 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_29 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_29 = models.CharField(max_length=500, null=True, blank=True)
+
+    country_participant_30 = models.CharField(max_length=500, null=True, blank=True)
+    latitude_30 = models.CharField(max_length=500, null=True, blank=True)
+    longitude_30 = models.CharField(max_length=500, null=True, blank=True)
+
+
     mixed_population = models.CharField(max_length=8, null=True, blank=True)
     ethnicity = models.CharField(max_length=500, null=True, blank=True)
     geographical_regions = models.CharField(max_length=500, null=True, blank=True)
