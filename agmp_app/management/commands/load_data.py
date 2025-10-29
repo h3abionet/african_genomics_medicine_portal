@@ -343,7 +343,7 @@ class Command(BaseCommand):
                         latitude_30=row.get('latitude_30', None), longitude_30=row.get('longitude_30', None),
                         country_participant_30=row.get('country_30', None),
                         p_value=normalized_p_value,
-                        # ethnicity=row['Ethnicity'],
+                        #ethnicity=row['Ethnicity'],
                         mixed_population=row['mixed_population'],
                         geographical_regions=row['geographical_region'],
                         country_participant=row['origin_of_participants'],
