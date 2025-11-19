@@ -76,6 +76,7 @@ INSTALLED_APPS = [
     'agmp_app',
     'leaflet',
     'agnocomplete',
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -85,6 +86,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'corsheaders',
     'dal_select2',
+     'django_filters',
 ]
 
 SHELL_PLUS = "notebook"
@@ -201,3 +203,9 @@ CSRF_TRUSTED_ORIGINS = [
     ).split(',') 
     if origin.strip()
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ]
+}

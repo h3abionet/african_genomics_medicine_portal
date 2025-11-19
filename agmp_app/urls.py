@@ -1,8 +1,12 @@
 from django.urls import path, re_path, include
-# from django.conf.urls import url
+from rest_framework.routers import DefaultRouter
+from .api_views import VariantagmpViewSet
 
 from . import views
 from .views import (DrugagmpDetailView, PhamacogeneDrugAssoc, VariantStudyagmpListView,VarDrugAssocDetailView,VvarDrugAssocDetailView,DiseaseVariantDetailView,VarDisAssocDetailView, PharmacoDrugDetailView,VariantDiseaseAssocDetailView,VariantDrugAssociationDetailView,search_view, test_data_table)
+
+router = DefaultRouter()
+router.register(r'variants', VariantagmpViewSet, basename='variant')
 
 urlpatterns = [
 
@@ -64,6 +68,9 @@ urlpatterns = [
     path('tutorial/', views.tutorial, name='tutorial'),
     path('help', views.help, name='help'),
     path('agnocomplete/', include('agnocomplete.urls')),
+
+   # API urls
+    path('api/', include(router.urls)),
 
 ]
 
