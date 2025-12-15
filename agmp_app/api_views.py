@@ -17,7 +17,10 @@ class VariantagmpViewSet(viewsets.ModelViewSet):
 
     serializer_class = VariantagmpSerializer
 
-    # Enable search for other fields
+    # 🔹 Allow only safe methods
+    http_method_names = ['get', 'put', 'patch', 'delete', 'head', 'options']
+
+    # Enable search for other fields (partial match)
     filter_backends = [filters.SearchFilter]
     search_fields = [
         'allele',
