@@ -1,5 +1,5 @@
 
-agmp01.tp-stack.co.uk {
+agmp01.tech.tp-stack.co.uk {
     log {
         output stdout
         format console
