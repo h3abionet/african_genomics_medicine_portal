@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:13
-    container_name: agmp_postgres_instance
+    container_name: agmp_postgres
     restart: unless-stopped
     env_file:
       - .env
@@ -14,31 +14,24 @@ services:
     networks:
       - agmp_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 5s
       timeout: 5s
       retries: 5
 
   djangoapp:
-    image: agmp
-    container_name: agmp_django_instance
-    restart: unless-stopped
     build:
       context: .
-      args:
-        - DB_HOST=postgres
-        - DB_PORT=5432
-        - DB_NAME=${DB_NAME}
-        - DB_USER=${DB_USER}
-        - DB_PASS=${DB_PASS}
-    #command: python manage.py runserver 0.0.0.0:8000
-    #command: tail -f /dev/null
-    command: bash -c "python manage.py collectstatic --noinput && python manage.py migrate && gunicorn --timeout 300 --workers 4 african_genomics_medicine_portal.wsgi:application -w 2 -b :8000"
+      dockerfile: Dockerfile
+    container_name: agmp_django
+    restart: unless-stopped
+    entrypoint: []
+    command: bash -c "python manage.py collectstatic --noinput && python manage.py migrate --noinput && gunicorn african_genomics_medicine_portal.wsgi:application --bind 0.0.0.0:8000 --workers 4 --timeout 300"
     volumes:
-      - static:/agmp/static_cdn
-      - ./:/agmp
+      - static_volume:/agmp/static_cdn
+      - media_volume:/agmp/media
     expose:
-      - 8000
+      - "8000"
     depends_on:
       postgres:
         condition: service_healthy
@@ -50,15 +43,19 @@ services:
       - DB_HOST=postgres
       - DB_PORT=5432
 
-  nginx:
-    image: nginx:latest
-    container_name: agmp_nginx_instance
+  caddy:
+    image: caddy:2
+    container_name: agmp_caddy
     restart: unless-stopped
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - static:/agmp/static_cdn
     ports:
-      - 8080:80
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile.${ENV:-local}:/etc/caddy/Caddyfile:ro
+      - static_volume:/agmp/static_cdn:ro
+      - media_volume:/agmp/media:ro
+      - caddy_data:/data
+      - caddy_config:/config
     depends_on:
       - djangoapp
     networks:
@@ -69,5 +66,8 @@ networks:
     driver: bridge
 
 volumes:
-  static:
   postgres_data:
+  static_volume:
+  media_volume:
+  caddy_data:
+  caddy_config:

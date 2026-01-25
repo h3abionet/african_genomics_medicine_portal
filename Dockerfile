@@ -119,4 +119,6 @@ USER django_user
 
 # Wait for PostgreSQL to be available before running command
 ENTRYPOINT ["/wait-for-postgres.sh"]
-CMD ["gunicorn", "african_genomics_medicine_portal.wsgi:application", "-w", "2", "-b", ":8000"]
+
+
+CMD ["gunicorn", "african_genomics_medicine_portal.wsgi:application", "-w", "2", "-b", "0.0.0.0:8000"]

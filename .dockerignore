@@ -21,3 +21,57 @@ incoming/
 config
 
 **/.git
+
+# Virtual environments
+venv/
+*/venv/
+.venv/
+env/
+.env.local
+
+# Git
+.git/
+.gitignore
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Docker
+Dockerfile*
+docker-compose*
+.docker/
+
+# Caddyfiles
+Caddyfile*
+
+# Local development
+*.log
+*.pot
+*.sqlite3
+db.sqlite3
+
+# Static files (collected in container)
+static_cdn/
+staticfiles/
+
+# Media files
+media/
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# OS files
+.DS_Store
+Thumbs.db

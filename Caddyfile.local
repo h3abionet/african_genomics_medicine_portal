@@ -1,0 +1,25 @@
+:80 {
+    log {
+        output stdout
+        format console
+    }
+    handle /static/* {
+        root * /agmp/static_cdn
+        uri strip_prefix /static
+        file_server
+    }
+    handle /media/* {
+        root * /agmp/media
+        uri strip_prefix /media
+        file_server
+    }
+    handle {
+        reverse_proxy djangoapp:8000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote}
+            header_up X-Forwarded-For {remote}
+            header_up X-Forwarded-Proto {scheme}
+        }
+    }
+    encode gzip
+}
