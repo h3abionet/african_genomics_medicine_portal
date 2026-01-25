@@ -3,7 +3,12 @@ from rest_framework.routers import DefaultRouter
 from .api_views import VariantagmpViewSet
 
 from . import views
-from .views import (DrugagmpDetailView, PhamacogeneDrugAssoc, VariantStudyagmpListView,VarDrugAssocDetailView,VvarDrugAssocDetailView,DiseaseVariantDetailView,VarDisAssocDetailView, PharmacoDrugDetailView,VariantDiseaseAssocDetailView,VariantDrugAssociationDetailView,search_view, test_data_table)
+
+
+from .views import (DrugagmpDetailView, PhamacogeneDrugAssoc, VariantStudyagmpListView,VarDrugAssocDetailView,VvarDrugAssocDetailView,DiseaseVariantDetailView,VarDisAssocDetailView, PharmacoDrugDetailView,VariantDiseaseAssocDetailView,VariantDrugAssociationDetailView,search_view, test_data_table,   # Batch Query Views
+    batch_query_view,
+    batch_query_execute,
+    batch_query_export,)
 
 router = DefaultRouter()
 router.register(r'variants', VariantagmpViewSet, basename='variant')
@@ -68,6 +73,16 @@ urlpatterns = [
     path('tutorial/', views.tutorial, name='tutorial'),
     path('help', views.help, name='help'),
     path('agnocomplete/', include('agnocomplete.urls')),
+
+        # =========================================
+    # BATCH QUERY URLs
+    # =========================================
+
+# Batch Query
+path('batch-query/', batch_query_view, name='batch_query'),
+path('batch-query/execute/', batch_query_execute, name='batch_query_execute'),
+path('batch-query/export/', batch_query_export, name='batch_query_export'),
+
 
    # API urls
     path('api/', include(router.urls)),

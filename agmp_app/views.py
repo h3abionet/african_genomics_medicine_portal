@@ -2,7 +2,7 @@ import logging
 import re
 from urllib.parse import DefragResult
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
-from django.http import FileResponse, JsonResponse, Http404
+from django.http import FileResponse, JsonResponse, Http404, HttpResponse
 from django.core import serializers
 from itertools import chain
 from .forms import SearchForm, ModelSearchForm
@@ -29,6 +29,298 @@ import geopandas as gpd
 from shapely.geometry import Point
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
+
+from django.views.decorators.http import require_http_methods
+
+import csv
+import io
+
+# ============================================================ # ============================================================
+
+
+def batch_query_view(request):
+    """Render the batch query page."""
+    return render(request, 'batch_query.html')
+
+
+def batch_query_execute(request):
+    """Execute batch query and return results."""
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': 'POST required'})
+    
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'error': 'Invalid JSON'})
+    
+    query_type = data.get('query_type', '')
+    queries = data.get('queries', [])
+    output_fields = data.get('output_fields', [])
+    
+    if not query_type:
+        return JsonResponse({'success': False, 'error': 'Select a query type'})
+    if not queries:
+        return JsonResponse({'success': False, 'error': 'Provide at least one search term'})
+    if not output_fields:
+        return JsonResponse({'success': False, 'error': 'Select at least one output field'})
+    
+    # Remove duplicates, preserve order
+    seen = set()
+    unique_queries = []
+    for q in queries:
+        q = q.strip()
+        if q and q.lower() not in seen:
+            seen.add(q.lower())
+            unique_queries.append(q)
+    
+    # Limit to 1000 queries
+    queries = unique_queries[:1000]
+    
+    results = []
+    not_found = []
+    
+    for query in queries:
+        if query_type == 'variant':
+            row = query_variant_data(query, output_fields)
+        elif query_type == 'gene':
+            row = query_gene_data(query, output_fields)
+        elif query_type == 'drug':
+            row = query_drug_data(query, output_fields)
+        elif query_type == 'phenotype':
+            row = query_phenotype_data(query, output_fields)
+        else:
+            row = None
+        
+        if row:
+            row['_input'] = query
+            row['_status'] = 'found'
+            results.append(row)
+        else:
+            results.append({
+                '_input': query,
+                '_status': 'not_found'
+            })
+            not_found.append(query)
+    
+    return JsonResponse({
+        'success': True,
+        'results': results,
+        'total': len(results),
+        'found': len(results) - len(not_found),
+        'not_found_count': len(not_found),
+        'not_found_list': not_found
+    })
+
+
+def query_variant_data(rs_id, fields):
+    """Query variant data."""
+    try:
+        variant = Variantagmp.objects.filter(
+            Q(rs_id__iexact=rs_id) | Q(rs_id__icontains=rs_id)
+        ).select_related('geneagmp', 'drugagmp', 'phenotypeagmp').first()
+        
+        if not variant:
+            return None
+        
+        result = {}
+        
+        if 'rs_id' in fields:
+            result['rs_id'] = variant.rs_id or ''
+        if 'gene_id' in fields:
+            result['gene_id'] = variant.geneagmp.gene_id if variant.geneagmp else ''
+        if 'gene_name' in fields:
+            result['gene_name'] = variant.geneagmp.gene_name if variant.geneagmp else ''
+        if 'chromosome' in fields:
+            result['chromosome'] = variant.geneagmp.chromosome if variant.geneagmp else ''
+        if 'variant_type' in fields:
+            result['variant_type'] = variant.variant_type or ''
+        if 'allele' in fields:
+            result['allele'] = variant.allele or ''
+        if 'source_db' in fields:
+            result['source_db'] = variant.source_db or ''
+        if 'drug_name' in fields:
+            result['drug_name'] = variant.drugagmp.drug_name if variant.drugagmp else ''
+        if 'drug_bank_id' in fields:
+            result['drug_bank_id'] = variant.drugagmp.drug_bank_id if variant.drugagmp else ''
+        if 'phenotype' in fields:
+            result['phenotype'] = variant.phenotypeagmp.name if variant.phenotypeagmp else ''
+        if 'drug_assoc_count' in fields:
+            result['drug_assoc_count'] = VariantStudyagmp.objects.filter(
+                variantagmp__rs_id__iexact=rs_id
+            ).exclude(variantagmp__source_db__in=["DisGeNET", "GWAS Catalog"]).count()
+        if 'phenotype_assoc_count' in fields:
+            result['phenotype_assoc_count'] = VariantStudyagmp.objects.filter(
+                variantagmp__rs_id__iexact=rs_id,
+                variantagmp__source_db__in=["DisGeNet", "GWAS Catalog"]
+            ).count()
+        if 'study_count' in fields:
+            result['study_count'] = VariantStudyagmp.objects.filter(
+                variantagmp__rs_id__iexact=rs_id
+            ).values('studyagmp__publication_id').distinct().count()
+        
+        return result
+    except Exception as e:
+        logger.error(f"query_variant_data error: {str(e)}")
+        return None
+
+
+def query_gene_data(gene_id, fields):
+    """Query gene data."""
+    try:
+        gene = Geneagmp.objects.filter(gene_id__iexact=gene_id).first()
+        
+        if not gene:
+            return None
+        
+        result = {}
+        
+        if 'gene_id' in fields:
+            result['gene_id'] = gene.gene_id or ''
+        if 'gene_name' in fields:
+            result['gene_name'] = gene.gene_name or ''
+        if 'chromosome' in fields:
+            result['chromosome'] = gene.chromosome or ''
+        if 'function' in fields:
+            result['function'] = gene.function or ''
+        if 'uniprot_ac' in fields:
+            result['uniprot_ac'] = gene.uniprot_ac or ''
+        if 'variant_count' in fields:
+            result['variant_count'] = Variantagmp.objects.filter(
+                geneagmp__gene_id__iexact=gene_id
+            ).values('rs_id').distinct().count()
+        if 'study_count' in fields:
+            result['study_count'] = VariantStudyagmp.objects.filter(
+                variantagmp__geneagmp__gene_id__iexact=gene_id
+            ).values('studyagmp__publication_id').distinct().count()
+        if 'drug_assoc_count' in fields:
+            result['drug_assoc_count'] = VariantStudyagmp.objects.filter(
+                variantagmp__geneagmp__gene_id__iexact=gene_id
+            ).exclude(variantagmp__source_db__in=["DisGeNET", "GWAS Catalog"]).count()
+        if 'phenotype_assoc_count' in fields:
+            result['phenotype_assoc_count'] = VariantStudyagmp.objects.filter(
+                variantagmp__geneagmp__gene_id__iexact=gene_id,
+                variantagmp__source_db__in=["DisGeNet", "GWAS Catalog"]
+            ).count()
+        
+        return result
+    except Exception as e:
+        logger.error(f"query_gene_data error: {str(e)}")
+        return None
+
+
+def query_drug_data(drug_input, fields):
+    """Query drug data."""
+    try:
+        drug = Drugagmp.objects.filter(
+            Q(drug_name__iexact=drug_input) | Q(drug_bank_id__iexact=drug_input)
+        ).first()
+        
+        if not drug:
+            return None
+        
+        result = {}
+        
+        if 'drug_name' in fields:
+            result['drug_name'] = drug.drug_name or ''
+        if 'drug_bank_id' in fields:
+            result['drug_bank_id'] = drug.drug_bank_id or ''
+        if 'drug_id' in fields:
+            result['drug_id'] = drug.drug_id or ''
+        if 'state' in fields:
+            result['state'] = drug.state or ''
+        if 'indication' in fields:
+            result['indication'] = drug.indication or ''
+        if 'iupac_name' in fields:
+            result['iupac_name'] = drug.iupac_name_seq or ''
+        if 'variant_count' in fields:
+            result['variant_count'] = Variantagmp.objects.filter(
+                drugagmp=drug
+            ).values('rs_id').distinct().count()
+        if 'gene_count' in fields:
+            result['gene_count'] = Variantagmp.objects.filter(
+                drugagmp=drug
+            ).values('geneagmp__gene_id').distinct().count()
+        if 'study_count' in fields:
+            result['study_count'] = VariantStudyagmp.objects.filter(
+                variantagmp__drugagmp=drug
+            ).values('studyagmp__publication_id').distinct().count()
+        
+        return result
+    except Exception as e:
+        logger.error(f"query_drug_data error: {str(e)}")
+        return None
+
+
+def query_phenotype_data(phenotype_name, fields):
+    """Query phenotype data."""
+    try:
+        exists = Variantagmp.objects.filter(
+            phenotypeagmp__name__iexact=phenotype_name
+        ).exclude(source_db="PharmGKB").exists()
+        
+        if not exists:
+            return None
+        
+        result = {}
+        
+        if 'phenotype_name' in fields:
+            result['phenotype_name'] = phenotype_name
+        if 'variant_count' in fields:
+            result['variant_count'] = Variantagmp.objects.filter(
+                phenotypeagmp__name__iexact=phenotype_name
+            ).exclude(source_db="PharmGKB").values('rs_id').distinct().count()
+        if 'gene_count' in fields:
+            result['gene_count'] = Variantagmp.objects.filter(
+                phenotypeagmp__name__iexact=phenotype_name
+            ).exclude(source_db="PharmGKB").values('geneagmp__gene_id').distinct().count()
+        if 'study_count' in fields:
+            result['study_count'] = VariantStudyagmp.objects.filter(
+                variantagmp__phenotypeagmp__name__iexact=phenotype_name
+            ).exclude(variantagmp__source_db="PharmGKB").values('studyagmp__publication_id').distinct().count()
+        
+        return result
+    except Exception as e:
+        logger.error(f"query_phenotype_data error: {str(e)}")
+        return None
+
+
+def batch_query_export(request):
+    """Export results as CSV."""
+    if request.method != 'POST':
+        return HttpResponse("POST required", status=405)
+    
+    try:
+        data = json.loads(request.body)
+        results = data.get('results', [])
+        columns = data.get('columns', [])
+    except json.JSONDecodeError:
+        return HttpResponse("Invalid data", status=400)
+    
+    if not results:
+        return HttpResponse("No results", status=400)
+    
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="batch_query_results.csv"'
+    
+    # Use provided columns or get from first result
+    if not columns:
+        columns = list(results[0].keys())
+    
+    # Ensure _input and _status are first
+    ordered = ['_input', '_status']
+    ordered += [c for c in columns if c not in ordered]
+    
+    writer = csv.DictWriter(response, fieldnames=ordered, extrasaction='ignore')
+    writer.writeheader()
+    
+    for row in results:
+        writer.writerow(row)
+    
+    return response
+
+
+
+# ============================================================ # ============================================================
 
 # Configure logger
 logger = logging.getLogger(__name__)
