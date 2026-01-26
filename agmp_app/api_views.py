@@ -1,38 +1,31 @@
 from rest_framework import viewsets, filters, status
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from rest_framework.response import Response
-
 from .models import Variantagmp
 from .serializers import VariantagmpSerializer
 
 
 class VariantagmpViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint for Variantagmp
-    Supports:
-    - GET (list, retrieve)
-    - PUT / PATCH (update)
-    - DELETE (delete)
-    """
-
     serializer_class = VariantagmpSerializer
-
-    # 🔹 Allow only safe methods
     http_method_names = ['get', 'put', 'patch', 'delete', 'head', 'options']
-
-    # Enable search for other fields (partial match)
     filter_backends = [filters.SearchFilter]
-    search_fields = [
-        'allele',
-        'variant_type',
-        'source_db'
-    ]
+    search_fields = ['allele', 'variant_type', 'source_db']
+
+    def get_permissions(self):
+        """
+        Custom permissions per action:
+        - check_exists: public access
+        - list/retrieve: authenticated users
+        - update/delete: admin only
+        """
+        if self.action == 'check_exists':
+            return [AllowAny()]
+        elif self.action in ['update', 'partial_update', 'destroy']:
+            return [IsAdminUser()]
+        return [IsAuthenticated()]
 
     def get_queryset(self):
-        """
-        Override to allow exact match search by rs_id using query param:
-        /api/variants/?rs_id=rs7
-        """
         qs = Variantagmp.objects.select_related(
             'geneagmp',
             'drugagmp',
@@ -42,18 +35,16 @@ class VariantagmpViewSet(viewsets.ModelViewSet):
 
         rs_id = self.request.query_params.get('rs_id')
         if rs_id:
-            qs = qs.filter(rs_id=rs_id)  # exact match
-
+            qs = qs.filter(rs_id=rs_id)
         return qs
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get'], permission_classes=[AllowAny])
     def check_exists(self, request):
         """
-        Custom endpoint:
+        Public endpoint:
         /api/variants/check_exists/?rs_id=rs123
         """
         rs_id = request.query_params.get('rs_id')
-
         if not rs_id:
             return Response(
                 {'error': 'Please provide rs_id parameter'},
@@ -61,7 +52,6 @@ class VariantagmpViewSet(viewsets.ModelViewSet):
             )
 
         qs = Variantagmp.objects.filter(rs_id=rs_id)
-
         return Response({
             'exists': qs.exists(),
             'count': qs.count(),
