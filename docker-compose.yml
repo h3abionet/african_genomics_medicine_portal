@@ -48,7 +48,7 @@ services:
     container_name: agmp_caddy
     restart: unless-stopped
     ports:
-      - "80:80"
+      - "8080:80"
       - "443:443"
     volumes:
       - ./Caddyfile.${ENV:-local}:/etc/caddy/Caddyfile:ro
