@@ -1,4 +1,4 @@
-django==4.2.25
+django==4.2.27
 djangorestframework==3.16.1
 django-agnocomplete # old version ==0.14.0
 django-bootstrap4
