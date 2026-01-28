@@ -17,8 +17,8 @@
         .section-title { font-size: 16px; font-weight: 600; margin-bottom: 15px; color: #333; }
         .type-options { display: flex; gap: 20px; flex-wrap: wrap; }
         .type-option { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 15px; border: 2px solid #ddd; border-radius: 6px; transition: all 0.2s; }
-        .type-option:hover { border-color: #007bff; }
-        .type-option.selected { border-color: #007bff; background: #e7f1ff; }
+        .type-option:hover { border-color: #1e7e34; }
+        .type-option.selected { border-color: #1e7e34; background: #e7f1ff; }
         .type-option input { display: none; }
         .input-methods { display: flex; gap: 10px; margin-bottom: 15px; }
         .input-method-btn { padding: 8px 16px; border: 1px solid #ddd; background: #f8f9fa; border-radius: 4px; cursor: pointer; }
@@ -78,7 +78,7 @@
 
 <body>
 <div class="batch-container">
-    <h2>Batch Query</h2>
+    <h5>Batch Query</h5>
     <p>Search multiple variants, genes, drugs, or phenotypes at once.</p>
     
     <!-- Step 1: Select Input Type -->
@@ -87,11 +87,11 @@
         <div class="type-options">
             <label class="type-option" data-type="variant">
                 <input type="radio" name="query_type" value="variant">
-                <span>🧬 Variant (RS ID)</span>
+                <span>🔬 Variant (RS ID)</span>
             </label>
             <label class="type-option" data-type="gene">
                 <input type="radio" name="query_type" value="gene">
-                <span>🔬 Gene</span>
+                <span>🧬 Gene</span>
             </label>
             <label class="type-option" data-type="drug">
                 <input type="radio" name="query_type" value="drug">
@@ -142,13 +142,13 @@
     
     <!-- Search Button -->
     <div class="search-section">
-        <button type="button" class="btn-search" id="searchBtn" onclick="executeSearch()" disabled>Search</button>
+        <button type="button" class="btn-search" id="searchBtn" onclick="executeSearch()" disabled>Run Batch Query</button>
     </div>
     
     <!-- Loading -->
     <div class="loading" id="loading">
         <div class="spinner"></div>
-        <p>Searching... Please wait.</p>
+        <p>Querying... Please wait.</p>
     </div>
     
     <!-- Results -->
