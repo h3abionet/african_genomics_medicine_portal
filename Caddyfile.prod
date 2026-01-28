@@ -1,64 +1,21 @@
 agmp01.dev.tp-stack.co.uk {
-	log {
-		output stdout
-		format console
-	}
+	log
 
-	# TLS hardening
-	tls {
-		protocols tls1.2 tls1.3
-		ciphers TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256 TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
-	}
-
-	# Static files
 	handle /static/* {
 		root * /agmp/static_cdn
 		uri strip_prefix /static
-		file_server {
-			hide .git .env *.log
-		}
-		header Cache-Control "public, max-age=31536000, immutable"
+		file_server
 	}
 
-	# Media files
 	handle /media/* {
 		root * /agmp/media
 		uri strip_prefix /media
-		file_server {
-			hide .git .env *.log
-		}
-		header Cache-Control "public, max-age=86400"
+		file_server
 	}
 
-	# Django app
 	handle {
-		reverse_proxy djangoapp:8000 {
-			header_up Host {host}
-			header_up X-Real-IP {remote}
-		}
+		reverse_proxy djangoapp:8000
 	}
 
-	# Security headers
-	header {
-		# Core security
-		X-Content-Type-Options "nosniff"
-		X-Frame-Options "SAMEORIGIN"
-		Referrer-Policy "strict-origin-when-cross-origin"
-		Permissions-Policy "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
-
-		# HSTS - forces HTTPS (start with short max-age, increase once confirmed working)
-		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-
-		# CSP - adjust based on your app's needs
-		Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self';"
-
-		# Remove server identification
-		-Server
-		-X-Powered-By
-
-		# Deprecated but still useful for older browsers
-		X-XSS-Protection "0"
-	}
-
-	encode gzip zstd
+	encode gzip
 }
