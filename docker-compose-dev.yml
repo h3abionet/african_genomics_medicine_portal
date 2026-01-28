@@ -1,0 +1,66 @@
+services:
+  postgres:
+    image: postgres:13
+    container_name: agmp_postgres_dev
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    networks:
+      - agmp_network_dev
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  djangoapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agmp_django_dev
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/agmp
+      - static_volume_dev:/agmp/static_cdn
+      - media_volume_dev:/agmp/media
+    expose:
+      - "8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - agmp_network_dev
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DEBUG=True
+
+  caddy:
+    image: caddy:2
+    container_name: agmp_caddy_dev
+    ports:
+      - "8080:80"
+    volumes:
+      - ./Caddyfile.local:/etc/caddy/Caddyfile:ro
+      - static_volume_dev:/agmp/static_cdn:ro
+      - media_volume_dev:/agmp/media:ro
+    depends_on:
+      - djangoapp
+    networks:
+      - agmp_network_dev
+
+networks:
+  agmp_network_dev:
+    driver: bridge
+
+volumes:
+  postgres_data_dev:
+  static_volume_dev:
+  media_volume_dev:

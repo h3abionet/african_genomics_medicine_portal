@@ -1,104 +1,239 @@
 # African Genomic Precision Medicine Portal
 
-This is the African Genomic Medicine Portal that provides information about African genomics and variation with regards to pharmocology and disease.
+This is the African Genomic Medicine Portal that provides information about African genomics and variation with regards to pharmacology and disease.
 
-## How to run:
+## Quick Start
 
-One prerequisite is to have Python installed and have valid understanding on the language.
+### Prerequisites
 
-### Creating a virtual environment 
+- Docker and Docker Compose installed
+- Git
 
-#### Working with conda 
-
-Create an isolated working environment with conda.
-
-```shell
-conda create --name env_pm django-bootstrap4=1.0.1 django-crispy-forms=1.7.0 django-leaflet=0.24.0 django-agnocomplete python=3.6
+### Clone the Repository
+```bash
+git clone https://github.com/h3abionet/african_genomics_medicine_portal.git
+cd african_genomics_medicine_portal
+git checkout deployed_v2_1
 ```
-Important: Make sure you install the aforementioned versions for the dependencies because of the compatibility reasons. 
 
-Then activate the environment 
+### Environment Setup
 
+Create a `.env` file with your database credentials:
+```bash
+cp .env.example .env
+# Edit .env with your credentials
 ```
+
+Required environment variables:
+```env
+DB_NAME=agmp
+DB_USER=postgres
+DB_PASS=your_password
+SECRET_KEY=your_secret_key
+DEBUG=False
+```
+
+## Running with Docker
+
+### Development Environment
+
+Development mode features hot-reloading and runs on port 8080.
+```bash
+# Start services
+docker compose -f docker-compose.dev.yml up -d
+
+# Run migrations
+docker exec agmp_django_dev python manage.py migrate
+
+# Create superuser (optional)
+docker exec -it agmp_django_dev python manage.py createsuperuser
+
+# Load data
+docker exec agmp_django_dev python manage.py load_data
+
+# Quality control check
+docker exec agmp_django_dev python manage.py quality_control
+```
+
+**Access the app:** http://localhost:8080
+
+**View logs:**
+```bash
+docker logs -f agmp_django_dev
+```
+
+**Stop services:**
+```bash
+docker compose -f docker-compose.dev.yml down
+```
+
+### Production Environment
+
+Production mode uses Gunicorn with Caddy for HTTPS.
+```bash
+# Start services
+docker compose -f docker-compose.prod.yml up -d
+
+# Run migrations (if needed)
+docker exec agmp_django python manage.py migrate
+
+# Load data
+docker exec agmp_django python manage.py load_data
+
+# Quality control check
+docker exec agmp_django python manage.py quality_control
+```
+
+**Access the app:** https://your-domain.com (configured in `Caddyfile.prod`)
+
+**Stop services:**
+```bash
+docker compose -f docker-compose.prod.yml down
+```
+
+### Running Both Environments Simultaneously
+
+Dev and prod can run together on the same machine using different ports and container names:
+
+| Environment | URL | Containers |
+|-------------|-----|------------|
+| Development | http://localhost:8080 | `agmp_*_dev` |
+| Production | http://localhost (or domain) | `agmp_*` |
+```bash
+# Start both
+docker compose -f docker-compose.dev.yml up -d
+docker compose -f docker-compose.prod.yml up -d
+
+# Stop both
+docker compose -f docker-compose.dev.yml down
+docker compose -f docker-compose.prod.yml down
+```
+
+## Running without Docker (Local Development)
+
+### Creating a Virtual Environment
+
+#### Using conda
+```bash
+conda create --name env_pm python=3.12
 conda activate env_pm
+pip install -r requirements.txt
 ```
 
-#### Working with `virtualenv`
-* create virtual environment
-* `virtualenv -p python3 env_pm`
-* `activate the new virtual environment (source env_pm/bin/activate)`
-Install the following packages (if you have not done so already):
-`django-bootstrap4 django-crispy-forms django-leaflet django-agnocomplete`
+#### Using virtualenv
+```bash
+virtualenv -p python3 env_pm
+source env_pm/bin/activate
+pip install -r requirements.txt
+```
 
-### Running the application in development
+### Running the Application
+```bash
+python manage.py makemigrations agmp_app
+python manage.py migrate
+python manage.py runserver
+```
 
-* clone from Github `git clone https://github.com/h3abionet/african_genomics_medicine_portal.git`
-* check out into correct production branch `git checkout deployed_v2_1`
-* `python manage.py makemigrations agmp_app`
-* `python manage.py migrate`
-* `python manage.py runserver`
+## Common Commands
 
+### Database Operations
+```bash
+# Development
+docker exec agmp_django_dev python manage.py makemigrations
+docker exec agmp_django_dev python manage.py migrate
+docker exec -it agmp_django_dev python manage.py createsuperuser
 
-### Running the application in docker production
+# Production
+docker exec agmp_django python manage.py makemigrations
+docker exec agmp_django python manage.py migrate
+docker exec -it agmp_django python manage.py createsuperuser
+```
 
-* clone from Github 'git clone  https://github.com/h3abionet/african_genomics_medicine_portal.git'
-* `git checkout deployed_v2_1 #switch to the correct production branch`
-* `vim .env  #add database credentials to the env file`
-* `mkdir static_cdn # inside the project directory on the host machine`
-* `docker-compose build`
-* `docker-compose up -d`
-Run ingestion script in docker 
-* `docker-compose run --rm djangoapp sh -c "python manage.py load_data"`
-Quality control check (QC)
-* `docker-compose run --rm djangoapp sh -c "python manage.py quality_control"`
+### Data Management
+```bash
+# Development
+docker exec agmp_django_dev python manage.py load_data
+docker exec agmp_django_dev python manage.py quality_control
 
-___ 
-Applying Migrations to the database if need be
-* `docker-compose run --rm djangoapp sh -c "python manage.py makemigrations"`
-* `docker-compose run --rm djangoapp sh -c "python manage.py migrate"`
-* `docker-compose run --rm djangoapp sh -c "python manage.py createsuperuser"`
+# Production
+docker exec agmp_django python manage.py load_data
+docker exec agmp_django python manage.py quality_control
+```
 
+### Generate ERD Diagram
+```bash
+# Development
+docker exec agmp_django_dev python manage.py graph_models agmp_app -g -o agmp_app_erd.png
 
+# Production
+docker exec agmp_django python manage.py graph_models agmp_app -g -o agmp_app_erd.png
+```
 
-### Import script notes
-1. The import script exist in agmp_app/management/commands/load_data.py.
-2. To run the import script # python3 manage.py load_data
-3. The script imports:
-                <br>1.<b>first_import_job_run.csv <b> file 
-               <br> 2. the second script imports a <b>second_import_job_run.xlsx</b> file
-4. The import script selects the column name instead of the column number.
+## Project Structure
+```
+├── docker-compose.dev.yml    # Development Docker configuration
+├── docker-compose.prod.yml   # Production Docker configuration
+├── Caddyfile.local           # Caddy config for local development
+├── Caddyfile.prod            # Caddy config for production
+├── Dockerfile                # Django application Dockerfile
+├── .env                      # Environment variables
+└── agmp_app/                 # Main application
+    └── management/
+        └── commands/
+            └── load_data.py  # Data import script
+```
 
-### Other project files
-1. Other project files not limitted to ERD's, data wrangling scripts, csv files are located <a href="https://drive.google.com/drive/u/0/folders/17vzyy3QGL466uH5uxAXDXiCySe3rZD36" target="_blank">here</a>
+## Import Script Notes
 
-2. Recent csv files are located <a href="https://drive.google.com/drive/folders/1QO1YDZQV2mj7_mwrUWxg9HZ3xKahNzqL" target="_blank">here</a>
+1. The import script exists in `agmp_app/management/commands/load_data.py`
+2. The script imports:
+   - `first_import_job_run.csv`
+   - `second_import_job_run.xlsx`
+3. The import script selects the column name instead of the column number
 
+## Other Project Files
 
+1. ERDs, data wrangling scripts, csv files: [Google Drive](https://drive.google.com/drive/u/0/folders/17vzyy3QGL466uH5uxAXDXiCySe3rZD36)
+2. Recent csv files: [Google Drive](https://drive.google.com/drive/folders/1QO1YDZQV2mj7_mwrUWxg9HZ3xKahNzqL)
 
-<!-- # Screen shots of tabular presentation of PharmaGKb data -->
-<!-- ![](images/drug.png?raw=true)
-![](images/snp.png?raw=true)
-![](images/snp_ethnic.png?raw=true) -->
+## Troubleshooting
 
-### Generating and ERD Diagram
+### Fix Git Large Files Issue
+```bash
+git lfs migrate import --include="*.csv"
+```
 
-* "Generates ERD for the specified agmp_app only: <br> `docker-compose run --rm djangoapp sh -c "python manage.py graph_models agmp_app -g -o agmp_app_erd.png"`"
-* "Generates ERD for all apps in the project, including the authentication model:<br> `python3 manage.py graph_models -a -g -o project_erd.png`"
+### View Container Logs
+```bash
+# Development
+docker logs -f agmp_django_dev
+docker logs -f agmp_postgres_dev
+docker logs -f agmp_caddy_dev
 
-### Fix the issue with git large files
-* run the below within the terminal of your repository for a csv large file: <br> git lfs migrate import --include="*.csv"
+# Production
+docker logs -f agmp_django
+docker logs -f agmp_postgres
+docker logs -f agmp_caddy
+```
 
-<hr>      
-Learning Resources for Beginers
-<hr> 
+### Restart Services
+```bash
+# Development
+docker compose -f docker-compose.dev.yml restart
 
-1. Freely available resources
-- CoreyMS. Python Tutorial for Beginners . Retrieved August 31, 2022, from [ https://www.youtube.com/watch?v=YYXdXT2l-Gg&list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7/](https://www.youtube.com/watch?v=YYXdXT2l-Gg&list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7)
+# Production
+docker compose -f docker-compose.prod.yml restart
+```
 
-- CoreyMS. Python Django Tutorial: Full-Featured Web App . Retrieved August 31, 2022, from [ https://www.youtube.com/watch?v=UmljXZIypDc&list=PL-osiE80TeTtoQCKZ03TU5fNfx2UY6U4p/](https://www.youtube.com/watch?v=UmljXZIypDc&list=PL-osiE80TeTtoQCKZ03TU5fNfx2UY6U4p)
+## Learning Resources
 
-- Chaudhary, A. (2018, October 31). Django Orm if you already know SQL. Django ORM if you already know SQL . Retrieved August 31, 2022, from [ https://amitness.com/2018/10/django-orm-for-sql-users/](https://amitness.com/2018/10/django-orm-for-sql-users/)
+### Free Resources
 
-2. Udemy & other online resources i.e if available
-- William Vincent - William Vincent. (2022). Retrieved 27 August 2022, from [https://wsvincent.com/](https://wsvincent.com/)
-- Docker and Kubernetes: The Complete Guide. (2022). Retrieved 27 August 2022, from [UDEMY](https://www.udemy.com/course/docker-and-kubernetes-the-complete-guide/?LSNPUBID=JVFxdTr9V80&ranEAID=JVFxdTr9V80&ranMID=39197&ranSiteID=JVFxdTr9V80-FPVFIipzqssQR0YfZDpoHA&utm_medium=udemyads&utm_source=aff-campaign)
+- [Python Tutorial for Beginners - CoreyMS](https://www.youtube.com/watch?v=YYXdXT2l-Gg&list=PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7)
+- [Python Django Tutorial: Full-Featured Web App - CoreyMS](https://www.youtube.com/watch?v=UmljXZIypDc&list=PL-osiE80TeTtoQCKZ03TU5fNfx2UY6U4p)
+- [Django ORM if you already know SQL](https://amitness.com/2018/10/django-orm-for-sql-users/)
+
+### Paid Resources
+
+- [William Vincent](https://wsvincent.com/)
+- [Docker and Kubernetes: The Complete Guide - Udemy](https://www.udemy.com/course/docker-and-kubernetes-the-complete-guide/)
