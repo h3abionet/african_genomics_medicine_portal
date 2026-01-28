@@ -23,7 +23,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: agmp_django_dev
-    command: python manage.py runserver 0.0.0.0:8000
+    command: bash -c "python manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/agmp
       - static_volume_dev:/agmp/static_cdn
