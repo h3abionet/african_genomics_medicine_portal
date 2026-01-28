@@ -101,12 +101,12 @@ Dev and prod can run together on the same machine using different ports and cont
 | Production | http://localhost (or domain) | `agmp_*` |
 ```bash
 # Start both
-docker compose -f docker-compose.dev.yml up -d
-docker compose -f docker-compose.prod.yml up -d
+docker compose -f docker-compose-dev.yml up -d
+docker compose -f docker-compose-prod.yml up -d
 
 # Stop both
-docker compose -f docker-compose.dev.yml down
-docker compose -f docker-compose.prod.yml down
+docker compose -f docker-compose-dev.yml down
+docker compose -f docker-compose-prod.yml down
 ```
 
 ## Running without Docker (Local Development)
@@ -171,8 +171,8 @@ docker exec agmp_django python manage.py graph_models agmp_app -g -o agmp_app_er
 
 ## Project Structure
 ```
-├── docker-compose.dev.yml    # Development Docker configuration
-├── docker-compose.prod.yml   # Production Docker configuration
+├── docker-compose-dev.yml    # Development Docker configuration
+├── docker-compose-prod.yml   # Production Docker configuration
 ├── Caddyfile.local           # Caddy config for local development
 ├── Caddyfile.prod            # Caddy config for production
 ├── Dockerfile                # Django application Dockerfile
@@ -219,10 +219,10 @@ docker logs -f agmp_caddy
 ### Restart Services
 ```bash
 # Development
-docker compose -f docker-compose.dev.yml restart
+docker compose -f docker-compose-dev.yml restart
 
 # Production
-docker compose -f docker-compose.prod.yml restart
+docker compose -f docker-compose-prod.yml restart
 ```
 
 ## Learning Resources
