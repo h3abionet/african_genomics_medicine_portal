@@ -51,7 +51,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./Caddyfile.${ENV:-local}:/etc/caddy/Caddyfile:ro
+      - ./Caddyfile.prod:/etc/caddy/Caddyfile:ro
       - static_volume:/agmp/static_cdn:ro
       - media_volume:/agmp/media:ro
       - caddy_data:/data
