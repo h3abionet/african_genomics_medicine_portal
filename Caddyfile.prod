@@ -1,21 +1,58 @@
-agmp01.dev.tp-stack.co.uk {
+agmp01.dev.tp-stack.co.uk, agmp.h3abionet.org, agmp.afrigen-d.org {
 	log
 
+	# TLS hardening
+	tls {
+		protocols tls1.2 tls1.3
+	}
+
+	# Static files
 	handle /static/* {
 		root * /agmp/static_cdn
 		uri strip_prefix /static
-		file_server
+		file_server {
+			hide .git .env *.log *.bak *.sql
+		}
+		header Cache-Control "public, max-age=31536000, immutable"
 	}
 
+	# Media files
 	handle /media/* {
 		root * /agmp/media
 		uri strip_prefix /media
-		file_server
+		file_server {
+			hide .git .env *.log *.bak *.sql
+		}
+		header Cache-Control "public, max-age=86400"
 	}
 
+	# Django app
 	handle {
-		reverse_proxy djangoapp:8000
+		reverse_proxy djangoapp:8000 {
+			header_up X-Real-IP {remote_host}
+		}
 	}
 
-	encode gzip
+	# Security headers
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "SAMEORIGIN"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
+		Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self';"
+		-Server
+		-X-Powered-By
+	}
+
+	# Rate limiting
+	rate_limit {
+		zone dynamic {
+			key {remote_host}
+			events 100
+			window 10s
+		}
+	}
+
+	encode zstd gzip
 }

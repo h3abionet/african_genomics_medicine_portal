@@ -65,6 +65,7 @@ ALLOWED_HOSTS = [
     if host.strip()
 ]
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 ADMIN_URL = "madiba/"
 # Application definition
 
