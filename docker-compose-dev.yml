@@ -56,6 +56,9 @@ services:
     networks:
       - agmp_network_dev
 
+    env_file:
+    - .env
+
 networks:
   agmp_network_dev:
     driver: bridge

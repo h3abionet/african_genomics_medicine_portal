@@ -31,6 +31,17 @@ DB_USER=postgres
 DB_PASS=your_password
 SECRET_KEY=your_secret_key
 DEBUG=False
+        # Database settings
+DB_NAME=database-name
+DB_USER=db-user
+DB_PASS=pdb-pass
+DB_PORT=port_number
+SECRET_KEY=django-secret-key
+# CSRF settings
+CSRF_TRUSTED_ORIGINS=https://domain-name.org
+# Host settings
+ALLOWED_HOSTS=domain-name.org
+SITE_DOMAINS=domain-name.org
 ```
 
 ## Running with Docker

@@ -60,6 +60,8 @@ services:
       - djangoapp
     networks:
       - agmp_network
+    env_file:
+    - .env
 
 networks:
   agmp_network:
