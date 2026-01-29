@@ -1,4 +1,48 @@
-agmp01.dev.tp-stack.co.uk, agmp.h3abionet.org, agmp.afrigen-d.org {
+agmp01.dev.tp-stack.co.uk {
+	log
+
+	handle /static/* {
+		root * /agmp/static_cdn
+		uri strip_prefix /static
+		file_server
+	}
+
+	handle /media/* {
+		root * /agmp/media
+		uri strip_prefix /media
+		file_server
+	}
+
+	handle {
+		reverse_proxy djangoapp:8000
+	}
+
+	encode gzip
+}
+
+agmp.h3abionet.org {
+	log
+
+	handle /static/* {
+		root * /agmp/static_cdn
+		uri strip_prefix /static
+		file_server
+	}
+
+	handle /media/* {
+		root * /agmp/media
+		uri strip_prefix /media
+		file_server
+	}
+
+	handle {
+		reverse_proxy djangoapp:8000
+	}
+
+	encode gzip
+}
+
+agmp.afrigen-d.org {
 	log
 
 	handle /static/* {
