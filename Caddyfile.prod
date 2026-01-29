@@ -1,6 +1,23 @@
 agmp01.dev.tp-stack.co.uk, agmp.h3abionet.org, agmp.afrigen-d.org {
 	log
 
+	# Block sensitive files and paths
+	@blocked path *.env *.git* *.sql *.bak *.log *.ini *.cfg *.conf *.yml *.yaml *.toml *.pem *.key *.crt *.p12 *.pfx *.json *.xml *.htaccess *.htpasswd
+	respond @blocked 404
+
+	# Block common scanner paths
+	@scanners path /admin* /.env* /wp-* /wordpress* /phpmyadmin* /phpinfo* /.git/* /.svn/* /config* /backup* /db* /database* /dump* /.aws* /.ssh* /credentials* /secrets* /api/config* /actuator* /debug* /trace* /metrics* /health* /info* /swagger* /graphql* /console* /.well-known/security.txt
+	respond @scanners 404
+
+	# Block bad user agents (scanners/bots)
+	@bad_agents header_regexp User-Agent (?i)(nikto|sqlmap|nmap|masscan|zgrab|gobuster|dirbuster|wfuzz|nuclei|httpx|curl|wget|python-requests|go-http|scanner|exploit)
+	respond @bad_agents 403
+
+	# Block suspicious methods
+	@bad_methods method TRACE TRACK OPTIONS DELETE PUT PATCH
+	respond @bad_methods 405
+
+	# TLS hardening
 	tls {
 		protocols tls1.2 tls1.3
 	}
@@ -9,7 +26,7 @@ agmp01.dev.tp-stack.co.uk, agmp.h3abionet.org, agmp.afrigen-d.org {
 		root * /agmp/static_cdn
 		uri strip_prefix /static
 		file_server {
-			hide .git .env *.log *.bak *.sql
+			hide .* *.env *.sql *.bak *.log
 		}
 		header Cache-Control "public, max-age=31536000, immutable"
 	}
@@ -18,7 +35,7 @@ agmp01.dev.tp-stack.co.uk, agmp.h3abionet.org, agmp.afrigen-d.org {
 		root * /agmp/media
 		uri strip_prefix /media
 		file_server {
-			hide .git .env *.log *.bak *.sql
+			hide .* *.env *.sql *.bak *.log
 		}
 		header Cache-Control "public, max-age=86400"
 	}
@@ -29,15 +46,15 @@ agmp01.dev.tp-stack.co.uk, agmp.h3abionet.org, agmp.afrigen-d.org {
 		}
 	}
 
+	# Security headers
 	header {
-		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
 		X-Content-Type-Options "nosniff"
 		X-Frame-Options "SAMEORIGIN"
 		Referrer-Policy "strict-origin-when-cross-origin"
-		Permissions-Policy "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()"
 		-Server
 		-X-Powered-By
 	}
 
-	encode zstd gzip
+	encode gzip
 }
