@@ -70,7 +70,7 @@ docker logs -f agmp_django_dev
 
 **Stop services:**
 ```bash
-docker compose -f docker-compose.dev.yml down
+docker compose -f docker-compose-dev.yml down
 ```
 
 ### Production Environment
@@ -78,7 +78,7 @@ docker compose -f docker-compose.dev.yml down
 Production mode uses Gunicorn with Caddy for HTTPS.
 ```bash
 # Start services
-docker compose -f docker-compose.prod.yml up -d
+docker compose -f docker-compose-prod.yml up -d
 
 # Run migrations (if needed)
 docker exec agmp_django python manage.py migrate
@@ -94,7 +94,7 @@ docker exec agmp_django python manage.py quality_control
 
 **Stop services:**
 ```bash
-docker compose -f docker-compose.prod.yml down
+docker compose -f docker-compose-prod.yml down
 ```
 
 ### Running Both Environments Simultaneously

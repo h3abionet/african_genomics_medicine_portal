@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:13
+    image: postgres:15
     container_name: agmp_postgres_dev
     env_file:
       - .env
