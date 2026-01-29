@@ -1,6 +1,12 @@
 {$SITE_DOMAINS} {
 	log
 
+	# Block sensitive files
+	@blocked {
+		path *.env* */.env* /.* /.*/ *.git* *.sql *.bak *.log *.ini *.conf
+	}
+	respond @blocked 404
+
 	handle /static/* {
 		root * /agmp/static_cdn
 		uri strip_prefix /static
