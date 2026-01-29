@@ -26,12 +26,7 @@ cp .env.example .env
 
 Required environment variables:
 ```env
-DB_NAME=agmp
-DB_USER=postgres
-DB_PASS=your_password
-SECRET_KEY=your_secret_key
-DEBUG=False
-        # Database settings
+# Database settings
 DB_NAME=database-name
 DB_USER=db-user
 DB_PASS=pdb-pass
