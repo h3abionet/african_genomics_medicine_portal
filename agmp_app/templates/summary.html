@@ -15,18 +15,14 @@ body {
     color: #2c3e50;
 }
 
-/* Improved Section Styling */
+/* Section styling matching batch query .section borders */
 .section {
-    margin-bottom: 50px;
-    padding: 30px;
+    margin-bottom: 20px;
+    padding: 20px;
     background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    border: 1px solid #ddd;
+    border-radius: 8px;
     transition: all 0.3s ease;
-}
-
-.section:hover {
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
 }
 
 .section h3 {
@@ -53,15 +49,10 @@ body {
 /* Enhanced Map Container */
 .map-container {
     background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
-    margin-bottom: 30px;
+    border-radius: 8px;
+    margin-bottom: 20px;
     overflow: hidden;
     transition: all 0.3s ease;
-}
-
-.map-container:hover {
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
 }
 
 .map-header {
@@ -265,7 +256,7 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    border-radius: 0 0 12px 12px;
+    border-radius: 0 0 8px 8px;
 }
 
 .loading-spinner {
@@ -1025,14 +1016,14 @@ $(document).ready(function() {
         showLoading('map1-container');
         setTimeout(() => {
             updateMap('marker', $(this).val());
-        }, 300); // Small delay for better UX
+        }, 300);
     });
     
     $('#map2-filter').change(function() {
         showLoading('map2-container');
         setTimeout(() => {
             updateMap('heatmap', $(this).val());
-        }, 300); // Small delay for better UX
+        }, 300);
     });
     
     // Highlight active navigation based on scroll position
