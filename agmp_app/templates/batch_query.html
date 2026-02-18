@@ -18,11 +18,11 @@
         .type-options { display: flex; gap: 20px; flex-wrap: wrap; }
         .type-option { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 10px 15px; border: 2px solid #ddd; border-radius: 6px; transition: all 0.2s; }
         .type-option:hover { border-color: #1e7e34; }
-        .type-option.selected { border-color: #1e7e34; background: #e7f1ff; }
+        .type-option.selected { border-color: #1e7e34; background: #e8f5e9; }
         .type-option input { display: none; }
         .input-methods { display: flex; gap: 10px; margin-bottom: 15px; }
         .input-method-btn { padding: 8px 16px; border: 1px solid #ddd; background: #f8f9fa; border-radius: 4px; cursor: pointer; }
-        .input-method-btn.active { background: #1e7e34; color: #fff; border-color: #007bff; }
+        .input-method-btn.active { background: #1e7e34; color: #fff; border-color: #1e7e34; }
         .input-textarea { width: 100%; height: 150px; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-family: monospace; font-size: 14px; resize: vertical; }
         .input-textarea::placeholder { color: #999; }
         .file-upload-area { border: 2px dashed #ddd; border-radius: 6px; padding: 30px; text-align: center; cursor: pointer; display: none; }
@@ -31,21 +31,34 @@
         .file-info { margin-top: 10px; padding: 10px; background: #d4edda; border-radius: 4px; display: none; }
         .file-info.show { display: block; }
         .input-hint { font-size: 13px; color: #666; margin-top: 8px; }
-        .output-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
-        .output-field { display: flex; align-items: center; gap: 8px; padding: 8px; background: #f8f9fa; border-radius: 4px; cursor: pointer; }
+        
+        /* Field Groups */
+        .output-grid { display: flex; flex-direction: column; gap: 10px; }
+        .field-group { margin-bottom: 10px; padding: 12px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef; }
+        .field-group-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #dee2e6; }
+        .field-group-title { font-weight: 600; font-size: 14px; color: #495057; }
+        .field-group-btns button { font-size: 11px; padding: 2px 8px; margin-left: 5px; background: #fff; border: 1px solid #ddd; border-radius: 3px; cursor: pointer; }
+        .field-group-btns button:hover { background: #e9ecef; }
+        .field-group-items { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 6px; }
+        .output-field { display: flex; align-items: center; gap: 8px; padding: 8px; background: #fff; border-radius: 4px; cursor: pointer; border: 1px solid #e9ecef; }
         .output-field:hover { background: #e9ecef; }
         .output-field input { cursor: pointer; }
-        .output-field label { cursor: pointer; margin: 0; font-size: 14px; }
+        .output-field label { cursor: pointer; margin: 0; font-size: 13px; }
+        .output-field.detailed { border-left: 3px solid #17a2b8; }
+        .output-field .detail-badge { font-size: 10px; background: #17a2b8; color: #fff; padding: 1px 5px; border-radius: 3px; margin-left: auto; }
+        
         .select-btns { margin-bottom: 10px; }
-        .select-btns button { padding: 4px 10px; font-size: 12px; margin-right: 8px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; }
+        .select-btns button { padding: 6px 12px; font-size: 12px; margin-right: 8px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; }
         .select-btns button:hover { background: #e9ecef; }
         .search-section { text-align: center; padding: 10px 0; }
         .btn-search { background: #1e7e34; color: #fff; border: none; padding: 12px 40px; border-radius: 6px; font-size: 16px; font-weight: 500; cursor: pointer; }
-        .btn-search:hover { background: #1e7e34; }
+        .btn-search:hover { background: #166a2a; }
         .btn-search:disabled { background: #ccc; cursor: not-allowed; }
         .loading { display: none; text-align: center; padding: 40px; }
         .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #1e7e34; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 15px; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* Results */
         .results-section { display: none; }
         .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
         .results-stats { display: flex; gap: 25px; }
@@ -55,33 +68,67 @@
         .stat-num.green { color: #28a745; }
         .stat-num.orange { color: #fd7e14; }
         .stat-label { font-size: 12px; color: #666; }
+        .results-actions { display: flex; gap: 10px; flex-wrap: wrap; }
         .btn-export { background: #28a745; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 500; }
         .btn-export:hover { background: #1e7e34; }
+        .btn-toggle-all { background: #17a2b8; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 500; }
+        .btn-toggle-all:hover { background: #138496; }
+        
+        /* Column Toggle */
         .column-toggle { margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 6px; }
         .column-toggle-title { font-weight: 600; margin-bottom: 10px; font-size: 14px; }
         .column-chips { display: flex; flex-wrap: wrap; gap: 8px; }
         .column-chip { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; background: #1e7e34; color: #fff; border-radius: 20px; font-size: 13px; cursor: pointer; }
         .column-chip.hidden { background: #6c757d; }
         .column-chip:hover { opacity: 0.9; }
-        .results-table-wrap { overflow-x: auto; border: 1px solid #ddd; border-radius: 8px; max-height: 500px; }
+        
+        /* Table with Expandable Rows */
+        .results-table-wrap { overflow-x: auto; border: 1px solid #ddd; border-radius: 8px; }
         .results-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        .results-table th { background: #343a40; color: #fff; padding: 12px 10px; text-align: left; position: sticky; top: 0; white-space: nowrap; }
-        .results-table td { padding: 10px; border-bottom: 1px solid #eee; }
+        .results-table th { background: #343a40; color: #fff; padding: 12px 10px; text-align: left; position: sticky; top: 0; white-space: nowrap; z-index: 10; }
+        .results-table td { padding: 10px; border-bottom: 1px solid #eee; vertical-align: top; }
         .results-table tr:hover { background: #f8f9fa; }
+        .results-table tr.expanded { background: #e3f2fd; }
         .status-found { color: #28a745; font-weight: 600; }
         .status-notfound { color: #dc3545; font-weight: 600; }
+        
+        /* Expand Button */
+        .expand-btn { background: none; border: 1px solid #007bff; color: #007bff; padding: 3px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; white-space: nowrap; }
+        .expand-btn:hover { background: #007bff; color: #fff; }
+        .expand-btn.active { background: #007bff; color: #fff; }
+        
+        /* Detail Row */
+        .detail-row { display: none; }
+        .detail-row.show { display: table-row; }
+        .detail-row td { background: #f8f9fa; padding: 0; }
+        .detail-content { padding: 15px 20px; }
+        .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; }
+        .detail-section { background: #fff; border: 1px solid #e9ecef; border-radius: 6px; padding: 12px; }
+        .detail-section-title { font-weight: 600; font-size: 13px; color: #495057; margin-bottom: 8px; padding-bottom: 6px; border-bottom: 1px solid #e9ecef; display: flex; align-items: center; gap: 6px; }
+        .detail-section-title .icon { font-size: 14px; }
+        .detail-item { margin-bottom: 6px; font-size: 12px; }
+        .detail-item-label { color: #6c757d; font-weight: 500; }
+        .detail-item-value { color: #212529; margin-left: 5px; }
+        .detail-list { max-height: 150px; overflow-y: auto; }
+        .detail-list-item { padding: 8px 10px; background: #fff; border: 1px solid #e9ecef; border-radius: 4px; margin: 4px 0; font-size: 12px; display: block; }
+        .detail-list-item:hover { background: #f8f9fa; }
+        .detail-list-item a { color: #007bff; text-decoration: none; font-weight: 500; }
+        .detail-list-item a:hover { text-decoration: underline; color: #0056b3; }
+        .detail-empty { color: #999; font-style: italic; font-size: 12px; }
+        
+        /* Not Found Box */
         .notfound-box { background: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 6px; margin-top: 15px; }
         .notfound-toggle { cursor: pointer; font-weight: 600; color: #856404; }
-        .notfound-list { margin-top: 10px; font-size: 13px; color: #856404; display: none; }
+        .notfound-list { margin-top: 10px; font-size: 13px; color: #856404; display: none; max-height: 150px; overflow-y: auto; }
     </style>
 </head>
 
 <body>
 <div class="batch-container">
     <h5>Batch Query</h5>
-    <p>Search multiple variants, genes, drugs, or phenotypes at once.</p>
+    <p>Search multiple variants, genes, drugs, or phenotypes and view detailed related information.</p>
     
-    <!-- Step 1: Select Input Type -->
+    <!-- Step 1 -->
     <div class="section">
         <div class="section-title">1. Select Input Type</div>
         <div class="type-options">
@@ -104,43 +151,42 @@
         </div>
     </div>
     
-    <!-- Step 2: Enter Search Terms -->
+    <!-- Step 2 -->
     <div class="section">
         <div class="section-title">2. Enter Search Terms</div>
         <div class="input-methods">
             <button type="button" class="input-method-btn active" data-method="text">Type/Paste</button>
             <button type="button" class="input-method-btn" data-method="file">Upload CSV</button>
         </div>
-        
         <div id="textInputArea">
-            <textarea class="input-textarea" id="searchTerms" placeholder="Enter search terms (one per line, or comma/space separated)&#10;&#10;Example:&#10;rs1234567&#10;rs9876543&#10;rs5555555"></textarea>
-            <div class="input-hint">Enter up to 1,000 search terms. Duplicates will be removed automatically.</div>
+            <textarea class="input-textarea" id="searchTerms" placeholder="Enter search terms (one per line)"></textarea>
+            <div class="input-hint">Enter up to 1,000 search terms. Duplicates removed automatically.</div>
         </div>
-        
         <div id="fileUploadArea" class="file-upload-area">
             <p><strong>Click to upload or drag & drop</strong></p>
-            <p style="color:#888; font-size:14px;">.csv or .txt file with one term per line</p>
+            <p style="color:#888; font-size:14px;">.csv or .txt file</p>
         </div>
         <input type="file" id="csvFileInput" accept=".csv,.txt" style="display:none;">
         <div class="file-info" id="fileInfo">
             <span id="fileInfoText"></span>
-            <button type="button" onclick="clearFile()" style="margin-left:10px;padding:2px 8px;cursor:pointer;">✕ Remove</button>
+            <button type="button" onclick="clearFile()" style="margin-left:10px;padding:2px 8px;cursor:pointer;">✕</button>
         </div>
     </div>
     
-    <!-- Step 3: Select Output Columns -->
+    <!-- Step 3 -->
     <div class="section">
-        <div class="section-title">3. Select Output Columns</div>
+        <div class="section-title">3. Select Output Columns <span style="font-weight:normal;color:#666;font-size:13px;">(fields marked with <span style="background:#17a2b8;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;">DETAIL</span> appear in expandable view)</span></div>
         <div class="select-btns">
             <button type="button" onclick="selectAllFields()">Select All</button>
             <button type="button" onclick="selectNoFields()">Clear All</button>
+            <button type="button" onclick="selectDefaults()">Reset Defaults</button>
         </div>
         <div class="output-grid" id="outputFields">
             <p style="color:#888;">Select an input type first</p>
         </div>
     </div>
     
-    <!-- Search Button -->
+    <!-- Search -->
     <div class="search-section">
         <button type="button" class="btn-search" id="searchBtn" onclick="executeSearch()" disabled>Run Batch Query</button>
     </div>
@@ -155,24 +201,18 @@
     <div class="section results-section" id="resultsSection">
         <div class="results-header">
             <div class="results-stats">
-                <div class="stat">
-                    <div class="stat-num blue" id="statTotal">0</div>
-                    <div class="stat-label">Total</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-num green" id="statFound">0</div>
-                    <div class="stat-label">Found</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-num orange" id="statNotFound">0</div>
-                    <div class="stat-label">Not Found</div>
-                </div>
+                <div class="stat"><div class="stat-num blue" id="statTotal">0</div><div class="stat-label">Total</div></div>
+                <div class="stat"><div class="stat-num green" id="statFound">0</div><div class="stat-label">Found</div></div>
+                <div class="stat"><div class="stat-num orange" id="statNotFound">0</div><div class="stat-label">Not Found</div></div>
             </div>
-            <button type="button" class="btn-export" onclick="exportResults()">⬇ Export CSV</button>
+            <div class="results-actions">
+                <button type="button" class="btn-toggle-all" onclick="toggleAllDetails()">📋 Expand/Collapse All</button>
+                <button type="button" class="btn-export" onclick="exportResults()">⬇ Export CSV</button>
+            </div>
         </div>
         
         <div class="column-toggle">
-            <div class="column-toggle-title">Show/Hide Columns (click to toggle):</div>
+            <div class="column-toggle-title">Show/Hide Main Columns:</div>
             <div class="column-chips" id="columnChips"></div>
         </div>
         
@@ -184,8 +224,8 @@
         </div>
         
         <div class="notfound-box" id="notFoundBox" style="display:none;">
-            <div class="notfound-toggle" onclick="toggleNotFound()">
-                ⚠ <span id="notFoundCount">0</span> items not found (click to show/hide)
+            <div class="notfound-toggle" onclick="$('#notFoundList').toggle();">
+                ⚠ <span id="notFoundCount">0</span> items not found (click to show)
             </div>
             <div class="notfound-list" id="notFoundList"></div>
         </div>
@@ -196,70 +236,102 @@
 var queryResults = [];
 var visibleColumns = [];
 var allColumns = [];
+var mainFields = [];
+var detailFields = [];
+var currentQueryType = '';
 
 var fieldOptions = {
-    variant: [
-        {id: 'rs_id', label: 'RS ID', def: true},
-        {id: 'gene_id', label: 'Gene ID', def: true},
-        {id: 'gene_name', label: 'Gene Name', def: false},
-        {id: 'chromosome', label: 'Chromosome', def: true},
-        {id: 'variant_type', label: 'Variant Type', def: false},
-        {id: 'allele', label: 'Allele', def: false},
-        {id: 'source_db', label: 'Source DB', def: false},
-        {id: 'drug_name', label: 'Drug Name', def: false},
-        {id: 'drug_bank_id', label: 'DrugBank ID', def: false},
-        {id: 'phenotype', label: 'Phenotype', def: false},
-        {id: 'drug_assoc_count', label: 'Drug Assoc. Count', def: true},
-        {id: 'phenotype_assoc_count', label: 'Phenotype Assoc. Count', def: true},
-        {id: 'study_count', label: 'Study Count', def: false}
-    ],
-    gene: [
-        {id: 'gene_id', label: 'Gene ID', def: true},
-        {id: 'gene_name', label: 'Gene Name', def: true},
-        {id: 'chromosome', label: 'Chromosome', def: true},
-        {id: 'function', label: 'Function', def: false},
-        {id: 'uniprot_ac', label: 'UniProt AC', def: false},
-        {id: 'variant_count', label: 'Variant Count', def: true},
-        {id: 'study_count', label: 'Study Count', def: true},
-        {id: 'drug_assoc_count', label: 'Drug Assoc. Count', def: true},
-        {id: 'phenotype_assoc_count', label: 'Phenotype Assoc. Count', def: false}
-    ],
-    drug: [
-        {id: 'drug_name', label: 'Drug Name', def: true},
-        {id: 'drug_bank_id', label: 'DrugBank ID', def: true},
-        {id: 'drug_id', label: 'Drug ID', def: false},
-        {id: 'state', label: 'State', def: true},
-        {id: 'indication', label: 'Indication', def: false},
-        {id: 'iupac_name', label: 'IUPAC Name', def: false},
-        {id: 'variant_count', label: 'Variant Count', def: true},
-        {id: 'gene_count', label: 'Gene Count', def: true},
-        {id: 'study_count', label: 'Study Count', def: false}
-    ],
-    phenotype: [
-        {id: 'phenotype_name', label: 'Phenotype Name', def: true},
-        {id: 'variant_count', label: 'Variant Count', def: true},
-        {id: 'gene_count', label: 'Gene Count', def: true},
-        {id: 'study_count', label: 'Study Count', def: true}
-    ]
+    variant: {
+        main: [
+            {id: 'rs_id', label: 'RS ID', def: true},
+            {id: 'gene_name', label: 'Gene Name', def: true},
+            {id: 'chromosome', label: 'Chromosome', def: true},
+            {id: 'variant_type', label: 'Variant Type', def: false},
+            {id: 'allele', label: 'Allele', def: false},
+            {id: 'source_db', label: 'Source DB', def: false},
+            {id: 'drug_assoc_count', label: 'Drug Assoc. Count', def: true},
+            {id: 'phenotype_assoc_count', label: 'Phenotype Assoc. Count', def: true},
+            {id: 'study_count', label: 'Study Count', def: true}
+        ],
+        detail: [
+            {id: 'gene_id', label: 'Gene ID', def: true, group: 'Gene'},
+            {id: 'gene_function', label: 'Gene Function', def: true, group: 'Gene'},
+            {id: 'uniprot_ac', label: 'UniProt AC', def: true, group: 'Gene'},
+            {id: 'drugs_detail', label: 'Associated Drugs (with IDs)', def: true, group: 'Drug'},
+            {id: 'phenotypes_detail', label: 'Associated Phenotypes', def: true, group: 'Phenotype'},
+            {id: 'studies_detail', label: 'Studies (Title, PubMed ID, Year)', def: true, group: 'Study'},
+            {id: 'countries_detail', label: 'Study Countries', def: false, group: 'Study'}
+        ]
+    },
+    gene: {
+        main: [
+            {id: 'gene_id', label: 'Gene ID', def: true},
+            {id: 'gene_name', label: 'Gene Name', def: true},
+            {id: 'chromosome', label: 'Chromosome', def: true},
+            {id: 'variant_count', label: 'Variant Count', def: true},
+            {id: 'drug_assoc_count', label: 'Drug Assoc. Count', def: true},
+            {id: 'phenotype_assoc_count', label: 'Phenotype Assoc. Count', def: true},
+            {id: 'study_count', label: 'Study Count', def: true}
+        ],
+        detail: [
+            {id: 'function', label: 'Gene Function', def: true, group: 'Gene'},
+            {id: 'uniprot_ac', label: 'UniProt AC', def: true, group: 'Gene'},
+            {id: 'variants_detail', label: 'Associated Variants (RS IDs)', def: true, group: 'Variant'},
+            {id: 'drugs_detail', label: 'Associated Drugs (Name, DrugBank ID)', def: true, group: 'Drug'},
+            {id: 'phenotypes_detail', label: 'Associated Phenotypes', def: true, group: 'Phenotype'},
+            {id: 'studies_detail', label: 'Studies (Title, PubMed ID, Year)', def: true, group: 'Study'},
+            {id: 'countries_detail', label: 'Study Countries', def: false, group: 'Study'}
+        ]
+    },
+    drug: {
+        main: [
+            {id: 'drug_name', label: 'Drug Name', def: true},
+            {id: 'drug_bank_id', label: 'DrugBank ID', def: true},
+            {id: 'state', label: 'State', def: true},
+            {id: 'variant_count', label: 'Variant Count', def: true},
+            {id: 'gene_count', label: 'Gene Count', def: true},
+            {id: 'study_count', label: 'Study Count', def: true}
+        ],
+        detail: [
+            {id: 'indication', label: 'Indication', def: true, group: 'Drug'},
+            {id: 'iupac_name', label: 'IUPAC Name', def: false, group: 'Drug'},
+            {id: 'genes_detail', label: 'Associated Genes (ID, Name, Chromosome)', def: true, group: 'Gene'},
+            {id: 'variants_detail', label: 'Associated Variants (RS IDs)', def: true, group: 'Variant'},
+            {id: 'phenotypes_detail', label: 'Associated Phenotypes', def: true, group: 'Phenotype'},
+            {id: 'studies_detail', label: 'Studies (Title, PubMed ID, Year)', def: true, group: 'Study'}
+        ]
+    },
+    phenotype: {
+        main: [
+            {id: 'phenotype_name', label: 'Phenotype Name', def: true},
+            {id: 'variant_count', label: 'Variant Count', def: true},
+            {id: 'gene_count', label: 'Gene Count', def: true},
+            {id: 'study_count', label: 'Study Count', def: true}
+        ],
+        detail: [
+            {id: 'genes_detail', label: 'Associated Genes (ID, Name, Chromosome)', def: true, group: 'Gene'},
+            {id: 'variants_detail', label: 'Associated Variants (RS IDs)', def: true, group: 'Variant'},
+            {id: 'drugs_detail', label: 'Associated Drugs (Name, DrugBank ID)', def: true, group: 'Drug'},
+            {id: 'studies_detail', label: 'Studies (Title, PubMed ID, Year)', def: true, group: 'Study'}
+        ]
+    }
 };
 
 $(document).ready(function() {
-    // Type selection
     $('.type-option').on('click', function() {
         $('.type-option').removeClass('selected');
         $(this).addClass('selected');
         $(this).find('input').prop('checked', true);
+        currentQueryType = $(this).data('type');
         updateOutputFields();
         updatePlaceholder();
         checkReady();
     });
     
-    // Input method toggle
     $('.input-method-btn').on('click', function() {
         $('.input-method-btn').removeClass('active');
         $(this).addClass('active');
-        var method = $(this).data('method');
-        if (method === 'text') {
+        if ($(this).data('method') === 'text') {
             $('#textInputArea').show();
             $('#fileUploadArea').removeClass('show');
         } else {
@@ -268,174 +340,111 @@ $(document).ready(function() {
         }
     });
     
-    // File upload area click
-    $('#fileUploadArea').on('click', function() {
-        $('#csvFileInput').click();
-    });
-    
-    // File input change
-    $('#csvFileInput').on('change', function() {
-        if (this.files && this.files[0]) {
-            handleFileUpload(this.files[0]);
-        }
-    });
-    
-    // Drag and drop
-    var dropArea = document.getElementById('fileUploadArea');
-    
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function(eventName) {
-        dropArea.addEventListener(eventName, preventDefaults, false);
-        document.body.addEventListener(eventName, preventDefaults, false);
-    });
-    
-    ['dragenter', 'dragover'].forEach(function(eventName) {
-        dropArea.addEventListener(eventName, highlight, false);
-    });
-    
-    ['dragleave', 'drop'].forEach(function(eventName) {
-        dropArea.addEventListener(eventName, unhighlight, false);
-    });
-    
-    dropArea.addEventListener('drop', handleDrop, false);
-    
-    function preventDefaults(e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-    
-    function highlight() {
-        dropArea.style.borderColor = '#007bff';
-        dropArea.style.background = '#e7f1ff';
-    }
-    
-    function unhighlight() {
-        dropArea.style.borderColor = '#ddd';
-        dropArea.style.background = '';
-    }
-    
-    function handleDrop(e) {
-        var dt = e.dataTransfer;
-        var files = dt.files;
-        if (files && files.length > 0) {
-            handleFileUpload(files[0]);
-        }
-    }
-    
-    // Text input change
+    $('#fileUploadArea').on('click', function() { $('#csvFileInput').click(); });
+    $('#csvFileInput').on('change', function() { if (this.files[0]) handleFileUpload(this.files[0]); });
     $('#searchTerms').on('input', checkReady);
-    
-    // Output field change
     $(document).on('change', '#outputFields input', checkReady);
+    
+    // Drag drop
+    var drop = document.getElementById('fileUploadArea');
+    ['dragenter','dragover','dragleave','drop'].forEach(e => { drop.addEventListener(e, ev => { ev.preventDefault(); ev.stopPropagation(); }, false); });
+    ['dragenter','dragover'].forEach(e => { drop.addEventListener(e, () => { drop.style.borderColor='#1e7e34'; drop.style.background='#e8f5e9'; }, false); });
+    ['dragleave','drop'].forEach(e => { drop.addEventListener(e, () => { drop.style.borderColor='#ddd'; drop.style.background=''; }, false); });
+    drop.addEventListener('drop', e => { if(e.dataTransfer.files[0]) handleFileUpload(e.dataTransfer.files[0]); }, false);
 });
 
 function updateOutputFields() {
     var type = $('input[name="query_type"]:checked').val();
-    if (!type) {
+    if (!type || !fieldOptions[type]) {
         $('#outputFields').html('<p style="color:#888;">Select an input type first</p>');
         return;
     }
     
-    var fields = fieldOptions[type] || [];
+    var opts = fieldOptions[type];
     var html = '';
-    for (var i = 0; i < fields.length; i++) {
-        var f = fields[i];
-        var checked = f.def ? 'checked' : '';
-        html += '<div class="output-field">';
-        html += '<input type="checkbox" id="field_' + f.id + '" value="' + f.id + '" ' + checked + '>';
-        html += '<label for="field_' + f.id + '">' + f.label + '</label>';
-        html += '</div>';
-    }
+    
+    // Main fields
+    html += '<div class="field-group"><div class="field-group-header"><span class="field-group-title">📊 Main Table Columns</span>';
+    html += '<span class="field-group-btns"><button type="button" onclick="selectGroupFields(\'main\', true)">All</button><button type="button" onclick="selectGroupFields(\'main\', false)">None</button></span></div>';
+    html += '<div class="field-group-items">';
+    opts.main.forEach(f => {
+        html += '<div class="output-field"><input type="checkbox" id="field_' + f.id + '" value="' + f.id + '" data-field-type="main" ' + (f.def ? 'checked' : '') + '><label for="field_' + f.id + '">' + f.label + '</label></div>';
+    });
+    html += '</div></div>';
+    
+    // Detail fields grouped
+    var detailGroups = {};
+    opts.detail.forEach(f => {
+        var g = f.group || 'Other';
+        if (!detailGroups[g]) detailGroups[g] = [];
+        detailGroups[g].push(f);
+    });
+    
+    var groupIcons = {'Gene': '🧬', 'Variant': '🔬', 'Drug': '💊', 'Phenotype': '🏥', 'Study': '📚'};
+    
+    html += '<div class="field-group"><div class="field-group-header"><span class="field-group-title">📋 Expandable Detail Fields</span>';
+    html += '<span class="field-group-btns"><button type="button" onclick="selectGroupFields(\'detail\', true)">All</button><button type="button" onclick="selectGroupFields(\'detail\', false)">None</button></span></div>';
+    
+    Object.keys(detailGroups).forEach(g => {
+        html += '<div style="margin-bottom:10px;"><div style="font-size:12px;color:#666;margin-bottom:5px;">' + (groupIcons[g]||'') + ' ' + g + '</div>';
+        html += '<div class="field-group-items">';
+        detailGroups[g].forEach(f => {
+            html += '<div class="output-field detailed"><input type="checkbox" id="field_' + f.id + '" value="' + f.id + '" data-field-type="detail" data-group="' + g + '" ' + (f.def ? 'checked' : '') + '><label for="field_' + f.id + '">' + f.label + '</label><span class="detail-badge">DETAIL</span></div>';
+        });
+        html += '</div></div>';
+    });
+    html += '</div>';
+    
     $('#outputFields').html(html);
 }
 
 function updatePlaceholder() {
-    var type = $('input[name="query_type"]:checked').val();
-    var examples = {
-        variant: 'rs1234567\nrs9876543\nrs5555555',
-        gene: 'CYP2D6\nABCB1\nSLCO1B1',
-        drug: 'Warfarin\nClopidogrel\nSimvastatin',
-        phenotype: 'Diabetes\nHypertension\nAsthma'
-    };
-    var placeholder = 'Enter search terms (one per line)\n\nExample:\n' + (examples[type] || '');
-    $('#searchTerms').attr('placeholder', placeholder);
+    var examples = {variant: 'rs1234567\nrs9876543', gene: 'CYP2D6\nABCB1', drug: 'Warfarin\nClopidogrel', phenotype: 'Diabetes\nHypertension'};
+    $('#searchTerms').attr('placeholder', 'Enter search terms (one per line)\n\nExample:\n' + (examples[currentQueryType] || ''));
 }
 
-function selectAllFields() {
-    $('#outputFields input').prop('checked', true);
+function selectAllFields() { $('#outputFields input').prop('checked', true); checkReady(); }
+function selectNoFields() { $('#outputFields input').prop('checked', false); checkReady(); }
+function selectDefaults() {
+    if (!currentQueryType || !fieldOptions[currentQueryType]) return;
+    var opts = fieldOptions[currentQueryType];
+    [...opts.main, ...opts.detail].forEach(f => { $('#field_' + f.id).prop('checked', f.def); });
     checkReady();
 }
-
-function selectNoFields() {
-    $('#outputFields input').prop('checked', false);
-    checkReady();
-}
+function selectGroupFields(type, val) { $('#outputFields input[data-field-type="' + type + '"]').prop('checked', val); checkReady(); }
 
 function handleFileUpload(file) {
-    if (!file) return;
-    
     var reader = new FileReader();
     reader.onload = function(e) {
-        var content = e.target.result;
-        var lines = content.split(/[\r\n]+/).filter(function(line) {
-            return line.trim() !== '';
-        });
-        
-        var terms = [];
-        for (var i = 0; i < lines.length; i++) {
-            var line = lines[i];
-            var val = line.split(',')[0].trim();
-            if (val) terms.push(val);
-        }
-        
+        var terms = e.target.result.split(/[\r\n]+/).filter(l => l.trim()).map(l => l.split(',')[0].trim()).filter(Boolean);
         $('#searchTerms').val(terms.join('\n'));
-        $('#fileInfoText').text(file.name + ' - ' + terms.length + ' terms loaded');
+        $('#fileInfoText').text(file.name + ' - ' + terms.length + ' terms');
         $('#fileInfo').addClass('show');
         checkReady();
     };
     reader.readAsText(file);
 }
-
-function clearFile() {
-    $('#csvFileInput').val('');
-    $('#fileInfo').removeClass('show');
-    $('#searchTerms').val('');
-    checkReady();
-}
-
-function getSearchTerms() {
-    var text = $('#searchTerms').val();
-    var terms = text.split(/[\r\n,\s]+/).filter(function(t) {
-        return t.trim() !== '';
-    });
-    return terms;
-}
-
-function getSelectedFields() {
+function clearFile() { $('#csvFileInput').val(''); $('#fileInfo').removeClass('show'); $('#searchTerms').val(''); checkReady(); }
+function getSearchTerms() { return $('#searchTerms').val().split(/[\r\n,\s]+/).filter(t => t.trim()); }
+function getSelectedFields(type) { 
     var fields = [];
-    $('#outputFields input:checked').each(function() {
-        fields.push($(this).val());
-    });
+    $('#outputFields input[data-field-type="' + type + '"]:checked').each(function() { fields.push($(this).val()); });
     return fields;
 }
-
 function checkReady() {
     var type = $('input[name="query_type"]:checked').val();
     var terms = getSearchTerms();
-    var fields = getSelectedFields();
-    
-    var ready = type && terms.length > 0 && fields.length > 0;
-    $('#searchBtn').prop('disabled', !ready);
+    var mf = getSelectedFields('main');
+    $('#searchBtn').prop('disabled', !(type && terms.length > 0 && mf.length > 0));
 }
 
 function executeSearch() {
     var type = $('input[name="query_type"]:checked').val();
     var terms = getSearchTerms();
-    var fields = getSelectedFields();
+    mainFields = getSelectedFields('main');
+    detailFields = getSelectedFields('detail');
     
-    if (!type || terms.length === 0 || fields.length === 0) {
-        alert('Please complete all steps.');
-        return;
-    }
+    if (!type || !terms.length || !mainFields.length) { alert('Please complete all steps.'); return; }
     
     $('#searchBtn').prop('disabled', true).text('Searching...');
     $('#loading').show();
@@ -449,130 +458,292 @@ function executeSearch() {
         data: JSON.stringify({
             query_type: type,
             queries: terms,
-            output_fields: fields
+            output_fields: [...mainFields, ...detailFields]
         }),
-        success: function(response) {
+        success: function(r) {
             $('#loading').hide();
-            $('#searchBtn').prop('disabled', false).text('Search');
-            
-            if (response.success) {
-                queryResults = response.results;
-                allColumns = ['_input', '_status'].concat(fields);
-                visibleColumns = allColumns.slice();
-                displayResults(response);
-            } else {
-                alert('Error: ' + response.error);
-            }
+            $('#searchBtn').prop('disabled', false).text('Run Batch Query');
+            if (r.success) {
+                queryResults = r.results;
+                allColumns = ['_input', '_status', ...mainFields];
+                visibleColumns = [...allColumns];
+                displayResults(r);
+            } else { alert('Error: ' + r.error); }
         },
-        error: function(xhr, status, error) {
+        error: function(x, s, e) {
             $('#loading').hide();
-            $('#searchBtn').prop('disabled', false).text('Search');
-            alert('Error: ' + error);
+            $('#searchBtn').prop('disabled', false).text('Run Batch Query');
+            alert('Error: ' + e);
         }
     });
 }
 
-function displayResults(response) {
-    $('#statTotal').text(response.total);
-    $('#statFound').text(response.found);
-    $('#statNotFound').text(response.not_found_count);
-    
+function displayResults(r) {
+    $('#statTotal').text(r.total);
+    $('#statFound').text(r.found);
+    $('#statNotFound').text(r.not_found_count);
     renderColumnChips();
     renderTable();
-    
-    if (response.not_found_count > 0) {
-        $('#notFoundCount').text(response.not_found_count);
-        $('#notFoundList').text(response.not_found_list.join(', '));
+    if (r.not_found_count > 0) {
+        $('#notFoundCount').text(r.not_found_count);
+        $('#notFoundList').text(r.not_found_list.join(', '));
         $('#notFoundBox').show();
-    } else {
-        $('#notFoundBox').hide();
-    }
-    
+    } else { $('#notFoundBox').hide(); }
     $('#resultsSection').show();
 }
 
 function renderColumnChips() {
     var html = '';
-    for (var i = 0; i < allColumns.length; i++) {
-        var col = allColumns[i];
-        var isVisible = visibleColumns.indexOf(col) !== -1;
-        var cls = isVisible ? '' : 'hidden';
-        var label = col.replace(/_/g, ' ');
-        label = label.charAt(0).toUpperCase() + label.slice(1);
-        html += '<span class="column-chip ' + cls + '" data-col="' + col + '">' + label + '</span>';
-    }
+    allColumns.forEach(col => {
+        var vis = visibleColumns.includes(col);
+        var label = col.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
+        html += '<span class="column-chip ' + (vis ? '' : 'hidden') + '" data-col="' + col + '">' + label + '</span>';
+    });
     $('#columnChips').html(html);
-    
-    $('.column-chip').on('click', function() {
+    $('.column-chip').off('click').on('click', function() {
         var col = $(this).data('col');
         var idx = visibleColumns.indexOf(col);
-        if (idx !== -1) {
-            visibleColumns.splice(idx, 1);
-            $(this).addClass('hidden');
-        } else {
-            visibleColumns.push(col);
-            $(this).removeClass('hidden');
-        }
+        if (idx > -1) { visibleColumns.splice(idx, 1); $(this).addClass('hidden'); }
+        else { visibleColumns.push(col); $(this).removeClass('hidden'); }
         renderTable();
     });
 }
 
 function renderTable() {
-    var headHtml = '<tr>';
-    for (var i = 0; i < visibleColumns.length; i++) {
-        var col = visibleColumns[i];
-        var label = col.replace(/_/g, ' ');
-        label = label.charAt(0).toUpperCase() + label.slice(1);
+    var headHtml = '<tr><th style="width:40px;"></th>';
+    visibleColumns.forEach(col => {
+        var label = col.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
         headHtml += '<th>' + label + '</th>';
-    }
+    });
     headHtml += '</tr>';
     $('#resultsHead').html(headHtml);
     
     var bodyHtml = '';
-    for (var j = 0; j < queryResults.length; j++) {
-        var row = queryResults[j];
-        bodyHtml += '<tr>';
-        for (var k = 0; k < visibleColumns.length; k++) {
-            var col = visibleColumns[k];
+    queryResults.forEach((row, idx) => {
+        var hasDetails = detailFields.length > 0 && row._status === 'found';
+        bodyHtml += '<tr data-idx="' + idx + '">';
+        bodyHtml += '<td>' + (hasDetails ? '<button class="expand-btn" onclick="toggleDetail(' + idx + ')">+ Details</button>' : '') + '</td>';
+        visibleColumns.forEach(col => {
             var val = row[col] !== undefined ? row[col] : '';
-            if (col === '_status') {
-                if (val === 'found') {
-                    val = '<span class="status-found">✓ Found</span>';
-                } else {
-                    val = '<span class="status-notfound">✗ Not Found</span>';
-                }
-            }
+            if (col === '_status') val = val === 'found' ? '<span class="status-found">✓ Found</span>' : '<span class="status-notfound">✗ Not Found</span>';
             bodyHtml += '<td>' + val + '</td>';
-        }
+        });
         bodyHtml += '</tr>';
-    }
+        
+        // Detail row
+        if (hasDetails) {
+            bodyHtml += '<tr class="detail-row" id="detail-' + idx + '"><td colspan="' + (visibleColumns.length + 1) + '">';
+            bodyHtml += '<div class="detail-content">' + renderDetailContent(row) + '</div>';
+            bodyHtml += '</td></tr>';
+        }
+    });
     $('#resultsBody').html(bodyHtml);
 }
 
-function toggleNotFound() {
-    $('#notFoundList').toggle();
+function renderDetailContent(row) {
+    var sections = {
+        'Gene': {icon: '🧬', fields: ['gene_id', 'gene_name', 'gene_function', 'function', 'uniprot_ac', 'chromosome', 'genes_detail']},
+        'Variant': {icon: '🔬', fields: ['variants_detail']},
+        'Drug': {icon: '💊', fields: ['drugs_detail', 'indication', 'iupac_name']},
+        'Phenotype': {icon: '🏥', fields: ['phenotypes_detail']},
+        'Study': {icon: '📚', fields: ['studies_detail', 'countries_detail']}
+    };
+    
+    var html = '<div class="detail-grid">';
+    
+    Object.keys(sections).forEach(secName => {
+        var sec = sections[secName];
+        var hasContent = sec.fields.some(f => detailFields.includes(f) && row[f]);
+        if (!hasContent) return;
+        
+        html += '<div class="detail-section">';
+        html += '<div class="detail-section-title"><span class="icon">' + sec.icon + '</span> ' + secName + ' Details</div>';
+        
+        sec.fields.forEach(f => {
+            if (!detailFields.includes(f) || !row[f]) return;
+            var val = row[f];
+            var label = f.replace(/_detail/g, '').replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
+            
+            if (f.endsWith('_detail') && Array.isArray(val)) {
+                html += '<div class="detail-item"><span class="detail-item-label">' + label + ':</span></div>';
+                html += '<div class="detail-list">';
+                val.forEach(item => {
+                    if (typeof item === 'object') {
+                        html += '<div class="detail-list-item">' + formatDetailItem(f, item) + '</div>';
+                    } else {
+                        html += '<div class="detail-list-item">' + escapeHtml(item) + '</div>';
+                    }
+                });
+                html += '</div>';
+            } else {
+                html += '<div class="detail-item"><span class="detail-item-label">' + label + ':</span><span class="detail-item-value">' + escapeHtml(val) + '</span></div>';
+            }
+        });
+        
+        html += '</div>';
+    });
+    
+    html += '</div>';
+    return html;
+}
+
+function escapeHtml(text) {
+    if (text === null || text === undefined) return '';
+    var str = String(text);
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
+function formatDetailItem(fieldType, item) {
+    var html = '';
+    
+    if (fieldType === 'studies_detail') {
+        // Study: Title, PubMed link, Year, Type
+        if (item.title) {
+            html += '<div style="margin-bottom:3px;"><strong>' + escapeHtml(item.title) + '</strong></div>';
+        }
+        var meta = [];
+        if (item.pubmed_id) {
+            meta.push('<a href="https://pubmed.ncbi.nlm.nih.gov/' + escapeHtml(item.pubmed_id) + '/" target="_blank" style="color:#007bff;">PMID: ' + escapeHtml(item.pubmed_id) + '</a>');
+        }
+        if (item.year) {
+            meta.push('Year: ' + escapeHtml(item.year));
+        }
+        if (item.study_type) {
+            meta.push('Type: ' + escapeHtml(item.study_type));
+        }
+        if (meta.length > 0) {
+            html += '<div style="font-size:11px;color:#666;">' + meta.join(' &nbsp;|&nbsp; ') + '</div>';
+        }
+    } 
+    else if (fieldType === 'drugs_detail') {
+        // Drug: Name, DrugBank link, Indication
+        if (item.name) {
+            html += '<strong>' + escapeHtml(item.name) + '</strong>';
+        }
+        if (item.drug_bank_id) {
+            html += ' &nbsp;<a href="https://go.drugbank.com/drugs/' + escapeHtml(item.drug_bank_id) + '" target="_blank" style="color:#007bff;">[' + escapeHtml(item.drug_bank_id) + ']</a>';
+        }
+        if (item.state) {
+            html += ' <span style="color:#666;">(' + escapeHtml(item.state) + ')</span>';
+        }
+        if (item.indication) {
+            html += '<div style="font-size:11px;color:#666;margin-top:2px;">' + escapeHtml(item.indication) + '</div>';
+        }
+    }
+    else if (fieldType === 'genes_detail') {
+        // Gene: Name, ID, Chromosome, Function
+        if (item.name) {
+            html += '<strong>' + escapeHtml(item.name) + '</strong>';
+        }
+        if (item.id) {
+            html += ' <span style="color:#666;">(' + escapeHtml(item.id) + ')</span>';
+        }
+        if (item.chromosome) {
+            html += ' &nbsp;<span style="background:#e9ecef;padding:1px 5px;border-radius:3px;font-size:10px;">Chr ' + escapeHtml(item.chromosome) + '</span>';
+        }
+        if (item.function) {
+            html += '<div style="font-size:11px;color:#666;margin-top:2px;">' + escapeHtml(item.function) + '</div>';
+        }
+    }
+    else if (fieldType === 'variants_detail') {
+        // Variant: RS ID, Type, Allele, Gene
+        if (item.id) {
+            html += '<a href="https://www.ncbi.nlm.nih.gov/snp/' + escapeHtml(item.id) + '" target="_blank" style="color:#007bff;font-weight:bold;">' + escapeHtml(item.id) + '</a>';
+        }
+        var varMeta = [];
+        if (item.type) {
+            varMeta.push('Type: ' + escapeHtml(item.type));
+        }
+        if (item.allele) {
+            varMeta.push('Allele: ' + escapeHtml(item.allele));
+        }
+        if (item.gene) {
+            varMeta.push('Gene: ' + escapeHtml(item.gene));
+        }
+        if (varMeta.length > 0) {
+            html += ' <span style="color:#666;font-size:11px;">(' + varMeta.join(', ') + ')</span>';
+        }
+    }
+    else if (fieldType === 'phenotypes_detail') {
+        // Phenotype: Name
+        if (item.name) {
+            html += escapeHtml(item.name);
+        }
+    }
+    else if (fieldType === 'countries_detail') {
+        // Country: Name, coordinates
+        if (item.country) {
+            html += '<strong>' + escapeHtml(item.country) + '</strong>';
+        }
+        if (item.lat && item.lng) {
+            html += ' <span style="color:#666;font-size:10px;">(' + escapeHtml(item.lat) + ', ' + escapeHtml(item.lng) + ')</span>';
+        }
+    }
+    else {
+        // Generic fallback
+        var parts = [];
+        Object.keys(item).forEach(key => {
+            if (item[key]) {
+                parts.push(escapeHtml(key) + ': ' + escapeHtml(item[key]));
+            }
+        });
+        html = parts.join(' | ');
+    }
+    
+    return html || '<span style="color:#999;">-</span>';
+}
+
+function toggleDetail(idx) {
+    var $row = $('#detail-' + idx);
+    var $btn = $('tr[data-idx="' + idx + '"] .expand-btn');
+    $row.toggleClass('show');
+    $btn.toggleClass('active');
+    $btn.text($row.hasClass('show') ? '− Hide' : '+ Details');
+    $('tr[data-idx="' + idx + '"]').toggleClass('expanded');
+}
+
+function toggleAllDetails() {
+    var anyHidden = $('.detail-row:not(.show)').length > 0;
+    if (anyHidden) {
+        $('.detail-row').addClass('show');
+        $('.expand-btn').addClass('active').text('− Hide');
+        $('tr[data-idx]').addClass('expanded');
+    } else {
+        $('.detail-row').removeClass('show');
+        $('.expand-btn').removeClass('active').text('+ Details');
+        $('tr[data-idx]').removeClass('expanded');
+    }
 }
 
 function exportResults() {
-    if (!queryResults || queryResults.length === 0) {
-        alert('No results to export.');
-        return;
-    }
+    if (!queryResults.length) { alert('No results'); return; }
     
-    var csvContent = visibleColumns.join(',') + '\n';
-    for (var i = 0; i < queryResults.length; i++) {
-        var row = queryResults[i];
-        var line = [];
-        for (var j = 0; j < visibleColumns.length; j++) {
-            var col = visibleColumns[j];
-            var val = row[col] !== undefined ? row[col] : '';
-            if (typeof val === 'string' && (val.indexOf(',') !== -1 || val.indexOf('"') !== -1 || val.indexOf('\n') !== -1)) {
+    // Flatten detail arrays for CSV
+    var allFields = ['_input', '_status', ...mainFields, ...detailFields];
+    var csvContent = allFields.join(',') + '\n';
+    
+    queryResults.forEach(row => {
+        var line = allFields.map(f => {
+            var val = row[f];
+            if (val === undefined || val === null) return '';
+            if (Array.isArray(val)) {
+                val = val.map(item => {
+                    if (typeof item === 'object') {
+                        return Object.values(item).filter(Boolean).join(' | ');
+                    }
+                    return item;
+                }).join('; ');
+            }
+            val = String(val);
+            if (val.includes(',') || val.includes('"') || val.includes('\n')) {
                 val = '"' + val.replace(/"/g, '""') + '"';
             }
-            line.push(val);
-        }
+            return val;
+        });
         csvContent += line.join(',') + '\n';
-    }
+    });
     
     var blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
     var link = document.createElement('a');
