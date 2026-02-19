@@ -27,6 +27,11 @@
         .placeholder:-ms-input-placeholder {
             color: #444 !important;
         }
+
+        .home-page-icons{
+         font-size: 1.5rem;
+
+        }
     </style>
 
     <!-- Include jQuery library -->
@@ -103,19 +108,19 @@
                     <ul id="id_model_selection">
                         <li>
                             <input type="radio" name="{{ form.model_selection.html_name }}" value="variantagmp" id="id_model_selection_0">
-                            Variant <label> <span>🔬</span></label>
+                            Variant <label> <span class="home-page-icons">🔬</span></label>
                         </li>
                         <li>
                             <input type="radio" name="{{ form.model_selection.html_name }}" value="geneagmp" id="id_model_selection_1">
-                            Gene<label> <span>🧬</span></label>
+                            Gene<label> <span class="home-page-icons">🧬</span></label>
                         </li>
                         <li>
                             <input type="radio" name="{{ form.model_selection.html_name }}" value="drugagmp" id="id_model_selection_2">
-                            Drug <label> <span>💊 </span></label>
+                            Drug <label> <span class="home-page-icons">💊 </span></label>
                         </li>
                         <li>
                             <input type="radio" name="{{ form.model_selection.html_name }}" value="disease" id="id_model_selection_3">
-                            Phenotype <label> <span>🏥 </span></label>
+                            Phenotype <label> <span class="home-page-icons">🏥 </span></label>
                         </li>
                     </ul>
                 </div>
