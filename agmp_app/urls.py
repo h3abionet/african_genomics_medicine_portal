@@ -12,6 +12,7 @@ from .views import (DrugagmpDetailView, PhamacogeneDrugAssoc, VariantStudyagmpLi
 
 router = DefaultRouter()
 router.register(r'variants', VariantagmpViewSet, basename='variant')
+# router.register(r'variant-phenotype', VariantagmpViewSet, basename='variant-phenotype')
 
 urlpatterns = [
 
