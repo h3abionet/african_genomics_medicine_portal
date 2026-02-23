@@ -38,7 +38,7 @@ class VariantagmpViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], permission_classes=[AllowAny])
     def check_exists(self, request):
         """
-       Public Endpoint:
+        Public endpoint:
         /api/variants/check_exists/?rs_id=rs123
         """
         rs_id = request.query_params.get('rs_id')
@@ -51,7 +51,7 @@ class VariantagmpViewSet(viewsets.ModelViewSet):
         exists = qs.exists()
         
         if exists:
-            url = request.build_absolute_uri(f'/api/variants/{rs_id}/')
+            url = request.build_absolute_uri(f'/variant-phenotype/{rs_id}/')
         else:
             url = None
         
