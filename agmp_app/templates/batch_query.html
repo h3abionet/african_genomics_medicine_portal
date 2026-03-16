@@ -31,8 +31,6 @@
         .file-info { margin-top: 10px; padding: 10px; background: #d4edda; border-radius: 4px; display: none; }
         .file-info.show { display: block; }
         .input-hint { font-size: 13px; color: #666; margin-top: 8px; }
-        
-        /* Field Groups */
         .output-grid { display: flex; flex-direction: column; gap: 10px; }
         .field-group { margin-bottom: 10px; padding: 12px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e9ecef; }
         .field-group-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #dee2e6; }
@@ -46,7 +44,6 @@
         .output-field label { cursor: pointer; margin: 0; font-size: 13px; }
         .output-field.detailed { border-left: 3px solid #17a2b8; }
         .output-field .detail-badge { font-size: 10px; background: #17a2b8; color: #fff; padding: 1px 5px; border-radius: 3px; margin-left: auto; }
-        
         .select-btns { margin-bottom: 10px; }
         .select-btns button { padding: 6px 12px; font-size: 12px; margin-right: 8px; background: #f8f9fa; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; }
         .select-btns button:hover { background: #e9ecef; }
@@ -57,8 +54,6 @@
         .loading { display: none; text-align: center; padding: 40px; }
         .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #1e7e34; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 15px; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        
-        /* Results */
         .results-section { display: none; }
         .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px; }
         .results-stats { display: flex; gap: 25px; }
@@ -69,20 +64,19 @@
         .stat-num.orange { color: #fd7e14; }
         .stat-label { font-size: 12px; color: #666; }
         .results-actions { display: flex; gap: 10px; flex-wrap: wrap; }
-        .btn-export { background: #28a745; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 500; }
-        .btn-export:hover { background: #1e7e34; }
+        .btn-export { color: #fff; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 500; }
+        .btn-export-xlsx { background: #1565C0; }
+        .btn-export-xlsx:hover { background: #0D47A1; }
+        .btn-export-csv { background: #28a745; }
+        .btn-export-csv:hover { background: #1e7e34; }
         .btn-toggle-all { background: #17a2b8; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 500; }
         .btn-toggle-all:hover { background: #138496; }
-        
-        /* Column Toggle */
         .column-toggle { margin-bottom: 15px; padding: 15px; background: #f8f9fa; border-radius: 6px; }
         .column-toggle-title { font-weight: 600; margin-bottom: 10px; font-size: 14px; }
         .column-chips { display: flex; flex-wrap: wrap; gap: 8px; }
         .column-chip { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; background: #1e7e34; color: #fff; border-radius: 20px; font-size: 13px; cursor: pointer; }
         .column-chip.hidden { background: #6c757d; }
         .column-chip:hover { opacity: 0.9; }
-        
-        /* Table with Expandable Rows */
         .results-table-wrap { overflow-x: auto; border: 1px solid #ddd; border-radius: 8px; }
         .results-table { width: 100%; border-collapse: collapse; font-size: 13px; }
         .results-table th { background: #343a40; color: #fff; padding: 12px 10px; text-align: left; position: sticky; top: 0; white-space: nowrap; z-index: 10; }
@@ -91,13 +85,9 @@
         .results-table tr.expanded { background: #e3f2fd; }
         .status-found { color: #28a745; font-weight: 600; }
         .status-notfound { color: #dc3545; font-weight: 600; }
-        
-        /* Expand Button */
         .expand-btn { background: none; border: 1px solid #007bff; color: #007bff; padding: 3px 8px; border-radius: 4px; cursor: pointer; font-size: 11px; white-space: nowrap; }
         .expand-btn:hover { background: #007bff; color: #fff; }
         .expand-btn.active { background: #007bff; color: #fff; }
-        
-        /* Detail Row */
         .detail-row { display: none; }
         .detail-row.show { display: table-row; }
         .detail-row td { background: #f8f9fa; padding: 0; }
@@ -115,13 +105,9 @@
         .detail-list-item a { color: #007bff; text-decoration: none; font-weight: 500; }
         .detail-list-item a:hover { text-decoration: underline; color: #0056b3; }
         .detail-empty { color: #999; font-style: italic; font-size: 12px; }
-        
-        /* Not Found Box */
         .notfound-box { background: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 6px; margin-top: 15px; }
         .notfound-toggle { cursor: pointer; font-weight: 600; color: #856404; }
         .notfound-list { margin-top: 10px; font-size: 13px; color: #856404; display: none; max-height: 150px; overflow-y: auto; }
-
-        
     </style>
 </head>
 
@@ -129,7 +115,7 @@
 <div class="batch-container">
     <h5>Batch Query</h5>
     <p>Search multiple variants, genes, drugs, or phenotypes and view detailed related information.</p>
-    
+
     <!-- Step 1 -->
     <div class="section">
         <div class="section-title">1. Select Input Type</div>
@@ -152,7 +138,7 @@
             </label>
         </div>
     </div>
-    
+
     <!-- Step 2 -->
     <div class="section">
         <div class="section-title">2. Enter Search Terms</div>
@@ -174,7 +160,7 @@
             <button type="button" onclick="clearFile()" style="margin-left:10px;padding:2px 8px;cursor:pointer;">✕</button>
         </div>
     </div>
-    
+
     <!-- Step 3 -->
     <div class="section">
         <div class="section-title">3. Select Output Columns <span style="font-weight:normal;color:#666;font-size:13px;">(fields marked with <span style="background:#17a2b8;color:#fff;padding:1px 5px;border-radius:3px;font-size:10px;">DETAIL</span> appear in expandable view)</span></div>
@@ -187,18 +173,18 @@
             <p style="color:#888;">Select an input type first</p>
         </div>
     </div>
-    
+
     <!-- Search -->
     <div class="search-section">
         <button type="button" class="btn-search" id="searchBtn" onclick="executeSearch()" disabled>Run Batch Query</button>
     </div>
-    
+
     <!-- Loading -->
     <div class="loading" id="loading">
         <div class="spinner"></div>
         <p>Querying... Please wait.</p>
     </div>
-    
+
     <!-- Results -->
     <div class="section results-section" id="resultsSection">
         <div class="results-header">
@@ -209,22 +195,23 @@
             </div>
             <div class="results-actions">
                 <button type="button" class="btn-toggle-all" onclick="toggleAllDetails()">📋 Expand/Collapse All</button>
-                <button type="button" class="btn-export" onclick="exportResults()">⬇ Export CSV</button>
+                <button type="button" class="btn-export btn-export-xlsx" onclick="exportXlsx()">📊 Export Excel</button>
+                <button type="button" class="btn-export btn-export-csv" onclick="exportCsv()">⬇ Export CSV</button>
             </div>
         </div>
-        
+
         <div class="column-toggle">
             <div class="column-toggle-title">Show/Hide Main Columns:</div>
             <div class="column-chips" id="columnChips"></div>
         </div>
-        
+
         <div class="results-table-wrap">
             <table class="results-table">
                 <thead id="resultsHead"></thead>
                 <tbody id="resultsBody"></tbody>
             </table>
         </div>
-        
+
         <div class="notfound-box" id="notFoundBox" style="display:none;">
             <div class="notfound-toggle" onclick="$('#notFoundList').toggle();">
                 ⚠ <span id="notFoundCount">0</span> items not found (click to show)
@@ -242,82 +229,91 @@ var mainFields = [];
 var detailFields = [];
 var currentQueryType = '';
 
+var headerMap = {
+    '_input': 'Search Input', '_status': 'Status',
+    'rs_id': 'RS ID', 'gene_name': 'Gene Name', 'chromosome': 'Chromosome',
+    'variant_type': 'Variant Type', 'allele': 'Allele', 'source_db': 'Source DB',
+    'gene_id': 'Gene ID', 'gene_function': 'Gene Function', 'function': 'Gene Function',
+    'uniprot_ac': 'UniProt AC', 'drug_name': 'Drug Name', 'drug_bank_id': 'DrugBank ID',
+    'drug_id': 'Drug ID', 'state': 'State', 'indication': 'Indication',
+    'iupac_name': 'IUPAC Name', 'phenotype_name': 'Phenotype Name',
+    'drug_assoc_count': 'Drug Assoc. Count', 'phenotype_assoc_count': 'Phenotype Assoc. Count',
+    'study_count': 'Study Count', 'variant_count': 'Variant Count', 'gene_count': 'Gene Count',
+    'variants_detail': 'Associated Variants', 'drugs_detail': 'Associated Drugs',
+    'phenotypes_detail': 'Associated Phenotypes', 'studies_detail': 'Associated Studies',
+    'genes_detail': 'Associated Genes', 'countries_detail': 'Study Countries'
+};
+
 var fieldOptions = {
     variant: {
         main: [
-            {id: 'rs_id', label: 'RS ID', def: true},
-            {id: 'gene_name', label: 'Gene Name', def: true},
-            {id: 'chromosome', label: 'Chromosome', def: true},
-            {id: 'variant_type', label: 'Variant Type', def: false},
-            {id: 'allele', label: 'Allele', def: false},
-            {id: 'source_db', label: 'Source DB', def: false},
-            {id: 'drug_assoc_count', label: 'Drug Assoc. Count', def: true},
-            {id: 'phenotype_assoc_count', label: 'Phenotype Assoc. Count', def: true},
-            {id: 'study_count', label: 'Study Count', def: true}
+            {id:'rs_id',label:'RS ID',def:true},{id:'gene_name',label:'Gene Name',def:true},
+            {id:'chromosome',label:'Chromosome',def:true},{id:'variant_type',label:'Variant Type',def:false},
+            {id:'allele',label:'Allele',def:false},{id:'source_db',label:'Source DB',def:false},
+            {id:'drug_assoc_count',label:'Drug Assoc. Count',def:true},
+            {id:'phenotype_assoc_count',label:'Phenotype Assoc. Count',def:true},
+            {id:'study_count',label:'Study Count',def:true}
         ],
         detail: [
-            {id: 'gene_id', label: 'Gene ID', def: true, group: 'Gene'},
-            {id: 'gene_function', label: 'Gene Function', def: true, group: 'Gene'},
-            {id: 'uniprot_ac', label: 'UniProt AC', def: true, group: 'Gene'},
-            {id: 'drugs_detail', label: 'Associated Drugs (with IDs)', def: true, group: 'Drug'},
-            {id: 'phenotypes_detail', label: 'Associated Phenotypes', def: true, group: 'Phenotype'},
-            {id: 'studies_detail', label: 'Studies (Title, PubMed ID, Year)', def: true, group: 'Study'},
-            {id: 'countries_detail', label: 'Study Countries', def: false, group: 'Study'}
+            {id:'gene_id',label:'Gene ID',def:true,group:'Gene'},
+            {id:'gene_function',label:'Gene Function',def:true,group:'Gene'},
+            {id:'uniprot_ac',label:'UniProt AC',def:true,group:'Gene'},
+            {id:'drugs_detail',label:'Associated Drugs (with IDs)',def:true,group:'Drug'},
+            {id:'phenotypes_detail',label:'Associated Phenotypes',def:true,group:'Phenotype'},
+            {id:'studies_detail',label:'Studies (Title, PubMed ID, Year)',def:true,group:'Study'},
+            {id:'countries_detail',label:'Study Countries',def:false,group:'Study'}
         ]
     },
     gene: {
         main: [
-            {id: 'gene_id', label: 'Gene ID', def: true},
-            {id: 'gene_name', label: 'Gene Name', def: true},
-            {id: 'chromosome', label: 'Chromosome', def: true},
-            {id: 'variant_count', label: 'Variant Count', def: true},
-            {id: 'drug_assoc_count', label: 'Drug Assoc. Count', def: true},
-            {id: 'phenotype_assoc_count', label: 'Phenotype Assoc. Count', def: true},
-            {id: 'study_count', label: 'Study Count', def: true}
+            {id:'gene_id',label:'Gene ID',def:true},{id:'gene_name',label:'Gene Name',def:true},
+            {id:'chromosome',label:'Chromosome',def:true},{id:'variant_count',label:'Variant Count',def:true},
+            {id:'drug_assoc_count',label:'Drug Assoc. Count',def:true},
+            {id:'phenotype_assoc_count',label:'Phenotype Assoc. Count',def:true},
+            {id:'study_count',label:'Study Count',def:true}
         ],
         detail: [
-            {id: 'function', label: 'Gene Function', def: true, group: 'Gene'},
-            {id: 'uniprot_ac', label: 'UniProt AC', def: true, group: 'Gene'},
-            {id: 'variants_detail', label: 'Associated Variants (RS IDs)', def: true, group: 'Variant'},
-            {id: 'drugs_detail', label: 'Associated Drugs (Name, DrugBank ID)', def: true, group: 'Drug'},
-            {id: 'phenotypes_detail', label: 'Associated Phenotypes', def: true, group: 'Phenotype'},
-            {id: 'studies_detail', label: 'Studies (Title, PubMed ID, Year)', def: true, group: 'Study'},
-            {id: 'countries_detail', label: 'Study Countries', def: false, group: 'Study'}
+            {id:'function',label:'Gene Function',def:true,group:'Gene'},
+            {id:'uniprot_ac',label:'UniProt AC',def:true,group:'Gene'},
+            {id:'variants_detail',label:'Associated Variants (RS IDs)',def:true,group:'Variant'},
+            {id:'drugs_detail',label:'Associated Drugs (Name, DrugBank ID)',def:true,group:'Drug'},
+            {id:'phenotypes_detail',label:'Associated Phenotypes',def:true,group:'Phenotype'},
+            {id:'studies_detail',label:'Studies (Title, PubMed ID, Year)',def:true,group:'Study'},
+            {id:'countries_detail',label:'Study Countries',def:false,group:'Study'}
         ]
     },
     drug: {
         main: [
-            {id: 'drug_name', label: 'Drug Name', def: true},
-            {id: 'drug_bank_id', label: 'DrugBank ID', def: true},
-            {id: 'state', label: 'State', def: true},
-            {id: 'variant_count', label: 'Variant Count', def: true},
-            {id: 'gene_count', label: 'Gene Count', def: true},
-            {id: 'study_count', label: 'Study Count', def: true}
+            {id:'drug_name',label:'Drug Name',def:true},{id:'drug_bank_id',label:'DrugBank ID',def:true},
+            {id:'state',label:'State',def:true},{id:'variant_count',label:'Variant Count',def:true},
+            {id:'gene_count',label:'Gene Count',def:true},{id:'study_count',label:'Study Count',def:true}
         ],
         detail: [
-            {id: 'indication', label: 'Indication', def: true, group: 'Drug'},
-            {id: 'iupac_name', label: 'IUPAC Name', def: false, group: 'Drug'},
-            {id: 'genes_detail', label: 'Associated Genes (ID, Name, Chromosome)', def: true, group: 'Gene'},
-            {id: 'variants_detail', label: 'Associated Variants (RS IDs)', def: true, group: 'Variant'},
-            {id: 'phenotypes_detail', label: 'Associated Phenotypes', def: true, group: 'Phenotype'},
-            {id: 'studies_detail', label: 'Studies (Title, PubMed ID, Year)', def: true, group: 'Study'}
+            {id:'indication',label:'Indication',def:true,group:'Drug'},
+            {id:'iupac_name',label:'IUPAC Name',def:false,group:'Drug'},
+            {id:'genes_detail',label:'Associated Genes (ID, Name, Chromosome)',def:true,group:'Gene'},
+            {id:'variants_detail',label:'Associated Variants (RS IDs)',def:true,group:'Variant'},
+            {id:'phenotypes_detail',label:'Associated Phenotypes',def:true,group:'Phenotype'},
+            {id:'studies_detail',label:'Studies (Title, PubMed ID, Year)',def:true,group:'Study'}
         ]
     },
     phenotype: {
         main: [
-            {id: 'phenotype_name', label: 'Phenotype Name', def: true},
-            {id: 'variant_count', label: 'Variant Count', def: true},
-            {id: 'gene_count', label: 'Gene Count', def: true},
-            {id: 'study_count', label: 'Study Count', def: true}
+            {id:'phenotype_name',label:'Phenotype Name',def:true},
+            {id:'variant_count',label:'Variant Count',def:true},
+            {id:'gene_count',label:'Gene Count',def:true},
+            {id:'study_count',label:'Study Count',def:true}
         ],
         detail: [
-            {id: 'genes_detail', label: 'Associated Genes (ID, Name, Chromosome)', def: true, group: 'Gene'},
-            {id: 'variants_detail', label: 'Associated Variants (RS IDs)', def: true, group: 'Variant'},
-            {id: 'drugs_detail', label: 'Associated Drugs (Name, DrugBank ID)', def: true, group: 'Drug'},
-            {id: 'studies_detail', label: 'Studies (Title, PubMed ID, Year)', def: true, group: 'Study'}
+            {id:'genes_detail',label:'Associated Genes (ID, Name, Chromosome)',def:true,group:'Gene'},
+            {id:'variants_detail',label:'Associated Variants (RS IDs)',def:true,group:'Variant'},
+            {id:'drugs_detail',label:'Associated Drugs (Name, DrugBank ID)',def:true,group:'Drug'},
+            {id:'studies_detail',label:'Studies (Title, PubMed ID, Year)',def:true,group:'Study'}
         ]
     }
 };
+
+/* ── Init ──────────────────────────────────── */
 
 $(document).ready(function() {
     $('.type-option').on('click', function() {
@@ -329,431 +325,295 @@ $(document).ready(function() {
         updatePlaceholder();
         checkReady();
     });
-    
+
     $('.input-method-btn').on('click', function() {
         $('.input-method-btn').removeClass('active');
         $(this).addClass('active');
-        if ($(this).data('method') === 'text') {
-            $('#textInputArea').show();
-            $('#fileUploadArea').removeClass('show');
-        } else {
-            $('#textInputArea').hide();
-            $('#fileUploadArea').addClass('show');
-        }
+        if ($(this).data('method') === 'text') { $('#textInputArea').show(); $('#fileUploadArea').removeClass('show'); }
+        else { $('#textInputArea').hide(); $('#fileUploadArea').addClass('show'); }
     });
-    
+
     $('#fileUploadArea').on('click', function() { $('#csvFileInput').click(); });
     $('#csvFileInput').on('change', function() { if (this.files[0]) handleFileUpload(this.files[0]); });
     $('#searchTerms').on('input', checkReady);
     $(document).on('change', '#outputFields input', checkReady);
-    
-    // Drag drop
+
     var drop = document.getElementById('fileUploadArea');
-    ['dragenter','dragover','dragleave','drop'].forEach(e => { drop.addEventListener(e, ev => { ev.preventDefault(); ev.stopPropagation(); }, false); });
-    ['dragenter','dragover'].forEach(e => { drop.addEventListener(e, () => { drop.style.borderColor='#1e7e34'; drop.style.background='#e8f5e9'; }, false); });
-    ['dragleave','drop'].forEach(e => { drop.addEventListener(e, () => { drop.style.borderColor='#ddd'; drop.style.background=''; }, false); });
-    drop.addEventListener('drop', e => { if(e.dataTransfer.files[0]) handleFileUpload(e.dataTransfer.files[0]); }, false);
+    ['dragenter','dragover','dragleave','drop'].forEach(function(e) { drop.addEventListener(e, function(ev) { ev.preventDefault(); ev.stopPropagation(); }, false); });
+    ['dragenter','dragover'].forEach(function(e) { drop.addEventListener(e, function() { drop.style.borderColor='#1e7e34'; drop.style.background='#e8f5e9'; }, false); });
+    ['dragleave','drop'].forEach(function(e) { drop.addEventListener(e, function() { drop.style.borderColor='#ddd'; drop.style.background=''; }, false); });
+    drop.addEventListener('drop', function(e) { if (e.dataTransfer.files[0]) handleFileUpload(e.dataTransfer.files[0]); }, false);
 });
+
+/* ── UI helpers ────────────────────────────── */
 
 function updateOutputFields() {
     var type = $('input[name="query_type"]:checked').val();
-    if (!type || !fieldOptions[type]) {
-        $('#outputFields').html('<p style="color:#888;">Select an input type first</p>');
-        return;
-    }
-    
+    if (!type || !fieldOptions[type]) { $('#outputFields').html('<p style="color:#888;">Select an input type first</p>'); return; }
     var opts = fieldOptions[type];
-    var html = '';
-    
-    // Main fields
-    html += '<div class="field-group"><div class="field-group-header"><span class="field-group-title">📊 Main Table Columns</span>';
-    html += '<span class="field-group-btns"><button type="button" onclick="selectGroupFields(\'main\', true)">All</button><button type="button" onclick="selectGroupFields(\'main\', false)">None</button></span></div>';
-    html += '<div class="field-group-items">';
-    opts.main.forEach(f => {
-        html += '<div class="output-field"><input type="checkbox" id="field_' + f.id + '" value="' + f.id + '" data-field-type="main" ' + (f.def ? 'checked' : '') + '><label for="field_' + f.id + '">' + f.label + '</label></div>';
-    });
+    var html = '<div class="field-group"><div class="field-group-header"><span class="field-group-title">📊 Main Table Columns</span><span class="field-group-btns"><button type="button" onclick="selectGroupFields(\'main\',true)">All</button><button type="button" onclick="selectGroupFields(\'main\',false)">None</button></span></div><div class="field-group-items">';
+    opts.main.forEach(function(f) { html += '<div class="output-field"><input type="checkbox" id="field_'+f.id+'" value="'+f.id+'" data-field-type="main" '+(f.def?'checked':'')+'><label for="field_'+f.id+'">'+f.label+'</label></div>'; });
     html += '</div></div>';
-    
-    // Detail fields grouped
-    var detailGroups = {};
-    opts.detail.forEach(f => {
-        var g = f.group || 'Other';
-        if (!detailGroups[g]) detailGroups[g] = [];
-        detailGroups[g].push(f);
-    });
-    
-    var groupIcons = {'Gene': '🧬', 'Variant': '🔬', 'Drug': '💊', 'Phenotype': '🏥', 'Study': '📚'};
-    
-    html += '<div class="field-group"><div class="field-group-header"><span class="field-group-title">📋 Expandable Detail Fields</span>';
-    html += '<span class="field-group-btns"><button type="button" onclick="selectGroupFields(\'detail\', true)">All</button><button type="button" onclick="selectGroupFields(\'detail\', false)">None</button></span></div>';
-    
-    Object.keys(detailGroups).forEach(g => {
-        html += '<div style="margin-bottom:10px;"><div style="font-size:12px;color:#666;margin-bottom:5px;">' + (groupIcons[g]||'') + ' ' + g + '</div>';
-        html += '<div class="field-group-items">';
-        detailGroups[g].forEach(f => {
-            html += '<div class="output-field detailed"><input type="checkbox" id="field_' + f.id + '" value="' + f.id + '" data-field-type="detail" data-group="' + g + '" ' + (f.def ? 'checked' : '') + '><label for="field_' + f.id + '">' + f.label + '</label><span class="detail-badge">DETAIL</span></div>';
-        });
+
+    var dg = {};
+    opts.detail.forEach(function(f) { var g=f.group||'Other'; if(!dg[g])dg[g]=[]; dg[g].push(f); });
+    var gi = {'Gene':'🧬','Variant':'🔬','Drug':'💊','Phenotype':'🏥','Study':'📚'};
+    html += '<div class="field-group"><div class="field-group-header"><span class="field-group-title">📋 Expandable Detail Fields</span><span class="field-group-btns"><button type="button" onclick="selectGroupFields(\'detail\',true)">All</button><button type="button" onclick="selectGroupFields(\'detail\',false)">None</button></span></div>';
+    Object.keys(dg).forEach(function(g) {
+        html += '<div style="margin-bottom:10px;"><div style="font-size:12px;color:#666;margin-bottom:5px;">'+(gi[g]||'')+' '+g+'</div><div class="field-group-items">';
+        dg[g].forEach(function(f) { html += '<div class="output-field detailed"><input type="checkbox" id="field_'+f.id+'" value="'+f.id+'" data-field-type="detail" data-group="'+g+'" '+(f.def?'checked':'')+'><label for="field_'+f.id+'">'+f.label+'</label><span class="detail-badge">DETAIL</span></div>'; });
         html += '</div></div>';
     });
     html += '</div>';
-    
     $('#outputFields').html(html);
 }
 
 function updatePlaceholder() {
-    var examples = {variant: 'rs1234567\nrs9876543', gene: 'CYP2D6\nABCB1', drug: 'Warfarin\nClopidogrel', phenotype: 'Diabetes\nHypertension'};
-    $('#searchTerms').attr('placeholder', 'Enter search terms (one per line)\n\nExample:\n' + (examples[currentQueryType] || ''));
+    var ex = {variant:'rs1234567\nrs9876543',gene:'CYP2D6\nABCB1',drug:'Warfarin\nClopidogrel',phenotype:'Diabetes\nHypertension'};
+    $('#searchTerms').attr('placeholder','Enter search terms (one per line)\n\nExample:\n'+(ex[currentQueryType]||''));
 }
-
-function selectAllFields() { $('#outputFields input').prop('checked', true); checkReady(); }
-function selectNoFields() { $('#outputFields input').prop('checked', false); checkReady(); }
+function selectAllFields()  { $('#outputFields input').prop('checked',true); checkReady(); }
+function selectNoFields()   { $('#outputFields input').prop('checked',false); checkReady(); }
 function selectDefaults() {
-    if (!currentQueryType || !fieldOptions[currentQueryType]) return;
-    var opts = fieldOptions[currentQueryType];
-    [...opts.main, ...opts.detail].forEach(f => { $('#field_' + f.id).prop('checked', f.def); });
+    if (!currentQueryType||!fieldOptions[currentQueryType]) return;
+    var o=fieldOptions[currentQueryType];
+    [].concat(o.main,o.detail).forEach(function(f){$('#field_'+f.id).prop('checked',f.def);});
     checkReady();
 }
-function selectGroupFields(type, val) { $('#outputFields input[data-field-type="' + type + '"]').prop('checked', val); checkReady(); }
+function selectGroupFields(t,v) { $('#outputFields input[data-field-type="'+t+'"]').prop('checked',v); checkReady(); }
 
 function handleFileUpload(file) {
     var reader = new FileReader();
     reader.onload = function(e) {
-        var terms = e.target.result.split(/[\r\n]+/).filter(l => l.trim()).map(l => l.split(',')[0].trim()).filter(Boolean);
+        var terms = e.target.result.split(/[\r\n]+/).filter(function(l){return l.trim();}).map(function(l){return l.split(',')[0].trim();}).filter(Boolean);
         $('#searchTerms').val(terms.join('\n'));
-        $('#fileInfoText').text(file.name + ' - ' + terms.length + ' terms');
+        $('#fileInfoText').text(file.name+' - '+terms.length+' terms');
         $('#fileInfo').addClass('show');
         checkReady();
     };
     reader.readAsText(file);
 }
 function clearFile() { $('#csvFileInput').val(''); $('#fileInfo').removeClass('show'); $('#searchTerms').val(''); checkReady(); }
-function getSearchTerms() { return $('#searchTerms').val().split(/[\r\n,\s]+/).filter(t => t.trim()); }
-function getSelectedFields(type) { 
-    var fields = [];
-    $('#outputFields input[data-field-type="' + type + '"]:checked').each(function() { fields.push($(this).val()); });
-    return fields;
-}
+function getSearchTerms() { return $('#searchTerms').val().split(/[\r\n,\s]+/).filter(function(t){return t.trim();}); }
+function getSelectedFields(type) { var f=[]; $('#outputFields input[data-field-type="'+type+'"]:checked').each(function(){f.push($(this).val());}); return f; }
 function checkReady() {
-    var type = $('input[name="query_type"]:checked').val();
-    var terms = getSearchTerms();
-    var mf = getSelectedFields('main');
-    $('#searchBtn').prop('disabled', !(type && terms.length > 0 && mf.length > 0));
+    var type=$('input[name="query_type"]:checked').val(), terms=getSearchTerms(), mf=getSelectedFields('main');
+    $('#searchBtn').prop('disabled',!(type&&terms.length>0&&mf.length>0));
 }
 
+/* ── Execute search ────────────────────────── */
+
 function executeSearch() {
-    var type = $('input[name="query_type"]:checked').val();
-    var terms = getSearchTerms();
-    mainFields = getSelectedFields('main');
-    detailFields = getSelectedFields('detail');
-    
-    if (!type || !terms.length || !mainFields.length) { alert('Please complete all steps.'); return; }
-    
-    $('#searchBtn').prop('disabled', true).text('Searching...');
-    $('#loading').show();
-    $('#resultsSection').hide();
-    
+    var type=$('input[name="query_type"]:checked').val(), terms=getSearchTerms();
+    mainFields=getSelectedFields('main'); detailFields=getSelectedFields('detail');
+    if(!type||!terms.length||!mainFields.length){alert('Please complete all steps.');return;}
+
+    $('#searchBtn').prop('disabled',true).text('Searching...');
+    $('#loading').show(); $('#resultsSection').hide();
+
     $.ajax({
-        url: '{% url "batch_query_execute" %}',
-        type: 'POST',
-        contentType: 'application/json',
-        headers: {'X-CSRFToken': '{{ csrf_token }}'},
-        data: JSON.stringify({
-            query_type: type,
-            queries: terms,
-            output_fields: [...mainFields, ...detailFields]
-        }),
-        success: function(r) {
-            $('#loading').hide();
-            $('#searchBtn').prop('disabled', false).text('Run Batch Query');
-            if (r.success) {
-                queryResults = r.results;
-                allColumns = ['_input', '_status', ...mainFields];
-                visibleColumns = [...allColumns];
-                displayResults(r);
-            } else { alert('Error: ' + r.error); }
+        url:'{% url "batch_query_execute" %}', type:'POST', contentType:'application/json',
+        headers:{'X-CSRFToken':'{{ csrf_token }}'},
+        data:JSON.stringify({query_type:type,queries:terms,output_fields:[].concat(mainFields,detailFields)}),
+        success:function(r) {
+            $('#loading').hide(); $('#searchBtn').prop('disabled',false).text('Run Batch Query');
+            if(r.success){ queryResults=r.results; allColumns=['_input','_status'].concat(mainFields); visibleColumns=allColumns.slice(); displayResults(r); }
+            else { alert('Error: '+r.error); }
         },
-        error: function(x, s, e) {
-            $('#loading').hide();
-            $('#searchBtn').prop('disabled', false).text('Run Batch Query');
-            alert('Error: ' + e);
-        }
+        error:function(x,s,e) { $('#loading').hide(); $('#searchBtn').prop('disabled',false).text('Run Batch Query'); alert('Error: '+e); }
     });
 }
 
+/* ── Display ───────────────────────────────── */
+
 function displayResults(r) {
-    $('#statTotal').text(r.total);
-    $('#statFound').text(r.found);
-    $('#statNotFound').text(r.not_found_count);
-    renderColumnChips();
-    renderTable();
-    if (r.not_found_count > 0) {
-        $('#notFoundCount').text(r.not_found_count);
-        $('#notFoundList').text(r.not_found_list.join(', '));
-        $('#notFoundBox').show();
-    } else { $('#notFoundBox').hide(); }
+    $('#statTotal').text(r.total); $('#statFound').text(r.found); $('#statNotFound').text(r.not_found_count);
+    renderColumnChips(); renderTable();
+    if(r.not_found_count>0){ $('#notFoundCount').text(r.not_found_count); $('#notFoundList').text(r.not_found_list.join(', ')); $('#notFoundBox').show(); }
+    else { $('#notFoundBox').hide(); }
     $('#resultsSection').show();
 }
 
 function renderColumnChips() {
-    var html = '';
-    allColumns.forEach(col => {
-        var vis = visibleColumns.includes(col);
-        var label = col.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
-        html += '<span class="column-chip ' + (vis ? '' : 'hidden') + '" data-col="' + col + '">' + label + '</span>';
-    });
+    var html='';
+    allColumns.forEach(function(col){ var vis=visibleColumns.indexOf(col)>-1; var label=headerMap[col]||col.replace(/_/g,' '); html+='<span class="column-chip '+(vis?'':'hidden')+'" data-col="'+col+'">'+label+'</span>'; });
     $('#columnChips').html(html);
-    $('.column-chip').off('click').on('click', function() {
-        var col = $(this).data('col');
-        var idx = visibleColumns.indexOf(col);
-        if (idx > -1) { visibleColumns.splice(idx, 1); $(this).addClass('hidden'); }
-        else { visibleColumns.push(col); $(this).removeClass('hidden'); }
-        renderTable();
-    });
+    $('.column-chip').off('click').on('click',function(){ var col=$(this).data('col'),idx=visibleColumns.indexOf(col); if(idx>-1){visibleColumns.splice(idx,1);$(this).addClass('hidden');}else{visibleColumns.push(col);$(this).removeClass('hidden');} renderTable(); });
 }
 
 function renderTable() {
-    var headHtml = '<tr><th style="width:40px;"></th>';
-    visibleColumns.forEach(col => {
-        var label = col.replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
-        headHtml += '<th>' + label + '</th>';
+    var h='<tr><th style="width:40px;"></th>';
+    visibleColumns.forEach(function(col){ h+='<th>'+(headerMap[col]||col.replace(/_/g,' '))+'</th>'; });
+    h+='</tr>'; $('#resultsHead').html(h);
+
+    var b='';
+    queryResults.forEach(function(row,idx){
+        var hasD=detailFields.length>0&&row._status==='found';
+        b+='<tr data-idx="'+idx+'"><td>'+(hasD?'<button class="expand-btn" onclick="toggleDetail('+idx+')">+ Details</button>':'')+'</td>';
+        visibleColumns.forEach(function(col){ var val=row[col]!==undefined?row[col]:''; if(col==='_status')val=val==='found'?'<span class="status-found">✓ Found</span>':'<span class="status-notfound">✗ Not Found</span>'; b+='<td>'+val+'</td>'; });
+        b+='</tr>';
+        if(hasD){ b+='<tr class="detail-row" id="detail-'+idx+'"><td colspan="'+(visibleColumns.length+1)+'"><div class="detail-content">'+renderDetailContent(row)+'</div></td></tr>'; }
     });
-    headHtml += '</tr>';
-    $('#resultsHead').html(headHtml);
-    
-    var bodyHtml = '';
-    queryResults.forEach((row, idx) => {
-        var hasDetails = detailFields.length > 0 && row._status === 'found';
-        bodyHtml += '<tr data-idx="' + idx + '">';
-        bodyHtml += '<td>' + (hasDetails ? '<button class="expand-btn" onclick="toggleDetail(' + idx + ')">+ Details</button>' : '') + '</td>';
-        visibleColumns.forEach(col => {
-            var val = row[col] !== undefined ? row[col] : '';
-            if (col === '_status') val = val === 'found' ? '<span class="status-found">✓ Found</span>' : '<span class="status-notfound">✗ Not Found</span>';
-            bodyHtml += '<td>' + val + '</td>';
-        });
-        bodyHtml += '</tr>';
-        
-        // Detail row
-        if (hasDetails) {
-            bodyHtml += '<tr class="detail-row" id="detail-' + idx + '"><td colspan="' + (visibleColumns.length + 1) + '">';
-            bodyHtml += '<div class="detail-content">' + renderDetailContent(row) + '</div>';
-            bodyHtml += '</td></tr>';
-        }
-    });
-    $('#resultsBody').html(bodyHtml);
+    $('#resultsBody').html(b);
 }
 
 function renderDetailContent(row) {
-    var sections = {
-        'Gene': {icon: '🧬', fields: ['gene_id', 'gene_name', 'gene_function', 'function', 'uniprot_ac', 'chromosome', 'genes_detail']},
-        'Variant': {icon: '🔬', fields: ['variants_detail']},
-        'Drug': {icon: '💊', fields: ['drugs_detail', 'indication', 'iupac_name']},
-        'Phenotype': {icon: '🏥', fields: ['phenotypes_detail']},
-        'Study': {icon: '📚', fields: ['studies_detail', 'countries_detail']}
-    };
-    
-    var html = '<div class="detail-grid">';
-    
-    Object.keys(sections).forEach(secName => {
-        var sec = sections[secName];
-        var hasContent = sec.fields.some(f => detailFields.includes(f) && row[f]);
-        if (!hasContent) return;
-        
-        html += '<div class="detail-section">';
-        html += '<div class="detail-section-title"><span class="icon">' + sec.icon + '</span> ' + secName + ' Details</div>';
-        
-        sec.fields.forEach(f => {
-            if (!detailFields.includes(f) || !row[f]) return;
-            var val = row[f];
-            var label = f.replace(/_detail/g, '').replace(/_/g, ' ').replace(/^\w/, c => c.toUpperCase());
-            
-            if (f.endsWith('_detail') && Array.isArray(val)) {
-                html += '<div class="detail-item"><span class="detail-item-label">' + label + ':</span></div>';
-                html += '<div class="detail-list">';
-                val.forEach(item => {
-                    if (typeof item === 'object') {
-                        html += '<div class="detail-list-item">' + formatDetailItem(f, item) + '</div>';
-                    } else {
-                        html += '<div class="detail-list-item">' + escapeHtml(item) + '</div>';
-                    }
-                });
-                html += '</div>';
-            } else {
-                html += '<div class="detail-item"><span class="detail-item-label">' + label + ':</span><span class="detail-item-value">' + escapeHtml(val) + '</span></div>';
-            }
+    var secs={'Gene':{icon:'🧬',fields:['gene_id','gene_name','gene_function','function','uniprot_ac','chromosome','genes_detail']},'Variant':{icon:'🔬',fields:['variants_detail']},'Drug':{icon:'💊',fields:['drugs_detail','indication','iupac_name']},'Phenotype':{icon:'🏥',fields:['phenotypes_detail']},'Study':{icon:'📚',fields:['studies_detail','countries_detail']}};
+    var html='<div class="detail-grid">';
+    Object.keys(secs).forEach(function(sn){
+        var sec=secs[sn]; var has=sec.fields.some(function(f){return detailFields.indexOf(f)>-1&&row[f];}); if(!has)return;
+        html+='<div class="detail-section"><div class="detail-section-title"><span class="icon">'+sec.icon+'</span> '+sn+' Details</div>';
+        sec.fields.forEach(function(f){
+            if(detailFields.indexOf(f)===-1||!row[f])return;
+            var val=row[f], label=(headerMap[f]||f).replace(/_detail/g,'').replace(/_/g,' ');
+            if(f.endsWith('_detail')&&Array.isArray(val)){
+                html+='<div class="detail-item"><span class="detail-item-label">'+label+':</span></div><div class="detail-list">';
+                val.forEach(function(item){ html+='<div class="detail-list-item">'+(typeof item==='object'?formatDetailItem(f,item):escapeHtml(item))+'</div>'; });
+                html+='</div>';
+            } else { html+='<div class="detail-item"><span class="detail-item-label">'+label+':</span><span class="detail-item-value">'+escapeHtml(val)+'</span></div>'; }
         });
-        
-        html += '</div>';
+        html+='</div>';
     });
-    
-    html += '</div>';
-    return html;
+    return html+'</div>';
 }
 
-function escapeHtml(text) {
-    if (text === null || text === undefined) return '';
-    var str = String(text);
-    var div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
+function escapeHtml(t) { if(t===null||t===undefined)return''; var d=document.createElement('div'); d.textContent=String(t); return d.innerHTML; }
+
+function formatDetailItem(ft, item) {
+    var h='';
+    if(ft==='studies_detail'){
+        if(item.title) h+='<div style="margin-bottom:3px;"><strong>'+escapeHtml(item.title)+'</strong></div>';
+        var m=[]; if(item.pubmed_id)m.push('<a href="https://pubmed.ncbi.nlm.nih.gov/'+escapeHtml(item.pubmed_id)+'/" target="_blank" style="color:#007bff;">PMID: '+escapeHtml(item.pubmed_id)+'</a>'); if(item.year)m.push('Year: '+escapeHtml(item.year)); if(item.study_type)m.push('Type: '+escapeHtml(item.study_type));
+        if(m.length) h+='<div style="font-size:11px;color:#666;">'+m.join(' &nbsp;|&nbsp; ')+'</div>';
+    } else if(ft==='drugs_detail'){
+        if(item.name)h+='<strong>'+escapeHtml(item.name)+'</strong>'; if(item.drug_bank_id)h+=' &nbsp;<a href="https://go.drugbank.com/drugs/'+escapeHtml(item.drug_bank_id)+'" target="_blank" style="color:#007bff;">['+escapeHtml(item.drug_bank_id)+']</a>';
+        if(item.state)h+=' <span style="color:#666;">('+escapeHtml(item.state)+')</span>'; if(item.indication)h+='<div style="font-size:11px;color:#666;margin-top:2px;">'+escapeHtml(item.indication)+'</div>';
+    } else if(ft==='genes_detail'){
+        if(item.name)h+='<strong>'+escapeHtml(item.name)+'</strong>'; if(item.id)h+=' <span style="color:#666;">('+escapeHtml(item.id)+')</span>';
+        if(item.chromosome)h+=' &nbsp;<span style="background:#e9ecef;padding:1px 5px;border-radius:3px;font-size:10px;">Chr '+escapeHtml(item.chromosome)+'</span>';
+        if(item.function)h+='<div style="font-size:11px;color:#666;margin-top:2px;">'+escapeHtml(item.function)+'</div>';
+    } else if(ft==='variants_detail'){
+        if(item.id)h+='<a href="https://www.ncbi.nlm.nih.gov/snp/'+escapeHtml(item.id)+'" target="_blank" style="color:#007bff;font-weight:bold;">'+escapeHtml(item.id)+'</a>';
+        var vm=[]; if(item.type)vm.push('Type: '+escapeHtml(item.type)); if(item.allele)vm.push('Allele: '+escapeHtml(item.allele)); if(item.gene)vm.push('Gene: '+escapeHtml(item.gene));
+        if(vm.length)h+=' <span style="color:#666;font-size:11px;">('+vm.join(', ')+')</span>';
+    } else if(ft==='phenotypes_detail'){ if(item.name)h+=escapeHtml(item.name);
+    } else if(ft==='countries_detail'){ if(item.country)h+='<strong>'+escapeHtml(item.country)+'</strong>'; if(item.lat&&item.lng)h+=' <span style="color:#666;font-size:10px;">('+escapeHtml(item.lat)+', '+escapeHtml(item.lng)+')</span>';
+    } else { var p=[]; Object.keys(item).forEach(function(k){if(item[k])p.push(escapeHtml(k)+': '+escapeHtml(item[k]));}); h=p.join(' | '); }
+    return h||'<span style="color:#999;">-</span>';
 }
 
-function formatDetailItem(fieldType, item) {
-    var html = '';
-    
-    if (fieldType === 'studies_detail') {
-        // Study: Title, PubMed link, Year, Type
-        if (item.title) {
-            html += '<div style="margin-bottom:3px;"><strong>' + escapeHtml(item.title) + '</strong></div>';
-        }
-        var meta = [];
-        if (item.pubmed_id) {
-            meta.push('<a href="https://pubmed.ncbi.nlm.nih.gov/' + escapeHtml(item.pubmed_id) + '/" target="_blank" style="color:#007bff;">PMID: ' + escapeHtml(item.pubmed_id) + '</a>');
-        }
-        if (item.year) {
-            meta.push('Year: ' + escapeHtml(item.year));
-        }
-        if (item.study_type) {
-            meta.push('Type: ' + escapeHtml(item.study_type));
-        }
-        if (meta.length > 0) {
-            html += '<div style="font-size:11px;color:#666;">' + meta.join(' &nbsp;|&nbsp; ') + '</div>';
-        }
-    } 
-    else if (fieldType === 'drugs_detail') {
-        // Drug: Name, DrugBank link, Indication
-        if (item.name) {
-            html += '<strong>' + escapeHtml(item.name) + '</strong>';
-        }
-        if (item.drug_bank_id) {
-            html += ' &nbsp;<a href="https://go.drugbank.com/drugs/' + escapeHtml(item.drug_bank_id) + '" target="_blank" style="color:#007bff;">[' + escapeHtml(item.drug_bank_id) + ']</a>';
-        }
-        if (item.state) {
-            html += ' <span style="color:#666;">(' + escapeHtml(item.state) + ')</span>';
-        }
-        if (item.indication) {
-            html += '<div style="font-size:11px;color:#666;margin-top:2px;">' + escapeHtml(item.indication) + '</div>';
-        }
-    }
-    else if (fieldType === 'genes_detail') {
-        // Gene: Name, ID, Chromosome, Function
-        if (item.name) {
-            html += '<strong>' + escapeHtml(item.name) + '</strong>';
-        }
-        if (item.id) {
-            html += ' <span style="color:#666;">(' + escapeHtml(item.id) + ')</span>';
-        }
-        if (item.chromosome) {
-            html += ' &nbsp;<span style="background:#e9ecef;padding:1px 5px;border-radius:3px;font-size:10px;">Chr ' + escapeHtml(item.chromosome) + '</span>';
-        }
-        if (item.function) {
-            html += '<div style="font-size:11px;color:#666;margin-top:2px;">' + escapeHtml(item.function) + '</div>';
-        }
-    }
-    else if (fieldType === 'variants_detail') {
-        // Variant: RS ID, Type, Allele, Gene
-        if (item.id) {
-            html += '<a href="https://www.ncbi.nlm.nih.gov/snp/' + escapeHtml(item.id) + '" target="_blank" style="color:#007bff;font-weight:bold;">' + escapeHtml(item.id) + '</a>';
-        }
-        var varMeta = [];
-        if (item.type) {
-            varMeta.push('Type: ' + escapeHtml(item.type));
-        }
-        if (item.allele) {
-            varMeta.push('Allele: ' + escapeHtml(item.allele));
-        }
-        if (item.gene) {
-            varMeta.push('Gene: ' + escapeHtml(item.gene));
-        }
-        if (varMeta.length > 0) {
-            html += ' <span style="color:#666;font-size:11px;">(' + varMeta.join(', ') + ')</span>';
-        }
-    }
-    else if (fieldType === 'phenotypes_detail') {
-        // Phenotype: Name
-        if (item.name) {
-            html += escapeHtml(item.name);
-        }
-    }
-    else if (fieldType === 'countries_detail') {
-        // Country: Name, coordinates
-        if (item.country) {
-            html += '<strong>' + escapeHtml(item.country) + '</strong>';
-        }
-        if (item.lat && item.lng) {
-            html += ' <span style="color:#666;font-size:10px;">(' + escapeHtml(item.lat) + ', ' + escapeHtml(item.lng) + ')</span>';
-        }
-    }
-    else {
-        // Generic fallback
-        var parts = [];
-        Object.keys(item).forEach(key => {
-            if (item[key]) {
-                parts.push(escapeHtml(key) + ': ' + escapeHtml(item[key]));
-            }
-        });
-        html = parts.join(' | ');
-    }
-    
-    return html || '<span style="color:#999;">-</span>';
-}
+/* ── Expand / Collapse ─────────────────────── */
 
 function toggleDetail(idx) {
-    var $row = $('#detail-' + idx);
-    var $btn = $('tr[data-idx="' + idx + '"] .expand-btn');
-    $row.toggleClass('show');
-    $btn.toggleClass('active');
-    $btn.text($row.hasClass('show') ? '− Hide' : '+ Details');
-    $('tr[data-idx="' + idx + '"]').toggleClass('expanded');
+    var $r=$('#detail-'+idx),$b=$('tr[data-idx="'+idx+'"] .expand-btn');
+    $r.toggleClass('show'); $b.toggleClass('active');
+    $b.text($r.hasClass('show')?'− Hide':'+ Details');
+    $('tr[data-idx="'+idx+'"]').toggleClass('expanded');
 }
-
 function toggleAllDetails() {
-    var anyHidden = $('.detail-row:not(.show)').length > 0;
-    if (anyHidden) {
-        $('.detail-row').addClass('show');
-        $('.expand-btn').addClass('active').text('− Hide');
-        $('tr[data-idx]').addClass('expanded');
-    } else {
-        $('.detail-row').removeClass('show');
-        $('.expand-btn').removeClass('active').text('+ Details');
-        $('tr[data-idx]').removeClass('expanded');
-    }
+    var any=$('.detail-row:not(.show)').length>0;
+    if(any){$('.detail-row').addClass('show');$('.expand-btn').addClass('active').text('− Hide');$('tr[data-idx]').addClass('expanded');}
+    else{$('.detail-row').removeClass('show');$('.expand-btn').removeClass('active').text('+ Details');$('tr[data-idx]').removeClass('expanded');}
 }
 
-function exportResults() {
-    if (!queryResults.length) { alert('No results'); return; }
-    
-    // Flatten detail arrays for CSV
-    var allFields = ['_input', '_status', ...mainFields, ...detailFields];
-    var csvContent = allFields.join(',') + '\n';
-    
-    queryResults.forEach(row => {
-        var line = allFields.map(f => {
-            var val = row[f];
-            if (val === undefined || val === null) return '';
-            if (Array.isArray(val)) {
-                val = val.map(item => {
-                    if (typeof item === 'object') {
-                        return Object.values(item).filter(Boolean).join(' | ');
-                    }
-                    return item;
-                }).join('; ');
-            }
-            val = String(val);
-            if (val.includes(',') || val.includes('"') || val.includes('\n')) {
-                val = '"' + val.replace(/"/g, '""') + '"';
-            }
-            return val;
+/* ──────────────────────────────────────────────
+   EXPORT: Multi-sheet Excel (.xlsx)
+   ────────────────────────────────────────────── */
+
+function exportXlsx() {
+    if (!queryResults.length) { alert('No results to export.'); return; }
+
+    var $btn = $('.btn-export-xlsx');
+    $btn.prop('disabled', true).text('Generating...');
+
+    // POST to server — it builds the .xlsx and returns a binary download
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '{% url "batch_query_export_xlsx" %}', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+    xhr.responseType = 'blob';
+
+    xhr.onload = function() {
+        $btn.prop('disabled', false).text('📊 Export Excel');
+        if (xhr.status === 200) {
+            var cd = xhr.getResponseHeader('Content-Disposition') || '';
+            var match = cd.match(/filename="?([^"]+)"?/);
+            var filename = match ? match[1] : 'batchquery_export.xlsx';
+
+            var url = URL.createObjectURL(xhr.response);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        } else {
+            alert('Export failed. Status: ' + xhr.status);
+        }
+    };
+    xhr.onerror = function() {
+        $btn.prop('disabled', false).text('📊 Export Excel');
+        alert('Export request failed.');
+    };
+
+    xhr.send(JSON.stringify({
+        results: queryResults,
+        main_fields: mainFields,
+        detail_fields: detailFields,
+        query_type: currentQueryType
+    }));
+}
+
+/* ──────────────────────────────────────────────
+   EXPORT: Flat CSV (chunked, backward compat)
+   ────────────────────────────────────────────── */
+
+function exportCsv() {
+    if (!queryResults.length) { alert('No results to export.'); return; }
+    var allExportFields = ['_input','_status'].concat(mainFields, detailFields);
+    var CHUNK = 500;
+    var totalChunks = Math.ceil(queryResults.length / CHUNK);
+    var ts = new Date().toISOString().slice(0,10);
+
+    for (var c = 0; c < totalChunks; c++) {
+        var slice = queryResults.slice(c*CHUNK, Math.min((c+1)*CHUNK, queryResults.length));
+        var headers = allExportFields.map(function(f){ return headerMap[f]||f.replace(/_/g,' '); });
+        var rows = [headers.map(csvEsc).join(',')];
+        slice.forEach(function(row) {
+            rows.push(allExportFields.map(function(f) {
+                var v=row[f]; if(v===undefined||v===null)return''; if(Array.isArray(v))v=flattenArr(f,v); return csvEsc(String(v));
+            }).join(','));
         });
-        csvContent += line.join(',') + '\n';
-    });
-    
-    var blob = new Blob([csvContent], {type: 'text/csv;charset=utf-8;'});
-    var link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'batch_query_results.csv';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+        var fname='batchquery_'+(c+1)+'_of_'+totalChunks+'_'+currentQueryType+'_'+ts+'.csv';
+        (function(content,name,delay){ setTimeout(function(){dlCsv(content,name);},delay); })(rows.join('\n'), fname, c*400);
+    }
+    if(totalChunks>1) setTimeout(function(){alert('Export split into '+totalChunks+' files.');}, totalChunks*400+200);
+}
+
+function csvEsc(v) { if(v==null)return''; v=String(v); return (v.indexOf(',')>-1||v.indexOf('"')>-1||v.indexOf('\n')>-1)?'"'+v.replace(/"/g,'""')+'"':v; }
+
+function flattenArr(ft, items) {
+    if(!items||!items.length)return'';
+    return items.map(function(item){
+        if(typeof item!=='object')return String(item);
+        var p=[];
+        if(ft==='studies_detail'){if(item.title)p.push(item.title);if(item.pubmed_id)p.push('PMID:'+item.pubmed_id);if(item.year)p.push(item.year);if(item.study_type)p.push(item.study_type);}
+        else if(ft==='drugs_detail'){if(item.name)p.push(item.name);if(item.drug_bank_id)p.push(item.drug_bank_id);if(item.state)p.push(item.state);if(item.indication)p.push(item.indication);}
+        else if(ft==='genes_detail'){if(item.name)p.push(item.name);if(item.id)p.push(item.id);if(item.chromosome)p.push('Chr '+item.chromosome);if(item.function)p.push(item.function);}
+        else if(ft==='variants_detail'){if(item.id)p.push(item.id);if(item.type)p.push(item.type);if(item.allele)p.push(item.allele);if(item.gene)p.push(item.gene);}
+        else if(ft==='phenotypes_detail'){return item.name||'';}
+        else if(ft==='countries_detail'){if(item.country)p.push(item.country);if(item.lat&&item.lng)p.push(item.lat+','+item.lng);}
+        else{return Object.values(item).filter(Boolean).join(' | ');}
+        return p.join(' | ');
+    }).join('; ');
+}
+
+function dlCsv(content, filename) {
+    var blob=new Blob(['\uFEFF'+content],{type:'text/csv;charset=utf-8;'});
+    var a=document.createElement('a'), url=URL.createObjectURL(blob);
+    a.href=url; a.download=filename; document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
 }
 </script>
 </body>

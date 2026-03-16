@@ -28,3 +28,4 @@ fuzzywuzzy==0.18.0
 pydotplus
 reverse_geocoder
 django-filter
+openpyxl

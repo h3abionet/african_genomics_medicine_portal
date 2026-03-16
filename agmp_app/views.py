@@ -12,6 +12,7 @@ from folium.plugins import HeatMap
 import math
 import geocoder
 from folium import plugins
+from datetime import datetime
 
 from agmp_app.models import *
 from django.db.models import Avg, Min, Max, Count, Q, F
@@ -36,26 +37,34 @@ import csv
 import io
 
 # ============================================================ # ============================================================
-import json
-import csv
-import logging
-from django.shortcuts import render
-from django.http import JsonResponse, HttpResponse
-from django.db.models import Q
-from .models import Drugagmp, Geneagmp, Studyagmp, Phenotypeagmp, Variantagmp, VariantStudyagmp
+
 
 logger = logging.getLogger(__name__)
 
 
-import json
-import csv
-import logging
-from django.shortcuts import render
-from django.http import JsonResponse, HttpResponse
-from django.db.models import Q
-from .models import Drugagmp, Geneagmp, Studyagmp, Phenotypeagmp, Variantagmp, VariantStudyagmp
+HEADER_MAP = {
+    '_input': 'Search Input', '_status': 'Status',
+    'rs_id': 'RS ID', 'gene_name': 'Gene Name', 'chromosome': 'Chromosome',
+    'variant_type': 'Variant Type', 'allele': 'Allele', 'source_db': 'Source DB',
+    'gene_id': 'Gene ID', 'gene_function': 'Gene Function', 'function': 'Gene Function',
+    'uniprot_ac': 'UniProt AC', 'drug_name': 'Drug Name', 'drug_bank_id': 'DrugBank ID',
+    'drug_id': 'Drug ID', 'state': 'State', 'indication': 'Indication',
+    'iupac_name': 'IUPAC Name', 'phenotype_name': 'Phenotype Name',
+    'drug_assoc_count': 'Drug Assoc. Count', 'phenotype_assoc_count': 'Phenotype Assoc. Count',
+    'study_count': 'Study Count', 'variant_count': 'Variant Count', 'gene_count': 'Gene Count',
+    'variants_detail': 'Associated Variants', 'drugs_detail': 'Associated Drugs',
+    'phenotypes_detail': 'Associated Phenotypes', 'studies_detail': 'Associated Studies',
+    'genes_detail': 'Associated Genes', 'countries_detail': 'Study Countries',
+}
 
-logger = logging.getLogger(__name__)
+DETAIL_FIELD_KEYS = {
+    'studies_detail': ['title', 'pubmed_id', 'year', 'study_type'],
+    'drugs_detail': ['name', 'drug_bank_id', 'state', 'indication'],
+    'genes_detail': ['name', 'id', 'chromosome', 'function'],
+    'variants_detail': ['id', 'type', 'allele', 'gene'],
+    'phenotypes_detail': ['name'],
+    'countries_detail': ['country', 'lat', 'lng'],
+}
 
 
 def batch_query_view(request):
@@ -65,23 +74,22 @@ def batch_query_view(request):
 def batch_query_execute(request):
     if request.method != 'POST':
         return JsonResponse({'success': False, 'error': 'POST required'})
-    
     try:
         data = json.loads(request.body)
     except json.JSONDecodeError:
         return JsonResponse({'success': False, 'error': 'Invalid JSON'})
-    
+
     query_type = data.get('query_type', '')
     queries = data.get('queries', [])
     output_fields = data.get('output_fields', [])
-    
+
     if not query_type:
         return JsonResponse({'success': False, 'error': 'Select a query type'})
     if not queries:
         return JsonResponse({'success': False, 'error': 'Provide at least one search term'})
     if not output_fields:
         return JsonResponse({'success': False, 'error': 'Select at least one output field'})
-    
+
     seen = set()
     unique_queries = []
     for q in queries:
@@ -89,23 +97,18 @@ def batch_query_execute(request):
         if q and q.lower() not in seen:
             seen.add(q.lower())
             unique_queries.append(q)
-    
     queries = unique_queries[:1000]
-    results = []
-    not_found = []
-    
+
+    results, not_found = [], []
+    query_func = {
+        'variant': query_variant_data,
+        'gene': query_gene_data,
+        'drug': query_drug_data,
+        'phenotype': query_phenotype_data,
+    }.get(query_type)
+
     for query in queries:
-        if query_type == 'variant':
-            row = query_variant_data(query, output_fields)
-        elif query_type == 'gene':
-            row = query_gene_data(query, output_fields)
-        elif query_type == 'drug':
-            row = query_drug_data(query, output_fields)
-        elif query_type == 'phenotype':
-            row = query_phenotype_data(query, output_fields)
-        else:
-            row = None
-        
+        row = query_func(query, output_fields) if query_func else None
         if row:
             row['_input'] = query
             row['_status'] = 'found'
@@ -113,30 +116,24 @@ def batch_query_execute(request):
         else:
             results.append({'_input': query, '_status': 'not_found'})
             not_found.append(query)
-    
+
     return JsonResponse({
-        'success': True,
-        'results': results,
-        'total': len(results),
-        'found': len(results) - len(not_found),
-        'not_found_count': len(not_found),
-        'not_found_list': not_found
+        'success': True, 'results': results,
+        'total': len(results), 'found': len(results) - len(not_found),
+        'not_found_count': len(not_found), 'not_found_list': not_found,
     })
 
 
+# ── Query helpers ───────────────────────────
+
 def query_variant_data(rs_id, fields):
-    """Query variant with full related details."""
     try:
         variant = Variantagmp.objects.filter(
             Q(rs_id__iexact=rs_id) | Q(rs_id__icontains=rs_id)
         ).select_related('geneagmp', 'drugagmp', 'phenotypeagmp').first()
-        
         if not variant:
             return None
-        
         result = {}
-        
-        # Main variant fields
         if 'rs_id' in fields:
             result['rs_id'] = variant.rs_id or ''
         if 'variant_type' in fields:
@@ -149,104 +146,64 @@ def query_variant_data(rs_id, fields):
             result['gene_name'] = variant.geneagmp.gene_name if variant.geneagmp else ''
         if 'chromosome' in fields:
             result['chromosome'] = variant.geneagmp.chromosome if variant.geneagmp else ''
-        
-        # Gene detail fields
         if 'gene_id' in fields:
             result['gene_id'] = variant.geneagmp.gene_id if variant.geneagmp else ''
         if 'gene_function' in fields:
             result['gene_function'] = variant.geneagmp.function if variant.geneagmp else ''
         if 'uniprot_ac' in fields:
             result['uniprot_ac'] = variant.geneagmp.uniprot_ac if variant.geneagmp else ''
-        
-        # Get all variant entries with same rs_id for comprehensive data
-        all_variants = Variantagmp.objects.filter(
-            rs_id__iexact=rs_id
-        ).select_related('drugagmp', 'phenotypeagmp')
-        
-        # Drugs detail
+
+        all_variants = Variantagmp.objects.filter(rs_id__iexact=rs_id).select_related('drugagmp', 'phenotypeagmp')
+
         if 'drugs_detail' in fields:
-            drugs = []
-            seen_drugs = set()
+            drugs, seen = [], set()
             for v in all_variants:
-                if v.drugagmp and v.drugagmp.drug_bank_id not in seen_drugs:
-                    seen_drugs.add(v.drugagmp.drug_bank_id)
-                    drugs.append({
-                        'name': v.drugagmp.drug_name or '',
-                        'drug_bank_id': v.drugagmp.drug_bank_id or '',
-                        'indication': (v.drugagmp.indication or '')[:100]
-                    })
+                if v.drugagmp and v.drugagmp.drug_bank_id not in seen:
+                    seen.add(v.drugagmp.drug_bank_id)
+                    drugs.append({'name': v.drugagmp.drug_name or '', 'drug_bank_id': v.drugagmp.drug_bank_id or '', 'indication': (v.drugagmp.indication or '')[:100]})
             result['drugs_detail'] = drugs[:30]
-        
-        # Phenotypes detail
+
         if 'phenotypes_detail' in fields:
-            phenotypes = []
-            seen_pheno = set()
+            phenotypes, seen = [], set()
             for v in all_variants:
-                if v.phenotypeagmp and v.phenotypeagmp.name not in seen_pheno:
-                    seen_pheno.add(v.phenotypeagmp.name)
+                if v.phenotypeagmp and v.phenotypeagmp.name not in seen:
+                    seen.add(v.phenotypeagmp.name)
                     phenotypes.append({'name': v.phenotypeagmp.name})
             result['phenotypes_detail'] = phenotypes[:50]
-        
-        # Studies detail
+
         if 'studies_detail' in fields or 'countries_detail' in fields:
-            variant_studies = VariantStudyagmp.objects.filter(
-                variantagmp__rs_id__iexact=rs_id
-            ).select_related('studyagmp')
-            
+            variant_studies = VariantStudyagmp.objects.filter(variantagmp__rs_id__iexact=rs_id).select_related('studyagmp')
             if 'studies_detail' in fields:
-                studies = []
-                seen_studies = set()
+                studies, seen = [], set()
                 for vs in variant_studies:
-                    if vs.studyagmp and vs.studyagmp.publication_id not in seen_studies:
-                        seen_studies.add(vs.studyagmp.publication_id)
-                        studies.append({
-                            'title': (vs.studyagmp.title or '')[:150],
-                            'pubmed_id': vs.studyagmp.publication_id or '',
-                            'year': vs.studyagmp.publication_year or '',
-                            'study_type': vs.studyagmp.study_type or ''
-                        })
+                    if vs.studyagmp and vs.studyagmp.publication_id not in seen:
+                        seen.add(vs.studyagmp.publication_id)
+                        studies.append({'title': (vs.studyagmp.title or '')[:150], 'pubmed_id': vs.studyagmp.publication_id or '', 'year': vs.studyagmp.publication_year or '', 'study_type': vs.studyagmp.study_type or ''})
                 result['studies_detail'] = studies[:20]
-            
             if 'countries_detail' in fields:
                 countries = []
                 for vs in variant_studies[:10]:
-                    country_data = extract_countries(vs)
-                    countries.extend(country_data)
+                    countries.extend(extract_countries(vs))
                 result['countries_detail'] = countries[:30]
-        
-        # Counts
+
         if 'drug_assoc_count' in fields:
-            result['drug_assoc_count'] = all_variants.exclude(
-                source_db__in=["DisGeNET", "GWAS Catalog"]
-            ).exclude(drugagmp__isnull=True).count()
+            result['drug_assoc_count'] = all_variants.exclude(source_db__in=["DisGeNET", "GWAS Catalog"]).exclude(drugagmp__isnull=True).count()
         if 'phenotype_assoc_count' in fields:
-            result['phenotype_assoc_count'] = all_variants.filter(
-                source_db__in=["DisGeNET", "GWAS Catalog"]
-            ).exclude(phenotypeagmp__isnull=True).count()
+            result['phenotype_assoc_count'] = all_variants.filter(source_db__in=["DisGeNET", "GWAS Catalog"]).exclude(phenotypeagmp__isnull=True).count()
         if 'study_count' in fields:
-            result['study_count'] = VariantStudyagmp.objects.filter(
-                variantagmp__rs_id__iexact=rs_id
-            ).values('studyagmp__publication_id').distinct().count()
-        
+            result['study_count'] = VariantStudyagmp.objects.filter(variantagmp__rs_id__iexact=rs_id).values('studyagmp__publication_id').distinct().count()
         return result
     except Exception as e:
-        logger.error(f"query_variant_data error: {str(e)}")
+        logger.error(f"query_variant_data error: {e}")
         return None
 
 
 def query_gene_data(gene_input, fields):
-    """Query gene with full related details."""
     try:
-        gene = Geneagmp.objects.filter(
-            Q(gene_id__iexact=gene_input) | Q(gene_name__iexact=gene_input)
-        ).first()
-        
+        gene = Geneagmp.objects.filter(Q(gene_id__iexact=gene_input) | Q(gene_name__iexact=gene_input)).first()
         if not gene:
             return None
-        
         result = {}
-        
-        # Main gene fields
         if 'gene_id' in fields:
             result['gene_id'] = gene.gene_id or ''
         if 'gene_name' in fields:
@@ -257,81 +214,51 @@ def query_gene_data(gene_input, fields):
             result['function'] = gene.function or ''
         if 'uniprot_ac' in fields:
             result['uniprot_ac'] = gene.uniprot_ac or ''
-        
+
         variants = Variantagmp.objects.filter(geneagmp=gene).select_related('drugagmp', 'phenotypeagmp')
-        
-        # Variants detail
+
         if 'variants_detail' in fields:
-            var_list = []
-            seen = set()
+            vl, seen = [], set()
             for v in variants:
                 if v.rs_id and v.rs_id not in seen:
                     seen.add(v.rs_id)
-                    var_list.append({
-                        'id': v.rs_id,
-                        'type': v.variant_type or '',
-                        'allele': v.allele or ''
-                    })
-            result['variants_detail'] = var_list[:50]
-        
-        # Drugs detail
+                    vl.append({'id': v.rs_id, 'type': v.variant_type or '', 'allele': v.allele or ''})
+            result['variants_detail'] = vl[:50]
         if 'drugs_detail' in fields:
-            drugs = []
-            seen = set()
+            dl, seen = [], set()
             for v in variants:
                 if v.drugagmp and v.drugagmp.drug_bank_id not in seen:
                     seen.add(v.drugagmp.drug_bank_id)
-                    drugs.append({
-                        'name': v.drugagmp.drug_name or '',
-                        'drug_bank_id': v.drugagmp.drug_bank_id or '',
-                        'state': v.drugagmp.state or ''
-                    })
-            result['drugs_detail'] = drugs[:30]
-        
-        # Phenotypes detail
+                    dl.append({'name': v.drugagmp.drug_name or '', 'drug_bank_id': v.drugagmp.drug_bank_id or '', 'state': v.drugagmp.state or ''})
+            result['drugs_detail'] = dl[:30]
         if 'phenotypes_detail' in fields:
-            phenos = []
-            seen = set()
+            pl, seen = [], set()
             for v in variants:
                 if v.phenotypeagmp and v.phenotypeagmp.name not in seen:
                     seen.add(v.phenotypeagmp.name)
-                    phenos.append({'name': v.phenotypeagmp.name})
-            result['phenotypes_detail'] = phenos[:50]
-        
-        # Studies detail
+                    pl.append({'name': v.phenotypeagmp.name})
+            result['phenotypes_detail'] = pl[:50]
+
         if 'studies_detail' in fields or 'countries_detail' in fields:
-            variant_studies = VariantStudyagmp.objects.filter(
-                variantagmp__geneagmp=gene
-            ).select_related('studyagmp')
-            
+            vs_qs = VariantStudyagmp.objects.filter(variantagmp__geneagmp=gene).select_related('studyagmp')
             if 'studies_detail' in fields:
-                studies = []
-                seen = set()
-                for vs in variant_studies:
+                sl, seen = [], set()
+                for vs in vs_qs:
                     if vs.studyagmp and vs.studyagmp.publication_id not in seen:
                         seen.add(vs.studyagmp.publication_id)
-                        studies.append({
-                            'title': (vs.studyagmp.title or '')[:150],
-                            'pubmed_id': vs.studyagmp.publication_id or '',
-                            'year': vs.studyagmp.publication_year or '',
-                            'study_type': vs.studyagmp.study_type or ''
-                        })
-                result['studies_detail'] = studies[:20]
-            
+                        sl.append({'title': (vs.studyagmp.title or '')[:150], 'pubmed_id': vs.studyagmp.publication_id or '', 'year': vs.studyagmp.publication_year or '', 'study_type': vs.studyagmp.study_type or ''})
+                result['studies_detail'] = sl[:20]
             if 'countries_detail' in fields:
-                countries = []
-                for vs in variant_studies[:15]:
-                    countries.extend(extract_countries(vs))
-                # Deduplicate countries
-                seen = set()
-                unique_countries = []
-                for c in countries:
+                cl = []
+                for vs in vs_qs[:15]:
+                    cl.extend(extract_countries(vs))
+                seen, unique = set(), []
+                for c in cl:
                     if c['country'] not in seen:
                         seen.add(c['country'])
-                        unique_countries.append(c)
-                result['countries_detail'] = unique_countries[:30]
-        
-        # Counts
+                        unique.append(c)
+                result['countries_detail'] = unique[:30]
+
         if 'variant_count' in fields:
             result['variant_count'] = variants.values('rs_id').distinct().count()
         if 'drug_assoc_count' in fields:
@@ -339,29 +266,19 @@ def query_gene_data(gene_input, fields):
         if 'phenotype_assoc_count' in fields:
             result['phenotype_assoc_count'] = variants.exclude(phenotypeagmp__isnull=True).count()
         if 'study_count' in fields:
-            result['study_count'] = VariantStudyagmp.objects.filter(
-                variantagmp__geneagmp=gene
-            ).values('studyagmp__publication_id').distinct().count()
-        
+            result['study_count'] = VariantStudyagmp.objects.filter(variantagmp__geneagmp=gene).values('studyagmp__publication_id').distinct().count()
         return result
     except Exception as e:
-        logger.error(f"query_gene_data error: {str(e)}")
+        logger.error(f"query_gene_data error: {e}")
         return None
 
 
 def query_drug_data(drug_input, fields):
-    """Query drug with full related details."""
     try:
-        drug = Drugagmp.objects.filter(
-            Q(drug_name__iexact=drug_input) | Q(drug_bank_id__iexact=drug_input)
-        ).first()
-        
+        drug = Drugagmp.objects.filter(Q(drug_name__iexact=drug_input) | Q(drug_bank_id__iexact=drug_input)).first()
         if not drug:
             return None
-        
         result = {}
-        
-        # Main drug fields
         if 'drug_name' in fields:
             result['drug_name'] = drug.drug_name or ''
         if 'drug_bank_id' in fields:
@@ -374,259 +291,375 @@ def query_drug_data(drug_input, fields):
             result['indication'] = drug.indication or ''
         if 'iupac_name' in fields:
             result['iupac_name'] = drug.iupac_name_seq or ''
-        
+
         variants = Variantagmp.objects.filter(drugagmp=drug).select_related('geneagmp', 'phenotypeagmp')
-        
-        # Genes detail
+
         if 'genes_detail' in fields:
-            genes = []
-            seen = set()
+            gl, seen = [], set()
             for v in variants:
                 if v.geneagmp and v.geneagmp.gene_id not in seen:
                     seen.add(v.geneagmp.gene_id)
-                    genes.append({
-                        'id': v.geneagmp.gene_id or '',
-                        'name': v.geneagmp.gene_name or '',
-                        'chromosome': v.geneagmp.chromosome or '',
-                        'function': (v.geneagmp.function or '')[:100]
-                    })
-            result['genes_detail'] = genes[:30]
-        
-        # Variants detail
+                    gl.append({'id': v.geneagmp.gene_id or '', 'name': v.geneagmp.gene_name or '', 'chromosome': v.geneagmp.chromosome or '', 'function': (v.geneagmp.function or '')[:100]})
+            result['genes_detail'] = gl[:30]
         if 'variants_detail' in fields:
-            vars_list = []
-            seen = set()
+            vl, seen = [], set()
             for v in variants:
                 if v.rs_id and v.rs_id not in seen:
                     seen.add(v.rs_id)
-                    vars_list.append({
-                        'id': v.rs_id,
-                        'type': v.variant_type or '',
-                        'gene': v.geneagmp.gene_name if v.geneagmp else ''
-                    })
-            result['variants_detail'] = vars_list[:50]
-        
-        # Phenotypes detail
+                    vl.append({'id': v.rs_id, 'type': v.variant_type or '', 'gene': v.geneagmp.gene_name if v.geneagmp else ''})
+            result['variants_detail'] = vl[:50]
         if 'phenotypes_detail' in fields:
-            phenos = []
-            seen = set()
+            pl, seen = [], set()
             for v in variants:
                 if v.phenotypeagmp and v.phenotypeagmp.name not in seen:
                     seen.add(v.phenotypeagmp.name)
-                    phenos.append({'name': v.phenotypeagmp.name})
-            result['phenotypes_detail'] = phenos[:50]
-        
-        # Studies detail
+                    pl.append({'name': v.phenotypeagmp.name})
+            result['phenotypes_detail'] = pl[:50]
         if 'studies_detail' in fields:
-            variant_studies = VariantStudyagmp.objects.filter(
-                variantagmp__drugagmp=drug
-            ).select_related('studyagmp')
-            studies = []
-            seen = set()
-            for vs in variant_studies:
+            vs_qs = VariantStudyagmp.objects.filter(variantagmp__drugagmp=drug).select_related('studyagmp')
+            sl, seen = [], set()
+            for vs in vs_qs:
                 if vs.studyagmp and vs.studyagmp.publication_id not in seen:
                     seen.add(vs.studyagmp.publication_id)
-                    studies.append({
-                        'title': (vs.studyagmp.title or '')[:150],
-                        'pubmed_id': vs.studyagmp.publication_id or '',
-                        'year': vs.studyagmp.publication_year or '',
-                        'study_type': vs.studyagmp.study_type or ''
-                    })
-            result['studies_detail'] = studies[:20]
-        
-        # Counts
+                    sl.append({'title': (vs.studyagmp.title or '')[:150], 'pubmed_id': vs.studyagmp.publication_id or '', 'year': vs.studyagmp.publication_year or '', 'study_type': vs.studyagmp.study_type or ''})
+            result['studies_detail'] = sl[:20]
+
         if 'variant_count' in fields:
             result['variant_count'] = variants.values('rs_id').distinct().count()
         if 'gene_count' in fields:
             result['gene_count'] = variants.values('geneagmp__gene_id').distinct().count()
         if 'study_count' in fields:
-            result['study_count'] = VariantStudyagmp.objects.filter(
-                variantagmp__drugagmp=drug
-            ).values('studyagmp__publication_id').distinct().count()
-        
+            result['study_count'] = VariantStudyagmp.objects.filter(variantagmp__drugagmp=drug).values('studyagmp__publication_id').distinct().count()
         return result
     except Exception as e:
-        logger.error(f"query_drug_data error: {str(e)}")
+        logger.error(f"query_drug_data error: {e}")
         return None
 
 
 def query_phenotype_data(phenotype_name, fields):
-    """Query phenotype with full related details."""
     try:
-        variants = Variantagmp.objects.filter(
-            phenotypeagmp__name__iexact=phenotype_name
-        ).select_related('geneagmp', 'drugagmp', 'phenotypeagmp')
-        
+        variants = Variantagmp.objects.filter(phenotypeagmp__name__iexact=phenotype_name).select_related('geneagmp', 'drugagmp', 'phenotypeagmp')
         if not variants.exists():
             return None
-        
         result = {}
-        
         if 'phenotype_name' in fields:
             result['phenotype_name'] = phenotype_name
-        
-        # Genes detail
         if 'genes_detail' in fields:
-            genes = []
-            seen = set()
+            gl, seen = [], set()
             for v in variants:
                 if v.geneagmp and v.geneagmp.gene_id not in seen:
                     seen.add(v.geneagmp.gene_id)
-                    genes.append({
-                        'id': v.geneagmp.gene_id or '',
-                        'name': v.geneagmp.gene_name or '',
-                        'chromosome': v.geneagmp.chromosome or ''
-                    })
-            result['genes_detail'] = genes[:30]
-        
-        # Variants detail
+                    gl.append({'id': v.geneagmp.gene_id or '', 'name': v.geneagmp.gene_name or '', 'chromosome': v.geneagmp.chromosome or ''})
+            result['genes_detail'] = gl[:30]
         if 'variants_detail' in fields:
-            vars_list = []
-            seen = set()
+            vl, seen = [], set()
             for v in variants:
                 if v.rs_id and v.rs_id not in seen:
                     seen.add(v.rs_id)
-                    vars_list.append({
-                        'id': v.rs_id,
-                        'gene': v.geneagmp.gene_name if v.geneagmp else ''
-                    })
-            result['variants_detail'] = vars_list[:50]
-        
-        # Drugs detail
+                    vl.append({'id': v.rs_id, 'gene': v.geneagmp.gene_name if v.geneagmp else ''})
+            result['variants_detail'] = vl[:50]
         if 'drugs_detail' in fields:
-            drugs = []
-            seen = set()
+            dl, seen = [], set()
             for v in variants:
                 if v.drugagmp and v.drugagmp.drug_bank_id not in seen:
                     seen.add(v.drugagmp.drug_bank_id)
-                    drugs.append({
-                        'name': v.drugagmp.drug_name or '',
-                        'drug_bank_id': v.drugagmp.drug_bank_id or ''
-                    })
-            result['drugs_detail'] = drugs[:30]
-        
-        # Studies detail
+                    dl.append({'name': v.drugagmp.drug_name or '', 'drug_bank_id': v.drugagmp.drug_bank_id or ''})
+            result['drugs_detail'] = dl[:30]
         if 'studies_detail' in fields:
-            variant_studies = VariantStudyagmp.objects.filter(
-                variantagmp__phenotypeagmp__name__iexact=phenotype_name
-            ).select_related('studyagmp')
-            studies = []
-            seen = set()
-            for vs in variant_studies:
+            vs_qs = VariantStudyagmp.objects.filter(variantagmp__phenotypeagmp__name__iexact=phenotype_name).select_related('studyagmp')
+            sl, seen = [], set()
+            for vs in vs_qs:
                 if vs.studyagmp and vs.studyagmp.publication_id not in seen:
                     seen.add(vs.studyagmp.publication_id)
-                    studies.append({
-                        'title': (vs.studyagmp.title or '')[:150],
-                        'pubmed_id': vs.studyagmp.publication_id or '',
-                        'year': vs.studyagmp.publication_year or '',
-                        'study_type': vs.studyagmp.study_type or ''
-                    })
-            result['studies_detail'] = studies[:20]
-        
-        # Counts
+                    sl.append({'title': (vs.studyagmp.title or '')[:150], 'pubmed_id': vs.studyagmp.publication_id or '', 'year': vs.studyagmp.publication_year or '', 'study_type': vs.studyagmp.study_type or ''})
+            result['studies_detail'] = sl[:20]
         if 'variant_count' in fields:
             result['variant_count'] = variants.values('rs_id').distinct().count()
         if 'gene_count' in fields:
             result['gene_count'] = variants.values('geneagmp__gene_id').distinct().count()
         if 'study_count' in fields:
-            result['study_count'] = VariantStudyagmp.objects.filter(
-                variantagmp__phenotypeagmp__name__iexact=phenotype_name
-            ).values('studyagmp__publication_id').distinct().count()
-        
+            result['study_count'] = VariantStudyagmp.objects.filter(variantagmp__phenotypeagmp__name__iexact=phenotype_name).values('studyagmp__publication_id').distinct().count()
         return result
     except Exception as e:
-        logger.error(f"query_phenotype_data error: {str(e)}")
+        logger.error(f"query_phenotype_data error: {e}")
         return None
 
 
 def extract_countries(variant_study):
-    """Extract all country data from a VariantStudyagmp record."""
     countries = []
-    
-    # Main country
     if variant_study.country_participant:
-        countries.append({
-            'country': variant_study.country_participant,
-            'lat': variant_study.latitude,
-            'lng': variant_study.longitude
-        })
-    
-    # Additional countries (01-30)
+        countries.append({'country': variant_study.country_participant, 'lat': variant_study.latitude, 'lng': variant_study.longitude})
     for i in range(1, 31):
-        suffix = f'_{i:02d}' if i < 20 else f'_{i}'
-        if i == 10:
-            suffix = '_010'
-        elif i == 11:
-            suffix = '_011'
-        elif i == 12:
-            suffix = '_012'
-        elif i == 13:
-            suffix = '_013'
-        elif i == 14:
-            suffix = '_014'
-        elif i == 15:
-            suffix = '_015'
-        elif i == 16:
-            suffix = '_016'
-        elif i == 17:
-            suffix = '_017'
-        elif i == 18:
-            suffix = '_018'
-        elif i == 19:
-            suffix = '_019'
-        
-        country_field = f'country_participant{suffix}'
-        lat_field = f'latitude{suffix}'
-        lng_field = f'longitude{suffix}'
-        
-        country = getattr(variant_study, country_field, None)
+        suffix = f'_{i:02d}' if i < 10 else (f'_{i:03d}' if i <= 19 else f'_{i}')
+        country = getattr(variant_study, f'country_participant{suffix}', None)
         if country:
-            countries.append({
-                'country': country,
-                'lat': getattr(variant_study, lat_field, None),
-                'lng': getattr(variant_study, lng_field, None)
-            })
-    
+            countries.append({'country': country, 'lat': getattr(variant_study, f'latitude{suffix}', None), 'lng': getattr(variant_study, f'longitude{suffix}', None)})
     return countries
 
 
+# ── Flat CSV export (backward compat) ───────
+
+def _flatten_detail_list(field_type, items):
+    if not items:
+        return ''
+    keys = DETAIL_FIELD_KEYS.get(field_type)
+    parts = []
+    for item in items:
+        if isinstance(item, dict):
+            vals = [str(item.get(k, '')) for k in (keys or item.keys()) if item.get(k) and str(item.get(k, '')).lower() != 'nan']
+            if vals:
+                parts.append(' | '.join(vals))
+        else:
+            s = str(item)
+            if s.lower() != 'nan':
+                parts.append(s)
+    return '; '.join(parts)
+
+
 def batch_query_export(request):
-    """Export results as CSV."""
     if request.method != 'POST':
         return HttpResponse("POST required", status=405)
-    
     try:
         data = json.loads(request.body)
         results = data.get('results', [])
         columns = data.get('columns', [])
+        query_type = data.get('query_type', 'query')
+        chunk_index = data.get('chunk_index', 1)
+        chunk_total = data.get('chunk_total', 1)
     except json.JSONDecodeError:
         return HttpResponse("Invalid data", status=400)
-    
     if not results:
         return HttpResponse("No results", status=400)
-    
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="batch_query_results.csv"'
-    
     if not columns:
         columns = list(results[0].keys())
-    
+
+    filename = f"batchquery_{chunk_index}_of_{chunk_total}_{query_type}.csv"
+    response = HttpResponse(content_type='text/csv; charset=utf-8')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    response.write('\ufeff')
     writer = csv.writer(response)
-    writer.writerow(columns)
-    
+    writer.writerow([HEADER_MAP.get(c, c.replace('_', ' ').title()) for c in columns])
     for row in results:
         csv_row = []
         for col in columns:
             val = row.get(col, '')
             if isinstance(val, list):
-                # Flatten list of dicts for CSV
-                val = '; '.join([
-                    ' | '.join(str(v) for v in item.values()) if isinstance(item, dict) else str(item)
-                    for item in val
-                ])
+                val = _flatten_detail_list(col, val)
+            elif val is None:
+                val = ''
             csv_row.append(val)
         writer.writerow(csv_row)
-    
+    return response
+
+
+# ── Multi-sheet Excel export ────────────────
+
+def batch_query_export_xlsx(request):
+    """Build a multi-sheet .xlsx with normalized tables linked by Search Input."""
+    if request.method != 'POST':
+        return HttpResponse("POST required", status=405)
+    try:
+        data = json.loads(request.body)
+        results = data.get('results', [])
+        main_fields = data.get('main_fields', [])
+        detail_fields = data.get('detail_fields', [])
+        query_type = data.get('query_type', 'query')
+    except json.JSONDecodeError:
+        return HttpResponse("Invalid JSON", status=400)
+    if not results:
+        return HttpResponse("No results to export", status=400)
+
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+    from openpyxl.utils import get_column_letter
+
+    wb = Workbook()
+
+    # Styles
+    hdr_font = Font(name='Arial', bold=True, color='FFFFFF', size=11)
+    hdr_fill = PatternFill('solid', fgColor='2E7D32')
+    hdr_align = Alignment(horizontal='center', vertical='center', wrap_text=True)
+    link_font = Font(name='Arial', color='1565C0', underline='single', size=10)
+    found_font = Font(name='Arial', color='2E7D32', bold=True, size=10)
+    notfound_font = Font(name='Arial', color='C62828', bold=True, size=10)
+    data_font = Font(name='Arial', size=10)
+    data_align = Alignment(vertical='top', wrap_text=True)
+    thin_border = Border(bottom=Side(style='thin', color='E0E0E0'))
+
+    def style_header(ws, fill=None):
+        f = fill or hdr_fill
+        for cell in ws[1]:
+            cell.font = hdr_font
+            cell.fill = f
+            cell.alignment = hdr_align
+
+    def auto_width(ws, max_w=50, min_w=12):
+        for col_cells in ws.columns:
+            letter = get_column_letter(col_cells[0].column)
+            best = max((len(str(c.value).split('\n')[0]) for c in col_cells if c.value), default=min_w)
+            ws.column_dimensions[letter].width = max(min_w, min(best + 3, max_w))
+
+    def style_data(ws):
+        for r in range(2, ws.max_row + 1):
+            for c in range(1, ws.max_column + 1):
+                cell = ws.cell(row=r, column=c)
+                cell.font = data_font
+                cell.alignment = data_align
+                cell.border = thin_border
+
+    def clean(v):
+        if v is None:
+            return ''
+        s = str(v).strip()
+        return '' if s.lower() == 'nan' else s
+
+    # ── Summary sheet ───────────────────────
+    ws = wb.active
+    ws.title = 'Summary'
+    scols = ['_input', '_status'] + main_fields
+    ws.append([HEADER_MAP.get(c, c.replace('_', ' ').title()) for c in scols])
+    style_header(ws)
+
+    for row in results:
+        ws.append([clean(row.get(c, '')) for c in scols])
+
+    si = scols.index('_status') + 1
+    for r in range(2, ws.max_row + 1):
+        sc = ws.cell(row=r, column=si)
+        if sc.value == 'found':
+            sc.value = '✓ Found'
+            sc.font = found_font
+        elif sc.value == 'not_found':
+            sc.value = '✗ Not Found'
+            sc.font = notfound_font
+
+    style_data(ws)
+    ws.freeze_panes = 'A2'
+    ws.auto_filter.ref = ws.dimensions
+    auto_width(ws)
+
+    # ── Detail sheet builder ────────────────
+    def build_sheet(title, detail_key, cols, col_headers, fill=None, hyperlink_col=None, hyperlink_tpl=None, hyperlink_prefix=None):
+        if detail_key not in detail_fields:
+            return None
+        rows_out = []
+        for row in results:
+            if row.get('_status') != 'found':
+                continue
+            items = row.get(detail_key, [])
+            if not items or not isinstance(items, list):
+                continue
+            inp = clean(row.get('_input', ''))
+            for item in items:
+                if not isinstance(item, dict):
+                    continue
+                vals = [clean(item.get(k, '')) for k in cols]
+                if any(vals):
+                    rows_out.append([inp] + vals)
+        if not rows_out:
+            return None
+
+        sheet = wb.create_sheet(title=title)
+        sheet.append(['Search Input'] + col_headers)
+        style_header(sheet, fill or PatternFill('solid', fgColor='1565C0'))
+        for rd in rows_out:
+            sheet.append(rd)
+        style_data(sheet)
+
+        # Hyperlinks
+        if hyperlink_col is not None and hyperlink_tpl:
+            ci = hyperlink_col + 2  # +1 for Search Input col, +1 for 1-index
+            for r in range(2, sheet.max_row + 1):
+                cell = sheet.cell(row=r, column=ci)
+                v = str(cell.value or '').strip()
+                if v and (not hyperlink_prefix or v.startswith(hyperlink_prefix)):
+                    cell.hyperlink = hyperlink_tpl.format(v)
+                    cell.font = link_font
+
+        sheet.freeze_panes = 'A2'
+        sheet.auto_filter.ref = sheet.dimensions
+        auto_width(sheet)
+        return sheet
+
+    # ── Genes ───────────────────────────────
+    build_sheet('Genes', 'genes_detail',
+                ['name', 'id', 'chromosome', 'function'],
+                ['Gene Name', 'Gene ID', 'Chromosome', 'Function'])
+
+    # ── Variants ────────────────────────────
+    build_sheet('Variants', 'variants_detail',
+                ['id', 'type', 'allele', 'gene'],
+                ['RS ID', 'Variant Type', 'Allele', 'Gene'],
+                hyperlink_col=0,
+                hyperlink_tpl='https://www.ncbi.nlm.nih.gov/snp/{}',
+                hyperlink_prefix='rs')
+
+    # ── Drugs ───────────────────────────────
+    build_sheet('Drugs', 'drugs_detail',
+                ['name', 'drug_bank_id', 'state', 'indication'],
+                ['Drug Name', 'DrugBank ID', 'State', 'Indication'],
+                fill=PatternFill('solid', fgColor='6A1B9A'),
+                hyperlink_col=1,
+                hyperlink_tpl='https://go.drugbank.com/drugs/{}',
+                hyperlink_prefix='DB')
+
+    # ── Phenotypes ──────────────────────────
+    build_sheet('Phenotypes', 'phenotypes_detail',
+                ['name'],
+                ['Phenotype Name'],
+                fill=PatternFill('solid', fgColor='E65100'))
+
+    # ── Studies ─────────────────────────────
+    build_sheet('Studies', 'studies_detail',
+                ['title', 'pubmed_id', 'year', 'study_type'],
+                ['Title', 'PubMed ID', 'Year', 'Study Type'],
+                fill=PatternFill('solid', fgColor='00695C'),
+                hyperlink_col=1,
+                hyperlink_tpl='https://pubmed.ncbi.nlm.nih.gov/{}/')
+
+    # ── Countries ───────────────────────────
+    build_sheet('Countries', 'countries_detail',
+                ['country', 'lat', 'lng'],
+                ['Country', 'Latitude', 'Longitude'],
+                fill=PatternFill('solid', fgColor='37474F'))
+
+    # ── Export Info sheet ───────────────────
+    ws_meta = wb.create_sheet(title='Export Info')
+    found_n = sum(1 for r in results if r.get('_status') == 'found')
+    meta = [
+        ['AGMP Batch Query Export'], [],
+        ['Query Type', query_type.title()],
+        ['Export Date', datetime.now().strftime('%Y-%m-%d %H:%M:%S')],
+        ['Total Queries', len(results)],
+        ['Found', found_n],
+        ['Not Found', len(results) - found_n],
+        [], ['Sheets Included'],
+    ]
+    for sn in wb.sheetnames:
+        if sn != 'Export Info':
+            meta.append(['', sn])
+    meta.extend([[], ['Notes'],
+        ['', 'Each detail sheet is linked to Summary by the "Search Input" column.'],
+        ['', 'Use Excel filters or VLOOKUP to cross-reference across sheets.'],
+        ['', 'Hyperlinks to PubMed, dbSNP, and DrugBank are clickable.'],
+    ])
+    for mr in meta:
+        ws_meta.append(mr)
+    ws_meta['A1'].font = Font(name='Arial', bold=True, size=14, color='2E7D32')
+    for r in range(3, ws_meta.max_row + 1):
+        ws_meta.cell(row=r, column=1).font = Font(name='Arial', bold=True, size=10)
+        ws_meta.cell(row=r, column=2).font = Font(name='Arial', size=10)
+    ws_meta.column_dimensions['A'].width = 20
+    ws_meta.column_dimensions['B'].width = 65
+
+    # ── Write and return ────────────────────
+    buf = io.BytesIO()
+    wb.save(buf)
+    buf.seek(0)
+    ts = datetime.now().strftime('%Y-%m-%d')
+    fname = f"batchquery_{query_type}_{ts}.xlsx"
+    response = HttpResponse(buf.getvalue(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = f'attachment; filename="{fname}"'
     return response
 
 # ============================================================ # ============================================================
