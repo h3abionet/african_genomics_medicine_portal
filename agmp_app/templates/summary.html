@@ -895,6 +895,8 @@ function updateMap(mapType, studyType) {
         data: { study_type: studyType },
         success: function(response) {
             $(`#${containerId} .map-display`).html(response.map_html);
+            // Fix OSM tile 403: allow referer on cross-origin tile requests from Folium iframe
+            $(`#${containerId} .map-display iframe`).attr('referrerpolicy', 'no-referrer-when-downgrade');
         },
         error: function(xhr, status, error) {
             $(`#${containerId} .map-display`).html(
