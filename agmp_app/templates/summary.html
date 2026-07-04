@@ -244,6 +244,48 @@ body {
     position: relative;
 }
 
+#map1, #map2 {
+    width: 100%;
+    height: 500px;
+}
+
+.map-content .leaflet-container {
+    border-radius: 0 0 8px 8px;
+    background: #f4f6f9;
+    font-family: 'Poppins', 'Helvetica Neue', sans-serif;
+}
+
+.map-legend {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    z-index: 500;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    line-height: 1.7;
+}
+
+.map-legend .swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    vertical-align: middle;
+    margin-right: 6px;
+    border-radius: 2px;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.leaflet-tooltip.map-tooltip {
+    font-family: 'Poppins', 'Helvetica Neue', sans-serif;
+    font-size: 12px;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
 /* Improved Loading Animation */
 .loading-overlay {
     position: absolute;
@@ -391,21 +433,29 @@ body {
     .filter-controls {
         padding: 20px 15px;
     }
-    
+
     .filter-group {
         flex-direction: column;
         align-items: stretch;
     }
-    
+
     .filter-controls label {
         margin-bottom: 10px;
         margin-right: 0;
         min-width: auto;
     }
-    
+
     .filter-controls select {
         min-width: 100%;
         width: 100%;
+    }
+
+    .map-content {
+        height: 380px;
+    }
+
+    #map1, #map2 {
+        height: 380px;
     }
 }
 
@@ -413,10 +463,15 @@ body {
     .filter-controls {
         padding: 15px;
     }
-    
+
     .filter-controls select {
         font-size: 14px;
         padding: 12px 15px;
+    }
+
+    .map-legend {
+        font-size: 11px;
+        padding: 8px 10px;
     }
 }
 </style>
@@ -692,8 +747,8 @@ body {
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <!-- Add Font Awesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
@@ -748,13 +803,13 @@ body {
     <!-- Graphs Section -->
     <div id="section2" class="section">
       <h5 class="text-center">Graphs</h5>
-      
+
       <ul id="clothing-nav" class="nav nav-tabs graph-custom-class" role="tablist">
         <li class="nav-item">
           <a class="nav-link active" href="#drug-graph" id="home-tab" role="tab"
             data-toggle="tab" aria-controls="home" aria-expanded="true">Top Ten Drugs</a>
         </li>
-        
+
         <li class="nav-item">
           <a class="nav-link" href="#gene-graph" role="tab" id="hats-tab"
             data-toggle="tab" aria-controls="hats">Top Ten Genes</a>
@@ -775,11 +830,11 @@ body {
         <div role="tabpanel" class="tab-pane fade show active" id="drug-graph" aria-labelledby="home-tab">
           <canvas id="myChart01" width="200" height="100"></canvas>
         </div>
-        
+
         <div role="tabpanel" class="tab-pane fade" id="gene-graph" aria-labelledby="hats-tab">
           <canvas id="myChart02" width="200" height="100"></canvas>
         </div>
-        
+
         <div role="tabpanel" class="tab-pane fade" id="variant-graph" aria-labelledby="hats-tab01">
           <canvas id="myChart03" width="200" height="100"></canvas>
         </div>
@@ -807,13 +862,13 @@ body {
             </select>
           </div>
         </div>
-        
+
         <h5 class="text-center">Distribution Map</h5>
         <div id="map1-container" class="map-content">
             <div class="loading-overlay">
                 <div class="loading-spinner"></div>
             </div>
-            <div class="map-display"></div>
+            <div id="map1"></div>
         </div>
       </div>
     </div>
@@ -835,13 +890,21 @@ body {
             </select>
           </div>
         </div>
-        
+
         <h5 class="text-center">Heat Map</h5>
         <div id="map2-container" class="map-content">
             <div class="loading-overlay">
                 <div class="loading-spinner"></div>
             </div>
-            <div class="map-display"></div>
+            <div id="map2"></div>
+            <div class="map-legend" id="map2-legend">
+                <strong>Publications by Country</strong><br>
+                <span class="swatch" style="background:#8B0000"></span>&gt; 1000<br>
+                <span class="swatch" style="background:#CD5C5C"></span>100 -- 1000<br>
+                <span class="swatch" style="background:#DAA520"></span>50 -- 100<br>
+                <span class="swatch" style="background:#F0E68C"></span>10 -- 50<br>
+                <span class="swatch" style="background:#FFFFE0;border-color:#ccc"></span>1 -- 10
+            </div>
         </div>
       </div>
     </div>
@@ -855,57 +918,206 @@ body {
 function createParticles(containerId) {
     const container = document.getElementById(containerId);
     const particleCount = 15;
-    
+
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.classList.add('particle');
-        
+
         // Random size between 2px and 6px
         const size = Math.random() * 4 + 2;
         particle.style.width = `${size}px`;
         particle.style.height = `${size}px`;
-        
+
         // Random position
         particle.style.left = `${Math.random() * 100}%`;
         particle.style.top = `${Math.random() * 100}%`;
-        
+
         // Random animation duration
         particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
         particle.style.animationDelay = `${Math.random() * 5}s`;
-        
+
         container.appendChild(particle);
     }
 }
 
-function showLoading(mapId) {
-    $(`#${mapId} .loading-overlay`).css('display', 'flex');
+function showLoading(containerId) {
+    $(`#${containerId} .loading-overlay`).css('display', 'flex');
 }
 
-function hideLoading(mapId) {
-    $(`#${mapId} .loading-overlay`).css('display', 'none');
+function hideLoading(containerId) {
+    $(`#${containerId} .loading-overlay`).css('display', 'none');
 }
 
+// ===== Interactive Leaflet maps (client-side) =====
+var _map1 = null, _map1Layer = null;
+var _map2 = null, _map2Layer = null;
+var _countryBoundaries = null;
+var GEO_COUNTRIES_URL = "{% static 'maps/countries.geo.json' %}";
+
+// Shared color scale used by both maps
+function choroplethColor(count) {
+    if (count > 1000) return '#8B0000';
+    if (count > 100) return '#CD5C5C';
+    if (count > 50) return '#DAA520';
+    if (count > 10) return '#F0E68C';
+    if (count > 0) return '#FFFFE0';
+    return '#f4f4f4';
+}
+
+// ---- Distribution Map (small uniform dots) ----
+function ensureMap1() {
+    if (_map1) return;
+    _map1 = L.map('map1', { center: [-4.0335, 21.7501], zoom: 3, minZoom: 2, worldCopyJump: true });
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO',
+        subdomains: 'abcd',
+        maxZoom: 19
+    }).addTo(_map1);
+    _map1Layer = L.layerGroup().addTo(_map1);
+}
+
+function renderMarkerMap(points) {
+    try {
+        ensureMap1();
+        _map1Layer.clearLayers();
+        if (!points || !points.length) { console.warn('Distribution map: no points received'); return; }
+        console.log('Distribution map: rendering ' + points.length + ' markers');
+        points.forEach(function (p) {
+            var marker = L.circleMarker([p.lat, p.lng], {
+                radius: 6,
+                fillColor: choroplethColor(p.count || 0),
+                color: '#ffffff',
+                weight: 1.5,
+                fillOpacity: 0.85
+            });
+            marker.bindTooltip('Publications: ' + (p.count || 0), { className: 'map-tooltip', sticky: true });
+            marker.bindPopup('<b>Publications:</b> ' + (p.count || 0));
+            _map1Layer.addLayer(marker);
+        });
+        _map1.invalidateSize();
+    } catch (err) {
+        console.error('Distribution map render error:', err);
+        $('#map1-container').append(
+            '<div class="map-error alert alert-danger m-3" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:600">Map render error. Check browser console.</div>'
+        );
+    }
+}
+
+// ---- Heat Map (full country choropleth) ----
+function ensureMap2() {
+    if (_map2) return;
+    _map2 = L.map('map2', { center: [1.2921, 36.8219], zoom: 3, minZoom: 2, worldCopyJump: true });
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap &copy; CARTO',
+        subdomains: 'abcd',
+        maxZoom: 19
+    }).addTo(_map2);
+    _map2Layer = L.layerGroup().addTo(_map2);
+}
+
+function renderChoroplethMap(countries) {
+    try {
+        ensureMap2();
+        _map2Layer.clearLayers();
+
+        var byName = {};
+        (countries || []).forEach(function (c) { byName[c.country] = c.count || 0; });
+        console.log('Heat map: rendering choropleth for ' + Object.keys(byName).length + ' countries');
+
+        function draw(boundaries) {
+            var geoLayer = L.geoJSON(boundaries, {
+                style: function (feature) {
+                    var name = feature.properties && feature.properties.name;
+                    var count = byName[name] || 0;
+                    return {
+                        fillColor: choroplethColor(count),
+                        fillOpacity: count > 0 ? 0.75 : 0.15,
+                        color: '#888888',
+                        weight: 0.8
+                    };
+                },
+                onEachFeature: function (feature, lyr) {
+                    var name = (feature.properties && feature.properties.name) || 'Unknown';
+                    var count = byName[name] || 0;
+                    var label = name + ': ' + count.toLocaleString() + ' publication' + (count !== 1 ? 's' : '');
+                    lyr.bindTooltip(label, { className: 'map-tooltip', sticky: true });
+                    if (count > 0) {
+                        lyr.bindPopup('<b>' + name + '</b><br>Publications: ' + count.toLocaleString());
+                    }
+                    lyr.on('mouseover', function () {
+                        lyr.setStyle({ weight: 2.5, color: '#1e3a8a', fillOpacity: 0.9 });
+                        if (lyr.bringToFront) lyr.bringToFront();
+                    });
+                    lyr.on('mouseout', function () {
+                        geoLayer.resetStyle(lyr);
+                    });
+                }
+            });
+            _map2Layer.addLayer(geoLayer);
+        }
+
+        if (_countryBoundaries) {
+            draw(_countryBoundaries);
+        } else {
+            fetch(GEO_COUNTRIES_URL)
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    _countryBoundaries = data;
+                    draw(data);
+                })
+                .catch(function (err) {
+                    console.error('Failed to load country boundaries:', err);
+                    $('#map2-container').append(
+                        '<div class="map-error alert alert-danger m-3" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:600">Unable to load country boundaries.</div>'
+                    );
+                });
+        }
+        _map2.invalidateSize();
+    } catch (err) {
+        console.error('Heat map render error:', err);
+        $('#map2-container').append(
+            '<div class="map-error alert alert-danger m-3" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:600">Heat map render error. Check browser console.</div>'
+        );
+    }
+}
+
+// ---- Shared AJAX loader ----
 function updateMap(mapType, studyType) {
-    const containerId = mapType === 'marker' ? 'map1-container' : 'map2-container';
+    var containerId = mapType === 'marker' ? 'map1-container' : 'map2-container';
     showLoading(containerId);
-    
+    // Remove any previous error banner
+    $(`#${containerId} .map-error`).remove();
+
     $.ajax({
         url: `/get-map-data/${mapType}/`,
         method: 'GET',
         data: { study_type: studyType },
-        success: function(response) {
-            $(`#${containerId} .map-display`).html(response.map_html);
-            // Fix OSM tile 403: allow referer on cross-origin tile requests from Folium iframe
-            $(`#${containerId} .map-display iframe`).attr('referrerpolicy', 'no-referrer-when-downgrade');
-        },
-        error: function(xhr, status, error) {
-            $(`#${containerId} .map-display`).html(
-                '<div class="alert alert-danger m-3">Error loading map. Please try again.</div>'
-            );
-            console.error('Error updating map:', error);
-        },
-        complete: function() {
+        success: function (response) {
             hideLoading(containerId);
+            if (!response || response.success === false) {
+                console.error('Map data error:', response && response.error);
+                $(`#${containerId}`).append(
+                    '<div class="map-error alert alert-warning m-3" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:600">No data available for this filter.</div>'
+                );
+                return;
+            }
+            if (mapType === 'marker') {
+                renderMarkerMap(response.points);
+            } else {
+                renderChoroplethMap(response.countries);
+            }
+            // Leaflet needs a size recalc after the container becomes visible
+            setTimeout(function () {
+                if (_map1) _map1.invalidateSize();
+                if (_map2) _map2.invalidateSize();
+            }, 300);
+        },
+        error: function (xhr, status, error) {
+            console.error('Map AJAX error:', status, error);
+            hideLoading(containerId);
+            $(`#${containerId}`).append(
+                '<div class="map-error alert alert-danger m-3" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:600">Error loading map. Please try again.</div>'
+            );
         }
     });
 }
@@ -916,20 +1128,20 @@ $(document).ready(function() {
     function enhanceSelectDropdowns() {
         $('.filter-controls select').each(function() {
             const $select = $(this);
-            
+
             // Create a custom container
             const $customSelect = $('<div class="custom-select-container"></div>');
-            
+
             // Create the visible part of the dropdown
             const $customSelectTrigger = $('<div class="custom-select-trigger"></div>');
             $customSelectTrigger.html(`
                 <span class="selected-value">${$select.find('option:selected').text()}</span>
                 <span class="dropdown-arrow"><i class="fas fa-chevron-down"></i></span>
             `);
-            
+
             // Create the dropdown options
             const $customOptions = $('<ul class="custom-select-options"></ul>');
-            
+
             // Add each option to the dropdown
             $select.find('option').each(function() {
                 const $option = $(this);
@@ -939,16 +1151,16 @@ $(document).ready(function() {
                         ${$option.is(':selected') ? '<i class="fas fa-check"></i>' : ''}
                     </li>
                 `);
-                
+
                 $customOptions.append($customOption);
             });
-            
+
             // Put it all together
             $customSelect.append($customSelectTrigger).append($customOptions);
-            
+
             // Insert the custom dropdown after the original select and hide the original
             $select.after($customSelect).hide();
-            
+
             // Handle click on trigger
             $customSelectTrigger.on('click', function(e) {
                 e.stopPropagation();
@@ -956,20 +1168,20 @@ $(document).ready(function() {
                 $customOptions.toggle();
                 $customSelect.toggleClass('open');
             });
-            
+
             // Handle option selection
             $customOptions.find('li').on('click', function() {
                 const value = $(this).data('value');
                 const text = $(this).text().trim();
-                
+
                 // Update the original select
                 $select.val(value).trigger('change');
-                
+
                 // Update the display
                 $customSelectTrigger.find('.selected-value').text(text);
                 $customOptions.hide();
                 $customSelect.removeClass('open');
-                
+
                 // Update checkmarks
                 $customOptions.find('li').removeClass('selected');
                 $(this).addClass('selected');
@@ -977,42 +1189,42 @@ $(document).ready(function() {
                 $(this).append('<i class="fas fa-check"></i>');
             });
         });
-        
+
         // Close dropdowns when clicking outside
         $(document).on('click', function() {
             $('.custom-select-options').hide();
             $('.custom-select-container').removeClass('open');
         });
     }
-    
+
     // Call the function to enhance dropdowns
     enhanceSelectDropdowns();
-    
+
     // Add smooth scrolling to navigation links
     const navLinks = document.querySelectorAll('.tag-link');
-    
+
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
-            
+
             const targetId = this.getAttribute('href');
             const targetElement = document.querySelector(targetId);
-            
+
             window.scrollTo({
                 top: targetElement.offsetTop - 80,
                 behavior: 'smooth'
             });
         });
     });
-    
+
     // Create particle effects
     createParticles('map1-filter-container');
     createParticles('map2-filter-container');
-    
+
     // Initial load of maps
     updateMap('marker', 'All');
     updateMap('heatmap', 'All');
-    
+
     // Event listeners for filters with animation
     $('#map1-filter').change(function() {
         showLoading('map1-container');
@@ -1020,21 +1232,21 @@ $(document).ready(function() {
             updateMap('marker', $(this).val());
         }, 300);
     });
-    
+
     $('#map2-filter').change(function() {
         showLoading('map2-container');
         setTimeout(() => {
             updateMap('heatmap', $(this).val());
         }, 300);
     });
-    
+
     // Highlight active navigation based on scroll position
     $(window).scroll(function() {
         const scrollPosition = $(window).scrollTop();
-        
+
         $('.section').each(function() {
             const topDistance = $(this).offset().top - 100;
-            
+
             if (scrollPosition >= topDistance) {
                 const id = $(this).attr('id');
                 $('.tag-link').removeClass('active');
