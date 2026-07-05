@@ -42,8 +42,8 @@ import io
 logger = logging.getLogger(__name__)
 
 # Maximum identifiers per batch query submission.
-# Configured in settings.py via the AGMP_BATCH_LIMIT environment variable.
-BATCH_QUERY_LIMIT = getattr(settings, 'BATCH_QUERY_LIMIT', 50)
+# Reads from settings.AGMP_BATCH_LIMIT (set via env var in settings.py).
+BATCH_QUERY_LIMIT = getattr(settings, 'AGMP_BATCH_LIMIT', 50)
 
 
 HEADER_MAP = {
@@ -101,6 +101,8 @@ def batch_query_execute(request):
         if q and q.lower() not in seen:
             seen.add(q.lower())
             unique_queries.append(q)
+    total_submitted = len(unique_queries)
+    truncated = total_submitted > BATCH_QUERY_LIMIT
     queries = unique_queries[:BATCH_QUERY_LIMIT]
 
     results, not_found = [], []
@@ -125,6 +127,8 @@ def batch_query_execute(request):
         'success': True, 'results': results,
         'total': len(results), 'found': len(results) - len(not_found),
         'not_found_count': len(not_found), 'not_found_list': not_found,
+        'limit': BATCH_QUERY_LIMIT, 'truncated': truncated,
+        'total_submitted': total_submitted,
     })
 
 

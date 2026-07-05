@@ -210,3 +210,6 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend'
     ]
 }
+
+
+AGMP_BATCH_LIMIT = int(os.environ.get('AGMP_BATCH_LIMIT', 1000))

@@ -78,7 +78,7 @@ body {
     box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     position: relative;
     overflow: visible;
-    z-index: 1;
+    z-index: 1500;
 }
 
 .filter-controls::before {
@@ -171,7 +171,7 @@ body {
     box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     max-height: 300px;
     overflow-y: auto;
-    z-index: 1000;
+    z-index: 2000;
     margin-top: 5px;
     padding: 5px 0;
 }
@@ -242,11 +242,13 @@ body {
 .map-content {
     height: 500px;
     position: relative;
+    z-index: 1;
 }
 
 #map1, #map2 {
     width: 100%;
     height: 500px;
+    z-index: 1;
 }
 
 .map-content .leaflet-container {
@@ -452,10 +454,12 @@ body {
 
     .map-content {
         height: 380px;
+        z-index: 1;
     }
 
     #map1, #map2 {
         height: 380px;
+        z-index: 1;
     }
 }
 
