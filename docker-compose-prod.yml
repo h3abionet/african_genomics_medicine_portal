@@ -48,8 +48,8 @@ services:
     container_name: agmp_caddy
     restart: unless-stopped
     ports:
-      - "8081:80"
-      - "8444:443"
+      - "18082:80"
+      - "18444:443"
     volumes:
       - ./Caddyfile.prod:/etc/caddy/Caddyfile:ro
       - static_volume:/agmp/static_cdn:ro
