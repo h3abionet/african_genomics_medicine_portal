@@ -36,6 +36,15 @@ from django.views.decorators.http import require_http_methods
 import csv
 import io
 
+
+from .ontology_resolver import OntologyResolver
+
+# Map your form's model_selection values to resolver categories
+CATEGORY_MAP = {
+    'disease': 'phenotype',
+    'drugagmp': 'drug',
+}
+
 # ============================================================ # ============================================================
 
 
@@ -697,34 +706,68 @@ def search_view(request):
     form = ModelSearchForm(request.GET)
     model_selection = ""
     suggestion = None
+    ontology_expansion = []
 
     if form.is_valid():
         model_selection = form.cleaned_data['model_selection']
         search_query = form.cleaned_data['search_query']
 
-        if model_selection == 'variantagmp':
-            results = Variantagmp.objects.filter(rs_id__icontains=search_query).values('rs_id', 'geneagmp__gene_id', 'geneagmp__chromosome').distinct()
+        resolver_category = CATEGORY_MAP.get(model_selection)
+
+        if resolver_category:
+            resolver = OntologyResolver(resolver_category)
+            q_filter, ontology_expansion = resolver.build_q(search_query)
+
+            if model_selection == 'disease':
+                results = (
+                    Variantagmp.objects.select_related()
+                    .exclude(source_db="PharmGKB")
+                    .filter(q_filter)
+                    .values("phenotypeagmp__name")
+                    .distinct()
+                )
+            elif model_selection == 'drugagmp':
+                results = (
+                    Drugagmp.objects.filter(q_filter)
+                    .values('drug_name', 'drug_id', 'drug_bank_id',
+                            'state', 'indication', 'iupac_name_seq')
+                    .distinct()
+                )
+
+            if not results and not ontology_expansion:
+                # existing fuzzy fallback
+                if model_selection == 'disease':
+                    all_vals = (
+                        Variantagmp.objects.exclude(source_db="PharmGKB")
+                        .values_list('phenotypeagmp__name', flat=True).distinct()
+                    )
+                else:
+                    all_vals = Drugagmp.objects.values_list('drug_name', flat=True)
+                suggestion = process.extractOne(search_query, all_vals)
+
+        elif model_selection == 'variantagmp':
+            results = (
+                Variantagmp.objects
+                .filter(rs_id__icontains=search_query)
+                .values('rs_id', 'geneagmp__gene_id', 'geneagmp__chromosome')
+                .distinct()
+            )
             if not results:
                 all_variants = Variantagmp.objects.values_list('rs_id', flat=True)
                 suggestion = process.extractOne(search_query, all_variants)
 
         elif model_selection == 'geneagmp':
-            results = Geneagmp.objects.filter(gene_id__icontains=search_query).values('gene_id', 'chromosome').distinct()
+            results = (
+                Geneagmp.objects
+                .filter(gene_id__icontains=search_query)
+                .values('gene_id', 'chromosome')
+                .distinct()
+            )
             if not results:
                 all_genes = Geneagmp.objects.values_list('gene_id', flat=True)
                 suggestion = process.extractOne(search_query, all_genes)
-
-        elif model_selection == 'drugagmp':
-            results = Drugagmp.objects.filter(drug_name__icontains=search_query).values('drug_name', 'drug_id', 'drug_bank_id', 'state', 'indication', 'iupac_name_seq').distinct()
-            if not results:
-                all_drugs = Drugagmp.objects.values_list('drug_name', flat=True)
-                suggestion = process.extractOne(search_query, all_drugs)
-
-        elif model_selection == 'disease':
-            results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__icontains=search_query).values("phenotypeagmp__name").distinct()
-            if not results:
-                all_diseases = Variantagmp.objects.exclude(source_db="PharmGKB").values_list('phenotypeagmp__name', flat=True).distinct()
-                suggestion = process.extractOne(search_query, all_diseases)
+        else:
+            results = []
     else:
         results = []
 
@@ -732,7 +775,8 @@ def search_view(request):
         'form': form,
         'results': results,
         'model_selection': model_selection,
-        'suggestion': suggestion
+        'suggestion': suggestion,
+        'ontology_expansion': ontology_expansion,
     })
 
 def search_all(request):

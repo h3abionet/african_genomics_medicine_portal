@@ -34,6 +34,37 @@ class PhenotypeagmpAdmin(admin.ModelAdmin):
     search_fields =['name']
     list_per_page = 500
 
+
+# admin.py
+
+from django.contrib import admin
+from .models import OntologyConfig, SearchFieldMapping, OxOMapping
+
+
+@admin.register(OntologyConfig)
+class OntologyConfigAdmin(admin.ModelAdmin):
+    list_display = ['display_name', 'ols_id', 'category', 'enabled',
+                    'priority', 'expand_children', 'child_depth']
+    list_filter = ['category', 'enabled']
+    list_editable = ['enabled', 'priority', 'expand_children', 'child_depth']
+    ordering = ['category', 'priority']
+
+
+@admin.register(SearchFieldMapping)
+class SearchFieldMappingAdmin(admin.ModelAdmin):
+    list_display = ['category', 'lookup_field', 'lookup_type', 'is_fallback', 'enabled']
+    list_filter = ['category', 'enabled', 'is_fallback']
+    list_editable = ['enabled', 'lookup_type', 'is_fallback']
+
+
+@admin.register(OxOMapping)
+class OxOMappingAdmin(admin.ModelAdmin):
+    list_display = ['source_category', 'target_ontology_prefix', 'distance', 'enabled']
+    list_filter = ['source_category', 'enabled']
+    list_editable = ['enabled', 'distance']
+
+    
+
 ###### site.register ######
 admin.site.register(Drugagmp, DrugagmpAdmin)
 admin.site.register(Variantagmp, VariantagmpAdmin)

@@ -235,3 +235,115 @@ class VariantStudyagmp(models.Model):
         verbose_name_plural = " Variant Studies"
 #====New Models=======#
 
+
+
+# models.py — add these
+
+class OntologyConfig(models.Model):
+    """
+    Admin-configurable ontology source.
+    Add/remove ontologies without touching code.
+    """
+    ols_id = models.CharField(
+        max_length=50, unique=True,
+        help_text="OLS4 ontology identifier, e.g. 'doid', 'hp', 'mondo', 'chebi'"
+    )
+    display_name = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+
+    CATEGORY_CHOICES = [
+        ('phenotype', 'Phenotype / Disease'),
+        ('drug', 'Drug / Chemical'),
+        ('gene', 'Gene / Protein'),
+        ('variant', 'Variant'),
+    ]
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, db_index=True)
+    enabled = models.BooleanField(default=True)
+    priority = models.PositiveIntegerField(
+        default=10,
+        help_text="Lower number = searched first"
+    )
+    expand_children = models.BooleanField(
+        default=True,
+        help_text="Include child terms in search expansion"
+    )
+    child_depth = models.PositiveIntegerField(
+        default=1,
+        help_text="How many levels of children to walk"
+    )
+    max_search_hits = models.PositiveIntegerField(
+        default=5,
+        help_text="Max OLS results to process per query"
+    )
+    max_children = models.PositiveIntegerField(
+        default=30,
+        help_text="Max child terms to fetch per hit"
+    )
+    cache_duration = models.PositiveIntegerField(
+        default=86400,
+        help_text="Cache TTL in seconds (default 24h)"
+    )
+
+    class Meta:
+        ordering = ['category', 'priority']
+        verbose_name = 'Ontology Source'
+
+    def __str__(self):
+        state = '✓' if self.enabled else '✗'
+        return f"[{state}] {self.display_name} ({self.ols_id}) — {self.get_category_display()}"
+
+
+class SearchFieldMapping(models.Model):
+    """
+    Maps a search category to the Django ORM lookup field.
+    Allows admin to change which model fields are matched
+    without editing views.
+    """
+    CATEGORY_CHOICES = OntologyConfig.CATEGORY_CHOICES
+
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    lookup_field = models.CharField(
+        max_length=200,
+        help_text="Django ORM field path, e.g. 'phenotypeagmp__name' or 'drug_name'"
+    )
+    lookup_type = models.CharField(
+        max_length=20, default='iexact',
+        help_text="Django lookup: iexact, icontains, exact, etc."
+    )
+    is_fallback = models.BooleanField(
+        default=False,
+        help_text="If True, this mapping is used as a loose fallback (icontains on raw input)"
+    )
+    enabled = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['category', 'is_fallback']
+        verbose_name = 'Search Field Mapping'
+
+    def __str__(self):
+        fb = ' (fallback)' if self.is_fallback else ''
+        return f"{self.get_category_display()}: {self.lookup_field}__{self.lookup_type}{fb}"
+
+########################### Ontology Mapping ############################
+class OxOMapping(models.Model):
+    """
+    Optional cross-ontology mapping config.
+    Only used when you need to bridge between ontology vocabularies.
+    """
+    source_category = models.CharField(max_length=20, choices=OntologyConfig.CATEGORY_CHOICES)
+    target_ontology_prefix = models.CharField(
+        max_length=50,
+        help_text="OxO target prefix, e.g. 'MONDO', 'HP', 'EFO'"
+    )
+    distance = models.PositiveIntegerField(
+        default=2,
+        help_text="Max mapping hops in OxO"
+    )
+    enabled = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['source_category', 'target_ontology_prefix']
+
+    def __str__(self):
+        return f"{self.source_category} → {self.target_ontology_prefix} (dist {self.distance})"
+

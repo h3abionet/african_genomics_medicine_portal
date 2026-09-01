@@ -24,12 +24,12 @@ services:
       dockerfile: Dockerfile
     container_name: agmp_django_dev
     command: bash -c "python manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
     volumes:
       - .:/agmp
       - static_volume_dev:/agmp/static_cdn
       - media_volume_dev:/agmp/media
-    expose:
-      - "8000"
     depends_on:
       postgres:
         condition: service_healthy
@@ -41,23 +41,6 @@ services:
       - DB_HOST=postgres
       - DB_PORT=5432
       - DEBUG=True
-
-  caddy:
-    image: caddy:2
-    container_name: agmp_caddy_dev
-    ports:
-      - "8080:80"
-    volumes:
-      - ./Caddyfile.local:/etc/caddy/Caddyfile:ro
-      - static_volume_dev:/agmp/static_cdn:ro
-      - media_volume_dev:/agmp/media:ro
-    depends_on:
-      - djangoapp
-    networks:
-      - agmp_network_dev
-
-    env_file:
-    - .env
 
 networks:
   agmp_network_dev:
