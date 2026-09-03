@@ -35,25 +35,25 @@ from django.views.decorators.http import require_http_methods
 
 import csv
 import io
+import reverse_geocoder as rg
 
+# ── Ontology resolver (safe import) ─────────
+try:
+    from .ontology_resolver import OntologyResolver
+    ONTOLOGY_AVAILABLE = True
+except ImportError:
+    ONTOLOGY_AVAILABLE = False
 
-from .ontology_resolver import OntologyResolver
-
-# Map your form's model_selection values to resolver categories
 CATEGORY_MAP = {
     'disease': 'phenotype',
     'drugagmp': 'drug',
 }
 
-# ============================================================ # ============================================================
-
-
+# ============================================================
 logger = logging.getLogger(__name__)
 
 # Maximum identifiers per batch query submission.
-# Reads from settings.AGMP_BATCH_LIMIT (set via env var in settings.py).
 BATCH_QUERY_LIMIT = getattr(settings, 'AGMP_BATCH_LIMIT', 50)
-
 
 HEADER_MAP = {
     '_input': 'Search Input', '_status': 'Status',
@@ -79,6 +79,50 @@ DETAIL_FIELD_KEYS = {
     'countries_detail': ['country', 'lat', 'lng'],
 }
 
+# Helper function to validate rsID format
+def is_valid_rs_id(rs_id):
+    if not rs_id:
+        return False
+    rs_pattern = re.compile(r'^rs\d+$')
+    return bool(rs_pattern.match(rs_id))
+
+COLORS = {
+    "brick_red": "#8B4513",
+    "darker_red": "#B22222",
+    "lighter_red": "#CD5C5C",
+    "orange_yellow": "#FFB266",
+    "light_yellow": "#FFFF99",
+}
+
+# Local cache for lat/lon lookups
+coord_cache = {}
+
+def is_valid_coord(lat, lon):
+    try:
+        return (
+            lat is not None
+            and lon is not None
+            and lat != ""
+            and lon != ""
+            and str(lat).lower() != "nan"
+            and str(lon).lower() != "nan"
+        )
+    except Exception:
+        return False
+
+def reverse_geocode(lat, lon):
+    key = (round(float(lat), 4), round(float(lon), 4))
+    if key in coord_cache:
+        return coord_cache[key]
+    result = rg.search(key, mode=1)[0]
+    country_code = result["cc"]
+    coord_cache[key] = country_code
+    return country_code
+
+
+# ============================================================
+# BATCH QUERY VIEWS
+# ============================================================
 
 def batch_query_view(request):
     return render(request, 'batch_query.html')
@@ -144,6 +188,7 @@ def batch_query_execute(request):
 # ── Query helpers ───────────────────────────
 
 def query_variant_data(rs_id, fields):
+    """UNCHANGED — no ontology for variants."""
     try:
         variant = Variantagmp.objects.filter(
             Q(rs_id__iexact=rs_id) | Q(rs_id__icontains=rs_id)
@@ -216,6 +261,7 @@ def query_variant_data(rs_id, fields):
 
 
 def query_gene_data(gene_input, fields):
+    """no ontology for genes."""
     try:
         gene = Geneagmp.objects.filter(Q(gene_id__iexact=gene_input) | Q(gene_name__iexact=gene_input)).first()
         if not gene:
@@ -291,10 +337,29 @@ def query_gene_data(gene_input, fields):
 
 
 def query_drug_data(drug_input, fields):
+    """ONTOLOGY-ENHANCED — resolves drug synonyms via OLS4."""
     try:
-        drug = Drugagmp.objects.filter(Q(drug_name__iexact=drug_input) | Q(drug_bank_id__iexact=drug_input)).first()
+        drug = None
+        if ONTOLOGY_AVAILABLE:
+            try:
+                resolver = OntologyResolver('drug')
+                names, _ = resolver.resolve(drug_input)
+                for name in names:
+                    drug = Drugagmp.objects.filter(
+                        Q(drug_name__iexact=name) | Q(drug_bank_id__iexact=name)
+                    ).first()
+                    if drug:
+                        break
+            except Exception as e:
+                logger.warning(f"Ontology resolution failed in batch drug query: {e}")
+
+        if not drug:
+            drug = Drugagmp.objects.filter(
+                Q(drug_name__iexact=drug_input) | Q(drug_bank_id__iexact=drug_input)
+            ).first()
         if not drug:
             return None
+
         result = {}
         if 'drug_name' in fields:
             result['drug_name'] = drug.drug_name or ''
@@ -354,10 +419,33 @@ def query_drug_data(drug_input, fields):
 
 
 def query_phenotype_data(phenotype_name, fields):
+    """ONTOLOGY-ENHANCED — resolves phenotype synonyms and children via OLS4."""
     try:
-        variants = Variantagmp.objects.filter(phenotypeagmp__name__iexact=phenotype_name).select_related('geneagmp', 'drugagmp', 'phenotypeagmp')
+        q_filter = None
+        if ONTOLOGY_AVAILABLE:
+            try:
+                resolver = OntologyResolver('phenotype')
+                names, _ = resolver.resolve(phenotype_name)
+                q_filter = Q()
+                for name in names:
+                    q_filter |= Q(phenotypeagmp__name__iexact=name)
+                q_filter |= Q(phenotypeagmp__name__icontains=phenotype_name)
+            except Exception as e:
+                logger.warning(f"Ontology resolution failed in batch phenotype query: {e}")
+                q_filter = None
+
+        if q_filter:
+            variants = Variantagmp.objects.filter(q_filter).select_related(
+                'geneagmp', 'drugagmp', 'phenotypeagmp'
+            )
+        else:
+            variants = Variantagmp.objects.filter(
+                phenotypeagmp__name__iexact=phenotype_name
+            ).select_related('geneagmp', 'drugagmp', 'phenotypeagmp')
+
         if not variants.exists():
             return None
+
         result = {}
         if 'phenotype_name' in fields:
             result['phenotype_name'] = phenotype_name
@@ -383,7 +471,14 @@ def query_phenotype_data(phenotype_name, fields):
                     dl.append({'name': v.drugagmp.drug_name or '', 'drug_bank_id': v.drugagmp.drug_bank_id or ''})
             result['drugs_detail'] = dl[:30]
         if 'studies_detail' in fields:
-            vs_qs = VariantStudyagmp.objects.filter(variantagmp__phenotypeagmp__name__iexact=phenotype_name).select_related('studyagmp')
+            if q_filter:
+                vs_qs = VariantStudyagmp.objects.filter(
+                    variantagmp__in=variants
+                ).select_related('studyagmp')
+            else:
+                vs_qs = VariantStudyagmp.objects.filter(
+                    variantagmp__phenotypeagmp__name__iexact=phenotype_name
+                ).select_related('studyagmp')
             sl, seen = [], set()
             for vs in vs_qs:
                 if vs.studyagmp and vs.studyagmp.publication_id not in seen:
@@ -395,7 +490,14 @@ def query_phenotype_data(phenotype_name, fields):
         if 'gene_count' in fields:
             result['gene_count'] = variants.values('geneagmp__gene_id').distinct().count()
         if 'study_count' in fields:
-            result['study_count'] = VariantStudyagmp.objects.filter(variantagmp__phenotypeagmp__name__iexact=phenotype_name).values('studyagmp__publication_id').distinct().count()
+            if q_filter:
+                result['study_count'] = VariantStudyagmp.objects.filter(
+                    variantagmp__in=variants
+                ).values('studyagmp__publication_id').distinct().count()
+            else:
+                result['study_count'] = VariantStudyagmp.objects.filter(
+                    variantagmp__phenotypeagmp__name__iexact=phenotype_name
+                ).values('studyagmp__publication_id').distinct().count()
         return result
     except Exception as e:
         logger.error(f"query_phenotype_data error: {e}")
@@ -414,7 +516,7 @@ def extract_countries(variant_study):
     return countries
 
 
-# ── Flat CSV export (backward compat) ───────
+# ── Flat CSV export ─────────────────────────
 
 def _flatten_detail_list(field_type, items):
     if not items:
@@ -472,7 +574,6 @@ def batch_query_export(request):
 # ── Multi-sheet Excel export ────────────────
 
 def batch_query_export_xlsx(request):
-    """Build a multi-sheet .xlsx with normalized tables linked by Search Input."""
     if request.method != 'POST':
         return HttpResponse("POST required", status=405)
     try:
@@ -492,7 +593,6 @@ def batch_query_export_xlsx(request):
 
     wb = Workbook()
 
-    # Styles
     hdr_font = Font(name='Arial', bold=True, color='FFFFFF', size=11)
     hdr_fill = PatternFill('solid', fgColor='2E7D32')
     hdr_align = Alignment(horizontal='center', vertical='center', wrap_text=True)
@@ -530,7 +630,6 @@ def batch_query_export_xlsx(request):
         s = str(v).strip()
         return '' if s.lower() == 'nan' else s
 
-    # ── Summary sheet ───────────────────────
     ws = wb.active
     ws.title = 'Summary'
     scols = ['_input', '_status'] + main_fields
@@ -555,7 +654,6 @@ def batch_query_export_xlsx(request):
     ws.auto_filter.ref = ws.dimensions
     auto_width(ws)
 
-    # ── Detail sheet builder ────────────────
     def build_sheet(title, detail_key, cols, col_headers, fill=None, hyperlink_col=None, hyperlink_tpl=None, hyperlink_prefix=None):
         if detail_key not in detail_fields:
             return None
@@ -583,9 +681,8 @@ def batch_query_export_xlsx(request):
             sheet.append(rd)
         style_data(sheet)
 
-        # Hyperlinks
         if hyperlink_col is not None and hyperlink_tpl:
-            ci = hyperlink_col + 2  # +1 for Search Input col, +1 for 1-index
+            ci = hyperlink_col + 2
             for r in range(2, sheet.max_row + 1):
                 cell = sheet.cell(row=r, column=ci)
                 v = str(cell.value or '').strip()
@@ -598,49 +695,13 @@ def batch_query_export_xlsx(request):
         auto_width(sheet)
         return sheet
 
-    # ── Genes ───────────────────────────────
-    build_sheet('Genes', 'genes_detail',
-                ['name', 'id', 'chromosome', 'function'],
-                ['Gene Name', 'Gene ID', 'Chromosome', 'Function'])
+    build_sheet('Genes', 'genes_detail', ['name', 'id', 'chromosome', 'function'], ['Gene Name', 'Gene ID', 'Chromosome', 'Function'])
+    build_sheet('Variants', 'variants_detail', ['id', 'type', 'allele', 'gene'], ['RS ID', 'Variant Type', 'Allele', 'Gene'], hyperlink_col=0, hyperlink_tpl='https://www.ncbi.nlm.nih.gov/snp/{}', hyperlink_prefix='rs')
+    build_sheet('Drugs', 'drugs_detail', ['name', 'drug_bank_id', 'state', 'indication'], ['Drug Name', 'DrugBank ID', 'State', 'Indication'], fill=PatternFill('solid', fgColor='6A1B9A'), hyperlink_col=1, hyperlink_tpl='https://go.drugbank.com/drugs/{}', hyperlink_prefix='DB')
+    build_sheet('Phenotypes', 'phenotypes_detail', ['name'], ['Phenotype Name'], fill=PatternFill('solid', fgColor='E65100'))
+    build_sheet('Studies', 'studies_detail', ['title', 'pubmed_id', 'year', 'study_type'], ['Title', 'PubMed ID', 'Year', 'Study Type'], fill=PatternFill('solid', fgColor='00695C'), hyperlink_col=1, hyperlink_tpl='https://pubmed.ncbi.nlm.nih.gov/{}/')
+    build_sheet('Countries', 'countries_detail', ['country', 'lat', 'lng'], ['Country', 'Latitude', 'Longitude'], fill=PatternFill('solid', fgColor='37474F'))
 
-    # ── Variants ────────────────────────────
-    build_sheet('Variants', 'variants_detail',
-                ['id', 'type', 'allele', 'gene'],
-                ['RS ID', 'Variant Type', 'Allele', 'Gene'],
-                hyperlink_col=0,
-                hyperlink_tpl='https://www.ncbi.nlm.nih.gov/snp/{}',
-                hyperlink_prefix='rs')
-
-    # ── Drugs ───────────────────────────────
-    build_sheet('Drugs', 'drugs_detail',
-                ['name', 'drug_bank_id', 'state', 'indication'],
-                ['Drug Name', 'DrugBank ID', 'State', 'Indication'],
-                fill=PatternFill('solid', fgColor='6A1B9A'),
-                hyperlink_col=1,
-                hyperlink_tpl='https://go.drugbank.com/drugs/{}',
-                hyperlink_prefix='DB')
-
-    # ── Phenotypes ──────────────────────────
-    build_sheet('Phenotypes', 'phenotypes_detail',
-                ['name'],
-                ['Phenotype Name'],
-                fill=PatternFill('solid', fgColor='E65100'))
-
-    # ── Studies ─────────────────────────────
-    build_sheet('Studies', 'studies_detail',
-                ['title', 'pubmed_id', 'year', 'study_type'],
-                ['Title', 'PubMed ID', 'Year', 'Study Type'],
-                fill=PatternFill('solid', fgColor='00695C'),
-                hyperlink_col=1,
-                hyperlink_tpl='https://pubmed.ncbi.nlm.nih.gov/{}/')
-
-    # ── Countries ───────────────────────────
-    build_sheet('Countries', 'countries_detail',
-                ['country', 'lat', 'lng'],
-                ['Country', 'Latitude', 'Longitude'],
-                fill=PatternFill('solid', fgColor='37474F'))
-
-    # ── Export Info sheet ───────────────────
     ws_meta = wb.create_sheet(title='Export Info')
     found_n = sum(1 for r in results if r.get('_status') == 'found')
     meta = [
@@ -669,7 +730,6 @@ def batch_query_export_xlsx(request):
     ws_meta.column_dimensions['A'].width = 20
     ws_meta.column_dimensions['B'].width = 65
 
-    # ── Write and return ────────────────────
     buf = io.BytesIO()
     wb.save(buf)
     buf.seek(0)
@@ -679,46 +739,87 @@ def batch_query_export_xlsx(request):
     response['Content-Disposition'] = f'attachment; filename="{fname}"'
     return response
 
-# ============================================================ # ============================================================
 
-# Configure logger
-logger = logging.getLogger(__name__)
+# ============================================================
+# SEARCH VIEW (ontology for drug and phenotype only)
+# ============================================================
 
-# Helper function to validate rsID format
-def is_valid_rs_id(rs_id):
-    """Validate the format of an rsID (typically rs followed by digits)"""
-    if not rs_id:
-        return False
-    rs_pattern = re.compile(r'^rs\d+$')
-    return bool(rs_pattern.match(rs_id))
-
-#heatmap-colors
-COLORS = {
-    "brick_red": "#8B4513",
-    "darker_red": "#B22222",
-    "lighter_red": "#CD5C5C",
-    "orange_yellow": "#FFB266",
-    "light_yellow": "#FFFF99",
-} 
-
-#current search view
 def search_view(request):
     form = ModelSearchForm(request.GET)
     model_selection = ""
     suggestion = None
     ontology_expansion = []
+    results = []
 
     if form.is_valid():
         model_selection = form.cleaned_data['model_selection']
         search_query = form.cleaned_data['search_query']
 
-        resolver_category = CATEGORY_MAP.get(model_selection)
+        if not search_query:
+            return render(request, 'search_list_template.html', {
+                'form': form,
+                'results': results,
+                'model_selection': model_selection,
+                'suggestion': suggestion,
+                'ontology_expansion': ontology_expansion,
+            })
 
-        if resolver_category:
-            resolver = OntologyResolver(resolver_category)
-            q_filter, ontology_expansion = resolver.build_q(search_query)
+        if model_selection == 'variantagmp':
+            results = Variantagmp.objects.filter(
+                rs_id__icontains=search_query
+            ).values('rs_id', 'geneagmp__gene_id', 'geneagmp__chromosome').distinct()
+            if not results:
+                all_variants = Variantagmp.objects.values_list('rs_id', flat=True)
+                suggestion = process.extractOne(search_query, all_variants)
 
-            if model_selection == 'disease':
+        elif model_selection == 'geneagmp':
+            results = Geneagmp.objects.filter(
+                gene_id__icontains=search_query
+            ).values('gene_id', 'chromosome').distinct()
+            if not results:
+                all_genes = Geneagmp.objects.values_list('gene_id', flat=True)
+                suggestion = process.extractOne(search_query, all_genes)
+
+        elif model_selection == 'drugagmp':
+            q_filter = None
+            if ONTOLOGY_AVAILABLE:
+                try:
+                    resolver = OntologyResolver('drug')
+                    q_filter, ontology_expansion = resolver.build_q(search_query)
+                except Exception as e:
+                    logger.warning(f"Ontology resolution failed for drug: {e}")
+                    q_filter = None
+                    ontology_expansion = []
+
+            if q_filter:
+                results = Drugagmp.objects.filter(q_filter).values(
+                    'drug_name', 'drug_id', 'drug_bank_id',
+                    'state', 'indication', 'iupac_name_seq'
+                ).distinct()
+            else:
+                results = Drugagmp.objects.filter(
+                    drug_name__icontains=search_query
+                ).values(
+                    'drug_name', 'drug_id', 'drug_bank_id',
+                    'state', 'indication', 'iupac_name_seq'
+                ).distinct()
+
+            if not results and not ontology_expansion:
+                all_drugs = Drugagmp.objects.values_list('drug_name', flat=True)
+                suggestion = process.extractOne(search_query, all_drugs)
+
+        elif model_selection == 'disease':
+            q_filter = None
+            if ONTOLOGY_AVAILABLE:
+                try:
+                    resolver = OntologyResolver('phenotype')
+                    q_filter, ontology_expansion = resolver.build_q(search_query)
+                except Exception as e:
+                    logger.warning(f"Ontology resolution failed for phenotype: {e}")
+                    q_filter = None
+                    ontology_expansion = []
+
+            if q_filter:
                 results = (
                     Variantagmp.objects.select_related()
                     .exclude(source_db="PharmGKB")
@@ -726,50 +827,22 @@ def search_view(request):
                     .values("phenotypeagmp__name")
                     .distinct()
                 )
-            elif model_selection == 'drugagmp':
+            else:
                 results = (
-                    Drugagmp.objects.filter(q_filter)
-                    .values('drug_name', 'drug_id', 'drug_bank_id',
-                            'state', 'indication', 'iupac_name_seq')
+                    Variantagmp.objects.select_related()
+                    .exclude(source_db="PharmGKB")
+                    .filter(phenotypeagmp__name__icontains=search_query)
+                    .values("phenotypeagmp__name")
                     .distinct()
                 )
 
             if not results and not ontology_expansion:
-                # existing fuzzy fallback
-                if model_selection == 'disease':
-                    all_vals = (
-                        Variantagmp.objects.exclude(source_db="PharmGKB")
-                        .values_list('phenotypeagmp__name', flat=True).distinct()
-                    )
-                else:
-                    all_vals = Drugagmp.objects.values_list('drug_name', flat=True)
-                suggestion = process.extractOne(search_query, all_vals)
-
-        elif model_selection == 'variantagmp':
-            results = (
-                Variantagmp.objects
-                .filter(rs_id__icontains=search_query)
-                .values('rs_id', 'geneagmp__gene_id', 'geneagmp__chromosome')
-                .distinct()
-            )
-            if not results:
-                all_variants = Variantagmp.objects.values_list('rs_id', flat=True)
-                suggestion = process.extractOne(search_query, all_variants)
-
-        elif model_selection == 'geneagmp':
-            results = (
-                Geneagmp.objects
-                .filter(gene_id__icontains=search_query)
-                .values('gene_id', 'chromosome')
-                .distinct()
-            )
-            if not results:
-                all_genes = Geneagmp.objects.values_list('gene_id', flat=True)
-                suggestion = process.extractOne(search_query, all_genes)
-        else:
-            results = []
-    else:
-        results = []
+                all_diseases = (
+                    Variantagmp.objects.exclude(source_db="PharmGKB")
+                    .values_list('phenotypeagmp__name', flat=True)
+                    .distinct()
+                )
+                suggestion = process.extractOne(search_query, all_diseases)
 
     return render(request, 'search_list_template.html', {
         'form': form,
@@ -779,13 +852,14 @@ def search_view(request):
         'ontology_expansion': ontology_expansion,
     })
 
+
 def search_all(request):
     if request.method == 'POST':
         form = SearchForm(request.POST)
         if form.is_valid():
             search_option = form.cleaned_data['search_option']
             search_query = form.cleaned_data['search_query']
-            
+
             if search_option == 'Variantagmp':
                 results = Variantagmp.objects.filter(rs_id__icontains=search_query).values("rs_id","geneagmp__gene_id","geneagmp__chromosome","variant_type").distinct()
             elif search_option == 'Geneagmp':
@@ -794,89 +868,68 @@ def search_all(request):
                 results = Drugagmp.objects.filter(drug_name__contains=search_query).order_by('drug_name').distinct(F('drug_name').desc())
             elif search_option == 'Disease':
                 results = Variantagmp.objects.select_related().exclude(source_db="PharmGKB").filter(phenotypeagmp__name__icontains=search_query).values("phenotypeagmp__name").distinct()
-                     
+
             return render(request, 'search_form.html', {'form': form, 'results': results, 'search_option':search_option})
     else:
         form = SearchForm()
-        
+
     return render(request, 'search_form.html', {'form': form})
 
 
-#################### Variant Drug Details 1 ################################
+# ============================================================
+# CLASS-BASED DETAIL VIEWS (all unchanged)
+# ============================================================
 
 class DrugagmpDetailView(DetailView):
     model = Drugagmp
-    template_name = 'drugagmp_detail.html'  # Template to display the post details
+    template_name = 'drugagmp_detail.html'
 
 class VariantStudyagmpListView(ListView):
     model = VariantStudyagmp
-    template_name = 'variantstudyagmp_list.html'  # Template to display the comment list
-
+    template_name = 'variantstudyagmp_list.html'
     def get_queryset(self):
-        drug_id = self.kwargs['pk']  # Get the post id from URL parameter
-        return VariantStudyagmp.objects.filter(Variantagmp__drugagmp_icontains=drug_id)  # Filter comments by post id
+        drug_id = self.kwargs['pk']
+        return VariantStudyagmp.objects.filter(Variantagmp__drugagmp_icontains=drug_id)
 
 
-  
-#################### Variant Drug Details ################################
-  
-#################### PharmacoGene Associations exclude Gwas catalogue in the first queryset ################################
-#03 Drug associations and Phenotype Associations
 class PhamacogeneDrugAssoc(DetailView):
     model = VariantStudyagmp
     template_name = 'PhamacogeneDrugAssoc.html'
     pk_url_kwarg = 'gene_id'
     context_object_name = 'variantstudyagmp'
 
-
     def get_object(self):
         gene_id = self.kwargs.get(self.pk_url_kwarg)
-        
         try:
             data = Geneagmp.objects.filter(gene_id=gene_id)
             if not data.exists():
-                logger.warning(f"No gene found with gene_id: {gene_id}")
                 raise Http404(f"No gene found with gene_id: {gene_id}")
             return data
         except Exception as e:
             logger.error(f"Error retrieving gene {gene_id}: {str(e)}")
             raise Http404(f"Error retrieving gene: {str(e)}")
-    
+
     def get_context_data(self, **kwargs):
         context = super(PhamacogeneDrugAssoc, self).get_context_data(**kwargs)
         gene_id = self.kwargs.get(self.pk_url_kwarg)
-
         try:
-            #content to display
-            context['geneagmp'] = Geneagmp.objects.filter(
-                gene_id=gene_id)
-            
-            context["data"] = Geneagmp.objects.filter(gene_id = gene_id).first()
-           
-            #include PharmGKB and Exclude Gwas Catalogue & DisGeNET
+            context['geneagmp'] = Geneagmp.objects.filter(gene_id=gene_id)
+            context["data"] = Geneagmp.objects.filter(gene_id=gene_id).first()
             context['object_list'] = VariantStudyagmp.objects.filter(
                 variantagmp__geneagmp__gene_id__iregex=r"(^|[^a-zA-Z0-9_]){0}([^a-zA-Z0-9_]|$)".format(
                     re.escape(str(gene_id)).replace('\\ ', '\\s+')
                 )
-            ).exclude(
-                variantagmp__source_db__in=["DisGeNET", "GWAS Catalog"])
-            
+            ).exclude(variantagmp__source_db__in=["DisGeNET", "GWAS Catalog"])
             context['object_list_diseases'] = VariantStudyagmp.objects.filter(
                 variantagmp__geneagmp__gene_id__iregex=r"(^|[^a-zA-Z0-9_]){0}([^a-zA-Z0-9_]|$)".format(re.escape(str(gene_id))),
                 variantagmp__source_db__in=["DisGeNet", "GWAS Catalog"]
-            ).exclude(
-                variantagmp__source_db="PharmGKB"
-            )
+            ).exclude(variantagmp__source_db="PharmGKB")
         except Exception as e:
             logger.error(f"Error in get_context_data for gene {gene_id}: {str(e)}")
             context['error'] = "An error occurred while retrieving data."
-        
         return context
 
-#################### Gene Drug Associations ################################
 
-
-#################### Var Drug Associations exclude gwas catalogue ################################
 class VarDrugAssocDetailView(DetailView):
     model = VariantStudyagmp
     template_name = 'VarDrugAssocDetail.html'
@@ -885,42 +938,32 @@ class VarDrugAssocDetailView(DetailView):
 
     def get_object(self):
         rs_id = self.kwargs.get(self.pk_url_kwarg)
-        
-        # Validate rs_id format first
         if rs_id and not rs_id.startswith("DB") and not is_valid_rs_id(rs_id):
-            logger.warning(f"Invalid rs_id format: {rs_id}")
             raise Http404(f"Invalid variant ID format: {rs_id}")
-
         try:
             data = Variantagmp.objects.filter(rs_id=rs_id)
             if not data.exists():
-                logger.warning(f"No variant found with rs_id: {rs_id}")
                 raise Http404(f"No variant found with rs_id: {rs_id}")
             return data
         except Exception as e:
             logger.error(f"Error retrieving variant {rs_id}: {str(e)}")
             raise Http404(f"Error retrieving variant: {str(e)}")
-    
+
     def get_context_data(self, **kwargs):
         context = super(VarDrugAssocDetailView, self).get_context_data(**kwargs)
         rs_id = self.kwargs.get(self.pk_url_kwarg)
-        
-        try:  
+        try:
             context['gene_id_display'] = Variantagmp.objects.values("geneagmp__gene_id").filter(rs_id=rs_id).first()
             context['chromosome_display'] = Variantagmp.objects.values("geneagmp__chromosome").filter(rs_id=rs_id).first()
             context['rs_id_display'] = Variantagmp.objects.values("rs_id").filter(rs_id=rs_id).first()
-      
-            #back up query
             context['object_list'] = VariantStudyagmp.objects.filter(
                 variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="DisGeNET").exclude(variantagmp__source_db="GWAS Catalog")
         except Exception as e:
             logger.error(f"Error in get_context_data for variant {rs_id}: {str(e)}")
             context['error'] = "An error occurred while retrieving data."
-        
         return context
 
-#################### Variant Disease Associations ################################
-# 02 
+
 class VariantDiseaseAssocDetailView(DetailView):
     model = VariantStudyagmp
     template_name = 'VariantDiseaseAssocDetail.html'
@@ -928,32 +971,25 @@ class VariantDiseaseAssocDetailView(DetailView):
 
     def get_object(self):
         rs_id = self.kwargs.get(self.pk_url_kwarg)
-        
-        # Validate rs_id format first
         if rs_id and not rs_id.startswith("DB") and not is_valid_rs_id(rs_id):
-            logger.warning(f"Invalid rs_id format: {rs_id}")
             raise Http404(f"Invalid variant ID format: {rs_id}")
-
         try:
             data = Variantagmp.objects.filter(rs_id=rs_id)
             if not data.exists():
-                logger.warning(f"No variant found with rs_id: {rs_id}")
                 raise Http404(f"No variant found with rs_id: {rs_id}")
             return data
         except Exception as e:
             logger.error(f"Error retrieving variant {rs_id}: {str(e)}")
             raise Http404(f"Error retrieving variant: {str(e)}")
-    
+
     def get_context_data(self, **kwargs):
         context = super(VariantDiseaseAssocDetailView, self).get_context_data(**kwargs)
         rs_id = self.kwargs.get(self.pk_url_kwarg)
-     
         try:
             if Variantagmp.objects.filter(rs_id=rs_id).exists():
                 context['rs_id_display'] = (Variantagmp.objects.values("rs_id").filter(rs_id=rs_id))[0]
                 context['gene_name_display'] = Variantagmp.objects.values("geneagmp__gene_id").filter(rs_id=rs_id).first()
                 context['chromosome_display'] = Variantagmp.objects.values("geneagmp__chromosome").filter(rs_id=rs_id).first()
-
                 context['object_list'] = VariantStudyagmp.objects.filter(
                     variantagmp__rs_id__iregex=r"(^|[^a-zA-Z0-9_]){0}([^a-zA-Z0-9_]|$)".format(re.escape(str(rs_id))),
                     variantagmp__source_db__iregex=r"^(DisGeNet|GWAS Catalog)$"
@@ -963,130 +999,80 @@ class VariantDiseaseAssocDetailView(DetailView):
         except Exception as e:
             logger.error(f"Error in get_context_data for variant {rs_id}: {str(e)}")
             context['error'] = "An error occurred while retrieving data."
-
         return context
-    
 
-#################### DRUG searchs for Variant drug Associations ################################
-#01
+
 class VariantDrugAssociationDetailView(DetailView):
     model = Variantagmp
     pk_url_kwarg = 'rs_id'
-    
+
     def get_template_names(self):
         rs_id = self.kwargs.get(self.pk_url_kwarg)
         if rs_id and rs_id.startswith("DB"):
             return ['VariantDrugAssociation.html']
         else:
             return ['VarDrugAssocDetail.html']
-    
+
     def get_object(self):
         rs_id = self.kwargs.get(self.pk_url_kwarg)
-        
-        # If not a DB ID, validate the rs_id format first
         if rs_id and not rs_id.startswith("DB") and not is_valid_rs_id(rs_id):
-            logger.warning(f"Invalid rs_id format: {rs_id}")
             raise Http404(f"Invalid variant ID format: {rs_id}")
-            
-        # If the ID starts with "DB", look up by drug ID instead
         if rs_id and rs_id.startswith("DB"):
             try:
-                # Find a variant associated with this drug
                 drug = get_object_or_404(Drugagmp, drug_bank_id=rs_id)
                 variant = Variantagmp.objects.filter(drugagmp=drug).first()
                 if variant:
                     return variant
                 else:
-                    # Still return something even if no variant is found
-                    # This allows the view to continue and show drug info
                     return Variantagmp(drugagmp=drug)
             except Http404:
-                logger.warning(f"No drug found with drug_bank_id: {rs_id}")
                 raise Http404(f"No drug found with ID: {rs_id}")
             except Exception as e:
                 logger.error(f"Error retrieving drug {rs_id}: {str(e)}")
                 raise Http404(f"Error retrieving drug: {str(e)}")
         else:
-            # For non-DB IDs - Always get the first matching variant when multiple exist
             try:
-                # First try with a direct filter
                 variants = Variantagmp.objects.filter(rs_id=rs_id)
                 if variants.exists():
-                    return variants.first()  # Return the first match if found
+                    return variants.first()
                 else:
-                    # If no variants found, raise a 404 instead of causing a 500 error
-                    logger.warning(f"No variant found with rs_id: {rs_id}")
                     raise Http404(f"No variant found with rs_id: {rs_id}")
             except Variantagmp.DoesNotExist:
-                # Also handle the DoesNotExist exception properly
-                logger.warning(f"Variant.DoesNotExist error for rs_id: {rs_id}")
                 raise Http404(f"No variant found with rs_id: {rs_id}")
             except Exception as e:
-                # Catch any other unexpected errors and log them
                 logger.error(f"Unexpected error for rs_id {rs_id}: {str(e)}")
                 raise Http404(f"Error retrieving variant: {str(e)}")
-                
+
     def get_context_data(self, **kwargs):
         context = super(VariantDrugAssociationDetailView, self).get_context_data(**kwargs)
         rs_id = self.kwargs.get(self.pk_url_kwarg)
-        
         try:
-            # If this is a drug ID, add drug data directly to context
             if rs_id and rs_id.startswith("DB"):
                 drug = get_object_or_404(Drugagmp, drug_bank_id=rs_id)
                 context['data'] = drug
-                # Get all variant studies related to this drug
-                variant_studies = VariantStudyagmp.objects.filter(
-                    variantagmp__drugagmp=drug
-                ).select_related(
-                    'variantagmp',
-                    'studyagmp',
-                    'variantagmp__drugagmp',
-                    'variantagmp__geneagmp'
-                )
+                variant_studies = VariantStudyagmp.objects.filter(variantagmp__drugagmp=drug).select_related('variantagmp', 'studyagmp', 'variantagmp__drugagmp', 'variantagmp__geneagmp')
                 context['object_list'] = variant_studies
-                # If we need an rs_id for other parts of the template, get it from the first variant
                 variant = Variantagmp.objects.filter(drugagmp=drug).first()
                 if variant:
                     rs_id = variant.rs_id
                 else:
                     rs_id = None
             else:
-                # If it's a variant ID, get associated drug info
                 variant = self.object
                 if variant and hasattr(variant, 'drugagmp') and variant.drugagmp:
                     context['data'] = variant.drugagmp
-                    # Get all variant studies for this variant
-                    context['object_list'] = VariantStudyagmp.objects.filter(
-                        variantagmp__rs_id=variant.rs_id
-                    ).select_related(
-                        'variantagmp',
-                        'studyagmp',
-                        'variantagmp__drugagmp',
-                        'variantagmp__geneagmp'
-                    ).exclude(
-                        variantagmp__source_db__in=["DisGeNET", "GWAS Catalog"]
-                    )
-            
-            # Get the variant object for display in the template
+                    context['object_list'] = VariantStudyagmp.objects.filter(variantagmp__rs_id=variant.rs_id).select_related('variantagmp', 'studyagmp', 'variantagmp__drugagmp', 'variantagmp__geneagmp').exclude(variantagmp__source_db__in=["DisGeNET", "GWAS Catalog"])
             variant = self.object
-            # Add variant info to context
             context['rs_id_display'] = variant
-            # Get gene information for this variant
             if variant and hasattr(variant, 'geneagmp') and variant.geneagmp:
-                context['gene_id_display'] = {
-                    'geneagmp__gene_id': variant.geneagmp.gene_id
-                }
-                context['chromosome_display'] = {
-                    'geneagmp__chromosome': variant.geneagmp.chromosome
-                }
+                context['gene_id_display'] = {'geneagmp__gene_id': variant.geneagmp.gene_id}
+                context['chromosome_display'] = {'geneagmp__chromosome': variant.geneagmp.chromosome}
         except Exception as e:
             logger.error(f"Error in context data for {rs_id}: {str(e)}")
             context['error'] = "An error occurred while retrieving data."
-            
         return context
 
-#################### Variant Var Drug Associations ################################
+
 class VvarDrugAssocDetailView(DetailView):
     model = VariantStudyagmp
     template_name = 'VarDrugAssocDetail.html'
@@ -1094,58 +1080,40 @@ class VvarDrugAssocDetailView(DetailView):
 
     def get_object(self):
         rs_id = self.kwargs.get(self.pk_url_kwarg)
-        
-        # Validate rs_id format first
         if rs_id and not rs_id.startswith("DB") and not is_valid_rs_id(rs_id):
-            logger.warning(f"Invalid rs_id format: {rs_id}")
             raise Http404(f"Invalid variant ID format: {rs_id}")
-            
         try:
             data = Variantagmp.objects.filter(rs_id=rs_id)
             if not data.exists():
-                logger.warning(f"No variant found with rs_id: {rs_id}")
                 raise Http404(f"No variant found with rs_id: {rs_id}")
             return data
         except Exception as e:
             logger.error(f"Error retrieving variant {rs_id}: {str(e)}")
             raise Http404(f"Error retrieving variant: {str(e)}")
-    
+
     def get_context_data(self, **kwargs):
         context = super(VvarDrugAssocDetailView, self).get_context_data(**kwargs)
         rs_id = self.kwargs.get(self.pk_url_kwarg)
-        
         try:
             context['variantagmp'] = Variantagmp.objects.filter(rs_id=rs_id)
-            variant = Variantagmp.objects.filter(rs_id=rs_id)
-            
-            context['object_list'] = VariantStudyagmp.objects.filter(
-                variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id)))
+            context['object_list'] = VariantStudyagmp.objects.filter(variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id)))
         except Exception as e:
             logger.error(f"Error in get_context_data for variant {rs_id}: {str(e)}")
             context['error'] = "An error occurred while retrieving data."
-            
         return context
 
-#################### Search Diseases ################################
 
-# Display Phamacogenes and Disease associations
-#04
 class DiseaseVariantDetailView(DetailView):
     model = VariantStudyagmp
     template_name = 'DiseaseVariantDetailView.html'
     pk_url_kwarg = 'phenotypeagmp__name'
 
-
     def get_object(self):
         phenotypeagmp__name = self.kwargs.get(self.pk_url_kwarg)
-        
         try:
-            # Check if data exists for this phenotype
             variants = Variantagmp.objects.filter(phenotypeagmp__name=phenotypeagmp__name)
             if not variants.exists():
-                logger.warning(f"No variants found with phenotype: {phenotypeagmp__name}")
                 raise Http404(f"No variants found with phenotype: {phenotypeagmp__name}")
-            # This method doesn't actually return anything, but we need to pass the check
             return variants
         except Exception as e:
             logger.error(f"Error checking phenotype {phenotypeagmp__name}: {str(e)}")
@@ -1154,18 +1122,13 @@ class DiseaseVariantDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(DiseaseVariantDetailView, self).get_context_data(**kwargs)
         phenotypeagmp__name = self.kwargs.get(self.pk_url_kwarg)
-
         try:
-            phenotype_data = Variantagmp.objects.filter(
-                phenotypeagmp__name=phenotypeagmp__name).values("phenotypeagmp__name").distinct()
-                
+            phenotype_data = Variantagmp.objects.filter(phenotypeagmp__name=phenotypeagmp__name).values("phenotypeagmp__name").distinct()
             if phenotype_data.exists():
                 context['data'] = phenotype_data[0]
-               
                 context['object_list1'] = VariantStudyagmp.objects.select_related().filter(
                     variantagmp__phenotypeagmp__name__iregex=r"\\y{0}\\y".format(str(phenotypeagmp__name))
                 ).exclude(variantagmp__source_db="PharmGKB")
-               
                 context['object_list'] = VariantStudyagmp.objects.select_related().filter(
                     variantagmp__phenotypeagmp__name__iexact=phenotypeagmp__name).exclude(variantagmp__source_db="PharmGKB")
             else:
@@ -1173,10 +1136,9 @@ class DiseaseVariantDetailView(DetailView):
         except Exception as e:
             logger.error(f"Error in get_context_data for phenotype {phenotypeagmp__name}: {str(e)}")
             context['error'] = "An error occurred while retrieving data."
-        
         return context
-       
-#################### Variant Var Drug Associations ################################
+
+
 class VarDisAssocDetailView(DetailView):
     model = VariantStudyagmp
     template_name = 'VarDissAssocDetail.html'
@@ -1184,80 +1146,59 @@ class VarDisAssocDetailView(DetailView):
 
     def get_object(self):
         rs_id = self.kwargs.get(self.pk_url_kwarg)
-        
-        # Validate rs_id format first
         if rs_id and not rs_id.startswith("DB") and not is_valid_rs_id(rs_id):
-            logger.warning(f"Invalid rs_id format: {rs_id}")
             raise Http404(f"Invalid variant ID format: {rs_id}")
-            
         try:
             data = Variantagmp.objects.filter(rs_id=rs_id)
             if not data.exists():
-                logger.warning(f"No variant found with rs_id: {rs_id}")
                 raise Http404(f"No variant found with rs_id: {rs_id}")
             return data
         except Exception as e:
             logger.error(f"Error retrieving variant {rs_id}: {str(e)}")
             raise Http404(f"Error retrieving variant: {str(e)}")
-    
+
     def get_context_data(self, **kwargs):
         context = super(VarDisAssocDetailView, self).get_context_data(**kwargs)
         rs_id = self.kwargs.get(self.pk_url_kwarg)
-     
         try:
             context['variantagmp'] = Variantagmp.objects.filter(rs_id=rs_id)
-            variant = Variantagmp.objects.filter(rs_id=rs_id)
-            
             context['object_list'] = VariantStudyagmp.objects.filter(
                 variantagmp__rs_id__iregex=r"\b{0}\b".format(str(rs_id))).exclude(variantagmp__source_db="PharmGKB")
         except Exception as e:
             logger.error(f"Error in get_context_data for variant {rs_id}: {str(e)}")
             context['error'] = "An error occurred while retrieving data."
-        
         return context
 
-# Display Phamacogenes and Disease associations
+
 class PharmacoDrugDetailView(DetailView):
     model = VariantStudyagmp
     template_name = 'PharmacoDrugDetailView.html'
     pk_url_kwarg = 'gene_id'
-    
 
     def get_object(self):
         gene_id = self.kwargs.get(self.pk_url_kwarg)
-
         try:
             data = Geneagmp.objects.filter(gene_id=gene_id)
             if not data.exists():
-                logger.warning(f"No gene found with gene_id: {gene_id}")
                 raise Http404(f"No gene found with gene_id: {gene_id}")
             return data
         except Exception as e:
             logger.error(f"Error retrieving gene {gene_id}: {str(e)}")
             raise Http404(f"Error retrieving gene: {str(e)}")
-    
+
     def get_context_data(self, **kwargs):
         context = super(PharmacoDrugDetailView, self).get_context_data(**kwargs)
         gene_id = self.kwargs.get(self.pk_url_kwarg)
-
         try:
-            context['geneagmp'] = Geneagmp.objects.filter(
-                gene_id=gene_id).first()
-            
-            context['object_list'] = VariantStudyagmp.objects.filter(
-                variantagmp__geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id))) 
-            
-            context['object_list_diseases_old']=VariantStudyagmp.objects.select_related().filter(variantagmp__geneagmp__gene_id__icontains=gene_id)
-
+            context['geneagmp'] = Geneagmp.objects.filter(gene_id=gene_id).first()
+            context['object_list'] = VariantStudyagmp.objects.filter(variantagmp__geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id)))
+            context['object_list_diseases_old'] = VariantStudyagmp.objects.select_related().filter(variantagmp__geneagmp__gene_id__icontains=gene_id)
             context['object_list_diseases'] = VariantStudyagmp.objects.select_related().filter(variantagmp__geneagmp__gene_id__iregex=r"\b{0}\b".format(str(gene_id))).exclude(variantagmp__source_db="PharmGKB")
         except Exception as e:
             logger.error(f"Error in get_context_data for gene {gene_id}: {str(e)}")
             context['error'] = "An error occurred while retrieving data."
-        
         return context
 
-
-#################### Variant Drug Details ################################
 
 class DrugDetailView(DetailView):
     model = VariantStudyagmp
@@ -1266,52 +1207,41 @@ class DrugDetailView(DetailView):
 
     def get_object(self):
         drug_id = self.kwargs.get(self.pk_url_kwarg)
-
         try:
             data = Drugagmp.objects.filter(drug_id=drug_id)
             if not data.exists():
-                logger.warning(f"No drug found with drug_id: {drug_id}")
                 raise Http404(f"No drug found with drug_id: {drug_id}")
             return data
         except Exception as e:
             logger.error(f"Error retrieving drug {drug_id}: {str(e)}")
             raise Http404(f"Error retrieving drug: {str(e)}")
-    
+
     def get_context_data(self, **kwargs):
         context = super(DrugDetailView, self).get_context_data(**kwargs)
         drug_id = self.kwargs.get(self.pk_url_kwarg)
-        
         try:
-            context['drugagmp'] = Drugagmp.objects.filter(
-                drug_id=drug_id).first()
+            context['drugagmp'] = Drugagmp.objects.filter(drug_id=drug_id).first()
             drug = Drugagmp.objects.filter(drug_id=drug_id).first()
-
             if drug:
-                context['object_list'] = VariantStudyagmp.objects.filter(
-                    variantagmp__drugagmp__drug_id__iregex=r"\b{0}\b".format(str(drug_id)))
-                
-                context['drugagmp'] = Drugagmp.objects.filter(
-                   drug_id=drug.id).first()
+                context['object_list'] = VariantStudyagmp.objects.filter(variantagmp__drugagmp__drug_id__iregex=r"\b{0}\b".format(str(drug_id)))
+                context['drugagmp'] = Drugagmp.objects.filter(drug_id=drug.id).first()
             else:
                 context['error'] = f"No drug found with ID: {drug_id}"
         except Exception as e:
             logger.error(f"Error in get_context_data for drug {drug_id}: {str(e)}")
             context['error'] = "An error occurred while retrieving data."
-            
         return context
+
+
+# ============================================================
+# STATIC PAGE VIEWS
+# ============================================================
 
 def about(request):
     return render(request, 'about.html')
 
 def get_map_data(request, map_type):
-    """
-    AJAX endpoint for getting map data based on study type filter.
-    - marker:  returns {success, points: [{lat, lng, count}]}
-    - heatmap: returns {success, countries: [{country, count}]}
-               (point-in-polygon aggregation so the client can shade full borders)
-    """
     study_type = request.GET.get('study_type', 'All')
-
     try:
         def get_filtered_studies(st):
             studies = VariantStudyagmp.objects.select_related('studyagmp').distinct('studyagmp__publication_id')
@@ -1325,11 +1255,9 @@ def get_map_data(request, map_type):
                 Q(**{f'{lat_field}__isnull': True}) | Q(**{f'{lat_field}__exact': ''}) |
                 Q(**{f'{lon_field}__iexact': 'nan'}) | Q(**{f'{lat_field}__iexact': 'nan'})
             ).values('studyagmp__publication_id', lat_field, lon_field).annotate(
-                _lat=F(lat_field),
-                _lng=F(lon_field)
+                _lat=F(lat_field), _lng=F(lon_field)
             ).values('_lat', '_lng')
 
-        # Model has an unsuffixed base pair plus _01 through _30
         location_fields = [('latitude', 'longitude')] + [
             (f'latitude_{i:02d}', f'longitude_{i:02d}') for i in range(1, 31)
         ]
@@ -1338,13 +1266,11 @@ def get_map_data(request, map_type):
         locations = [get_location_data(lat, lon, filtered_studies) for lat, lon in location_fields]
         flattened_locations = [item for sublist in locations for item in sublist]
 
-        # Deduplicate by coordinate
         count_per_coordinates = defaultdict(int)
         for record in flattened_locations:
             coordinates = (record["_lat"], record["_lng"])
             count_per_coordinates[coordinates] += 1
 
-        # Clean: skip NaN / Infinity values (they break JSON serialisation)
         clean_points = []
         for coordinates, value in count_per_coordinates.items():
             try:
@@ -1359,12 +1285,9 @@ def get_map_data(request, map_type):
         if map_type == 'marker':
             points = [{'lat': lat, 'lng': lng, 'count': cnt} for lat, lng, cnt in clean_points]
             return JsonResponse({'success': True, 'points': points})
-
         elif map_type == 'heatmap':
-            # Aggregate points into countries using the local GeoJSON boundaries
             geojson_path = os.path.join(settings.BASE_DIR, 'agmp_app/static/maps/countries.geo.json')
             gdf = gpd.read_file(geojson_path)
-
             publications_per_country = defaultdict(int)
             for lat, lng, value in clean_points:
                 try:
@@ -1375,77 +1298,35 @@ def get_map_data(request, map_type):
                             break
                 except (ValueError, TypeError):
                     continue
-
-            countries = [
-                {'country': name, 'count': count}
-                for name, count in sorted(publications_per_country.items(), key=lambda x: -x[1])
-            ]
+            countries = [{'country': name, 'count': count} for name, count in sorted(publications_per_country.items(), key=lambda x: -x[1])]
             return JsonResponse({'success': True, 'countries': countries})
-
         return JsonResponse({'success': False, 'error': f'Unknown map_type: {map_type}'}, status=400)
-
     except Exception as e:
         logger.error(f"Error generating map data: {str(e)}")
         return JsonResponse({'success': False, 'error': 'An error occurred while generating map data'}, status=500)
-    
+
 
 def summary(request):
-    """
-    Main view for the summary page
-    """
-    # Basic counts
     unique_genes = Geneagmp.objects.exclude(gene_id__iexact='').exclude(gene_id__iexact="nan").values('gene_id').distinct()
     gene_count = unique_genes.count()
     drug_count = Drugagmp.objects.exclude(drug_bank_id__iexact='').exclude(drug_bank_id__iexact="nan").values('drug_bank_id').distinct().count()
     variant_count = Variantagmp.objects.exclude(rs_id__iexact='').exclude(rs_id__iexact="nan").values('rs_id').distinct().count()
     disease_count = Variantagmp.objects.values('phenotypeagmp__name').distinct().count()
     publication_count = Studyagmp.objects.exclude(publication_id__iexact='').exclude(publication_id__iexact="nan").values('publication_id').distinct().count()
-    
-    # Optimized queries for graphs
-    qs_drug = (
-        Drugagmp.objects.exclude(drug_name="nan")
-        .values('drug_name')
-        .annotate(frequency=Count('drugs'))
-        .order_by('-frequency')[:10]
-    )
-    
-    qs_gene = (
-        Geneagmp.objects.exclude(gene_name="nan")
-        .values('gene_id')
-        .annotate(frequency=Count('variantagmp__studyagmp'))
-        .order_by('-frequency')[:10]
-    )
-    
-    qs_variant = (
-        Variantagmp.objects.exclude(rs_id="nan")
-        .values('rs_id')
-        .annotate(frequency=Count('studyagmp'))
-        .order_by('-frequency')[:10]
-    )
-    
-    qs_disease = (
-        Phenotypeagmp.objects.exclude(variantagmp__source_db="PharmGKB")
-        .exclude(variantagmp__source_db="nan")
-        .values('name')
-        .annotate(frequency=Count('variantagmp'))
-        .order_by('-frequency')[:10]
-    )
-    
-    context = {
-        'gene_count': gene_count,
-        'publication_count': publication_count,
-        'drug_count': drug_count,
-        'variant_count': variant_count,
-        'disease_count': disease_count,
-        'qs_drug': qs_drug,
-        'qs_gene': qs_gene,
-        'qs_variant': qs_variant,
-        'qs_disease': qs_disease,
-        'study_types': ['All', 'GWAS', 'Case Report','Candidate Gene','WES/WGS','Clinical Trial','Other']
-    }
-    
-    return render(request, 'summary.html', context)
 
+    qs_drug = Drugagmp.objects.exclude(drug_name="nan").values('drug_name').annotate(frequency=Count('drugs')).order_by('-frequency')[:10]
+    qs_gene = Geneagmp.objects.exclude(gene_name="nan").values('gene_id').annotate(frequency=Count('variantagmp__studyagmp')).order_by('-frequency')[:10]
+    qs_variant = Variantagmp.objects.exclude(rs_id="nan").values('rs_id').annotate(frequency=Count('studyagmp')).order_by('-frequency')[:10]
+    qs_disease = Phenotypeagmp.objects.exclude(variantagmp__source_db="PharmGKB").exclude(variantagmp__source_db="nan").values('name').annotate(frequency=Count('variantagmp')).order_by('-frequency')[:10]
+
+    context = {
+        'gene_count': gene_count, 'publication_count': publication_count,
+        'drug_count': drug_count, 'variant_count': variant_count,
+        'disease_count': disease_count, 'qs_drug': qs_drug,
+        'qs_gene': qs_gene, 'qs_variant': qs_variant, 'qs_disease': qs_disease,
+        'study_types': ['All', 'GWAS', 'Case Report', 'Candidate Gene', 'WES/WGS', 'Clinical Trial', 'Other']
+    }
+    return render(request, 'summary.html', context)
 
 
 def outreach(request):
@@ -1481,53 +1362,9 @@ def home(request):
 def test_data_table(request):
     return render(request, 'test_data_table.html')
 
-from django.http import JsonResponse
-from collections import defaultdict
-import reverse_geocoder as rg
-
-# Local cache for lat/lon lookups
-coord_cache = {}
-
-def is_valid_coord(lat, lon):
-    """
-    Checks whether lat/lon are valid values (not blank, not NaN).
-    """
-    try:
-        return (
-            lat is not None
-            and lon is not None
-            and lat != ""
-            and lon != ""
-            and str(lat).lower() != "nan"
-            and str(lon).lower() != "nan"
-        )
-    except Exception:
-        return False
-
-def reverse_geocode(lat, lon):
-    """
-    Reverse-geocode lat/lon to country code.
-    Caches results for efficiency.
-    """
-    key = (round(float(lat), 4), round(float(lon), 4))
-    if key in coord_cache:
-        return coord_cache[key]
-    
-    result = rg.search(key, mode=1)[0]
-    country_code = result["cc"]
-    coord_cache[key] = country_code
-    return country_code
 
 def studies_per_country(request):
-    """
-    Returns JSON of unique publication_ids per country.
-    """
-
-    from .models import VariantStudyagmp
-
     variant_studies = VariantStudyagmp.objects.all()
-
-    # Mapping: country → set of publication_ids
     country_to_publication_ids = defaultdict(set)
 
     for vs in variant_studies:
@@ -1540,7 +1377,6 @@ def studies_per_country(request):
             lat = getattr(vs, lat_field, None)
             lon = getattr(vs, lon_field, None)
 
-            # Determine country
             if country_name:
                 country = country_name.strip()
             elif is_valid_coord(lat, lon):
@@ -1551,55 +1387,9 @@ def studies_per_country(request):
             else:
                 continue
 
-            # Ensure study exists and has a publication_id
-            if (
-                vs.studyagmp
-                and vs.studyagmp.publication_id
-                and vs.studyagmp.publication_id.strip() != ""
-            ):
+            if vs.studyagmp and vs.studyagmp.publication_id and vs.studyagmp.publication_id.strip() != "":
                 pub_id = vs.studyagmp.publication_id.strip()
                 country_to_publication_ids[country].add(pub_id)
 
-    # Prepare final result: count unique publication_ids per country
-    result = {
-        country: len(publication_ids)
-        for country, publication_ids in country_to_publication_ids.items()
-    }
-
+    result = {country: len(publication_ids) for country, publication_ids in country_to_publication_ids.items()}
     return JsonResponse(result)
-
-from django.shortcuts import render
-from collections import defaultdict
-import reverse_geocoder as rg
-
-coord_cache = {}
-
-def is_valid_coord(lat, lon):
-    """
-    Checks whether lat/lon are valid values (not blank, not NaN).
-    """
-    try:
-        return (
-            lat is not None
-            and lon is not None
-            and lat != ""
-            and lon != ""
-            and str(lat).lower() != "nan"
-            and str(lon).lower() != "nan"
-        )
-    except Exception:
-        return False
-
-def reverse_geocode(lat, lon):
-    """
-    Reverse-geocode lat/lon to country code.
-    Caches results for efficiency.
-    """
-    key = (round(float(lat), 4), round(float(lon), 4))
-    if key in coord_cache:
-        return coord_cache[key]
-    
-    result = rg.search(key, mode=1)[0]
-    country_code = result["cc"]
-    coord_cache[key] = country_code
-    return country_code

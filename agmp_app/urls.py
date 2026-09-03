@@ -55,7 +55,9 @@ urlpatterns = [
     path('PharmacoDrug/<str:gene_id>/',
          PharmacoDrugDetailView.as_view(),
          name='Pharmaco_Drug_Detail'),
-    path('DiseaseVariant/<str:phenotypeagmp__name>/',
+
+    # CHANGED: <str:> to <path:> so phenotype names with / ( ) work
+    path('DiseaseVariant/<path:phenotypeagmp__name>/',
          DiseaseVariantDetailView.as_view(),
          name='DiseaseVariant'),
 

@@ -108,6 +108,33 @@
         .notfound-box { background: #fff3cd; border: 1px solid #ffc107; padding: 15px; border-radius: 6px; margin-top: 15px; }
         .notfound-toggle { cursor: pointer; font-weight: 600; color: #856404; }
         .notfound-list { margin-top: 10px; font-size: 13px; color: #856404; display: none; max-height: 150px; overflow-y: auto; }
+
+        /* NEW: Ontology hint */
+        .ontology-hint {
+            display: none;
+            margin-top: 12px;
+            padding: 10px 14px;
+            border-left: 4px solid #2E7D32;
+            background: #f1f8e9;
+            border-radius: 0 6px 6px 0;
+            font-size: 13px;
+            color: #33691E;
+        }
+        .ontology-hint.show { display: block; }
+        .ontology-hint strong { color: #2E7D32; }
+
+        /* NEW: Ontology note in results */
+        .ontology-results-note {
+            display: none;
+            padding: 8px 14px;
+            background: #f1f8e9;
+            border: 1px solid #C8E6C9;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #33691E;
+            margin-bottom: 15px;
+        }
+        .ontology-results-note.show { display: block; }
     </style>
 </head>
 
@@ -136,6 +163,11 @@
                 <input type="radio" name="query_type" value="phenotype">
                 <span>🏥 Phenotype</span>
             </label>
+        </div>
+        <!-- NEW: Ontology hint -->
+        <div class="ontology-hint" id="ontologyHint">
+            <strong>Ontology mapping active</strong> — synonyms and related terms are automatically resolved.
+            For example, searching "heart attack" will also match "myocardial infarction" and its subtypes.
         </div>
     </div>
 
@@ -182,11 +214,16 @@
     <!-- Loading -->
     <div class="loading" id="loading">
         <div class="spinner"></div>
-        <p>Querying... Please wait.</p>
+        <p id="loadingText">Querying... Please wait.</p>
     </div>
 
     <!-- Results -->
     <div class="section results-section" id="resultsSection">
+        <!-- NEW: Ontology note in results -->
+        <div class="ontology-results-note" id="ontologyResultsNote">
+            Results include ontology-expanded matches — synonyms and related terms were automatically resolved via EBI OLS4.
+        </div>
+
         <div class="results-header">
             <div class="results-stats">
                 <div class="stat"><div class="stat-num blue" id="statTotal">0</div><div class="stat-label">Total</div></div>
@@ -228,6 +265,9 @@ var allColumns = [];
 var mainFields = [];
 var detailFields = [];
 var currentQueryType = '';
+
+/* NEW: tracks whether current query type uses ontology */
+var ontologyTypes = ['drug', 'phenotype'];
 
 var headerMap = {
     '_input': 'Search Input', '_status': 'Status',
@@ -323,6 +363,7 @@ $(document).ready(function() {
         currentQueryType = $(this).data('type');
         updateOutputFields();
         updatePlaceholder();
+        updateOntologyHint();
         checkReady();
     });
 
@@ -347,6 +388,15 @@ $(document).ready(function() {
 
 /* ── UI helpers ────────────────────────────── */
 
+/* NEW: show/hide ontology hint based on query type */
+function updateOntologyHint() {
+    if (ontologyTypes.indexOf(currentQueryType) > -1) {
+        $('#ontologyHint').addClass('show');
+    } else {
+        $('#ontologyHint').removeClass('show');
+    }
+}
+
 function updateOutputFields() {
     var type = $('input[name="query_type"]:checked').val();
     if (!type || !fieldOptions[type]) { $('#outputFields').html('<p style="color:#888;">Select an input type first</p>'); return; }
@@ -369,7 +419,12 @@ function updateOutputFields() {
 }
 
 function updatePlaceholder() {
-    var ex = {variant:'rs1234567\nrs9876543',gene:'CYP2D6\nABCB1',drug:'Warfarin\nClopidogrel',phenotype:'Diabetes\nHypertension'};
+    var ex = {
+        variant: 'rs1234567\nrs9876543',
+        gene: 'CYP2D6\nABCB1',
+        drug: 'Warfarin\nClopidogrel\nacetylsalicylic acid',
+        phenotype: 'Diabetes\nheart attack\nHypertension'
+    };
     $('#searchTerms').attr('placeholder','Enter search terms (one per line)\n\nExample:\n'+(ex[currentQueryType]||''));
 }
 function selectAllFields()  { $('#outputFields input').prop('checked',true); checkReady(); }
@@ -411,6 +466,13 @@ function executeSearch() {
     $('#searchBtn').prop('disabled',true).text('Searching...');
     $('#loading').show(); $('#resultsSection').hide();
 
+    /* NEW: update loading text for ontology types */
+    if (ontologyTypes.indexOf(type) > -1) {
+        $('#loadingText').text('Resolving ontology terms and querying... Please wait.');
+    } else {
+        $('#loadingText').text('Querying... Please wait.');
+    }
+
     $.ajax({
         url:'{% url "batch_query_execute" %}', type:'POST', contentType:'application/json',
         headers:{'X-CSRFToken':'{{ csrf_token }}'},
@@ -428,6 +490,14 @@ function executeSearch() {
 
 function displayResults(r) {
     $('#statTotal').text(r.total); $('#statFound').text(r.found); $('#statNotFound').text(r.not_found_count);
+
+    /* NEW: show ontology note in results for drug/phenotype */
+    if (ontologyTypes.indexOf(currentQueryType) > -1) {
+        $('#ontologyResultsNote').addClass('show');
+    } else {
+        $('#ontologyResultsNote').removeClass('show');
+    }
+
     renderColumnChips(); renderTable();
     if(r.not_found_count>0){ $('#notFoundCount').text(r.not_found_count); $('#notFoundList').text(r.not_found_list.join(', ')); $('#notFoundBox').show(); }
     else { $('#notFoundBox').hide(); }
@@ -526,7 +596,6 @@ function exportXlsx() {
     var $btn = $('.btn-export-xlsx');
     $btn.prop('disabled', true).text('Generating...');
 
-    // POST to server — it builds the .xlsx and returns a binary download
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '{% url "batch_query_export_xlsx" %}', true);
     xhr.setRequestHeader('Content-Type', 'application/json');

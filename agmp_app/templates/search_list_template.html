@@ -12,47 +12,254 @@
     <title>Searching Page</title>
 
     <style>
-        .placeholder::placeholder {
-            color: #444 !important;
+        /* ── Existing styles (unchanged) ── */
+        .placeholder::placeholder { color: #444 !important; }
+        .placeholder::-webkit-input-placeholder { color: #444 !important; }
+        .placeholder::-moz-placeholder { color: #444 !important; }
+        .placeholder:-ms-input-placeholder { color: #444 !important; }
+        .home-page-icons { font-size: 1.5rem; }
+
+        /* ── Ontology expansion panel ── */
+        .ontology-panel {
+            margin: 1em 0;
+            border-radius: 8px;
+            border: 1px solid #C8E6C9;
+            background: #FAFFF9;
+            overflow: hidden;
+            display: none;
+        }
+        .ontology-panel.visible {
+            display: block;
+        }
+        .ontology-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            width: 100%;
+            text-align: left;
+        }
+        .ontology-header:hover {
+            background: #F1F8E9;
+        }
+        .ontology-header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ontology-check {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #2E7D32;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .ontology-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #2E7D32;
+        }
+        .ontology-subtitle {
+            font-size: 12px;
+            color: #66BB6A;
+        }
+        .ontology-toggle {
+            font-size: 18px;
+            color: #81C784;
+            transition: transform 0.2s;
+        }
+        .ontology-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+        .ontology-body {
+            padding: 0 14px 12px;
+        }
+        .ontology-legend {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 8px;
+            font-size: 11px;
+            color: #78909C;
+        }
+        .ontology-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .ontology-legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .ontology-terms {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
         }
 
-        .placeholder::-webkit-input-placeholder {
-            color: #444 !important;
+        /* Term badges */
+        .term-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            line-height: 18px;
+            white-space: nowrap;
+        }
+        .term-badge.canonical {
+            background: #E8F5E9;
+            color: #1B5E20;
+            border: 1px solid #A5D6A7;
+        }
+        .term-badge.child {
+            background: #E3F2FD;
+            color: #0D47A1;
+            border: 1px solid #90CAF9;
+        }
+        .term-badge.synonym {
+            background: #FFF3E0;
+            color: #E65100;
+            border: 1px solid #FFCC80;
+        }
+        .term-badge .term-source {
+            font-size: 10px;
+            opacity: 0.6;
+            font-style: italic;
+        }
+        .term-badge .child-arrow {
+            font-size: 10px;
+            opacity: 0.7;
         }
 
-        .placeholder::-moz-placeholder {
-            color: #444 !important;
+        /* Result cards */
+        .result-card {
+            padding: 14px 18px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            background: #fff;
+            border: 1px solid #E0E0E0;
+            transition: border-color 0.15s, box-shadow 0.15s;
+        }
+        .result-card:hover {
+            border-color: #A5D6A7;
+            box-shadow: 0 2px 8px rgba(46,125,50,0.08);
+        }
+        .result-card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #212121;
+            margin-bottom: 6px;
+        }
+        .result-card-meta {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #546E7A;
+        }
+        .result-card-meta b {
+            color: #37474F;
+            font-weight: 600;
+        }
+        .result-card-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .result-card-links a {
+            font-size: 12px;
+            font-weight: 500;
+            color: #2E7D32;
+            text-decoration: none;
+        }
+        .result-card-links a:hover {
+            text-decoration: underline;
+        }
+        .expanded-match-badge {
+            display: inline-block;
+            font-size: 10px;
+            padding: 2px 7px;
+            border-radius: 8px;
+            background: #E3F2FD;
+            color: #1565C0;
+            margin-left: 6px;
+            vertical-align: middle;
         }
 
-        .placeholder:-ms-input-placeholder {
-            color: #444 !important;
+        /* No-results state */
+        .no-results-box {
+            padding: 30px 20px;
+            text-align: center;
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #E0E0E0;
+        }
+        .no-results-box p {
+            margin: 4px 0;
+            font-size: 14px;
+            color: #78909C;
         }
 
-        .home-page-icons{
-         font-size: 1.5rem;
-
+        /* Results count bar */
+        .results-bar {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .results-count {
+            font-size: 13px;
+            font-weight: 600;
+            color: #455A64;
+        }
+        .results-note {
+            font-size: 12px;
+            color: #81C784;
+            font-style: italic;
         }
     </style>
 
-    <!-- Include jQuery library -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <script>
         $(document).ready(function () {
-            // Function to handle form submission
+
+            // Toggle ontology expansion panel
+            $(document).on('click', '.ontology-header', function () {
+                var body = $(this).siblings('.ontology-body');
+                var toggle = $(this).find('.ontology-toggle');
+                body.slideToggle(200);
+                toggle.toggleClass('collapsed');
+            });
+
+            // Form submission (AJAX)
             $('#search-form').on('submit', function (e) {
-                e.preventDefault(); // Prevent default form submission
+                e.preventDefault();
 
-                // Get the search query from the input field
                 var searchQuery = $('#id_search_query').val();
-
-                // Get the selected model from the radio buttons
                 var modelSelection = $('input[name=model_selection]:checked').val();
 
-                // Show loading message
-                $('#results-list').html('Loading...');
+                if (!searchQuery || !modelSelection) return;
 
-                // Make an AJAX request to the backend
+                // Show loading
+                $('#ontology-expansion-panel').removeClass('visible');
+                $('#results-list').html(
+                    '<div style="text-align:center; padding:30px; color:#78909C;">' +
+                    '<div>Searching...</div>' +
+                    '</div>'
+                );
+
                 $.ajax({
                     type: 'GET',
                     url: '{% url "search_view" %}',
@@ -61,22 +268,37 @@
                         model_selection: modelSelection
                     },
                     success: function (data) {
-                        // Extract and update only the #results-list from the received data
                         var updatedResults = $(data).find('#results-list').html();
                         $('#results-list').html(updatedResults);
+
+                        var newPanel = $(data).find('#ontology-expansion-panel');
+                        if (newPanel.length && newPanel.hasClass('visible')) {
+                            $('#ontology-expansion-panel')
+                                .html(newPanel.html())
+                                .addClass('visible');
+                        } else {
+                            $('#ontology-expansion-panel').removeClass('visible');
+                        }
                     },
                     error: function (error) {
                         console.log('Error:', error);
-                        $('#results-list').html('Error fetching data, try again.');
+                        $('#results-list').html(
+                            '<div class="no-results-box">' +
+                            '<p>Error fetching data. Please try again.</p>' +
+                            '</div>'
+                        );
                     }
                 });
             });
 
-            // Function to update input field placeholder based on selected option
+            // Update placeholder on category change
             $('input[name=model_selection]').on('change', function () {
                 var selectedOption = $(this).val();
                 var inputField = $('#id_search_query');
                 var placeholder = '';
+
+                $('#ontology-expansion-panel').removeClass('visible');
+                $('#results-list').html('');
 
                 switch (selectedOption) {
                     case 'variantagmp':
@@ -86,14 +308,20 @@
                         placeholder = 'Enter Gene name (e.g. UGT2B7)';
                         break;
                     case 'drugagmp':
-                        placeholder = 'Enter Drug name (e.g. Carbamazepine)';
+                        placeholder = 'Enter Drug name or synonym (e.g. Warfarin, Coumadin)';
                         break;
                     case 'disease':
-                        placeholder = 'Enter Phenotype (e.g. Diabetes)';
+                        placeholder = 'Enter Phenotype or common name (e.g. heart attack, Diabetes)';
                         break;
                 }
 
                 inputField.attr('placeholder', placeholder);
+
+                if (selectedOption === 'disease' || selectedOption === 'drugagmp') {
+                    $('#ontology-hint').show();
+                } else {
+                    $('#ontology-hint').hide();
+                }
             });
         });
     </script>
@@ -107,86 +335,238 @@
                     <label><h5><b>{{ form.model_selection.label }}</b></h5></label>
                     <ul id="id_model_selection">
                         <li>
-                            <input type="radio" name="{{ form.model_selection.html_name }}" value="variantagmp" id="id_model_selection_0">
-                            Variant <label> <span class="home-page-icons">🔬</span></label>
+                            <input type="radio" name="{{ form.model_selection.html_name }}" value="variantagmp" id="id_model_selection_0"
+                                {% if model_selection == "variantagmp" %}checked{% endif %}>
+                            Variant <label><span class="home-page-icons">🔬</span></label>
                         </li>
                         <li>
-                            <input type="radio" name="{{ form.model_selection.html_name }}" value="geneagmp" id="id_model_selection_1">
-                            Gene<label> <span class="home-page-icons">🧬</span></label>
+                            <input type="radio" name="{{ form.model_selection.html_name }}" value="geneagmp" id="id_model_selection_1"
+                                {% if model_selection == "geneagmp" %}checked{% endif %}>
+                            Gene <label><span class="home-page-icons">🧬</span></label>
                         </li>
                         <li>
-                            <input type="radio" name="{{ form.model_selection.html_name }}" value="drugagmp" id="id_model_selection_2">
-                            Drug <label> <span class="home-page-icons">💊 </span></label>
+                            <input type="radio" name="{{ form.model_selection.html_name }}" value="drugagmp" id="id_model_selection_2"
+                                {% if model_selection == "drugagmp" %}checked{% endif %}>
+                            Drug <label><span class="home-page-icons">💊</span></label>
                         </li>
                         <li>
-                            <input type="radio" name="{{ form.model_selection.html_name }}" value="disease" id="id_model_selection_3">
-                            Phenotype <label> <span class="home-page-icons">🏥 </span></label>
+                            <input type="radio" name="{{ form.model_selection.html_name }}" value="disease" id="id_model_selection_3"
+                                {% if model_selection == "disease" %}checked{% endif %}>
+                            Phenotype <label><span class="home-page-icons">🏥</span></label>
                         </li>
                     </ul>
                 </div>
                 <div>
-                    <input class="placeholder mb+2" type="text" name="{{ form.search_query.html_name }}" value="" id="{{ form.search_query.id_for_label }}" maxlength="100">
+                    <input class="placeholder mb+2" type="text"
+                        name="{{ form.search_query.html_name }}"
+                        value="{{ form.search_query.value|default_if_none:'' }}"
+                        id="{{ form.search_query.id_for_label }}"
+                        maxlength="100">
                 </div>
+
+                <!-- Ontology hint — shown for drug and phenotype -->
+                <div id="ontology-hint" style="display:{% if model_selection == 'disease' or model_selection == 'drugagmp' %}block{% else %}none{% endif %}; margin-bottom:8px;">
+                    <small style="color:#2E7D32;">
+                        <strong>Ontology mapping active</strong> — you can search using common names, synonyms, or clinical terms.
+                    </small>
+                </div>
+
                 <button type="submit" class="btn btn-sm btn-outline-dark rounded">Search</button>
             </form>
         </div>
     </div>
 
-    <div class="">
-        <ul id="results-list">
-            <!-- Results will be dynamically updated here -->
+    <!-- Ontology Expansion Panel -->
+    <div id="ontology-expansion-panel" class="ontology-panel {% if ontology_expansion %}visible{% endif %}">
+        {% if ontology_expansion %}
+        <button type="button" class="ontology-header">
+            <div class="ontology-header-left">
+                <span class="ontology-check">✓</span>
+                <span class="ontology-title">Ontology expansion</span>
+                <span class="ontology-subtitle">
+                    — your search was broadened to {{ ontology_expansion|length }} term{{ ontology_expansion|length|pluralize }}
+                </span>
+            </div>
+            <span class="ontology-toggle">▾</span>
+        </button>
+        <div class="ontology-body">
+            <div class="ontology-legend">
+                <span class="ontology-legend-item">
+                    <span class="ontology-legend-dot" style="background:#A5D6A7;"></span>
+                    Canonical match
+                </span>
+                <span class="ontology-legend-item">
+                    <span class="ontology-legend-dot" style="background:#90CAF9;"></span>
+                    Child term
+                </span>
+                <span class="ontology-legend-item">
+                    <span class="ontology-legend-dot" style="background:#FFCC80;"></span>
+                    Synonym
+                </span>
+            </div>
+            <div class="ontology-terms">
+                {% for term in ontology_expansion %}
+                    {% if '↳' in term %}
+                        <span class="term-badge child">
+                            <span class="child-arrow">↳</span>
+                            {{ term|cut:"↳ " }}
+                        </span>
+                    {% elif '+' in term %}
+                        <span class="term-badge synonym">{{ term|cut:"+ " }}</span>
+                    {% else %}
+                        <span class="term-badge canonical">{{ term }}</span>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Results List -->
+    <div>
+        <ul id="results-list" style="list-style:none; padding:0;">
+
+            {% if results %}
+                <div class="results-bar">
+                    <span class="results-count">
+                        {{ results|length }} result{{ results|length|pluralize }}
+                    </span>
+                    {% if ontology_expansion %}
+                        <span class="results-note">
+                            Includes ontology-expanded matches
+                        </span>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <!-- VARIANT results -->
             {% if model_selection == "variantagmp" %}
                 {% for result in results %}
-                    <b>Variant ID: </b>{{ result.rs_id }}<br>
-                    <b>Gene:</b> {{ result.geneagmp__gene_id }}<br>
-                    <b>Chromosome: </b>{{ result.geneagmp__chromosome }}<br>
-                    <a href="{% url 'variant_drug' result.rs_id %}">Variant-Drug Associations</a><br>
-                    <a href="{% url 'variant_phenotype' result.rs_id %}">Variant-Phenotype Associations</a><br>
-                    <hr>
+                    <div class="result-card">
+                        <div class="result-card-title">{{ result.rs_id }}</div>
+                        <div class="result-card-meta">
+                            <span><b>Gene:</b> {{ result.geneagmp__gene_id }}</span>
+                            <span><b>Chromosome:</b> {{ result.geneagmp__chromosome }}</span>
+                        </div>
+                        <div class="result-card-links">
+                            <a href="{% url 'variant_drug' result.rs_id %}">Drug associations </a>
+                            <a href="{% url 'variant_phenotype' result.rs_id %}">Phenotype associations </a>
+                        </div>
+                    </div>
                 {% empty %}
-                    <p class="text-center">No results found.</p>
-                    {% if suggestion %}
-                        <p class="text-center">Did you mean <a href="?search_query={{ suggestion.0 }}&model_selection={{ model_selection }}">{{ suggestion.0 }}</a>?</p>
-                    {% endif %}
+                    <div class="no-results-box">
+                        <p>No results found.</p>
+                        {% if suggestion %}
+                            <p>Did you mean
+                                <a href="?search_query={{ suggestion.0 }}&model_selection={{ model_selection }}">
+                                    <strong>{{ suggestion.0 }}</strong>
+                                </a>?
+                            </p>
+                        {% endif %}
+                    </div>
                 {% endfor %}
+
+            <!-- GENE results -->
             {% elif model_selection == "geneagmp" %}
                 {% for result in results %}
-                    <b>Gene: </b>{{ result.gene_id }}<br>
-                    <b>Chromosome: </b>{{ result.chromosome }}<br>
-                    <a href="{% url 'drug_phenotype_associations' result.gene_id %}">Gene Associations</a><br><hr>
+                    <div class="result-card">
+                        <div class="result-card-title">{{ result.gene_id }}</div>
+                        <div class="result-card-meta">
+                            <span><b>Chromosome:</b> {{ result.chromosome }}</span>
+                        </div>
+                        <div class="result-card-links">
+                            <a href="{% url 'drug_phenotype_associations' result.gene_id %}">Gene associations </a>
+                        </div>
+                    </div>
                 {% empty %}
-                    <p class="text-center">No results found.</p>
-                    {% if suggestion %}
-                        <p class="text-center">Did you mean <a href="?search_query={{ suggestion.0 }}&model_selection={{ model_selection }}">{{ suggestion.0 }}</a>?</p>
-                    {% endif %}
+                    <div class="no-results-box">
+                        <p>No results found.</p>
+                        {% if suggestion %}
+                            <p>Did you mean
+                                <a href="?search_query={{ suggestion.0 }}&model_selection={{ model_selection }}">
+                                    <strong>{{ suggestion.0 }}</strong>
+                                </a>?
+                            </p>
+                        {% endif %}
+                    </div>
                 {% endfor %}
+
+            <!-- DRUG results (ontology-enhanced) -->
             {% elif model_selection == "drugagmp" %}
                 {% regroup results by drug_bank_id as grouped_results %}
                 {% for group in grouped_results %}
                     {% with first_item=group.list|first %}
-                        <div class="drug-entry">
-                            <b>Drug Name: </b>{{ first_item.drug_name }}<br>
-                            <b>Drug Bank ID: </b><a href="https://go.drugbank.com/drugs/{{ first_item.drug_bank_id }}">{{ first_item.drug_bank_id }}</a><br>
-                            <b>State: </b>{{ first_item.state }}<br>
-                            <a href="{% url 'variant_drug' first_item.drug_bank_id %}">Variant-Drug Associations</a><br>
+                        <div class="result-card">
+                            <div class="result-card-title">
+                                {{ first_item.drug_name }}
+                                {% if ontology_expansion and first_item.drug_name != form.search_query.value %}
+                                    <span class="expanded-match-badge">expanded match</span>
+                                {% endif %}
+                            </div>
+                            <div class="result-card-meta">
+                                <span>
+                                    <b>DrugBank:</b>
+                                    <a href="https://go.drugbank.com/drugs/{{ first_item.drug_bank_id }}"
+                                       target="_blank" rel="noopener"
+                                       style="color:#1565C0;">
+                                        {{ first_item.drug_bank_id }}
+                                    </a>
+                                </span>
+                                <span><b>State:</b> {{ first_item.state }}</span>
+                            </div>
+                            <div class="result-card-links">
+                                <a href="{% url 'variant_drug' first_item.drug_bank_id %}">Variant–Drug associations </a>
+                            </div>
                         </div>
-                        <hr>
                     {% endwith %}
                 {% empty %}
-                    <p class="text-center">No results found.</p>
-                    {% if suggestion %}
-                        <p class="text-center">Did you mean <a href="?search_query={{ suggestion.0 }}&model_selection={{ model_selection }}">{{ suggestion.0 }}</a>?</p>
-                    {% endif %}
+                    <div class="no-results-box">
+                        <p>No results found.</p>
+                        {% if ontology_expansion %}
+                            <p style="font-size:13px; color:#90A4AE;">
+                                Ontology lookup found terms but no matching drugs in the database.
+                            </p>
+                        {% endif %}
+                        {% if suggestion %}
+                            <p>Did you mean
+                                <a href="?search_query={{ suggestion.0 }}&model_selection={{ model_selection }}">
+                                    <strong>{{ suggestion.0 }}</strong>
+                                </a>?
+                            </p>
+                        {% endif %}
+                    </div>
                 {% endfor %}
+
+            <!-- PHENOTYPE / DISEASE results (ontology-enhanced) -->
             {% elif model_selection == "disease" %}
                 {% for result in results %}
-                    <b>Phenotype:</b> {{ result.phenotypeagmp__name }}<br>
-                    <a href="{% url 'DiseaseVariant' result.phenotypeagmp__name %}">Variant-Phenotype Associations</a><br><hr>
+                    <div class="result-card">
+                        <div class="result-card-title">
+                            {{ result.phenotypeagmp__name }}
+                            {% if ontology_expansion and result.phenotypeagmp__name != form.search_query.value %}
+                                <span class="expanded-match-badge">expanded match</span>
+                            {% endif %}
+                        </div>
+                        <div class="result-card-links">
+                            <a href="/DiseaseVariant/{{ result.phenotypeagmp__name|urlencode }}/">Variant–Phenotype associations </a>
+                        </div>
+                    </div>
                 {% empty %}
-                    <p class="text-center">No results found.</p>
-                    {% if suggestion %}
-                        <p class="text-center">Did you mean <a href="?search_query={{ suggestion.0 }}&model_selection={{ model_selection }}">{{ suggestion.0 }}</a>?</p>
-                    {% endif %}
+                    <div class="no-results-box">
+                        <p>No results found.</p>
+                        {% if ontology_expansion %}
+                            <p style="font-size:13px; color:#90A4AE;">
+                                Ontology lookup found terms but no matching phenotypes in the database.
+                            </p>
+                        {% endif %}
+                        {% if suggestion %}
+                            <p>Did you mean
+                                <a href="?search_query={{ suggestion.0 }}&model_selection={{ model_selection }}">
+                                    <strong>{{ suggestion.0 }}</strong>
+                                </a>?
+                            </p>
+                        {% endif %}
+                    </div>
                 {% endfor %}
             {% endif %}
         </ul>
