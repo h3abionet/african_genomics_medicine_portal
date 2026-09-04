@@ -135,6 +135,58 @@
             margin-bottom: 15px;
         }
         .ontology-results-note.show { display: block; }
+
+        /* Ontology expansion panel per result row */
+        .ontology-badge {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2E7D32;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: 8px;
+            cursor: pointer;
+            border: 1px solid #C8E6C9;
+            transition: background 0.15s, border-color 0.15s;
+            vertical-align: middle;
+        }
+        .ontology-badge:hover {
+            background: #c8e6c9;
+            border-color: #81C784;
+        }
+        .ontology-badge.active {
+            background: #2E7D32;
+            color: #fff;
+            border-color: #2E7D32;
+        }
+        .ontology-panel-row { display: none; }
+        .ontology-panel-row.show { display: table-row; }
+        .ontology-panel {
+            background: #f0faf3;
+            border-left: 3px solid #28a745;
+            padding: 12px 16px;
+            margin: 0;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+        .ontology-panel-title {
+            font-weight: 600;
+            color: #155724;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        .ont-section { margin-bottom: 8px; }
+        .ont-section-label {
+            font-weight: 600;
+            color: #2E7D32;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 2px;
+        }
+        .ont-term { color: #333; padding: 1px 0; font-size: 12px; }
+        .ont-term.child { padding-left: 14px; color: #555; }
+        .ont-term.crossmap { color: #0c5460; font-style: italic; }
     </style>
 </head>
 
@@ -511,6 +563,62 @@ function renderColumnChips() {
     $('.column-chip').off('click').on('click',function(){ var col=$(this).data('col'),idx=visibleColumns.indexOf(col); if(idx>-1){visibleColumns.splice(idx,1);$(this).addClass('hidden');}else{visibleColumns.push(col);$(this).removeClass('hidden');} renderTable(); });
 }
 
+/* ── Ontology panel builder ────────────────── */
+
+function buildOntologyPanel(terms, inputName, idx) {
+    if (!terms || terms.length === 0) return {badge:'', panel:''};
+
+    var canonical = [], children = [], crossmaps = [];
+    for (var i = 0; i < terms.length; i++) {
+        var t = terms[i];
+        if (t.indexOf('↓') !== -1 || t.indexOf('↳') !== -1) {
+            children.push(t.replace(/^\s*[↳↓]\s*/, ''));
+        } else if (t.indexOf('cross-ontology') !== -1) {
+            crossmaps.push(t.replace(/^\s*\+\s*/, ''));
+        } else {
+            canonical.push(t);
+        }
+    }
+
+    var totalTerms = canonical.length + children.length + (crossmaps.length > 0 ? 1 : 0);
+    var badge = ' <span class="ontology-badge" onclick="toggleOntologyPanel('+idx+')" id="ontBadge_'+idx+'" title="Show ontology expansion">🔍 '+totalTerms+' term'+(totalTerms!==1?'s':'')+'</span>';
+
+    var panel = '<tr class="ontology-panel-row" id="ontPanel_'+idx+'"><td colspan="'+(visibleColumns.length+1)+'"><div class="ontology-panel">';
+    panel += '<div class="ontology-panel-title">Ontology expansion for “'+escapeHtml(inputName)+'”</div>';
+
+    if (canonical.length > 0) {
+        panel += '<div class="ont-section"><div class="ont-section-label">Matched terms</div>';
+        for (var c = 0; c < canonical.length; c++) {
+            panel += '<div class="ont-term">'+escapeHtml(canonical[c])+'</div>';
+        }
+        panel += '</div>';
+    }
+    if (children.length > 0) {
+        panel += '<div class="ont-section"><div class="ont-section-label">Child terms (subtypes)</div>';
+        for (var ch = 0; ch < children.length; ch++) {
+            panel += '<div class="ont-term child">↳ '+escapeHtml(children[ch])+'</div>';
+        }
+        panel += '</div>';
+    }
+    if (crossmaps.length > 0) {
+        panel += '<div class="ont-section"><div class="ont-section-label">Cross-ontology mappings</div>';
+        for (var x = 0; x < crossmaps.length; x++) {
+            panel += '<div class="ont-term crossmap">'+escapeHtml(crossmaps[x])+'</div>';
+        }
+        panel += '</div>';
+    }
+
+    panel += '</div></td></tr>';
+    return {badge: badge, panel: panel};
+}
+
+function toggleOntologyPanel(idx) {
+    var $row = $('#ontPanel_'+idx);
+    var $badge = $('#ontBadge_'+idx);
+    $row.toggleClass('show');
+    $badge.toggleClass('active');
+}
+
 function renderTable() {
     var h='<tr><th style="width:40px;"></th>';
     visibleColumns.forEach(function(col){ h+='<th>'+(headerMap[col]||col.replace(/_/g,' '))+'</th>'; });
@@ -519,9 +627,17 @@ function renderTable() {
     var b='';
     queryResults.forEach(function(row,idx){
         var hasD=detailFields.length>0&&row._status==='found';
+        var ontData = (row._ontology_terms && row._ontology_terms.length > 0) ? buildOntologyPanel(row._ontology_terms, row._input || '', idx) : null;
+
         b+='<tr data-idx="'+idx+'"><td>'+(hasD?'<button class="expand-btn" onclick="toggleDetail('+idx+')">+ Details</button>':'')+'</td>';
-        visibleColumns.forEach(function(col){ var val=row[col]!==undefined?row[col]:''; if(col==='_status')val=val==='found'?'<span class="status-found">✓ Found</span>':'<span class="status-notfound">✗ Not Found</span>'; b+='<td>'+val+'</td>'; });
+        visibleColumns.forEach(function(col){
+            var val=row[col]!==undefined?row[col]:'';
+            if(col==='_status') val=val==='found'?'<span class="status-found">✓ Found</span>':'<span class="status-notfound">✗ Not Found</span>';
+            if(col==='_input' && ontData) val = escapeHtml(val) + ontData.badge;
+            b+='<td>'+val+'</td>';
+        });
         b+='</tr>';
+        if(ontData){ b+=ontData.panel; }
         if(hasD){ b+='<tr class="detail-row" id="detail-'+idx+'"><td colspan="'+(visibleColumns.length+1)+'"><div class="detail-content">'+renderDetailContent(row)+'</div></td></tr>'; }
     });
     $('#resultsBody').html(b);
@@ -677,7 +793,6 @@ function flattenArr(ft, items) {
         return p.join(' | ');
     }).join('; ');
 }
-
 function dlCsv(content, filename) {
     var blob=new Blob(['\uFEFF'+content],{type:'text/csv;charset=utf-8;'});
     var a=document.createElement('a'), url=URL.createObjectURL(blob);

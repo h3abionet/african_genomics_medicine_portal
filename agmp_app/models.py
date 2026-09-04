@@ -235,10 +235,6 @@ class VariantStudyagmp(models.Model):
         verbose_name_plural = " Variant Studies"
 #====New Models=======#
 
-
-
-# models.py — add these
-
 class OntologyConfig(models.Model):
     """
     Admin-configurable ontology source.

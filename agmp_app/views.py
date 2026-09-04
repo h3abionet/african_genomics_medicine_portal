@@ -340,10 +340,11 @@ def query_drug_data(drug_input, fields):
     """ONTOLOGY-ENHANCED — resolves drug synonyms via OLS4."""
     try:
         drug = None
+        expansion_info = []
         if ONTOLOGY_AVAILABLE:
             try:
                 resolver = OntologyResolver('drug')
-                names, _ = resolver.resolve(drug_input)
+                names, expansion_info = resolver.resolve(drug_input)
                 for name in names:
                     drug = Drugagmp.objects.filter(
                         Q(drug_name__iexact=name) | Q(drug_bank_id__iexact=name)
@@ -352,6 +353,7 @@ def query_drug_data(drug_input, fields):
                         break
             except Exception as e:
                 logger.warning(f"Ontology resolution failed in batch drug query: {e}")
+                expansion_info = []
 
         if not drug:
             drug = Drugagmp.objects.filter(
@@ -412,6 +414,8 @@ def query_drug_data(drug_input, fields):
             result['gene_count'] = variants.values('geneagmp__gene_id').distinct().count()
         if 'study_count' in fields:
             result['study_count'] = VariantStudyagmp.objects.filter(variantagmp__drugagmp=drug).values('studyagmp__publication_id').distinct().count()
+        if expansion_info:
+            result['_ontology_terms'] = expansion_info
         return result
     except Exception as e:
         logger.error(f"query_drug_data error: {e}")
@@ -422,10 +426,11 @@ def query_phenotype_data(phenotype_name, fields):
     """ONTOLOGY-ENHANCED — resolves phenotype synonyms and children via OLS4."""
     try:
         q_filter = None
+        expansion_info = []
         if ONTOLOGY_AVAILABLE:
             try:
                 resolver = OntologyResolver('phenotype')
-                names, _ = resolver.resolve(phenotype_name)
+                names, expansion_info = resolver.resolve(phenotype_name)
                 q_filter = Q()
                 for name in names:
                     q_filter |= Q(phenotypeagmp__name__iexact=name)
@@ -433,6 +438,7 @@ def query_phenotype_data(phenotype_name, fields):
             except Exception as e:
                 logger.warning(f"Ontology resolution failed in batch phenotype query: {e}")
                 q_filter = None
+                expansion_info = []
 
         if q_filter:
             variants = Variantagmp.objects.filter(q_filter).select_related(
@@ -498,6 +504,8 @@ def query_phenotype_data(phenotype_name, fields):
                 result['study_count'] = VariantStudyagmp.objects.filter(
                     variantagmp__phenotypeagmp__name__iexact=phenotype_name
                 ).values('studyagmp__publication_id').distinct().count()
+        if expansion_info:
+            result['_ontology_terms'] = expansion_info
         return result
     except Exception as e:
         logger.error(f"query_phenotype_data error: {e}")
