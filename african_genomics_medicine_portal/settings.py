@@ -15,17 +15,15 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
-# GDAL Configuration
+
 GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
 GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
 
-# If not set through environment variables, try common locations
 if not GDAL_LIBRARY_PATH:
     possible_paths = [
         '/usr/lib/libgdal.so',
         '/usr/lib/aarch64-linux-gnu/libgdal.so',
         '/usr/lib/x86_64-linux-gnu/libgdal.so',
-        # Add any other potential paths here
     ]
     for path in possible_paths:
         if Path(path).exists():
@@ -37,37 +35,26 @@ if not GEOS_LIBRARY_PATH:
         '/usr/lib/libgeos_c.so',
         '/usr/lib/aarch64-linux-gnu/libgeos_c.so',
         '/usr/lib/x86_64-linux-gnu/libgeos_c.so',
-        # Add any other potential paths here
     ]
     for path in possible_paths:
         if Path(path).exists():
             GEOS_LIBRARY_PATH = path
             break
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-
-
-
 SECRET_KEY = os.environ.get('SECRET_KEY')
-# SECURITY WARNING: don't run with debug turned on in production!
-# as a failsafe if you don't have this flag in config switch on production
+
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    host.strip() for host in 
-    os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',') 
+    host.strip() for host in
+    os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
     if host.strip()
 ]
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 ADMIN_URL = "madiba/"
-# Application definition
 
 AGNOCOMPLETE_DATA_ATTRIBUTE = 'autocomplete'
 
@@ -87,7 +74,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'corsheaders',
     'dal_select2',
-     'django_filters',
+    'django_filters',
 ]
 
 SHELL_PLUS = "notebook"
@@ -95,9 +82,9 @@ SHELL_PLUS = "notebook"
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -124,10 +111,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'african_genomics_medicine_portal.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -140,10 +123,6 @@ DATABASES = {
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
-
-
-# Password validation
-# https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -160,30 +139,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/1.10/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
-# os.path.abspath("static")  # added by Anmol
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 STATIC_URL = '/static/'
-
 STATIC_ROOT = os.path.join(BASE_DIR, '/agmp/static_cdn')
-
-
 
 RESULTS_PER_PAGE = 50
 
@@ -195,21 +159,43 @@ LEAFLET_CONFIG = {
                })]
 }
 
-# Get CSRF_TRUSTED_ORIGINS from .env, split by comma, and filter out empty strings
+
 CSRF_TRUSTED_ORIGINS = [
-    origin.strip() for origin in 
-    os.getenv(
-        'CSRF_TRUSTED_ORIGINS', 
-        'http://localhost:8080,http://127.0.0.1:8080'
-    ).split(',') 
+    origin.strip() for origin in
+    os.getenv('CSRF_TRUSTED_ORIGINS', '').split(',')
     if origin.strip()
 ]
 
-REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend'
-    ]
-}
+CORS_ALLOWED_ORIGINS = [
+    origin.strip() for origin in
+    os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
+    if origin.strip()
+]
+
 
 
 AGMP_BATCH_LIMIT = int(os.environ.get('AGMP_BATCH_LIMIT', 1000))
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'agmp_app.pagination.StandardResultsSetPagination',
+    'PAGE_SIZE': 25,
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/hour',
+        'user': '1000/hour',
+    },
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+}
