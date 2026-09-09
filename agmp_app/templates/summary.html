@@ -972,10 +972,9 @@ function choroplethColor(count) {
 function ensureMap1() {
     if (_map1) return;
     _map1 = L.map('map1', { center: [-4.0335, 21.7501], zoom: 3, minZoom: 2, worldCopyJump: true });
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap &copy; CARTO',
-        subdomains: 'abcd',
-        maxZoom: 19
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+        maxZoom: 16
     }).addTo(_map1);
     _map1Layer = L.layerGroup().addTo(_map1);
 }
@@ -1011,10 +1010,9 @@ function renderMarkerMap(points) {
 function ensureMap2() {
     if (_map2) return;
     _map2 = L.map('map2', { center: [1.2921, 36.8219], zoom: 3, minZoom: 2, worldCopyJump: true });
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; OpenStreetMap &copy; CARTO',
-        subdomains: 'abcd',
-        maxZoom: 19
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+        maxZoom: 16
     }).addTo(_map2);
     _map2Layer = L.layerGroup().addTo(_map2);
 }
