@@ -1,6 +1,4 @@
 from django.urls import path, re_path, include
-from rest_framework.routers import DefaultRouter
-from .api_views import VariantagmpViewSet
 from . import views
 from .views import (
     DrugagmpDetailView,
@@ -21,9 +19,6 @@ from .views import (
     batch_query_export,
     batch_query_export_xlsx,
 )
-
-router = DefaultRouter()
-router.register(r'variants', VariantagmpViewSet, basename='variant')
 
 urlpatterns = [
     path('test', test_data_table, name='test_data_table'),
@@ -55,7 +50,9 @@ urlpatterns = [
     path('PharmacoDrug/<str:gene_id>/',
          PharmacoDrugDetailView.as_view(),
          name='Pharmaco_Drug_Detail'),
-    path('DiseaseVariant/<str:phenotypeagmp__name>/',
+
+    # CHANGED: <str:> to <path:> so phenotype names with / ( ) work
+    path('DiseaseVariant/<path:phenotypeagmp__name>/',
          DiseaseVariantDetailView.as_view(),
          name='DiseaseVariant'),
 
@@ -80,6 +77,8 @@ urlpatterns = [
     path('batch-query/export/', batch_query_export, name='batch_query_export'),
     path('batch-query/export-xlsx/', batch_query_export_xlsx, name='batch_query_export_xlsx'),
 
-    # API urls
-    path('api/', include(router.urls)),
+    # =========================================
+    # REST API (all endpoints under /api/)
+    # =========================================
+    path('api/', include('agmp_app.api_urls')),
 ]
